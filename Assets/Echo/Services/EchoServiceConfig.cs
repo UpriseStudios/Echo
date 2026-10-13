@@ -38,11 +38,18 @@ namespace Echo.Services
         public string StoreUrlAndroid = Placeholder;
         public string StoreUrlIos = Placeholder;
 
+        [Header("Unity Gaming Services")]
+        [Tooltip("UGS environment for development builds (and the editor). Never production.")]
+        public string UgsEnvironmentDevelopment = "development";
+        [Tooltip("UGS environment for release builds.")]
+        public string UgsEnvironmentRelease = "production";
+
         [Header("Development")]
         [Tooltip("Use the real SDKs in the editor too (normally mocks run in the editor).")]
         public bool RealServicesInEditor;
 
         public string LevelPlayAppKey => IsIos ? LevelPlayAppKeyIos : LevelPlayAppKeyAndroid;
+        public string UgsEnvironment => Debug.isDebugBuild ? UgsEnvironmentDevelopment : UgsEnvironmentRelease;
         public string BanishAdUnit => IsIos ? BanishAdUnitIos : BanishAdUnitAndroid;
         public string BanishTenAdUnit => IsSet(IsIos ? BanishTenAdUnitIos : BanishTenAdUnitAndroid) ? (IsIos ? BanishTenAdUnitIos : BanishTenAdUnitAndroid) : BanishAdUnit;
         public string ContinueAdUnit => IsIos ? ContinueAdUnitIos : ContinueAdUnitAndroid;

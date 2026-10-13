@@ -174,6 +174,7 @@ namespace Echo.Game.Flow
             _contentVersion = ContentVersion.Compute(_library, _cfg);
 
             _services = EchoServices.CreateMocks();
+            WireBackend();
             _saves = new SaveSystem(SavePathOverride ?? Path.Combine(Application.persistentDataPath, "echo_save.json"));
             _save = _saves.Load() ?? new SaveData();
             _save.Tutorial ??= new TutorialSaveData();
@@ -247,6 +248,7 @@ namespace Echo.Game.Flow
             _settings.Changed += () => { ApplySettings(); Save(); };
             _settings.PrivacyClicked += () => { _settings.Hide(); _consentFromSettings = true; _consentView.Show(); };
             _settings.DevAdFailureToggled += () => _services.ToggleMockAdFailure();
+            _settings.ServerCheckClicked += OnServerCheck;
             _skins.BuyClicked += Buy;
             _skins.WatchAdClicked += WatchUnlockAd;
             _skins.TrialAdClicked += WatchTrialAd;
@@ -1526,7 +1528,7 @@ namespace Echo.Game.Flow
 
         void ShowSettings()
         {
-            _settings.Show(_save.Settings, Debug.isDebugBuild && _services.UsingMockAds);
+            _settings.Show(_save.Settings, Debug.isDebugBuild && _services.UsingMockAds, Debug.isDebugBuild);
             // Development builds only: what the ad and store SDKs are doing, readable on the phone itself.
             _settings.SetStatus(Debug.isDebugBuild ? _services.StatusReport : null);
         }

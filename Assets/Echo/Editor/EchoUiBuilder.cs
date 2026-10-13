@@ -707,7 +707,10 @@ namespace Echo.Editor
             nameLabel.alignment = TextAlignmentOptions.MidlineLeft;
             nameLabel.margin = new Vector4(36, 0, 36, 0);
             var privacy = MakeButton(root, "Privacy", "Privacy choices", new Vector2(0, -270), new Vector2(760, 124), ButtonStyle.Secondary);
-            var devAds = MakeButton(root, "DevAdFailure", "Dev: rewarded ads succeed", new Vector2(0, -440), new Vector2(760, 112), ButtonStyle.Secondary);
+            var devAds = MakeButton(root, "DevAdFailure", "Dev: ads succeed", new Vector2(-200, -440), new Vector2(380, 112), ButtonStyle.Secondary);
+            // Version 2.0, development builds: the newest reel replayed on the server, against the device.
+            var serverCheck = MakeButton(root, "ServerCheck", "Dev: server check", new Vector2(200, -440), new Vector2(380, 112), ButtonStyle.Secondary);
+            Wire(view, "_serverCheck", serverCheck);
             var close = MakeButton(root, "Close", "Back", new Vector2(0, -830), new Vector2(500, 120), ButtonStyle.Primary);
             Wire(view, "_root", root.gameObject);
             Wire(view, "_music", music);

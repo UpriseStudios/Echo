@@ -5,6 +5,7 @@ using Echo.Services.Analytics;
 using Echo.Services.Iap;
 using Echo.Services.Share;
 using Unity.Services.Core;
+using Unity.Services.Core.Environments;
 using UnityEngine;
 
 namespace Echo.Services
@@ -24,6 +25,7 @@ namespace Echo.Services
         public IAdsService Ads;
         public IIapService Iap;
         public IAnalytics Analytics;
+        public Echo.Services.Backend.IBackendService Backend;
 
         /// <summary>What started and what did not, for the development status readout.</summary>
         public string Note = "";
@@ -63,7 +65,11 @@ namespace Echo.Services
             bool core = false;
             try
             {
-                await Limit(UnityServices.InitializeAsync(), StartLimit, "Unity Services");
+                // Version 2.0: development builds talk to the UGS development environment, release builds to
+                // production (EchoServiceConfig), so a test phone never touches live data.
+                var options = new InitializationOptions().SetEnvironmentName(config.UgsEnvironment);
+                await Limit(UnityServices.InitializeAsync(options), StartLimit, "Unity Services");
+                real.Note += $"UGS environment: {config.UgsEnvironment}. ";
                 core = true;
             }
             catch (Exception e)
@@ -87,6 +93,15 @@ namespace Echo.Services
                 catch (Exception e)
                 {
                     real.Fail("Store", e);
+                }
+                try
+                {
+                    // Version 2.0: created now, but nothing signs in until a server feature is first used.
+                    real.Backend = new Echo.Services.Backend.UgsBackendService();
+                }
+                catch (Exception e)
+                {
+                    real.Fail("Backend", e);
                 }
             }
 

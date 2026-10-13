@@ -19,6 +19,9 @@ namespace Echo.Game.UI
         [SerializeField] Button _glow;
         [SerializeField] Button _privacy;
         [SerializeField] Button _devAdFailure;
+        // Version 2.0, development builds: replay the newest reel on the server and compare.
+        [SerializeField] Button _serverCheck;
+        public event System.Action ServerCheckClicked;
         [SerializeField] Button _close;
         [Tooltip("The name on Ghost Challenges.")]
         [SerializeField] Button _name;
@@ -49,18 +52,20 @@ namespace Echo.Game.UI
             _devAdFailure.onClick.AddListener(() =>
             {
                 bool failing = DevAdFailureToggled?.Invoke() ?? false;
-                SetLabel(_devAdFailure, $"Dev: rewarded ads {(failing ? "fail" : "succeed")}");
+                SetLabel(_devAdFailure, $"Dev: ads {(failing ? "fail" : "succeed")}");
             });
             _close.onClick.AddListener(() => Closed?.Invoke());
+            if (_serverCheck != null) _serverCheck.onClick.AddListener(() => ServerCheckClicked?.Invoke());
             if (_name != null) _name.onClick.AddListener(() => NameClicked?.Invoke());
             if (_heading != null) _heading.onClick.AddListener(OnHeadingTapped);
         }
 
-        public void Show(SettingsSaveData settings, bool showDevToggle)
+        public void Show(SettingsSaveData settings, bool showDevToggle, bool showServerCheck = false)
         {
             _settings = settings;
             _root.SetActive(true);
             _devAdFailure.gameObject.SetActive(showDevToggle);
+            if (_serverCheck != null) _serverCheck.gameObject.SetActive(showServerCheck);
             Refresh();
         }
 

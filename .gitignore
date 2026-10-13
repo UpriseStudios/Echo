@@ -46,3 +46,7 @@ crashlytics-build.properties
 # Unity crash-recovery scene copies
 /Assets/_Recovery/
 /Assets/_Recovery.meta
+
+# Server build output
+/Server/**/bin/
+/Server/**/obj/

@@ -190,6 +190,13 @@ namespace Echo.Tests.PlayMode
             Click("Reels/Close");
             Assert.AreEqual(GameState.Title, game.State);
             Assert.AreEqual(5, game.CurrentSave.Reels.Count);
+
+            // Version 2.0: the development server check replays the newest reel (here through the mock backend,
+            // which runs the module's code path locally) to the distance the run reached.
+            game.OnServerCheck();
+            Assert.IsNotNull(game.LastServerCheck);
+            Assert.IsTrue(game.LastServerCheck.Accepted, game.LastServerCheck.Error);
+            Assert.AreEqual(game.CurrentSave.Reels[4].Distance, game.LastServerCheck.Distance);
         }
     }
 }

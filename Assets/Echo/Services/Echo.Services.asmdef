@@ -9,7 +9,11 @@
         "Unity.Services.Core",
         "Unity.Services.Analytics",
         "NativeShare.Runtime",
-        "Unity.Advertisement.IosSupport"
+        "Unity.Advertisement.IosSupport",
+        "Unity.Services.Authentication",
+        "Unity.Services.CloudCode",
+        "Unity.Services.RemoteConfig",
+        "Unity.Services.Core.Environments"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

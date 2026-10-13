@@ -2,6 +2,7 @@ using System;
 using Echo.Services;
 using Echo.Services.Ads;
 using Echo.Services.Analytics;
+using Echo.Services.Backend;
 using Echo.Services.Iap;
 using Echo.Services.Mocks;
 using Echo.Services.Share;
@@ -18,6 +19,7 @@ namespace Echo.Game.Bootstrap
         public IIapService Iap { get; private set; }
         public IAnalytics Analytics { get; private set; }
         public IShareService Share { get; private set; }
+        public IBackendService Backend { get; private set; }
 
         public event Action<string> Entitled;
 
@@ -27,7 +29,7 @@ namespace Echo.Game.Bootstrap
         public string StartupNote = "Real services not started yet (they wait for the privacy choice).";
 
         /// <summary>The development status readout: what is running, and how ads and the store are doing.</summary>
-        public string StatusReport => StartupNote + "\nAds: " + Ads.Status + "\nStore: " + Iap.Status;
+        public string StatusReport => StartupNote + "\nAds: " + Ads.Status + "\nStore: " + Iap.Status + "\nBackend: " + Backend.Status;
 
         public static EchoServices CreateMocks()
         {
@@ -36,6 +38,7 @@ namespace Echo.Game.Bootstrap
                 Ads = new MockAdsService(),
                 Analytics = new MockAnalytics(),
                 Share = new MockShareService(),
+                Backend = new MockBackendService(),
             };
             s.SetIap(new MockIapService());
             return s;
@@ -46,6 +49,7 @@ namespace Echo.Game.Bootstrap
             if (real.Ads != null) Ads = real.Ads;
             if (real.Analytics != null) Analytics = real.Analytics;
             if (real.Iap != null) SetIap(real.Iap);
+            if (real.Backend != null) Backend = real.Backend;
         }
 
         /// <summary>The native share sheet, which needs no consent, so it replaces the mock at launch.</summary>
