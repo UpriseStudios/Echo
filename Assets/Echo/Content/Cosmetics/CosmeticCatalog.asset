@@ -1,0 +1,2203 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87ebfd4180c30594ea9305fe987d6859, type: 3}
+  m_Name: CosmeticCatalog
+  m_EditorClassIdentifier: Echo.Game::Echo.Game.Cosmetics.CosmeticCatalog
+  Items:
+  - Id: char_hooded
+    DisplayName: Hooded
+    Type: 3
+    Color: {r: 0.92156863, g: 0.92156863, b: 0.92156863, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames:
+    - {fileID: 21300000, guid: 56d129a890a28c64baedd3e3d7a837b0, type: 3}
+    - {fileID: 21300000, guid: e4595414696048d4596d92273a8c899e, type: 3}
+    - {fileID: 21300000, guid: a62d8f086c98f954286d3b63ccdb7ad6, type: 3}
+    - {fileID: 21300000, guid: b6140ad4365695a42a9b18cb77202d7a, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 1038dd18d29d8cc4693c45e24093b0d5, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 3ae9c6ebd01cbf84eb57052430d7f0cc, type: 3}
+    - {fileID: 21300000, guid: a4404cf8eb10b1b4789e1c9d53b78d0f, type: 3}
+    - {fileID: 21300000, guid: cde681e969be0a241b45902e7452f581, type: 3}
+    - {fileID: 21300000, guid: 23bce8ffec8df9046b8150c5e94d81d1, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 0e6f3add7895b914eae823b18c514c7b, type: 3}
+    Tintable: 1
+    ScarfColor: {r: 1, g: 0.7882353, b: 0.28235295, a: 1}
+    ScarfWidth: 0.09
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_ninja
+    DisplayName: Ninja
+    Type: 3
+    Color: {r: 0.16862746, g: 0.1882353, b: 0.3137255, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames:
+    - {fileID: 21300000, guid: 718cb62db66a3294f9d9b54320eb90ab, type: 3}
+    - {fileID: 21300000, guid: 03f9ddf837620fa418bcdb02ed7ed655, type: 3}
+    - {fileID: 21300000, guid: 7a72db7bec547124fa30dcc097520de4, type: 3}
+    - {fileID: 21300000, guid: 17de770c645c95743b91dc3307deb749, type: 3}
+    JumpFrame: {fileID: 21300000, guid: ef134cbca81f7a54382da360d213c5a7, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 1755ff986c275da439860df5c8996776, type: 3}
+    - {fileID: 21300000, guid: 3c6830e327df7844ea1f1f2872e42ffb, type: 3}
+    - {fileID: 21300000, guid: 39ab178f073494d4c8996958ea939caa, type: 3}
+    - {fileID: 21300000, guid: 236000ab4d877d44889d11096abf9fdd, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 528251102a487d042bbe7ebd741b4286, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.84705883, g: 0.19607843, b: 0.23529412, a: 1}
+    ScarfWidth: 0.06
+    ScarfAnchor: {x: -0.1875, y: 0.6875}
+    Reaction: 13
+    HeadTop: 0.84375
+  - Id: char_knight
+    DisplayName: Knight
+    Type: 3
+    Color: {r: 0.7176471, g: 0.7529412, b: 0.8117647, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames:
+    - {fileID: 21300000, guid: 44d72f8de1076074f91c7dec6d3be2a8, type: 3}
+    - {fileID: 21300000, guid: a0740d88df6917e419571dae554269c7, type: 3}
+    - {fileID: 21300000, guid: 5fba2a3cac614ff428ef6b2763d3526a, type: 3}
+    - {fileID: 21300000, guid: a7e0dda6d4664ee40adcbcf3f6f906d7, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 31320863fcafc934d8641d3d24b5a028, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 1bdbc5d04243a5e48b1c9a44c2dbea4f, type: 3}
+    - {fileID: 21300000, guid: ca74c6ce126a15d4a945e6912ebc904c, type: 3}
+    - {fileID: 21300000, guid: 7fecae5087d56764fb60c1992ddb5b25, type: 3}
+    - {fileID: 21300000, guid: d3a19de736f1f9e4aae119540ecea730, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 166a507762ce6ac43a7c1b19d482a8ac, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.72156864, g: 0.15686275, b: 0.22745098, a: 1}
+    ScarfWidth: 0.13
+    ScarfAnchor: {x: -0.0625, y: 0.5}
+    Reaction: 9
+    HeadTop: 0.90625
+  - Id: char_wizard
+    DisplayName: Wizard
+    Type: 3
+    Color: {r: 0.41568628, g: 0.24705882, b: 0.627451, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames:
+    - {fileID: 21300000, guid: f85f76cc94362214fa726460a63efdae, type: 3}
+    - {fileID: 21300000, guid: a2750983fabad024abf491ef60544141, type: 3}
+    - {fileID: 21300000, guid: baac4f1090a30ca418ed74935ff28b2a, type: 3}
+    - {fileID: 21300000, guid: 9cef0e667d2a9d54c92fb43ab36a3f38, type: 3}
+    JumpFrame: {fileID: 21300000, guid: ebb01d101f6acb34a93260d533eff5a1, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 2f580a706d94938498e91c9b9b32e115, type: 3}
+    - {fileID: 21300000, guid: 47505da0724c47744837698d7dedccd3, type: 3}
+    - {fileID: 21300000, guid: 1a7695e85af839b44b0c82f7a5bb0eb6, type: 3}
+    - {fileID: 21300000, guid: 036e18069a52c344eba8880646eda186, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 75833dc4a624f7e4b9d35b8a80cfd9af, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 7
+    HeadTop: 1
+  - Id: char_princess
+    DisplayName: Princess
+    Type: 3
+    Color: {r: 0.9411765, g: 0.47843137, b: 0.6901961, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames:
+    - {fileID: 21300000, guid: d30dccb9c751aaf4686f9ca7a6959f62, type: 3}
+    - {fileID: 21300000, guid: da627c300f61d6b42b8bc8500c444607, type: 3}
+    - {fileID: 21300000, guid: a494a3d1891f1de4bb66bedce3428ad3, type: 3}
+    - {fileID: 21300000, guid: 081d156819051b949bb85f5917af732c, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 3dec161def4a2ac4992ce0c8ac38238b, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 8243cb694a6841e43ab1eb21496a5efa, type: 3}
+    - {fileID: 21300000, guid: 193ae87114d1abd4cb51bce2a36da336, type: 3}
+    - {fileID: 21300000, guid: 922c67ab18c470f47add1f5f4b0b696f, type: 3}
+    - {fileID: 21300000, guid: e0a4bae3e8f1d74428f5313c1a91d130, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 2df2583805660f244b0a9c025b0ee7b9, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.972549, g: 0.8117647, b: 0.3764706, a: 1}
+    ScarfWidth: 0.1
+    ScarfAnchor: {x: -0.1875, y: 0.65625}
+    Reaction: 9
+    HeadTop: 0.90625
+  - Id: char_cat
+    DisplayName: Cat
+    Type: 3
+    Color: {r: 0.9411765, g: 0.627451, b: 0.2509804, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames:
+    - {fileID: 21300000, guid: 88591383521720c4494f971215a1a8e1, type: 3}
+    - {fileID: 21300000, guid: 4cc709790b85929459e7d91331f04658, type: 3}
+    - {fileID: 21300000, guid: 25f26ff00b2084842a3b549c157940df, type: 3}
+    - {fileID: 21300000, guid: 0cd8210220d5d4749b6cab085347ff84, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 067e7a4031b4df54fa75ee681b5ad70f, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 7520988a19c4ff8449d57ce8a3cda6fb, type: 3}
+    - {fileID: 21300000, guid: 2dbdd7bdba552674e89e320c647b8a6c, type: 3}
+    - {fileID: 21300000, guid: 0c4839f7de22f4f4f99d96681e04dc33, type: 3}
+    - {fileID: 21300000, guid: ce3607c43235cba43a931bcbdbed0ccf, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 0c643c456412eea4d96d1d3b0d61fc38, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.9411765, g: 0.627451, b: 0.2509804, a: 1}
+    ScarfWidth: 0.08
+    ScarfAnchor: {x: -0.125, y: 0.34375}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_skeleton
+    DisplayName: Skeleton
+    Type: 3
+    Color: {r: 0.18039216, g: 0.18039216, b: 0.21960784, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames:
+    - {fileID: 21300000, guid: 55e334e707ccc3f489a3d3e5434aa3ea, type: 3}
+    - {fileID: 21300000, guid: 2e6d9891fab8df444ac5d2589c4a6297, type: 3}
+    - {fileID: 21300000, guid: 0bd525238f6bfcb47849b3963fbeba44, type: 3}
+    - {fileID: 21300000, guid: d37878eaa19f8224e8f8c83ea6690b3c, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 7f6fdff9d685a8a41b54d101239f2846, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 16d9b638690b78142ac9d4152e484e6f, type: 3}
+    - {fileID: 21300000, guid: f832d98e6b7bd6646a9afcb144f1063a, type: 3}
+    - {fileID: 21300000, guid: c123f531ed297e741b572dfaebce42fc, type: 3}
+    - {fileID: 21300000, guid: 0cea8b350c34e9440ab1b163aff936d0, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 2f868937035efd744adee990da9ab678, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 8
+    HeadTop: 0.84375
+  - Id: char_astronaut
+    DisplayName: Astronaut
+    Type: 3
+    Color: {r: 0.9490196, g: 0.9490196, b: 0.9490196, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames:
+    - {fileID: 21300000, guid: 9232a8ea7c257f844984e13528630475, type: 3}
+    - {fileID: 21300000, guid: 898479aa8fd400f45bddc63ad76c6c91, type: 3}
+    - {fileID: 21300000, guid: 5880fdcac3992cc4aac79942b1510be5, type: 3}
+    - {fileID: 21300000, guid: cb57fd56b748cb74086d5b8940365084, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 6f5a85f0b2d0a3c4e867062f0f6c7c05, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 3e9dc22997d318e42bbb51e25b29b11b, type: 3}
+    - {fileID: 21300000, guid: ed6463c9167dc3847a2539c2aaa4eba3, type: 3}
+    - {fileID: 21300000, guid: c7c24d89d298df747b4f787590f11dca, type: 3}
+    - {fileID: 21300000, guid: b47eed7e5a26d3b49ae870f27214fa62, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 75f8e1447c39547438f02b1895ba5ec1, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 1
+    HeadTop: 0.875
+  - Id: char_robot
+    DisplayName: Robot
+    Type: 3
+    Color: {r: 0.56078434, g: 0.6392157, b: 0.72156864, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames:
+    - {fileID: 21300000, guid: fcf28950187b15746a5553085a10e2b2, type: 3}
+    - {fileID: 21300000, guid: 4f970280a64262341a9a4323d0ea7efc, type: 3}
+    - {fileID: 21300000, guid: 8a1ef20dccdb01f42b4458917225711c, type: 3}
+    - {fileID: 21300000, guid: c998ac6ff184f7747a99ab3ecef5c484, type: 3}
+    JumpFrame: {fileID: 21300000, guid: a37084c571702ae4b97fe8ca7aa71b0b, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 186a19ba5fe87df439d2f0264128563d, type: 3}
+    - {fileID: 21300000, guid: 688a14e3866767b42b22a0c764631cdf, type: 3}
+    - {fileID: 21300000, guid: 1f6703a2958fd0a47b7a636c48fd91ef, type: 3}
+    - {fileID: 21300000, guid: ad66671648f6dc24faf146b75caf790a, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: ebd85e9e696672d49aec81a53a57310e, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 3
+    HeadTop: 0.875
+  - Id: char_pumpkin
+    DisplayName: Pumpkin
+    Type: 3
+    Color: {r: 0.22745098, g: 0.18039216, b: 0.3529412, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 5
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Watch 5 ads
+    RunFrames:
+    - {fileID: 21300000, guid: db3478d3c0e7f054ab156a352489dabe, type: 3}
+    - {fileID: 21300000, guid: 298c3e050a7e89a43899d5294c9b386a, type: 3}
+    - {fileID: 21300000, guid: 255fe584b1232dc4f82da6cc43e64017, type: 3}
+    - {fileID: 21300000, guid: 54ba5b3fa43f21b4191ae20152c5aea4, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 03e7881fdd0a2c743910cfb775d5b231, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: e44c5218141be1e43a8a3e53deebc75a, type: 3}
+    - {fileID: 21300000, guid: c53dbb3462e066d44829d7449ec07490, type: 3}
+    - {fileID: 21300000, guid: 201fb768dfdf56f49a436d2ec4dd4f92, type: 3}
+    - {fileID: 21300000, guid: a6493ab2eeb9e6d4babc429805784e25, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 8d61a1b227e66d04184caf2336f0a8c4, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.24705882, g: 0.6392157, b: 0.3019608, a: 1}
+    ScarfWidth: 0.05
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 6
+    HeadTop: 0.90625
+  - Id: char_shadow
+    DisplayName: Shadow Self
+    Type: 3
+    Color: {r: 0.14117648, g: 0.14117648, b: 0.18039216, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 3
+    UnlockTarget: 15
+    UnlockText: Have 15 ghosts active
+    RunFrames:
+    - {fileID: 21300000, guid: d9f7b540ef9a4fa489be82762fb531fb, type: 3}
+    - {fileID: 21300000, guid: 91ab232ec685ce448b2011dede2932ca, type: 3}
+    - {fileID: 21300000, guid: ffbe84ded0e45a8428ba3a69ede18bb2, type: 3}
+    - {fileID: 21300000, guid: 9cce0a3a2b15597449bc1fe0893a57b9, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 6bac00d0ec1a07b47bf0440ea14004cd, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 6623e1ee75166ce49921aef93c76ac90, type: 3}
+    - {fileID: 21300000, guid: 0c39c5f2b2ecd744e8d8e5b162cc22bc, type: 3}
+    - {fileID: 21300000, guid: c45f8f885c949cf40b1150a0920722d7, type: 3}
+    - {fileID: 21300000, guid: 0dff06779ff3e1045b748c99e3c813de, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 39a7ecdf67c4d2447ae1bbf6f3b84821, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.22745098, g: 0.22745098, b: 0.2901961, a: 1}
+    ScarfWidth: 0.09
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_glitch
+    DisplayName: RGB Glitch
+    Type: 3
+    Color: {r: 0.9490196, g: 0.9490196, b: 0.9490196, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 2
+    UnlockTarget: 1000
+    UnlockText: Reach 1,000 m
+    RunFrames:
+    - {fileID: 21300000, guid: e62bd7295c35b254da5c40e8412beacf, type: 3}
+    - {fileID: 21300000, guid: 89867985d43ff1f47a88cc10e32ed078, type: 3}
+    - {fileID: 21300000, guid: ffbecc2932a721c449eacfe8fa454b8e, type: 3}
+    - {fileID: 21300000, guid: e9420c9c126ec244c8e608eccbb18c19, type: 3}
+    JumpFrame: {fileID: 21300000, guid: c9c4dc1e465211b4fbc4fff3155c1d36, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: bbff039b233ac874dab6095f01d3d9a5, type: 3}
+    - {fileID: 21300000, guid: 1de802eea10698c48a32ffb7c5a35a20, type: 3}
+    - {fileID: 21300000, guid: 564c59c96be59014892f152704e883a9, type: 3}
+    - {fileID: 21300000, guid: a524b47d97a18564487b000f16ba1b27, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 5497fa60ad3b5ba48b9cedfc760f3b24, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 0.24705882, b: 0.8156863, a: 1}
+    ScarfWidth: 0.09
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_negative
+    DisplayName: Negative
+    Type: 3
+    Color: {r: 0.9490196, g: 0.9490196, b: 0.9490196, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 4
+    UnlockTarget: 15
+    UnlockText: Clear 15+ ghosts with a new best
+    RunFrames:
+    - {fileID: 21300000, guid: af9366b112979f747baed7ac07b8fc5e, type: 3}
+    - {fileID: 21300000, guid: 62db2d45ec8bdb0498c8711dd4214ef5, type: 3}
+    - {fileID: 21300000, guid: f2ede7749761a9d40831e1318a1f05da, type: 3}
+    - {fileID: 21300000, guid: c5e2e04be55785b4da1ed91d515af53f, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 857bb62ca9227cd4b9491dcd976b8555, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 44101f8f236f46d4e8288387f060d7cf, type: 3}
+    - {fileID: 21300000, guid: dc1c7b2947f5b354d944421f5a9accd1, type: 3}
+    - {fileID: 21300000, guid: 87ed2ea8b2598724aa808f5fceed259e, type: 3}
+    - {fileID: 21300000, guid: 70752772cacd8b346ac919cb70517be4, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 5949a25a4a899ea4c87afa8807231d2b, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0.21176471, b: 0.7176471, a: 1}
+    ScarfWidth: 0.09
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_golden
+    DisplayName: Golden Echo
+    Type: 3
+    Color: {r: 1, g: 0.8352941, b: 0.2901961, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 4
+    UnlockTarget: 20
+    UnlockText: Clear 20+ ghosts at once
+    RunFrames:
+    - {fileID: 21300000, guid: 3efed7e430f93c448a0e0cbe5bf845dd, type: 3}
+    - {fileID: 21300000, guid: 97f199891f9fdc44db7ecd6ca74445d6, type: 3}
+    - {fileID: 21300000, guid: d8fee7ae42355ca41b882b46eadbab22, type: 3}
+    - {fileID: 21300000, guid: 88138fe4e6e4a1f4a85db9e1b5cf82a2, type: 3}
+    JumpFrame: {fileID: 21300000, guid: c081d03f21da54b45a00c45793a0e25e, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 683d09938ba95d14d9211791f31dc487, type: 3}
+    - {fileID: 21300000, guid: a9f37297445bf3948b36d2ec86f65f0c, type: 3}
+    - {fileID: 21300000, guid: 9b80fbee1a3be1b4aa989c5051bb260a, type: 3}
+    - {fileID: 21300000, guid: e0896b1ffd2721549a31cac003227276, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: eb8d68bab7028184e8fd5ab9564dc36f, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 0.9529412, b: 0.6901961, a: 1}
+    ScarfWidth: 0.09
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 10
+    HeadTop: 0.875
+  - Id: char_reaper
+    DisplayName: Grim Reaper
+    Type: 3
+    Color: {r: 0.16470589, g: 0.13333334, b: 0.21960784, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 1
+    UnlockTarget: 250
+    UnlockText: Die 250 times
+    RunFrames:
+    - {fileID: 21300000, guid: f46b195ea99f11d4f8a5c9e04e99b06c, type: 3}
+    - {fileID: 21300000, guid: e236f52f378fa074196b559ebae1e71e, type: 3}
+    - {fileID: 21300000, guid: 6de95f153e14362408d74400f1f1d0ae, type: 3}
+    - {fileID: 21300000, guid: 4865d6877370cdd498660a4939cf32ff, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 278da34dc10daa245883bc1248ec045e, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 7bb295725ddfaad448fb39663a749915, type: 3}
+    - {fileID: 21300000, guid: c815a543d0add4a4d94429223ac2101f, type: 3}
+    - {fileID: 21300000, guid: 7268ea74c4e092149a67ff850b2dbfdf, type: 3}
+    - {fileID: 21300000, guid: 64745d8f30708bf4991afd9e620c6163, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 3385c1d187420c749943f114793e1955, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.16470589, g: 0.13333334, b: 0.21960784, a: 1}
+    ScarfWidth: 0.1
+    ScarfAnchor: {x: -0.09375, y: 0.46875}
+    Reaction: 8
+    HeadTop: 1.03125
+  - Id: char_lich
+    DisplayName: Lich
+    Type: 3
+    Color: {r: 0.23137255, g: 0.16470589, b: 0.3529412, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.undead
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Undead Pack
+    RunFrames:
+    - {fileID: 21300000, guid: b5ac5b2339ef41b4091e409eacb5af0f, type: 3}
+    - {fileID: 21300000, guid: b23107f83e9ad744b9a01274b7403cda, type: 3}
+    - {fileID: 21300000, guid: 6a61d2479d7ec274fa20c5e4fa45bf52, type: 3}
+    - {fileID: 21300000, guid: af14c9b5d9ff83945b77fa655c757381, type: 3}
+    JumpFrame: {fileID: 21300000, guid: ad46694a229f901499a764de56f90332, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 0de6975461b6735429bad4cab80d82d8, type: 3}
+    - {fileID: 21300000, guid: 5d3486c4612fb2641a6b31472e792516, type: 3}
+    - {fileID: 21300000, guid: d8dec38bbc6be624cbe89fcd81b6e55a, type: 3}
+    - {fileID: 21300000, guid: a77d952cb9ea6234eb1aff431685782d, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: a546b31b280d4ff4981bda7b18a4a072, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.36078432, g: 0.9647059, b: 1, a: 1}
+    ScarfWidth: 0.05
+    ScarfAnchor: {x: -0.09375, y: 0.46875}
+    Reaction: 8
+    HeadTop: 0.875
+  - Id: char_vampire
+    DisplayName: Vampire
+    Type: 3
+    Color: {r: 0.11764706, g: 0.101960786, b: 0.14901961, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.undead
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Undead Pack
+    RunFrames:
+    - {fileID: 21300000, guid: e26a4b892cab40845b3c65a47d9405e2, type: 3}
+    - {fileID: 21300000, guid: f55d8bd1c01d8ae46a9fa4c484b8394a, type: 3}
+    - {fileID: 21300000, guid: 583889bc58bed7a488b3d50a40a5703d, type: 3}
+    - {fileID: 21300000, guid: c5b52917f2ff4f143be9417cd5282ac1, type: 3}
+    JumpFrame: {fileID: 21300000, guid: e1b0303893ce5b741b9949c8e1650d59, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 1b2fa009ff0a10f4d877b1162678e4b6, type: 3}
+    - {fileID: 21300000, guid: 1a16be5f9f04d854ab51201b1891863d, type: 3}
+    - {fileID: 21300000, guid: 4dd2ec087ca68674199c3d468fd4d878, type: 3}
+    - {fileID: 21300000, guid: 781f53849d4b96a4e972ade28973ad34, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 158116cc15901d5419aa33d3f1769b96, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.5411765, g: 0.0627451, b: 0.1254902, a: 1}
+    ScarfWidth: 0.15
+    ScarfAnchor: {x: -0.09375, y: 0.5}
+    Reaction: 5
+    HeadTop: 0.875
+  - Id: char_mummy
+    DisplayName: Mummy
+    Type: 3
+    Color: {r: 0.9019608, g: 0.8627451, b: 0.7529412, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.undead
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Undead Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 4cc58596614d9e44a87553a22a4b77ff, type: 3}
+    - {fileID: 21300000, guid: d0ea2892cad01774e94c96b4dcf8dfc3, type: 3}
+    - {fileID: 21300000, guid: c763d3a1665008544acb3a8b16ed27a6, type: 3}
+    - {fileID: 21300000, guid: 0d3bbc4a781c6b94baf4f9c9ae4850fb, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 24ae87571da5cbd429e5808a4c6508ba, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 029943ecd37886e47a7191c19c7c0d6c, type: 3}
+    - {fileID: 21300000, guid: 5c3f654858ce67641970aeaa125641b6, type: 3}
+    - {fileID: 21300000, guid: 61118ed7b2c0420459b56b72e189328e, type: 3}
+    - {fileID: 21300000, guid: 9df0931a7944176488cd0133a9ccba3f, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 66ca238634f88854aa318fd8d5b7dea9, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.9019608, g: 0.8627451, b: 0.7529412, a: 1}
+    ScarfWidth: 0.05
+    ScarfAnchor: {x: -0.0625, y: 0.46875}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_zombie
+    DisplayName: Zombie
+    Type: 3
+    Color: {r: 0.2901961, g: 0.41568628, b: 0.6039216, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.undead
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Undead Pack
+    RunFrames:
+    - {fileID: 21300000, guid: ece67dae4ba9a734ea88fb63bbf12084, type: 3}
+    - {fileID: 21300000, guid: 5a4591e66958937418a375ca79f89255, type: 3}
+    - {fileID: 21300000, guid: 45a1072ae43907a4bb4ca52a9445d92a, type: 3}
+    - {fileID: 21300000, guid: 1179ba1b09493de48aa3e07f7c8d1506, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 8b965200dfa7e454bafd2cb7de7f4e7f, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 2fda9f63f20d7334786e617150819dc1, type: 3}
+    - {fileID: 21300000, guid: 122edb57909d6ff4daa96f080db61e15, type: 3}
+    - {fileID: 21300000, guid: 5b27bb59f91a7264aae71975b2265526, type: 3}
+    - {fileID: 21300000, guid: b601aed80edf162499bd55b3a527e714, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 948102bb587637e4fa33764e6d30a86c, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_barbarian
+    DisplayName: Barbarian
+    Type: 3
+    Color: {r: 0.8784314, g: 0.65882355, b: 0.5019608, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.dungeon
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Dungeon Pack
+    RunFrames:
+    - {fileID: 21300000, guid: b85013075159c6f4eb663cdfe9a0a1bf, type: 3}
+    - {fileID: 21300000, guid: 0a71b04223e83b746890ef5c0b5d1704, type: 3}
+    - {fileID: 21300000, guid: 7b45cf07387d8b248b8634d518d6d929, type: 3}
+    - {fileID: 21300000, guid: 5683e3ab0fa592d42aa656002b332617, type: 3}
+    JumpFrame: {fileID: 21300000, guid: f862dad77ee9c6e409b108e0b87dfa43, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 9bb1c74906b707f41b69519084e77ea4, type: 3}
+    - {fileID: 21300000, guid: a0d72a2aa884b1f4c83495a7f5438004, type: 3}
+    - {fileID: 21300000, guid: edfc2614187e6dd488d1f6f9a315ad56, type: 3}
+    - {fileID: 21300000, guid: abacd8322afce9148902eda70f9c5c0f, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 6b1632c9b0e36a14cafcbf0e5a7f31bc, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.78431374, g: 0.3137255, b: 0.11764706, a: 1}
+    ScarfWidth: 0.07
+    ScarfAnchor: {x: -0.09375, y: 0.65625}
+    Reaction: 0
+    HeadTop: 0.90625
+  - Id: char_rogue
+    DisplayName: Rogue
+    Type: 3
+    Color: {r: 0.24313726, g: 0.3529412, b: 0.20392157, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.dungeon
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Dungeon Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 94834e16c36b9e74b9e5b6b473bbf3fc, type: 3}
+    - {fileID: 21300000, guid: b8eb3649524644741b54940805d26e80, type: 3}
+    - {fileID: 21300000, guid: decd21e4a052df545b3698ec442b9c2b, type: 3}
+    - {fileID: 21300000, guid: 91a1b1ae85498e5448ecc046106a9537, type: 3}
+    JumpFrame: {fileID: 21300000, guid: c42d8e23daf74b94fb0956816e570ce0, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 5429cc5ab964c7543b61f4c491647c89, type: 3}
+    - {fileID: 21300000, guid: 20dca1c032331b44daecf90f43525257, type: 3}
+    - {fileID: 21300000, guid: eee3635f53c8d5848a454df9ede5bdfd, type: 3}
+    - {fileID: 21300000, guid: fc964531753420d47b17a6085f258226, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: bcc47569aec82a34a8ce1761947fad20, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.17254902, g: 0.25882354, b: 0.14117648, a: 1}
+    ScarfWidth: 0.1
+    ScarfAnchor: {x: -0.09375, y: 0.5}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_paladin
+    DisplayName: Paladin
+    Type: 3
+    Color: {r: 0.18039216, g: 0.3529412, b: 0.65882355, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.dungeon
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Dungeon Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 4650b13872aa09e4c9c6a39c06b2b341, type: 3}
+    - {fileID: 21300000, guid: 3083928919516d242ae90382b5af1ed1, type: 3}
+    - {fileID: 21300000, guid: 9ff9cbf4c53877b4bbc6ee7bdd11c66f, type: 3}
+    - {fileID: 21300000, guid: 4b390dea0d64a7641b009d2516637d4d, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 9ddfb15bcb0d4f94387d612d3c541789, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 0e41df68bf66fb947aa175819feec282, type: 3}
+    - {fileID: 21300000, guid: 2574d8d5c55800541bb43b3d48cacc0c, type: 3}
+    - {fileID: 21300000, guid: a891072f0ba46e44aa65e10864160dba, type: 3}
+    - {fileID: 21300000, guid: 23c04116a981c2b4c8c625f714fd25ab, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: cf3dce780e5ee2b46b3f5cf1fd18e188, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.18039216, g: 0.3529412, b: 0.65882355, a: 1}
+    ScarfWidth: 0.15
+    ScarfAnchor: {x: -0.09375, y: 0.5}
+    Reaction: 9
+    HeadTop: 0.875
+  - Id: char_goblin
+    DisplayName: Goblin
+    Type: 3
+    Color: {r: 0.47843137, g: 0.3529412, b: 0.20392157, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.dungeon
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Dungeon Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 1750d841d56aae74cb8632765acbcfc9, type: 3}
+    - {fileID: 21300000, guid: 319d29246d8bb5d4d960c9461fdcff46, type: 3}
+    - {fileID: 21300000, guid: 4cb37d6e3e821b649b6652c2998ba3da, type: 3}
+    - {fileID: 21300000, guid: a678648f5350a3142b70996f4906635b, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 91935d98906e9ad45a62e76d7215471c, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 9a42af3d4b8111c40b815468842063e4, type: 3}
+    - {fileID: 21300000, guid: 7c75ed736e99ac24891b1e4c812ec256, type: 3}
+    - {fileID: 21300000, guid: d0799053f4ad74e4396a921f7cd39eb2, type: 3}
+    - {fileID: 21300000, guid: ba17b7e463d634440aefc7c385a49d37, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: a53cd83ac7848a449816065eb3e09e7c, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.8125
+  - Id: char_fox
+    DisplayName: Fox
+    Type: 3
+    Color: {r: 0.9098039, g: 0.45490196, b: 0.16470589, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.critters
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Critters Pack
+    RunFrames:
+    - {fileID: 21300000, guid: df985dd567aa84f45ba4f34cb12079e2, type: 3}
+    - {fileID: 21300000, guid: 26b5ddeadba2bc840bb561761dd6d124, type: 3}
+    - {fileID: 21300000, guid: 9eee2063a5bed674e86a4a37bd265ad8, type: 3}
+    - {fileID: 21300000, guid: 633e78d55af201e409b941a626c3d522, type: 3}
+    JumpFrame: {fileID: 21300000, guid: bf66f659c2ad02340a96d18aa498598c, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 8f71f859f49477d4fa29e5680bfe2872, type: 3}
+    - {fileID: 21300000, guid: 4c4a34a11b097c74eb854613ed2708a7, type: 3}
+    - {fileID: 21300000, guid: 1eb21385345257142a0e4a10360453ca, type: 3}
+    - {fileID: 21300000, guid: 9c340ae2a8feafc4db94dd40ad3c30a3, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 63afd25134a36154d91d11244b2720b7, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.9098039, g: 0.45490196, b: 0.16470589, a: 1}
+    ScarfWidth: 0.14
+    ScarfAnchor: {x: -0.125, y: 0.34375}
+    Reaction: 0
+    HeadTop: 0.84375
+  - Id: char_frog
+    DisplayName: Frog
+    Type: 3
+    Color: {r: 0.3529412, g: 0.72156864, b: 0.2901961, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.critters
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Critters Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 9c315307273581d4ab8e5fa302d24b22, type: 3}
+    - {fileID: 21300000, guid: a21c9222df9576c439a93224617c91c2, type: 3}
+    - {fileID: 21300000, guid: e8d4d4b5c433d65488d5c131aab25bd9, type: 3}
+    - {fileID: 21300000, guid: 7ef8b8ed588a9934bbe4ef75720705ea, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 4c0907a8a56f952458c01d3dcedf5d3d, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 8627649a039131f42b72249f61e88890, type: 3}
+    - {fileID: 21300000, guid: 99cd60b01e434cb429032cbf2cdb8a77, type: 3}
+    - {fileID: 21300000, guid: 329ae96380f1f99458f3ead3c9caf840, type: 3}
+    - {fileID: 21300000, guid: 0924a81b2ec5fb54e95fca286a90dc7b, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 510fa180c620b734bbc2447cceb59765, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 11
+    HeadTop: 0.84375
+  - Id: char_raccoon
+    DisplayName: Raccoon
+    Type: 3
+    Color: {r: 0.5411765, g: 0.5411765, b: 0.57254905, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.critters
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Critters Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 4baca91ff8a1ff948aeb057be6682649, type: 3}
+    - {fileID: 21300000, guid: c866a02460f0b694e848a66b9af2f1ce, type: 3}
+    - {fileID: 21300000, guid: 4e6bbff6e5ef9ca48bf71c67bcbd88f6, type: 3}
+    - {fileID: 21300000, guid: 481f2ada6265ce343abab492d66b4b74, type: 3}
+    JumpFrame: {fileID: 21300000, guid: e806c088bf711e84b8602ed3fa48f379, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 81a381cfb0d93594da67901c1f445c08, type: 3}
+    - {fileID: 21300000, guid: 16b2c487987221344aee552ac9162b59, type: 3}
+    - {fileID: 21300000, guid: fbb26f5354a68244181010bb07b57de1, type: 3}
+    - {fileID: 21300000, guid: b6202fc94faf0ab469bbc6d0612e2d25, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 4e13267d79b12324db9df1b71cc7c562, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.41568628, g: 0.41568628, b: 0.44705883, a: 1}
+    ScarfWidth: 0.13
+    ScarfAnchor: {x: -0.125, y: 0.34375}
+    Reaction: 0
+    HeadTop: 0.84375
+  - Id: char_bunny
+    DisplayName: Bunny
+    Type: 3
+    Color: {r: 0.95686275, g: 0.9490196, b: 0.9647059, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.critters
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Critters Pack
+    RunFrames:
+    - {fileID: 21300000, guid: ff3a6bda0b8031449bd6866cd93d49c1, type: 3}
+    - {fileID: 21300000, guid: a6c048eccc13834459bf688740850cbb, type: 3}
+    - {fileID: 21300000, guid: b42ded9054bc20e49b8397e50a1b59a3, type: 3}
+    - {fileID: 21300000, guid: 8f6682c9477550c47acdeb9861cb5db3, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 4c7c36a550fa895469930176e42097d6, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: c450b4ce907618f4ab63ffd3d1eb350b, type: 3}
+    - {fileID: 21300000, guid: 49d3164ac1e53e4439a0300dc9ef5375, type: 3}
+    - {fileID: 21300000, guid: d9e80d6d7ad51f74ebed90e99ce8a141, type: 3}
+    - {fileID: 21300000, guid: 031c27a139b2c9e459ceccd651d71157, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 762c11d94d23eb445b9541c366434917, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.90625
+  - Id: char_alien
+    DisplayName: Alien
+    Type: 3
+    Color: {r: 0.5411765, g: 0.8784314, b: 0.4392157, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.space
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Space Pack
+    RunFrames:
+    - {fileID: 21300000, guid: d8d61810a77cce344b70ee9eb7277ff5, type: 3}
+    - {fileID: 21300000, guid: 8236e22248ee6b1439ea4793757db47e, type: 3}
+    - {fileID: 21300000, guid: 8475b2d00e0c50e4a8098561d45f7ddd, type: 3}
+    - {fileID: 21300000, guid: bf85c4bcc12a20141a8cdd659d1a777f, type: 3}
+    JumpFrame: {fileID: 21300000, guid: e5d73a81cfe6fef42a2d6d5539124c3c, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 3e4c4969f3728fd4a9a01b427423c588, type: 3}
+    - {fileID: 21300000, guid: 9f66f6e1f123e264b8572f872fd0032d, type: 3}
+    - {fileID: 21300000, guid: 23d55df56b183574abdaa31469fb8cf8, type: 3}
+    - {fileID: 21300000, guid: dae3c3b57757f0b4680b6898ed475d80, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: f849cfb522a5de642a785c642a66cdbf, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 2
+    HeadTop: 0.90625
+  - Id: char_marine
+    DisplayName: Space Marine
+    Type: 3
+    Color: {r: 0.3529412, g: 0.43137255, b: 0.22745098, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.space
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Space Pack
+    RunFrames:
+    - {fileID: 21300000, guid: d5ff5f4890183df4a9a9b608c0b8340b, type: 3}
+    - {fileID: 21300000, guid: a89277dda0a56404987951d54421b6f8, type: 3}
+    - {fileID: 21300000, guid: 668fe931904dc91489bc69823c60a966, type: 3}
+    - {fileID: 21300000, guid: 0154dc1eb551d144bb2aa1dda225ff7a, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 62ebd69769a7d454d94379c65ca5285c, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 091f3761bdd96864696f725abfbb321b, type: 3}
+    - {fileID: 21300000, guid: fd2afb230c6124d46a5f3f5172127693, type: 3}
+    - {fileID: 21300000, guid: 16bfd74f1c274a24d8046deff3dff702, type: 3}
+    - {fileID: 21300000, guid: 6de1ebec10203b545aa12cf517e8e0ab, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 6af1b6f8a0ce397459ed63fe0cf40192, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 3
+    HeadTop: 0.84375
+  - Id: char_android
+    DisplayName: Retro Android
+    Type: 3
+    Color: {r: 0.78431374, g: 0.80784315, b: 0.8392157, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.space
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Space Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 3b9fabb5a7123ba408963da2ad8c01e7, type: 3}
+    - {fileID: 21300000, guid: dd29d838797f98d4d9cabf25ec491d2a, type: 3}
+    - {fileID: 21300000, guid: 92db424358ee71f449ccdbf48bbcaaf5, type: 3}
+    - {fileID: 21300000, guid: 2985f9fafaae21c48aaefc2c614bab28, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 5116ca8d28187d148b4611449b9706cf, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 0a6a649bec9cbaf4993c00aa1c1ae885, type: 3}
+    - {fileID: 21300000, guid: af1d51e917c787541ae1f4b346813dd9, type: 3}
+    - {fileID: 21300000, guid: 7b906a77ae9fba5429a5ce3980e13d45, type: 3}
+    - {fileID: 21300000, guid: 4924accc8add46e419ddb6fc98c2ac56, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 1cd1631eb521a9840be83eeba8162a54, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 3
+    HeadTop: 0.90625
+  - Id: char_cosmic
+    DisplayName: Cosmic Explorer
+    Type: 3
+    Color: {r: 0.41568628, g: 0.24705882, b: 0.7529412, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.space
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Space Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 5bf9ea5fbadfffd4586b5e6b1a412bf7, type: 3}
+    - {fileID: 21300000, guid: a799cb4a3d3ae4f4ebec047260c9f40b, type: 3}
+    - {fileID: 21300000, guid: a28bdf8afb68c7347a4b44630fd7f483, type: 3}
+    - {fileID: 21300000, guid: af9634b1abe9e714d8c58ecb2c4bf2a3, type: 3}
+    JumpFrame: {fileID: 21300000, guid: d440692ef4666d34a8c221c3e53d1b84, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 6c6d3d9fbd143364ea6f1a4ac8869d1e, type: 3}
+    - {fileID: 21300000, guid: 8402bbf7320dec642833868426e8be4f, type: 3}
+    - {fileID: 21300000, guid: 69f0863b13434af42a86e07322779350, type: 3}
+    - {fileID: 21300000, guid: d4c72395d27617840ac68d8818132e4c, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: e8345ef18d836e14689e0978479f726e, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.22745098, g: 0.8784314, b: 1, a: 1}
+    ScarfWidth: 0.06
+    ScarfAnchor: {x: -0.09375, y: 0.5}
+    Reaction: 1
+    HeadTop: 0.875
+  - Id: char_arcade
+    DisplayName: Arcade Hero
+    Type: 3
+    Color: {r: 0.16470589, g: 0.41568628, b: 0.84705883, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.retro
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Retro Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 4588cb555b575804f81d5e334718f4bc, type: 3}
+    - {fileID: 21300000, guid: 0e928ba25b4c1e74fb7519e7353f67f7, type: 3}
+    - {fileID: 21300000, guid: aa57082dd32f1ca40a3305bf18a7970d, type: 3}
+    - {fileID: 21300000, guid: d1a53dfbd1f116446baa2cab286e58ea, type: 3}
+    JumpFrame: {fileID: 21300000, guid: dd0e33ea9f579de4e842adf30744ec4c, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: e00cd0404c165fa4fa752b8868c29a8b, type: 3}
+    - {fileID: 21300000, guid: 8d0b550a7ef64214989e828c4e4c86b1, type: 3}
+    - {fileID: 21300000, guid: 118c66843eb12e446b007035a6002ca4, type: 3}
+    - {fileID: 21300000, guid: 9e4db085c22db9443bbc77a56a3f79b8, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: e35496a186ddcb14eb3cbff9f5138125, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.84705883, g: 0.22745098, b: 0.22745098, a: 1}
+    ScarfWidth: 0.06
+    ScarfAnchor: {x: -0.1875, y: 0.71875}
+    Reaction: 0
+    HeadTop: 0.84375
+  - Id: char_crt
+    DisplayName: CRT Head
+    Type: 3
+    Color: {r: 0.22745098, g: 0.22745098, b: 0.26666668, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.retro
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Retro Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 6f0a95fa48fc80049a6275cba8406fa1, type: 3}
+    - {fileID: 21300000, guid: bfd05c723c073b349a0f434ddc1f5fa2, type: 3}
+    - {fileID: 21300000, guid: 44b9494bfc2189141b7d9365b50c8d65, type: 3}
+    - {fileID: 21300000, guid: af827c69b8a017244820944df86aa8f5, type: 3}
+    JumpFrame: {fileID: 21300000, guid: c8e4e2b749f480145a0953dda0d0b765, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 621fb4571b66d1244ac11e7865613e86, type: 3}
+    - {fileID: 21300000, guid: 40392f1cd3142794694d69abfeba7063, type: 3}
+    - {fileID: 21300000, guid: b04b8c698653ac3409980f87a255f545, type: 3}
+    - {fileID: 21300000, guid: 8928e6c14b6b2a04690fe9cdbd1f6ae9, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 2441511225c64894485d376b68ba815f, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.9375
+  - Id: char_cartridge
+    DisplayName: Cartridge Kid
+    Type: 3
+    Color: {r: 0.9098039, g: 0.2901961, b: 0.41568628, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.retro
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Retro Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 1ca6c63da6892004e82ffe4683045a8f, type: 3}
+    - {fileID: 21300000, guid: 7caa32b14f6f9854f89dd8eb54138046, type: 3}
+    - {fileID: 21300000, guid: 417191f4f1a5a534db2b841c4674ede1, type: 3}
+    - {fileID: 21300000, guid: 0a257ffed1b83764fa9fe4802421337a, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 82d37e81a33f42246ae3d5d09574112a, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 5fb895bf87a47e9429c54d88660b41b3, type: 3}
+    - {fileID: 21300000, guid: dfc332066256c88429abb3df2f1e057a, type: 3}
+    - {fileID: 21300000, guid: e9277380e6b15f04998f1eb5f4fbd9f1, type: 3}
+    - {fileID: 21300000, guid: aae07024c5b621d45a041e7f82ca3124, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 485d2425a6902b444843e492bb223b7e, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.90625
+  - Id: char_block
+    DisplayName: Pixel Block
+    Type: 3
+    Color: {r: 0.22745098, g: 0.78431374, b: 0.9098039, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.retro
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Retro Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 63299a67bd64e804aa5013b8fe9ad61b, type: 3}
+    - {fileID: 21300000, guid: 73204ee9352a799428b158d800378640, type: 3}
+    - {fileID: 21300000, guid: 532964a27d730c54dab1744aff55c6f6, type: 3}
+    - {fileID: 21300000, guid: a745ebd1bc188be46abef8b0ee2ce5d4, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 7b633899f687e80409d97faa2d97b0f8, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: ab7afe8fe62d21a4c9c253e714451927, type: 3}
+    - {fileID: 21300000, guid: c9d363d7fd2f14d49b03d1eb9d29e77f, type: 3}
+    - {fileID: 21300000, guid: fe5fc122824d1c148963433aea174762, type: 3}
+    - {fileID: 21300000, guid: 9e142a47bd6cd9e45a31772076c93b13, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 183231943a4a9d5409b5c523cb12add2, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_king
+    DisplayName: King
+    Type: 3
+    Color: {r: 0.72156864, g: 0.15686275, b: 0.21960784, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.royal
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Royal Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 2a5d50153a3e4284aa5d01336b3df134, type: 3}
+    - {fileID: 21300000, guid: e1f46f00439edf740b4673c76e5d040d, type: 3}
+    - {fileID: 21300000, guid: 16a37ce2058674a418bca95d77220090, type: 3}
+    - {fileID: 21300000, guid: 04c2f751f24fc9f48863bd9e30a2d68f, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 1da3fabead79f064b936ebfffe73af1e, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 13a529bf76c2d9e46ae5fc262ec44972, type: 3}
+    - {fileID: 21300000, guid: 73a879f3656e3c348a66924e233aaf4b, type: 3}
+    - {fileID: 21300000, guid: ea9b7b4b352e0f145840988c910cdd58, type: 3}
+    - {fileID: 21300000, guid: 46009746f3168ae4a919006df0fbe371, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 6edd091276e6be14f8222318d25f2d25, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.72156864, g: 0.15686275, b: 0.21960784, a: 1}
+    ScarfWidth: 0.15
+    ScarfAnchor: {x: -0.09375, y: 0.5}
+    Reaction: 9
+    HeadTop: 0.9375
+  - Id: char_queen
+    DisplayName: Queen
+    Type: 3
+    Color: {r: 0.47843137, g: 0.22745098, b: 0.72156864, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.royal
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Royal Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 4a9905c4ac506d144903d474d62d2be0, type: 3}
+    - {fileID: 21300000, guid: fc749c0529a2f7f418ea6598d8162467, type: 3}
+    - {fileID: 21300000, guid: b1eaaa9655f4f1e4581fcca1379430aa, type: 3}
+    - {fileID: 21300000, guid: 8665651c3100d2c4cba95f682d723d69, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 899458d195f338e4aa8e45d625d2a1e2, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 55e1bb333c066aa46a8b66eee1a9523b, type: 3}
+    - {fileID: 21300000, guid: 372540b25683ef94f88559fc988c5258, type: 3}
+    - {fileID: 21300000, guid: 4b1833431fd4808478c23572e59a757c, type: 3}
+    - {fileID: 21300000, guid: bb0cd09b74647e846b08025de317a082, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 31c318ed427fca24c90029b778325972, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.3529412, g: 0.1882353, b: 0.1254902, a: 1}
+    ScarfWidth: 0.1
+    ScarfAnchor: {x: -0.1875, y: 0.65625}
+    Reaction: 9
+    HeadTop: 0.9375
+  - Id: char_jester
+    DisplayName: Jester
+    Type: 3
+    Color: {r: 0.84705883, g: 0.22745098, b: 0.22745098, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.royal
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Royal Pack
+    RunFrames:
+    - {fileID: 21300000, guid: c3da504169100a847a24d0b3432b5f2c, type: 3}
+    - {fileID: 21300000, guid: 93f784c8c2a62dc4f9b45d72e8bd2d00, type: 3}
+    - {fileID: 21300000, guid: b11bae7308dedb04f893eef209141784, type: 3}
+    - {fileID: 21300000, guid: 41405c144c1644d48b9d0f34692e73c6, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 36d365410e5f94e4e86594eb42ef675e, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 9672c324a6e898547bb0b0062dac11a9, type: 3}
+    - {fileID: 21300000, guid: 2308c8e21142dc4479c5085629fb7ef3, type: 3}
+    - {fileID: 21300000, guid: af8583cf58277974db9d17f837195a67, type: 3}
+    - {fileID: 21300000, guid: f9b13130049a8a448b84ac9f958f55db, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 77adc7989f2057f4aac4e4b7e237b01e, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_guard
+    DisplayName: Royal Guard
+    Type: 3
+    Color: {r: 0.84705883, g: 0.16470589, b: 0.16470589, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.royal
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Royal Pack
+    RunFrames:
+    - {fileID: 21300000, guid: dd0e9a82d07324a49ac92172a667602e, type: 3}
+    - {fileID: 21300000, guid: c433664ed54bee741b1b16f8ca739d19, type: 3}
+    - {fileID: 21300000, guid: 3970257977f22614e81b0a9a91ba7f80, type: 3}
+    - {fileID: 21300000, guid: 3d1470ec2137c384abdb461988ba5108, type: 3}
+    JumpFrame: {fileID: 21300000, guid: d656af94346410542aa9d1a747110037, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: b2eaff5f9d4080043b69eb95724345bf, type: 3}
+    - {fileID: 21300000, guid: f4d72868196f94147b13f501dfd71e45, type: 3}
+    - {fileID: 21300000, guid: 69b90f11672996e4eab8491eede612ba, type: 3}
+    - {fileID: 21300000, guid: 00227259e29cf8b419285a2cc3462289, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 1e325dcb3d13fb04a900f6460506f33f, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 9
+    HeadTop: 1
+  - Id: char_werewolf
+    DisplayName: Werewolf
+    Type: 3
+    Color: {r: 0.3529412, g: 0.41568628, b: 0.5411765, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.monsters
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Monsters Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 4377e57c5dfb74a4cb4519b06c604897, type: 3}
+    - {fileID: 21300000, guid: 4f485d507aa477d4b881a5e071fcf914, type: 3}
+    - {fileID: 21300000, guid: 6ce9bc895b2dbb342ace5f0001f36db8, type: 3}
+    - {fileID: 21300000, guid: 0f1e475a2378ecd4ea9ec8b687103770, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 62fcd722a9e8ec8479759bb7402535f0, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 3a1e7c9c32075b6408133c4a6897aac0, type: 3}
+    - {fileID: 21300000, guid: 026f58b8581939b4db4ce8a618aef936, type: 3}
+    - {fileID: 21300000, guid: 58d5d61d6c608a74fa26ecfa20a5462b, type: 3}
+    - {fileID: 21300000, guid: 1a290046197f2e445b5844005dc733eb, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 77eed4fc301a03149ab04645f77b3a7f, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.41568628, g: 0.3529412, b: 0.28235295, a: 1}
+    ScarfWidth: 0.1
+    ScarfAnchor: {x: -0.125, y: 0.34375}
+    Reaction: 4
+    HeadTop: 0.875
+  - Id: char_stitched
+    DisplayName: Stitched Monster
+    Type: 3
+    Color: {r: 0.22745098, g: 0.22745098, b: 0.26666668, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.monsters
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Monsters Pack
+    RunFrames:
+    - {fileID: 21300000, guid: c26bbbb45c5559c4c924be09627173d0, type: 3}
+    - {fileID: 21300000, guid: e76b5e87c3e4b574bab7c4bd00622078, type: 3}
+    - {fileID: 21300000, guid: ac37c63ff28624d4cb2db282441460af, type: 3}
+    - {fileID: 21300000, guid: f586950560d7cfa408f518187f530460, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 65fe46af2932e3143b231eb52ceee720, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: f5baa20356969f046aa850a16c9c6a17, type: 3}
+    - {fileID: 21300000, guid: 0368d152511175842ab1666fb78f061a, type: 3}
+    - {fileID: 21300000, guid: 92d3a3b07137cc4408d6472ce188cd50, type: 3}
+    - {fileID: 21300000, guid: 0b52753deeb2d14408a2b8fc2033b905, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 4ef927ee91480864caa4425378193f50, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.90625
+  - Id: char_banshee
+    DisplayName: Banshee
+    Type: 3
+    Color: {r: 0.78431374, g: 0.84705883, b: 0.9098039, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.monsters
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Monsters Pack
+    RunFrames:
+    - {fileID: 21300000, guid: d09492417ce8d234393199e237ef295a, type: 3}
+    - {fileID: 21300000, guid: 4aad9d987c0b2e646be4772272bdf53e, type: 3}
+    - {fileID: 21300000, guid: 83609411ec413b342af9aff3a545112b, type: 3}
+    - {fileID: 21300000, guid: dbf5417c532c9174b940243e8e3ae04c, type: 3}
+    JumpFrame: {fileID: 21300000, guid: bf16aaa9bf69c0e498f54699e21f4e75, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: d3ced52c40c9ab741ba96aba3b90d1d3, type: 3}
+    - {fileID: 21300000, guid: dc485c5f195aaf64780cebb5dff2861f, type: 3}
+    - {fileID: 21300000, guid: 39a536c484b053942809a916ae12f50f, type: 3}
+    - {fileID: 21300000, guid: d64a0130784fd794abb81e6b260ea4d1, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: e610ef2598b2e504792cf7d315ebd4dd, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.95686275, g: 0.972549, b: 1, a: 1}
+    ScarfWidth: 0.12
+    ScarfAnchor: {x: -0.1875, y: 0.6875}
+    Reaction: 8
+    HeadTop: 0.9375
+  - Id: char_bog
+    DisplayName: Bog Beast
+    Type: 3
+    Color: {r: 0.22745098, g: 0.41568628, b: 0.22745098, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.monsters
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Monsters Pack
+    RunFrames:
+    - {fileID: 21300000, guid: a581994fe518b2246a1f2a76030771b8, type: 3}
+    - {fileID: 21300000, guid: 4f99fc02d25e91340b3c95886f78a289, type: 3}
+    - {fileID: 21300000, guid: 21d7143e1360bb846959e436fc4a8d92, type: 3}
+    - {fileID: 21300000, guid: 251e1b0fb8a05ac4882899d85a2ec47c, type: 3}
+    JumpFrame: {fileID: 21300000, guid: d63e4551557ad6c4884f4338e84222fe, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: efb6e2f785e330e46806b69aff89ba78, type: 3}
+    - {fileID: 21300000, guid: 0aa3bce7e9a5ad347936aa19e7cc0c25, type: 3}
+    - {fileID: 21300000, guid: 8cf1a7fdc0b03044ba088e36aee50451, type: 3}
+    - {fileID: 21300000, guid: e437ab766aa785e449daeb2a4e6f0a57, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 262cf005bd338cc4d9855ffbebdfd8de, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.41568628, g: 0.6039216, b: 0.22745098, a: 1}
+    ScarfWidth: 0.05
+    ScarfAnchor: {x: -0.09375, y: 0.46875}
+    Reaction: 12
+    HeadTop: 0.875
+  - Id: char_cone
+    DisplayName: Traffic Cone
+    Type: 3
+    Color: {r: 1, g: 0.47843137, b: 0.101960786, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.oddballs
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Oddballs Pack
+    RunFrames:
+    - {fileID: 21300000, guid: a806b8314eccb4946a12733f87931a9a, type: 3}
+    - {fileID: 21300000, guid: f0a1cf6312ecaaf488ed5993de22269e, type: 3}
+    - {fileID: 21300000, guid: f7d7fe6ea4345d34a88faca7cb4d8681, type: 3}
+    - {fileID: 21300000, guid: c79a2fc46d34c04449acb16253dbb519, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 447b81e610bf3494189dfc5363b2f3b8, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 7f183dec01515884c9361ae3b4e1013e, type: 3}
+    - {fileID: 21300000, guid: d5de834dd5da74447b75f50a522e8823, type: 3}
+    - {fileID: 21300000, guid: d0fd79e5d0850a84295c3ea7df1c4745, type: 3}
+    - {fileID: 21300000, guid: 60b53530dc3f1644680ac5b9223f8c55, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 9f86072ab2b6dc644be260145a503bf2, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.96875
+  - Id: char_banana
+    DisplayName: Banana
+    Type: 3
+    Color: {r: 1, g: 0.8784314, b: 0.2901961, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.oddballs
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Oddballs Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 8eab1af787edc424c912b0e7f078ce67, type: 3}
+    - {fileID: 21300000, guid: 6de84c4567991fb44ab2194fe6b36a8e, type: 3}
+    - {fileID: 21300000, guid: ca73774ed0f2c5443b542871a913c3af, type: 3}
+    - {fileID: 21300000, guid: 077cbc6352d7d844fad1e17897f700dc, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 30512fa0ff1de8d41966c629d871943f, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: d71a6423734e5574787d25fb32a56291, type: 3}
+    - {fileID: 21300000, guid: 0811e3ea04f99a14dacb4a520447a404, type: 3}
+    - {fileID: 21300000, guid: 356f144460a434a498297029c5593ff4, type: 3}
+    - {fileID: 21300000, guid: dd64215c909a0014f86cbe05b5adbfda, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 675c9fcca181414498a9649d6dbdbecd, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.90625
+  - Id: char_hotdog
+    DisplayName: Hotdog
+    Type: 3
+    Color: {r: 0.9098039, g: 0.72156864, b: 0.41568628, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.oddballs
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Oddballs Pack
+    RunFrames:
+    - {fileID: 21300000, guid: e9b4e82221704864fbc676591bc23b1e, type: 3}
+    - {fileID: 21300000, guid: b28663209a5942d4ca34d834abf1979e, type: 3}
+    - {fileID: 21300000, guid: da7acb1f9b7e2b74fb0a566d92c41260, type: 3}
+    - {fileID: 21300000, guid: ecee5db073ba70048b9d8657e95bda61, type: 3}
+    JumpFrame: {fileID: 21300000, guid: cff73bb1df617f948a3e51db00ebebba, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: d8d02a51122ce4a4bb57fc7bdb26e107, type: 3}
+    - {fileID: 21300000, guid: 96b36a827e5947b4eb76b4e843a752cd, type: 3}
+    - {fileID: 21300000, guid: 86c8d076551427d47a52aa203eb59c56, type: 3}
+    - {fileID: 21300000, guid: 171b35955ac87e74ea6edfd1480d18ec, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 35d185e9d852a204cbcf598f291a1207, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_gnome
+    DisplayName: Gnome
+    Type: 3
+    Color: {r: 0.22745098, g: 0.41568628, b: 0.78431374, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.oddballs
+    BundleProductId: echo.pack.season1
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Oddballs Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 54bfa757d755eca4b93b2aa32095a8ab, type: 3}
+    - {fileID: 21300000, guid: 803847c1eafd62c4484040f8abe9bf5d, type: 3}
+    - {fileID: 21300000, guid: 785b99bff001ac548904c69de90a8264, type: 3}
+    - {fileID: 21300000, guid: 77960e3ca19ae6845b999d0a97f53e37, type: 3}
+    JumpFrame: {fileID: 21300000, guid: ef84165e49902db4390c22a83c79dd5a, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: d428e407a96425e4bbd3666b83bbf47b, type: 3}
+    - {fileID: 21300000, guid: eaa69fe3434b3b440b950004980748ad, type: 3}
+    - {fileID: 21300000, guid: d4af066f1fe2c6043a912c5786558203, type: 3}
+    - {fileID: 21300000, guid: 2fb42d020a5222b4b8316221cb373fad, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: b85f288cccfce364087679cfdc4163f9, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 1.03125
+  - Id: char_ember
+    DisplayName: Ember
+    Type: 3
+    Color: {r: 0.22745098, g: 0.16470589, b: 0.16470589, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 1
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Earn all 30 achievements
+    RunFrames:
+    - {fileID: 21300000, guid: 80c512d539248df468364c6066d67c6a, type: 3}
+    - {fileID: 21300000, guid: f261650f10e82b344a0fd40e97f84e8b, type: 3}
+    - {fileID: 21300000, guid: eaceed712319b87458b43c4318bca9ee, type: 3}
+    - {fileID: 21300000, guid: 0c7c5d2bd2243d54fb707106fc30bb38, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 398674dd1bc04a64da48862c587836b2, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 1f73aaefe21a2034c88ce49215cc70dd, type: 3}
+    - {fileID: 21300000, guid: cc4b420cf71dfb543a53cd98d6ef367e, type: 3}
+    - {fileID: 21300000, guid: b06b20bdda312914997133751ddbcafc, type: 3}
+    - {fileID: 21300000, guid: f3d23416cc515ca42b9ec3522a1da013, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 48b03809ccfa1f649954663c81154c04, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 0.5411765, b: 0.16470589, a: 1}
+    ScarfWidth: 0.08
+    ScarfAnchor: {x: -0.09375, y: 0.5}
+    Reaction: 14
+    HeadTop: 0.875
+  - Id: char_frost
+    DisplayName: Frost
+    Type: 3
+    Color: {r: 0.9098039, g: 0.9647059, b: 1, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 1
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Earn all 30 achievements
+    RunFrames:
+    - {fileID: 21300000, guid: bbb7a44d3a83bc74890942339787514f, type: 3}
+    - {fileID: 21300000, guid: 1ba07b09d539c7c4c88479d15e4b98a4, type: 3}
+    - {fileID: 21300000, guid: 98a0706415aa33d439d9e82628f5cac5, type: 3}
+    - {fileID: 21300000, guid: 9c559bdf2bf32f34085071db45b2231b, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 549856ff81e82f04e90acee0e7bed435, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: a81148ad045df474eb5e5cb44b059ab7, type: 3}
+    - {fileID: 21300000, guid: 57add22f2eae3034e8cf9c961db28672, type: 3}
+    - {fileID: 21300000, guid: 4e0dc2744ed3ec04ba3bab06e3c976a9, type: 3}
+    - {fileID: 21300000, guid: 2fbe3530c57402e459cbfaef89d9262a, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 49c31733135bbee47bdf59ad42fa9e1a, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.9098039, g: 0.98039216, b: 1, a: 1}
+    ScarfWidth: 0.06
+    ScarfAnchor: {x: -0.09375, y: 0.5}
+    Reaction: 15
+    HeadTop: 0.84375
+  - Id: char_storm
+    DisplayName: Storm
+    Type: 3
+    Color: {r: 0.16470589, g: 0.22745098, b: 0.41568628, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 1
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Earn all 30 achievements
+    RunFrames:
+    - {fileID: 21300000, guid: cfef60058736d334dac5b1f6da885424, type: 3}
+    - {fileID: 21300000, guid: 13fbcfee1d4f2d64e945a37fdaff4fd5, type: 3}
+    - {fileID: 21300000, guid: cb46a120f48b177489ce9e1118b3b856, type: 3}
+    - {fileID: 21300000, guid: 481090415071a5748a91abc2cd4ccbd0, type: 3}
+    JumpFrame: {fileID: 21300000, guid: c5981eae0c3cf484595e759f30184de8, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 6c531779b8005bc4b98dcade88f5639f, type: 3}
+    - {fileID: 21300000, guid: d30b89868890cf54f899bfdc64f738d2, type: 3}
+    - {fileID: 21300000, guid: db3fc64aef6832f4d92da1a216348c0d, type: 3}
+    - {fileID: 21300000, guid: c722982d495677a4e960452481e43c52, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 6e9efb5d4c30a6e4c891691328cc7231, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.72156864, g: 0.7529412, b: 0.8, a: 1}
+    ScarfWidth: 0.1
+    ScarfAnchor: {x: -0.09375, y: 0.5}
+    Reaction: 16
+    HeadTop: 0.8125
+  - Id: char_tide
+    DisplayName: Tide
+    Type: 3
+    Color: {r: 0.22745098, g: 0.78431374, b: 0.84705883, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 1
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: Earn all 30 achievements
+    RunFrames:
+    - {fileID: 21300000, guid: 7826268c5a2a60f49a2a9e39fa9f7d06, type: 3}
+    - {fileID: 21300000, guid: eaf51d8537da8204e8c6bf92f65e4568, type: 3}
+    - {fileID: 21300000, guid: 0760064a2db21c44c95883f5f8948dfc, type: 3}
+    - {fileID: 21300000, guid: ee7b7e465ee1bfa4d99c3145169ee64a, type: 3}
+    JumpFrame: {fileID: 21300000, guid: d8c09be64656d044b890b54b1c280402, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: b8f46834ce733c34b84853c7be5dd46a, type: 3}
+    - {fileID: 21300000, guid: a393eccd2018bb64c927748abae7e0ec, type: 3}
+    - {fileID: 21300000, guid: 771f436201b6c7c46b750cf8cc9818ae, type: 3}
+    - {fileID: 21300000, guid: ded90831ad68de84eb7b0bba703dd683, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 4b409d4e41a664249a2ea75f3ff55531, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.47843137, g: 0.9098039, b: 0.9411765, a: 1}
+    ScarfWidth: 0.07
+    ScarfAnchor: {x: -0.09375, y: 0.5}
+    Reaction: 17
+    HeadTop: 0.84375
+  - Id: runner_default
+    DisplayName: White
+    Type: 0
+    Color: {r: 1, g: 1, b: 1, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: runner_mint
+    DisplayName: Mint
+    Type: 0
+    Color: {r: 0.62, g: 1, b: 0.82, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 100
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: runner_sun
+    DisplayName: Sunbeam
+    Type: 0
+    Color: {r: 1, g: 0.86, b: 0.32, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 250
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: runner_coral
+    DisplayName: Coral
+    Type: 0
+    Color: {r: 1, g: 0.52, b: 0.46, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 500
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: runner_neon
+    DisplayName: Neon
+    Type: 0
+    Color: {r: 0.35, g: 1, b: 0.35, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 1000
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 6
+    AllAchievements: 0
+    AdPack: Neon
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: runner_gold
+    DisplayName: Gold
+    Type: 0
+    Color: {r: 1, g: 0.78, b: 0.18, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 3000
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 10
+    AllAchievements: 0
+    AdPack: Gold
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: trail_default
+    DisplayName: Cyan
+    Type: 1
+    Color: {r: 0.45, g: 0.95, b: 1, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: trail_starter
+    DisplayName: Starter
+    Type: 1
+    Color: {r: 0.91, g: 0.96, b: 1, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 3
+    UnlockTarget: 1
+    UnlockText: Meet your first ghost
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: trail_bone
+    DisplayName: Bone
+    Type: 1
+    Color: {r: 0.93, g: 0.91, b: 0.85, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 1
+    UnlockTarget: 50
+    UnlockText: Die 50 times
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: trail_prism
+    DisplayName: Prism
+    Type: 1
+    Color: {r: 0.73, g: 0.55, b: 1, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 2
+    UnlockTarget: 500
+    UnlockText: Reach 500 m
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: trail_magenta
+    DisplayName: Magenta
+    Type: 1
+    Color: {r: 1, g: 0.45, b: 0.95, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 150
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: trail_lime
+    DisplayName: Lime
+    Type: 1
+    Color: {r: 0.7, g: 1, b: 0.3, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 400
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 6
+    AllAchievements: 0
+    AdPack: Neon
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: trail_gold
+    DisplayName: Gold
+    Type: 1
+    Color: {r: 1, g: 0.82, b: 0.3, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops: []
+    UnlockScore: 3000
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 10
+    AllAchievements: 0
+    AdPack: Gold
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: palette_default
+    DisplayName: Teal to Red
+    Type: 2
+    Color: {r: 0.16078432, g: 0.4509804, b: 0.5019608, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops:
+    - {r: 0.16078432, g: 0.4509804, b: 0.5019608, a: 1}
+    - {r: 0.35686275, g: 0.23529412, b: 0.54901963, a: 1}
+    - {r: 0.54901963, g: 0.18039216, b: 0.22745098, a: 1}
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: palette_mono
+    DisplayName: Monochrome
+    Type: 2
+    Color: {r: 0.3529412, g: 0.3529412, b: 0.3529412, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops:
+    - {r: 0.3529412, g: 0.3529412, b: 0.3529412, a: 1}
+    - {r: 0.23921569, g: 0.23921569, b: 0.23921569, a: 1}
+    - {r: 0.13333334, g: 0.13333334, b: 0.13333334, a: 1}
+    UnlockScore: 300
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 3
+    AllAchievements: 0
+    AdPack: Mono
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: palette_forest
+    DisplayName: Forest
+    Type: 2
+    Color: {r: 0.18431373, g: 0.41960785, b: 0.22745098, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops:
+    - {r: 0.18431373, g: 0.41960785, b: 0.22745098, a: 1}
+    - {r: 0.41960785, g: 0.41568628, b: 0.18431373, a: 1}
+    - {r: 0.41960785, g: 0.22745098, b: 0.18431373, a: 1}
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 2
+    UnlockTarget: 100
+    UnlockText: Reach 100 m
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: palette_supporter
+    DisplayName: Night
+    Type: 2
+    Color: {r: 0.11764706, g: 0.16470589, b: 0.3529412, a: 1}
+    Sprite: {fileID: 0}
+    PaletteStops:
+    - {r: 0.11764706, g: 0.16470589, b: 0.3529412, a: 1}
+    - {r: 0.22745098, g: 0.11764706, b: 0.3529412, a: 1}
+    - {r: 0.3529412, g: 0.11764706, b: 0.22745098, a: 1}
+    UnlockScore: 3000
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 10
+    AllAchievements: 0
+    AdPack: Gold
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85

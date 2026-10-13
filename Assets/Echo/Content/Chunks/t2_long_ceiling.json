@@ -1,0 +1,1 @@
+{ "id": "t2_long_ceiling", "tier": 2, "length": 12000, "ceilings": [{ "x": 1200, "w": 5500, "y": 1300 }], "spikes": [{ "x": 8000, "w": 600, "h": 500 }] }

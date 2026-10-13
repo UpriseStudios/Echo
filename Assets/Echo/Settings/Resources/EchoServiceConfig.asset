@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1437fac9071380247aa0550293472932, type: 3}
+  m_Name: EchoServiceConfig
+  m_EditorClassIdentifier: Echo.Services::Echo.Services.EchoServiceConfig
+  LevelPlayAppKeyAndroid: 288f611c5
+  LevelPlayAppKeyIos: REPLACE_ME
+  BanishAdUnitAndroid: abb2fmeklr2cph3j
+  BanishAdUnitIos: 1pkub9lm7lq9nrfc
+  ContinueAdUnitAndroid: gfpqnqc0pt80ptvi
+  ContinueAdUnitIos: k8ws0qguzxr2nopk
+  UnlockAdUnitAndroid: 04cfksbewjo4gpdi
+  UnlockAdUnitIos: 9sfykqa67w9fpi37
+  PowerUpAdUnitAndroid: j5h3stsq9y1ba5zr
+  PowerUpAdUnitIos: 7408h5oakz0x5hol
+  StoreUrlAndroid: https://play.google.com/store/apps/details?id=com.uprise.echo
+  StoreUrlIos: REPLACE_ME
+  RealServicesInEditor: 0

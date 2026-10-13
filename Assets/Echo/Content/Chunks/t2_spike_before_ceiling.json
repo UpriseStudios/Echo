@@ -1,0 +1,1 @@
+{ "id": "t2_spike_before_ceiling", "tier": 2, "length": 11000, "spikes": [{ "x": 1900, "w": 600, "h": 600 }], "ceilings": [{ "x": 6700, "w": 2600, "y": 1400 }] }

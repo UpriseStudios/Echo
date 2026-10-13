@@ -1,0 +1,6 @@
+{
+  "id": "t0_02_taller_spike",
+  "tier": 0,
+  "length": 10000,
+  "spikes": [{ "x": 4500, "w": 600, "h": 700 }]
+}

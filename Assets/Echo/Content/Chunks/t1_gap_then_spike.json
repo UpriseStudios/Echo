@@ -1,0 +1,1 @@
+{ "id": "t1_gap_then_spike", "tier": 1, "length": 12000, "gaps": [{ "x": 1500, "w": 2000 }], "spikes": [{ "x": 7500, "w": 600, "h": 600 }] }

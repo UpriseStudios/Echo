@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Echo Privacy Policy</title>
+<meta name="description" content="How Echo, the one-tap runner by Uprise, handles your data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; }
+  /* Layout: one readable column, the game's teal and ghost cyan as accents, a pixel-face title only. */
+  :root {
+    --bg: #f3f8f9;
+    --surface: #ffffff;
+    --fg: #102a30;
+    --muted: #4a6a71;
+    --rule: #cfe1e4;
+    --accent: #1d6f7d;
+    --ghost: #0f9fb3;
+    --font-display: "Press Start 2P", ui-monospace, "Courier New", monospace;
+    --font-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d2226; --surface: #13313a; --fg: #e3f4f6; --muted: #9fc3c9; --rule: #24505a;
+      --accent: #73f2ff; --ghost: #73f2ff; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d2226; --surface: #13313a; --fg: #e3f4f6; --muted: #9fc3c9; --rule: #24505a;
+    --accent: #73f2ff; --ghost: #73f2ff; color-scheme: dark;
+  }
+
+  body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 17px; line-height: 1.6; }
+  .page { max-width: 46rem; margin: 0 auto; padding-inline: 20px; padding-block: 48px 64px; display: grid; gap: 40px; }
+
+  header { display: grid; gap: 14px; }
+  .brand { font-family: var(--font-display); font-size: 12px; letter-spacing: 0.08em; color: var(--ghost); }
+  h1 { font-family: var(--font-display); font-size: clamp(22px, 5vw, 32px); line-height: 1.35; margin: 0; text-wrap: balance;
+       text-shadow: -3px -3px 0 color-mix(in srgb, var(--ghost) 30%, transparent); }
+  .meta { color: var(--muted); font-size: 15px; margin: 0; }
+  .lede { font-size: 19px; margin: 0; }
+
+  section { display: grid; gap: 12px; min-width: 0; }
+  h2 { font-size: 22px; font-weight: 700; margin: 0; text-wrap: balance; }
+  h3 { font-size: 17px; font-weight: 700; margin: 8px 0 0; }
+  p, ul { margin: 0; }
+  ul { padding-left: 1.2em; display: grid; gap: 6px; }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--ghost); outline-offset: 2px; border-radius: 2px; }
+  strong { font-weight: 600; }
+
+  .glance { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 34rem; font-size: 15.5px; }
+  th, td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--rule); }
+  th { font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child { font-weight: 600; }
+  .tag { display: inline-block; font-size: 12.5px; font-weight: 600; padding: 1px 8px; border-radius: 999px;
+         border: 1px solid var(--rule); color: var(--muted); white-space: nowrap; }
+  .tag.on { border-color: var(--ghost); color: var(--accent); }
+
+  .contact { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 18px 20px; display: grid; gap: 6px; }
+  .email { font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 16px; user-select: all; }
+  footer { color: var(--muted); font-size: 14px; border-top: 1px solid var(--rule); padding-top: 18px; }
+</style>
+
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="brand">UPRISE</div>
+    <h1>Echo Privacy Policy</h1>
+    <p class="meta">Effective 9 October 2026 · Applies to Echo on Android and iOS</p>
+    <p class="lede">Echo is a one-tap runner where every failed run comes back as a ghost. It has no accounts and no
+      Echo servers: your game lives on your phone. This policy explains the little data that leaves it, and why.</p>
+  </header>
+
+  <section aria-labelledby="glance">
+    <h2 id="glance">At a glance</h2>
+    <div class="glance">
+      <table>
+        <thead><tr><th>What</th><th>Where it goes</th><th>When</th></tr></thead>
+        <tbody>
+          <tr><td>Your game save (scores, ghosts, reels, skins, settings)</td><td>Stays on your device</td><td><span class="tag">Always local</span></td></tr>
+          <tr><td>Ad data for rewarded ads</td><td>Unity LevelPlay and its ad partners</td><td><span class="tag">Only when ads load or play</span></td></tr>
+          <tr><td>Personalised ads</td><td>Unity LevelPlay and its ad partners</td><td><span class="tag on">Only if you accept</span></td></tr>
+          <tr><td>Gameplay analytics</td><td>Unity Analytics</td><td><span class="tag on">Only if you accept</span></td></tr>
+          <tr><td>Purchases</td><td>Google Play or the App Store</td><td><span class="tag">Only when you buy</span></td></tr>
+          <tr><td>Challenge links and clips</td><td>Whoever you send them to</td><td><span class="tag">Only when you share</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="who">
+    <h2 id="who">Who we are</h2>
+    <p>Echo is made by Uprise (“we”, “us”). We are responsible for the data described in this policy. You can reach us
+      at <strong>hello@uprise.co.uk</strong>.</p>
+  </section>
+
+  <section aria-labelledby="device">
+    <h2 id="device">What stays on your device</h2>
+    <p>Echo saves your progress in a file on your phone: your best score and stats, your ghosts (stored as the timing of
+      your taps, not as video), achievements, the skins and power-ups you hold, your highlights reel, your settings and
+      privacy choices, and the name you choose for Ghost Challenges. We never receive this file. Uninstalling Echo
+      deletes it.</p>
+    <ul>
+      <li><strong>Ghost Challenges.</strong> When you send a challenge, Echo builds a link containing your run, your
+        chosen name and the skin you wore. It goes only to the people you send it to, through the app you pick.</li>
+      <li><strong>Highlights reel clips.</strong> Clips are made on your phone and shared only when you choose to, through
+        your phone’s share sheet.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="choice">
+    <h2 id="choice">Your privacy choice</h2>
+    <p>The first time you open Echo we ask before anything starts. <strong>Accept all</strong> allows personalised ads
+      and anonymous gameplay analytics. <strong>Essential only</strong> turns both off. Nothing from Unity or our ad
+      partners starts until you have chosen. You can change your choice any time in <strong>Settings › Privacy
+      choices</strong>. On iPhone, personalised ads also need your permission in Apple’s tracking prompt.</p>
+  </section>
+
+  <section aria-labelledby="third">
+    <h2 id="third">Data handled by our partners</h2>
+
+    <h3>Rewarded ads: Unity LevelPlay</h3>
+    <p>Echo only shows ads you choose to watch (to continue a run, banish a ghost, unlock a character or earn a
+      power-up), never during a run, and never as banners or pop-ups. To load, show and measure these ads and to
+      prevent fraud, Unity LevelPlay and the ad networks it works with process device data such as your device’s
+      advertising identifier, IP address, device model and operating system, and how you interact with ads. If you
+      choose <strong>Essential only</strong>, the ads you see are not personalised.</p>
+
+    <h3>Gameplay analytics: Unity Analytics</h3>
+    <p>Only if you accept analytics, Echo sends anonymous gameplay events to Unity Analytics so we can balance the game:
+      for example when a run starts and ends, its score and distance, and when power-ups, ads, purchases or Ghost
+      Challenges are used. Unity also records basic device information and a random installation identifier. We do not
+      collect your name, email or contacts. If you later switch analytics off, Echo stops sending events and asks Unity
+      to delete the analytics data it holds for your device.</p>
+
+    <h3>Purchases: Google Play and the App Store</h3>
+    <p>Skin packs are bought through Google Play or the App Store, using Unity IAP. The store handles your payment; we
+      only receive confirmation of what was bought so we can unlock it. We never see your card or payment details.</p>
+
+    <p>Each partner’s own policy explains how it uses data:
+      <a href="https://unity.com/legal/game-player-and-app-user-privacy-policy">Unity (LevelPlay, Analytics, IAP)</a>,
+      <a href="https://policies.google.com/privacy">Google</a> and
+      <a href="https://www.apple.com/legal/privacy/">Apple</a>.</p>
+  </section>
+
+  <section aria-labelledby="basis">
+    <h2 id="basis">Why we may use it</h2>
+    <ul>
+      <li><strong>Your consent</strong> for personalised ads and analytics. You can withdraw it at any time in Settings.</li>
+      <li><strong>Providing the game you asked for</strong> for showing the rewarded ads you choose to watch and unlocking
+        purchases.</li>
+      <li><strong>Legitimate interests</strong> in keeping ads working and free of fraud.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="keep">
+    <h2 id="keep">How long it is kept, and security</h2>
+    <p>Your save stays on your phone until you uninstall Echo. Data held by Unity, its ad partners and the app stores is
+      kept under their own policies. Everything Echo sends over the internet is encrypted in transit (HTTPS). We do
+      not sell your data.</p>
+  </section>
+
+  <section aria-labelledby="children">
+    <h2 id="children">Children</h2>
+    <p>Echo is not directed at children under 13. We do not knowingly collect personal data from them. If you believe
+      a child has used Echo and data about them has been collected, contact us and we will help remove it.</p>
+  </section>
+
+  <section aria-labelledby="rights">
+    <h2 id="rights">Your rights</h2>
+    <p>Depending on where you live, including the UK and the EU, you can ask to access, correct or delete personal data
+      about you, object to its use, or withdraw consent. Because Echo has no accounts and keeps your game on your phone,
+      the quickest way to remove it is to switch off analytics in Settings and uninstall the app. For anything else,
+      email us. If you are in the UK you can also complain to the Information Commissioner’s Office
+      (<a href="https://ico.org.uk">ico.org.uk</a>), or in the EU to your local data protection authority.</p>
+  </section>
+
+  <section aria-labelledby="changes">
+    <h2 id="changes">Changes to this policy</h2>
+    <p>If we change how Echo handles data, we will update this page and its effective date, and ask again in the game
+      when a change needs your consent.</p>
+  </section>
+
+  <div class="contact">
+    <strong>Questions or requests</strong>
+    <span class="email">hello@uprise.co.uk</span>
+  </div>
+
+  <footer>© 2026 Uprise</footer>
+</div>
+</body>
+</html>

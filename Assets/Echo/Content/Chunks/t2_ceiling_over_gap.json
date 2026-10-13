@@ -1,0 +1,1 @@
+{ "id": "t2_ceiling_over_gap", "tier": 2, "length": 10000, "ceilings": [{ "x": 2000, "w": 2000, "y": 2600 }], "gaps": [{ "x": 4500, "w": 1800 }] }

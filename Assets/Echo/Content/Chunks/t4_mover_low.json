@@ -1,0 +1,1 @@
+{ "id": "t4_mover_low", "tier": 4, "length": 10000, "movers": [{ "x": 5000, "w": 700, "h": 700, "yMin": 0, "yMax": 1800, "period": 100, "phase": 20 }] }

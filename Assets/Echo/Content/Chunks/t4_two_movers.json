@@ -1,0 +1,1 @@
+{ "id": "t4_two_movers", "tier": 4, "length": 14000, "movers": [{ "x": 2500, "w": 600, "h": 700, "yMin": 0, "yMax": 2400, "period": 120, "phase": 0 }, { "x": 11200, "w": 600, "h": 700, "yMin": 0, "yMax": 2400, "period": 120, "phase": 60 }] }

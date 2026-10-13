@@ -1,0 +1,23 @@
+{
+    "name": "Echo.Services",
+    "rootNamespace": "Echo.Services",
+    "references": [
+        "Echo.Core",
+        "Unity.LevelPlay",
+        "Unity.Purchasing",
+        "Unity.Purchasing.Stores",
+        "Unity.Services.Core",
+        "Unity.Services.Analytics",
+        "NativeShare.Runtime",
+        "Unity.Advertisement.IosSupport"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

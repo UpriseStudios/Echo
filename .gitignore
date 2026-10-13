@@ -1,0 +1,48 @@
+# Unity: generated, rebuilt on open
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+/.utmp/
+
+# Builds and test output
+/[Bb]uild/
+/[Bb]uilds/
+/TestResults/
+*.apk
+*.aab
+*.ipa
+*_BackUpThisFolder_ButDontShipItWithYourGame/
+*_BurstDebugInformation_DoNotShip/
+
+# IDE files Unity regenerates
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.sln
+*.slnx
+*.user
+*.pidb
+*.booproj
+*.unityproj
+
+# Secrets: never commit signing keys
+*.keystore
+*.jks
+*.p12
+*.mobileprovision
+
+# OS and crash files
+.DS_Store
+Thumbs.db
+sysinfo.txt
+mono_crash.*
+crashlytics-build.properties
+
+# Unity crash-recovery scene copies
+/Assets/_Recovery/
+/Assets/_Recovery.meta
