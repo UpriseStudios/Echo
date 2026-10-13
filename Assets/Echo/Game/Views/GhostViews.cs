@@ -171,6 +171,8 @@ namespace Echo.Game.Views
         }
 
         bool _leaderNames;
+        readonly float[] _leaderX = new float[PoolSize];
+        readonly bool[] _leaderNamed = new bool[PoolSize];
 
         public void Render(GhostManager ghosts, int playerTicks, float alpha, in SimConfig cfg,
                            Course course, GhostRecord nemesis, float playerX, bool previews)
@@ -184,6 +186,20 @@ namespace Echo.Game.Views
 
             // Ghosts tick slower than the player; this is how far the current frame is towards their next own tick.
             float ownFraction = Mathf.Clamp01((playerTicks * ghosts.ClockNum % ghosts.ClockDen + alpha * ghosts.ClockNum) / ghosts.ClockDen);
+
+            // Daily Haunt: the one name label goes on the next leader ahead, wherever the others are in the pool.
+            int labelledLeader = -1;
+            if (_leaderNames && !_popped)
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    GhostRecord record = ghosts.RecordAt(i);
+                    ref readonly GhostReplay r = ref ghosts.ReplayAt(i);
+                    _leaderNamed[i] = r.Phase != GhostPhase.Gone && record.Leader && !string.IsNullOrEmpty(record.Name);
+                    _leaderX[i] = SimUnits.Lerp(r.PrevState, r.State, ownFraction).x;
+                }
+                labelledLeader = LeaderLabel.NextAhead(playerX, _leaderX, _leaderNamed, count);
+            }
 
             for (int i = 0; i < PoolSize; i++)
             {
@@ -265,7 +281,7 @@ namespace Echo.Game.Views
                 }
 
                 bool tagged = _nameTag != null && (_nameTagRun < 0 ? i == 0 : record.RunIndex == _nameTagRun)
-                              || _leaderNames && record.Leader && !string.IsNullOrEmpty(record.Name);
+                              || i == labelledLeader;
                 if (isNemesis || tagged)
                 {
                     hornsShown |= isNemesis;
@@ -282,7 +298,7 @@ namespace Echo.Game.Views
                         if (_labelRunIndex != labelKey)
                         {
                             _labelRunIndex = labelKey;
-                            _nemesisLabel.text = tagged ? (record.Leader && _leaderNames ? record.Name : _nameTag) : _nemesisPrefix + NemesisNames.For(record.RunIndex);
+                            _nemesisLabel.text = tagged ? (i == labelledLeader ? record.Name : _nameTag) : _nemesisPrefix + NemesisNames.For(record.RunIndex);
                         }
                         Color labelColor = tagged ? NameTagColor : NemesisColor;
                         _nemesisLabel.transform.position = new Vector3(pos.x, pos.y + top + 0.45f + lift, 0f);

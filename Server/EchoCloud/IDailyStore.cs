@@ -16,10 +16,10 @@ namespace EchoCloud
         Task SetGameAsync(string key, string json);
 
         /// <summary>
-        /// Records a distance; the leaderboard keeps each player's best. <paramref name="yesterday"/>: a run from just
-        /// before midnight, submitted in the grace period, goes on yesterday's archived board.
+        /// Records a distance on today's board; the leaderboard keeps each player's best. (Archived boards are
+        /// read-only in UGS, so grace-period runs never come here.)
         /// </summary>
-        Task SubmitAsync(string playerId, int distance, bool yesterday);
+        Task SubmitAsync(string playerId, int distance);
 
         /// <summary>Today's top <paramref name="count"/>, best first.</summary>
         Task<List<LeaderboardRow>> TopAsync(int count);

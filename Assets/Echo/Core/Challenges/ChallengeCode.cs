@@ -91,6 +91,7 @@ namespace Echo.Core.Challenges
             c.SpeedPct = (int)speed;
             c.Distance = (int)distance;
             c.Name = Truncate(c.Name, Challenge.MaxNameLength);
+            if (ChallengeNames.IsBlocked(c.Name)) c.Name = ChallengeNames.Default;   // links from older versions, or edited by hand
             r.SkinId = skin;
             r.RunIndex = (int)runIndex;
             r.DeathTick = (int)deathTick;

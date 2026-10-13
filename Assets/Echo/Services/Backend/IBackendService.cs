@@ -34,6 +34,6 @@ namespace Echo.Services.Backend
         Task<DailyInfo> GetDailyAsync(string dateOverride);
 
         /// <summary>Sends a finished daily run (its inputs, as a ReelPacket) for the server to replay and rank.</summary>
-        Task<DailySubmitResult> SubmitDailyRunAsync(string date, int leaderVersion, string packet, string dateOverride);
+        Task<DailySubmitResult> SubmitDailyRunAsync(string date, string leaderVersion, string packet, string dateOverride);
     }
 }

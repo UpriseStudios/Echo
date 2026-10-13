@@ -65,6 +65,11 @@ namespace Echo.Game.Flow
             if (this == null) return;
             if (!r.Ok || !ReelPacket.TryDecode(r.Packet, out Reel reel))
             {
+                if (r.Error == BackendFlags.Disabled)
+                {
+                    Ask("CHALLENGES ARE RESTING", "Friend challenges are switched off for a moment. Try the link again soon.", "OK", null, null, null);
+                    return;
+                }
                 string body = r.Error == "expired" ? "This challenge is more than 30 days old, so it has expired. Ask for a new one."
                     : r.Error == "offline" ? "Opening a challenge needs a connection. Check yours and tap the link again."
                     : "This challenge couldn't be found. Ask your friend to send it again.";
@@ -72,7 +77,7 @@ namespace Echo.Game.Flow
                 return;
             }
             Challenge c = ChallengeRuns.FromReel(reel);
-            c.Name = r.Name;
+            c.Name = ChallengeNames.Clean(r.Name);
             c.Score = r.Score;
             c.Distance = r.Distance;
             c.OwnerId = owner;
@@ -213,7 +218,7 @@ namespace Echo.Game.Flow
                 AskName(() => SendChallenge(reel, lite));
                 return;
             }
-            string name = _save.Settings.PlayerName;
+            string name = ChallengeNames.Clean(_save.Settings.PlayerName);
             bool full = ChallengeRuns.CanSendFull(reel) && reel.PlayableOn(_contentVersion);
             if (full && _servicesSettled) full = (await _services.Backend.GetFlagsAsync()).ServerChallengesEnabled;
             else full = false;
@@ -225,6 +230,11 @@ namespace Echo.Game.Flow
             _hud.QueueToast("CREATING CHALLENGE...");
             CreateChallengeResult r = await _services.Backend.CreateChallengeAsync(ReelPacket.Encode(reel), name);
             if (this == null) return;
+            if (!r.Ok && r.Error == BackendFlags.Disabled)
+            {
+                ShareLite(lite, name);   // switched off on the server since the flags were read: the link needs no server
+                return;
+            }
             if (!r.Ok)
             {
                 Ask("COULDN'T CREATE A CHALLENGE", "Try again." + (r.Error == "rate-limit" ? " You've sent a lot today; try again tomorrow." : ""),

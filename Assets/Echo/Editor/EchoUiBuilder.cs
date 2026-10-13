@@ -59,11 +59,16 @@ namespace Echo.Editor
             var tapHint = MakeText(root, "TapHint", "TAP TO JUMP", 50, _black, new Vector2(0.5f, 0.5f), new Vector2(0, -420), new Vector2(1000, 110));
             tapHint.gameObject.AddComponent<Pulse>();
             var countdown = MakeText(root, "Countdown", "3", 200, _black, new Vector2(0.5f, 0.5f), new Vector2(0, 200), new Vector2(400, 320));
+            // Daily Haunt: the last 5 minutes before the board closes at 00:00 UTC.
+            var boardCloses = MakeText(root, "BoardCloses", "", 34, _bold, new Vector2(0.5f, 1f), new Vector2(0, -380), new Vector2(900, 60));
+            boardCloses.color = NemesisRed;
+            boardCloses.gameObject.SetActive(false);
 
             Wire(view, "_root", root.gameObject);
             Wire(view, "_score", score);
             Wire(view, "_ghosts", ghosts);
             Wire(view, "_countdown", countdown);
+            Wire(view, "_boardCloses", boardCloses);
             Wire(view, "_nearMiss", nearMiss);
             Wire(view, "_tapHint", tapHint);
             Wire(view, "_toast", toast);

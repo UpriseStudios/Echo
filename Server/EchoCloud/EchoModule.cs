@@ -24,22 +24,32 @@ namespace EchoCloud
             return Task.FromResult(new ReplayService(GameContent.Shared).Check(packet));
         }
 
+        // Every endpoint below checks its Remote Config switch first (2.0 brief rule 6), so turning one off closes it here
+        // as well as in the game.
         [CloudCodeFunction("CreateChallenge")]
-        public Task<CreateChallengeResponse> CreateChallenge(IExecutionContext context, IGameApiClient api, string packet, string name) =>
-            Challenges(context, api).CreateAsync(context.PlayerId, packet, name);
+        public async Task<CreateChallengeResponse> CreateChallenge(IExecutionContext context, IGameApiClient api, string packet, string name) =>
+            !(await FeatureSwitches.ReadAsync(context, api)).ServerChallenges
+                ? new CreateChallengeResponse { Error = FeatureSwitches.Disabled }
+                : await Challenges(context, api).CreateAsync(context.PlayerId, packet, name);
 
         [CloudCodeFunction("GetChallenge")]
-        public Task<GetChallengeResponse> GetChallenge(IExecutionContext context, IGameApiClient api, string ownerId, string challengeId) =>
-            Challenges(context, api).GetAsync(ownerId, challengeId);
+        public async Task<GetChallengeResponse> GetChallenge(IExecutionContext context, IGameApiClient api, string ownerId, string challengeId) =>
+            !(await FeatureSwitches.ReadAsync(context, api)).ServerChallenges
+                ? new GetChallengeResponse { Error = FeatureSwitches.Disabled }
+                : await Challenges(context, api).GetAsync(ownerId, challengeId);
 
         [CloudCodeFunction("GetDaily")]
         public async Task<GetDailyResponse> GetDaily(IExecutionContext context, IGameApiClient api, string dateOverride = null) =>
-            await (await Daily(context, api)).GetDailyAsync(context.PlayerId, DevelopmentOnly(context, dateOverride));
+            !(await FeatureSwitches.ReadAsync(context, api)).Daily
+                ? new GetDailyResponse { Error = FeatureSwitches.Disabled }
+                : await (await Daily(context, api)).GetDailyAsync(context.PlayerId, DevelopmentOnly(context, dateOverride));
 
         [CloudCodeFunction("SubmitDailyRun")]
-        public async Task<SubmitDailyResponse> SubmitDailyRun(IExecutionContext context, IGameApiClient api, string date, int leaderVersion,
+        public async Task<SubmitDailyResponse> SubmitDailyRun(IExecutionContext context, IGameApiClient api, string date, string leaderVersion,
             string packet, string dateOverride = null) =>
-            await (await Daily(context, api)).SubmitAsync(context.PlayerId, date, leaderVersion, packet, DevelopmentOnly(context, dateOverride));
+            !(await FeatureSwitches.ReadAsync(context, api)).Daily
+                ? new SubmitDailyResponse { Error = FeatureSwitches.Disabled }
+                : await (await Daily(context, api)).SubmitAsync(context.PlayerId, date, leaderVersion, packet, DevelopmentOnly(context, dateOverride));
 
         // Daily Haunt doc: the date can be overridden to test midnight, in development only.
         static string DevelopmentOnly(IExecutionContext context, string dateOverride) =>

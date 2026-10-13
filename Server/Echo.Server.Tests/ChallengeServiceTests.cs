@@ -65,6 +65,15 @@ namespace Echo.Server.Tests
         }
 
         [Test]
+        public async Task ABlockedName_IsStoredAsTheDefault()
+        {
+            Reel reel = ARun(9, 1);
+            CreateChallengeResponse created = await _service.CreateAsync("p", ReelPacket.Encode(reel), "Sh1t\n");
+            Assert.IsTrue(created.Ok, created.Error);
+            Assert.AreEqual(Echo.Core.Challenges.ChallengeNames.Default, (await _service.GetAsync("p", created.ChallengeId)).Name);
+        }
+
+        [Test]
         public async Task AFakedScore_IsReplacedByTheReplay()
         {
             Reel reel = ARun(6, 2);

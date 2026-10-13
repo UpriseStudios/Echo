@@ -22,6 +22,16 @@
       "Version": "1.0.0"
     },
     {
+      "Sid": "deny-player-name-changes",
+      "Action": [
+        "Write"
+      ],
+      "Effect": "Deny",
+      "Principal": "Player",
+      "Resource": "urn:ugs:social:/*/names/*",
+      "Version": "1.0.0"
+    },
+    {
       "Sid": "deny-player-cloud-code-scripts",
       "Action": [
         "*"

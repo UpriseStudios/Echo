@@ -18,6 +18,9 @@ namespace Echo.Services.Backend
         public bool Corrected;
         public int NextRunIndex;
 
+        /// <summary>Yesterday's run sent just after midnight: kept as that day's best and ghosts, but not ranked.</summary>
+        public bool BoardClosed;
+
         public static DailySubmitResult Failed(string error) => new DailySubmitResult { Error = error };
     }
 }

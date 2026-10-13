@@ -118,7 +118,7 @@ namespace Echo.Services.Backend
             }
         }
 
-        public async Task<DailySubmitResult> SubmitDailyRunAsync(string date, int leaderVersion, string packet, string dateOverride)
+        public async Task<DailySubmitResult> SubmitDailyRunAsync(string date, string leaderVersion, string packet, string dateOverride)
         {
             if (!await SignInAsync()) return DailySubmitResult.Failed("offline");
             try

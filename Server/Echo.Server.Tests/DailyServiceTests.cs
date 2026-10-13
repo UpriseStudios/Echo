@@ -31,9 +31,9 @@ namespace Echo.Server.Tests
             public Task<string> GetGameAsync(string k) => Task.FromResult(Items.TryGetValue("game/" + k, out string v) ? v : null);
             public Task SetGameAsync(string k, string json) { Items["game/" + k] = json; return Task.CompletedTask; }
 
-            public Task SubmitAsync(string playerId, int distance, bool yesterday)
+            public Task SubmitAsync(string playerId, int distance)
             {
-                var board = yesterday ? Yesterday : Today;
+                var board = Today;
                 board[playerId] = Math.Max(distance, board.TryGetValue(playerId, out int had) ? had : 0);
                 return Task.CompletedTask;
             }
@@ -137,22 +137,59 @@ namespace Echo.Server.Tests
             Assert.AreEqual(bestDistance, d.BestDistance);
         }
 
-        [Test]
-        public async Task TheLeaderSet_IsKeptFiveMinutes_ThenRebuiltAsANewVersion()
+        // Another player joins the top of today's board with the given player's best run, so the leader set changes.
+        void Overtake(string from, string player, int distance)
         {
+            string key = "/daily_" + DailyService.DateKey(_now).Replace("-", "");
+            _store.Items[player + key] = _store.Items[from + key];
+            _store.Today[player] = distance;
+        }
+
+        [Test]
+        public void TheLeaderVersion_IsAHashOfTheDayAndEveryEntry()
+        {
+            var set = new List<(string, string, int, int, string)> { ("p1", "ALICE#1", 1, 500, "AAA"), ("p2", "BOB#2", 2, 400, "BBB") };
+            string v = DailyService.VersionOf("2026-10-14", set);
+            Assert.AreEqual(v, DailyService.VersionOf("2026-10-14", set.ToList()), "the same contents, the same version");
+            Assert.AreEqual(64, v.Length);
+            Assert.AreNotEqual(v, DailyService.VersionOf("2026-10-15", set), "another day");
+            Assert.AreNotEqual(v, DailyService.VersionOf("2026-10-14", set.Take(1).ToList()), "fewer leaders");
+            Assert.AreNotEqual(v, DailyService.VersionOf("2026-10-14", new[] { set[1], set[0] }), "another order");
+            foreach (var changed in new[]
+                     {
+                         ("p9", "ALICE#1", 1, 500, "AAA"), ("p1", "ALICE#9", 1, 500, "AAA"), ("p1", "ALICE#1", 3, 500, "AAA"),
+                         ("p1", "ALICE#1", 1, 501, "AAA"), ("p1", "ALICE#1", 1, 500, "AAB"),
+                     })
+                Assert.AreNotEqual(v, DailyService.VersionOf("2026-10-14", new[] { changed, set[1] }), changed.ToString());
+            // Length prefixes: moving characters between neighbouring fields still changes the version.
+            Assert.AreNotEqual(DailyService.VersionOf("d", new[] { ("ab", "c", 1, 1, "x") }), DailyService.VersionOf("d", new[] { ("a", "bc", 1, 1, "x") }));
+        }
+
+        [Test]
+        public async Task TheLeaderSet_IsKeptFiveMinutes_ThenRebuilt_AndOnlyANewSetGetsANewVersion()
+        {
+            await PlayAndSubmit("alice", 41);
             GetDailyResponse a = await _daily.GetDailyAsync("x");
+            _now = _now.AddMinutes(6);
+            Assert.AreEqual(a.LeaderVersion, (await _daily.GetDailyAsync("x")).LeaderVersion, "rebuilt, unchanged: the same version");
+
+            Overtake("alice", "bob", 100_000);
             _now = _now.AddMinutes(4);
-            Assert.AreEqual(a.LeaderVersion, (await _daily.GetDailyAsync("x")).LeaderVersion);
+            Assert.AreEqual(a.LeaderVersion, (await _daily.GetDailyAsync("x")).LeaderVersion, "kept for 5 minutes");
             _now = _now.AddMinutes(2);
-            Assert.AreEqual(a.LeaderVersion + 1, (await _daily.GetDailyAsync("x")).LeaderVersion);
+            string b = (await _daily.GetDailyAsync("x")).LeaderVersion;
+            Assert.AreNotEqual(a.LeaderVersion, b, "bob leads now: a new set, a new version");
+            Assert.AreNotEqual("", b);
         }
 
         [Test]
         public async Task ARunStartedAgainstAnOlderLeaderSet_StillReplays_UntilItFallsOutOfTheCache()
         {
+            await PlayAndSubmit("alice", 2);
             var (d, reel) = await Play("p", 3);
             for (int i = 0; i < 5; i++)
             {
+                Overtake("alice", "o" + i, 100_000 + i);
                 _now = _now.AddMinutes(6);
                 await _daily.GetDailyAsync("someone");
             }
@@ -160,6 +197,7 @@ namespace Echo.Server.Tests
             var (d2, reel2) = await Play("q", 4);
             for (int i = 0; i < DailyService.LeaderVersionsKept + 1; i++)
             {
+                Overtake("alice", "n" + i, 200_000 + i);
                 _now = _now.AddMinutes(6);
                 await _daily.GetDailyAsync("someone");
             }
@@ -177,7 +215,7 @@ namespace Echo.Server.Tests
                 change(copy);
                 return ReelPacket.Encode(copy);
             }
-            async Task<SubmitDailyResponse> Submit(string packet, string date = null, int? version = null)
+            async Task<SubmitDailyResponse> Submit(string packet, string date = null, string version = null)
             {
                 _now = _now.AddSeconds(3);
                 return await _daily.SubmitAsync("cheat", date ?? d.Date, version ?? d.LeaderVersion, packet);
@@ -194,7 +232,7 @@ namespace Echo.Server.Tests
             Assert.AreEqual("seed", (await Submit(Packet(r => r.Seed ^= 77))).Error);
             Assert.AreEqual("wrong-day", (await Submit(ReelPacket.Encode(reel), date: "2026-10-01")).Error, "an old date");
             Assert.AreEqual("malformed", (await Submit("x" + new string('A', ReelPacket.MaxChars))).Error, "oversized");
-            Assert.AreEqual("leader-version", (await Submit(ReelPacket.Encode(reel), version: 999)).Error);
+            Assert.AreEqual("leader-version", (await Submit(ReelPacket.Encode(reel), version: "999")).Error);
 
             Assert.IsTrue(ReelPacket.TryDecode(ReelPacket.Encode(reel), out Reel edited));
             edited.Run.TapTicks = edited.Run.TapTicks.Take(edited.Run.TapTicks.Length / 2).ToArray();
@@ -207,7 +245,7 @@ namespace Echo.Server.Tests
         }
 
         [Test]
-        public async Task JustAfterMidnight_YesterdaysRunsCountForFiveMinutes_OnYesterdaysBoard()
+        public async Task JustAfterMidnight_YesterdaysRunsAreKeptForFiveMinutes_ButTheBoardHasClosed()
         {
             _now = new DateTime(2026, 10, 14, 23, 59, 0, DateTimeKind.Utc);
             var (d, reel) = await Play("late", 21);
@@ -216,8 +254,13 @@ namespace Echo.Server.Tests
             _now = new DateTime(2026, 10, 15, 0, 3, 0, DateTimeKind.Utc);
             SubmitDailyResponse r = await _daily.SubmitAsync("late", d.Date, d.LeaderVersion, packet);
             Assert.IsTrue(r.Ok, r.Error);
-            Assert.IsTrue(_store.Yesterday.ContainsKey("late"), "on yesterday's board");
-            Assert.IsFalse(_store.Today.ContainsKey("late"));
+            Assert.IsTrue(r.BoardClosed);
+            Assert.IsTrue(r.NewBest, "yesterday's best, kept with yesterday's ghosts");
+            Assert.AreEqual(r.Distance, r.BestDistance);
+            Assert.AreEqual(0, r.Rank, "not ranked");
+            Assert.IsFalse(_store.Yesterday.ContainsKey("late"), "UGS archives are read-only");
+            Assert.IsFalse(_store.Today.ContainsKey("late"), "and it never lands on today's board");
+            Assert.IsNotNull(_store.Items["late/daily_20261014"]);
 
             var (d2, reel2) = await Play("later", 22);   // today's course now
             Assert.AreNotEqual(d.Seed, d2.Seed);
@@ -225,8 +268,8 @@ namespace Echo.Server.Tests
             Assert.AreEqual("wrong-day", (await _daily.SubmitAsync("late", d.Date, d.LeaderVersion, packet)).Error, "past the grace period");
 
             GetDailyResponse next = await _daily.GetDailyAsync("late");
-            Assert.AreEqual(1, next.YesterdayRank);
-            Assert.AreEqual("LATE#1", next.YesterdayWinner);
+            Assert.AreEqual(0, next.YesterdayRank);
+            Assert.AreEqual("", next.YesterdayWinner);
         }
 
         [Test]

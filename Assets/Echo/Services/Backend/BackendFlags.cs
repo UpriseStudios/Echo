@@ -9,6 +9,9 @@ namespace Echo.Services.Backend
         public const string DailyKey = "daily_enabled";
         public const string ServerChallengesKey = "server_challenges_enabled";
 
+        /// <summary>The error Cloud Code answers with when the endpoint's switch is off (it checks them too).</summary>
+        public const string Disabled = "disabled";
+
         public readonly bool DailyEnabled;
         public readonly bool ServerChallengesEnabled;
 

@@ -49,12 +49,9 @@ namespace EchoCloud
         public Task SetGameAsync(string key, string json) =>
             _api.CloudSaveData.SetPrivateCustomItemAsync(_context, _context.ServiceToken, _context.ProjectId, GameDataId, new SetItemBody(key, json));
 
-        public async Task SubmitAsync(string playerId, int distance, bool yesterday)
-        {
-            string version = yesterday ? await LastArchivedVersion() : null;
-            await _api.Leaderboards.AddLeaderboardPlayerScoreAsync(_context, _context.ServiceToken, _project, LeaderboardId, playerId,
-                new AddLeaderboardScore(distance, null, version));
-        }
+        public Task SubmitAsync(string playerId, int distance) =>
+            _api.Leaderboards.AddLeaderboardPlayerScoreAsync(_context, _context.ServiceToken, _project, LeaderboardId, playerId,
+                new AddLeaderboardScore(distance));
 
         public async Task<List<LeaderboardRow>> TopAsync(int count)
         {

@@ -25,6 +25,12 @@ namespace Echo.Services.Mocks
         /// <summary>Offline: every call fails as if there were no connection.</summary>
         public bool Offline;
 
+        /// <summary>The Daily Haunt switched off on the server after the game read the flags: its endpoints answer "disabled".</summary>
+        public bool ServerDailyOff;
+
+        /// <summary>Seconds until the mock's day ends (and its board closes).</summary>
+        public int SecondsLeft = 3600;
+
         /// <summary>Replays a packet locally (the game supplies it, since only it holds the course content).</summary>
         public Func<string, ReplayCheckResult> LocalReplay;
 
@@ -100,6 +106,7 @@ namespace Echo.Services.Mocks
         public Task<DailyInfo> GetDailyAsync(string dateOverride)
         {
             if (Offline) return Task.FromResult(DailyInfo.Failed("offline"));
+            if (ServerDailyOff) return Task.FromResult(DailyInfo.Failed(BackendFlags.Disabled));
             string date = string.IsNullOrEmpty(dateOverride) ? Today : dateOverride;
             var day = Day(date);
             var ghosts = new List<GhostRecord>();
@@ -108,8 +115,8 @@ namespace Echo.Services.Mocks
             ghosts.Sort((a, b) => a.RunIndex.CompareTo(b.RunIndex));
             var info = new DailyInfo
             {
-                Ok = true, Date = date, Day = 100, Seed = SeedFor(date), ContentVersion = ContentVersion, SecondsLeft = 3600,
-                LeaderVersion = 1, BestDistance = day.best, NextRunIndex = day.next,
+                Ok = true, Date = date, Day = 100, Seed = SeedFor(date), ContentVersion = ContentVersion, SecondsLeft = SecondsLeft,
+                LeaderVersion = "mock-leaders", BestDistance = day.best, NextRunIndex = day.next,
                 GhostsPacket = ReelPacket.Encode(new Reel { ContentVersion = ContentVersion, Seed = (uint)SeedFor(date), SpeedPct = DailyRules.SpeedPct, RunIndex = 1, Run = new GhostRecord(), Ghosts = ghosts }),
             };
             int rank = 1;
@@ -119,9 +126,10 @@ namespace Echo.Services.Mocks
             return Task.FromResult(info);
         }
 
-        public Task<DailySubmitResult> SubmitDailyRunAsync(string date, int leaderVersion, string packet, string dateOverride)
+        public Task<DailySubmitResult> SubmitDailyRunAsync(string date, string leaderVersion, string packet, string dateOverride)
         {
             if (Offline) return Task.FromResult(DailySubmitResult.Failed("offline"));
+            if (ServerDailyOff) return Task.FromResult(DailySubmitResult.Failed(BackendFlags.Disabled));
             Submissions++;
             if (!ReelPacket.TryDecode(packet, out Reel reel)) return Task.FromResult(DailySubmitResult.Failed("malformed"));
             string broken = DailyRules.Check(reel);

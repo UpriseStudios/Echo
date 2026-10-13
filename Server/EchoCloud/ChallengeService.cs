@@ -132,7 +132,7 @@ namespace EchoCloud
             }
             response.Ok = true;
             response.Packet = stored.Packet;
-            response.Name = stored.Name;
+            response.Name = CleanName(stored.Name);
             response.Score = stored.Score;
             response.Distance = stored.Distance;
             return response;
@@ -157,13 +157,8 @@ namespace EchoCloud
             }
         }
 
-        static string CleanName(string raw)
-        {
-            var b = new System.Text.StringBuilder();
-            foreach (char ch in raw ?? "")
-                if (!char.IsControl(ch) && b.Length < Challenge.MaxNameLength) b.Append(ch);
-            return b.ToString().Trim();
-        }
+        // The same filter as the game: a name on the blocklist is stored as ChallengeNames.Default.
+        static string CleanName(string raw) => ChallengeNames.Clean(raw);
 
         static string NewId()
         {

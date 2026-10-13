@@ -37,6 +37,12 @@ namespace Echo.Game.Flow
         bool _dailyEnabled = true;       // Remote Config, once known
         bool _dailyBusy;
         float _dailyFetchedAt;
+
+        // The server's day as last confirmed (date, seconds left, when): a failed fetch leaves it alone, so queued runs
+        // are judged by the server's clock, not the device's.
+        string _serverDay;
+        int _serverDaySecondsLeft;
+        float _serverDayAt;
         float _dailyLabelIn;
 
         /// <summary>Development builds: play another day's course (honoured by the server in development only).</summary>
@@ -77,9 +83,20 @@ namespace Echo.Game.Flow
             if (_dailyLobby != null && _dailyLobby.IsOpen && _daily != null && _daily.Ok)
             {
                 int left = Math.Max(0, _daily.SecondsLeft - (int)(Time.realtimeSinceStartup - _dailyFetchedAt));
-                _dailyLobby.SetCountdown($"{_daily.Date} · new course in {left / 3600}h {left / 60 % 60:00}m {left % 60:00}s");
+                int closing = DailyClock.Closing(left);
+                _dailyLobby.SetCountdown(closing > 0
+                    ? $"{_daily.Date} · <color=#FF5A5A>{DailyClock.Line(closing)}</color>"
+                    : $"{_daily.Date} · new course in {left / 3600}h {left / 60 % 60:00}m {left % 60:00}s");
             }
+            bool dailyRun = State == GameState.Running && _run != null && _run.Options.Daily;
+            _hud.SetBoardCloses(dailyRun ? DailyClock.Closing(BoardSecondsLeft()) : 0);
         }
+
+        // Seconds until the board closes at 00:00 UTC, by the server's clock when it has told us the day.
+        int BoardSecondsLeft() =>
+            _serverDay != null
+                ? _serverDaySecondsLeft - (int)(Time.realtimeSinceStartup - _serverDayAt)
+                : (int)(DateTime.UtcNow.Date.AddDays(1) - DateTime.UtcNow).TotalSeconds;
 
         // ---- the lobby ----
 
@@ -112,7 +129,9 @@ namespace Echo.Game.Flow
             {
                 _dailyLobby.SetMessage(_daily != null && _daily.Error == "content-version"
                     ? "Update Echo to play today's Daily Haunt."
-                    : "The Daily Haunt needs a connection.", playable: false);
+                    : _daily != null && _daily.Error == BackendFlags.Disabled
+                        ? "The Daily Haunt is resting. Back soon."
+                        : "The Daily Haunt needs a connection.", playable: false);
                 return;
             }
             Log(AnalyticsEvents.DailyOpened, ("date", _daily.Date), ("rank", _daily.Rank), ("best", _daily.BestDistance));
@@ -127,6 +146,9 @@ namespace Echo.Game.Flow
             if (this == null) return false;
             _daily = info;
             if (!info.Ok) return false;
+            _serverDay = info.Date;
+            _serverDaySecondsLeft = info.SecondsLeft;
+            _serverDayAt = Time.realtimeSinceStartup;
             if (info.ContentVersion != _contentVersion)
             {
                 info.Error = "content-version";
@@ -228,6 +250,7 @@ namespace Echo.Game.Flow
             DailyRules.Settle(run);
             SetState(GameState.DeathScreen);
             _hud.SetVisible(false);
+            _hud.SetBoardCloses(0);
             _ghostViews.SetLeaderNames(false);
             int bestToday = Math.Max(_daily.BestDistance, run.Distance);
             _deathScreen.Show(run.Distance, bestToday, run.Distance > _daily.BestDistance, "", "Saving your run...", "Best today");
@@ -268,17 +291,19 @@ namespace Echo.Game.Flow
             _dailyNextRun = Math.Max(_dailyNextRun, r.NextRunIndex);
             int previousRank = _daily.Rank;
             _daily.BestDistance = r.BestDistance;
-            _daily.Rank = r.Rank;
+            if (!r.BoardClosed) _daily.Rank = r.Rank;
             Log(AnalyticsEvents.DailyRunEnd, ("distance", r.Distance), ("best", r.BestDistance), ("rank", r.Rank), ("leadersPassed", r.LeadersPassed), ("newBest", r.NewBest));
             if (r.NewBest) Log(AnalyticsEvents.DailyNewBest, ("distance", r.Distance), ("rank", r.Rank));
 
-            _deathScreen.Show(r.Distance, r.BestDistance, r.NewBest, "", NextLeaderLine(r), "Best today");
+            _deathScreen.Show(r.Distance, r.BestDistance, r.NewBest, "",
+                r.BoardClosed ? "Midnight passed while you ran, so yesterday's board had closed. Today's course is ready." : NextLeaderLine(r),
+                "Best today");
             _deathScreen.SetScoreLabel("DISTANCE");
             _deathScreen.SetOffers(false, false);
             _deathScreen.SetDuel(null);
             _deathScreen.SetChallenge(null);
             _deathScreen.SetSaveReel(ReelRules.CanSave(run) ? "Save reel" : null, false, true);
-            _deathScreen.SetBanner(RankLine(r.Rank, previousRank, r.NewBest));
+            _deathScreen.SetBanner(r.BoardClosed ? "BOARD CLOSED" : RankLine(r.Rank, previousRank, r.NewBest));
         }
 
         static string NextLeaderLine(DailySubmitResult r) =>
@@ -317,7 +342,8 @@ namespace Echo.Game.Flow
                 }
                 DailySubmitResult r = await _services.Backend.SubmitDailyRunAsync(next.Date, next.LeaderVersion, next.Packet, DailyDateOverride);
                 if (this == null) return null;
-                if (!r.Ok && (r.Error == "offline" || r.Error == "rate-limit"))
+                // Switched off on the server: kept, like an offline run, until the end of its day.
+                if (!r.Ok && (r.Error == "offline" || r.Error == "rate-limit" || r.Error == BackendFlags.Disabled))
                 {
                     Log(AnalyticsEvents.DailySubmitFailed, ("error", r.Error));
                     break;   // try again later
@@ -335,7 +361,7 @@ namespace Echo.Game.Flow
         bool StillSendable(string date)
         {
             // The server's own date for today, while it is still today.
-            if (_daily != null && _daily.Ok && date == _daily.Date && Time.realtimeSinceStartup - _dailyFetchedAt <= _daily.SecondsLeft) return true;
+            if (_serverDay != null && date == _serverDay && Time.realtimeSinceStartup - _serverDayAt <= _serverDaySecondsLeft) return true;
             if (!string.IsNullOrEmpty(DailyDateOverride)) return date == DailyDateOverride;
             DateTime now = DateTime.UtcNow;
             string yesterday = now.Date.AddDays(-1).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);

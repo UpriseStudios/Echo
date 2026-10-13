@@ -796,13 +796,8 @@ namespace Echo.Game.Flow
             _challengeNo = null;
         }
 
-        static string CleanName(string raw)
-        {
-            var b = new System.Text.StringBuilder();
-            foreach (char ch in raw ?? "")
-                if (!char.IsControl(ch) && b.Length < Challenge.MaxNameLength) b.Append(ch);
-            return b.ToString().Trim();
-        }
+        // A name on the blocklist quietly becomes ChallengeNames.Default (a user choice).
+        static string CleanName(string raw) => ChallengeNames.Clean(raw);
 
         void Ask(string title, string body, string yes, string no, Action onYes, Action onNo)
         {

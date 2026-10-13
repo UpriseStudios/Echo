@@ -18,6 +18,7 @@ namespace Echo.Game.UI
         [SerializeField] TMP_Text _score;
         [SerializeField] TMP_Text _ghosts;
         [SerializeField] TMP_Text _countdown;
+        [SerializeField] TMP_Text _boardCloses;
         [SerializeField] TMP_Text _nearMiss;
         [SerializeField] TMP_Text _tapHint;
         [SerializeField] TMP_Text _toast;
@@ -125,6 +126,21 @@ namespace Echo.Game.UI
             _shownCountdown = seconds;
             _countdown.gameObject.SetActive(seconds > 0);
             if (seconds > 0) _countdown.SetText("{0}", seconds);
+        }
+
+        // Written into a fixed buffer, so the once-a-second update allocates nothing mid-run (tech spec 18).
+        readonly char[] _boardText = "Board closes in 0:00".ToCharArray();
+        int _shownBoardCloses = -1;
+
+        /// <summary>Daily Haunt: "Board closes in m:ss"; 0 hides it.</summary>
+        public void SetBoardCloses(int seconds)
+        {
+            if (_boardCloses == null || seconds == _shownBoardCloses) return;
+            _shownBoardCloses = seconds;
+            _boardCloses.gameObject.SetActive(seconds > 0);
+            if (seconds <= 0) return;
+            DailyClock.Write(seconds, _boardText);
+            _boardCloses.SetCharArray(_boardText, 0, _boardText.Length);
         }
 
         public void SetTapHint(bool visible)

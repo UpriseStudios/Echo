@@ -14,7 +14,8 @@ namespace Echo.Services.Backend
         public long Seed;
         public string ContentVersion = "";
         public int SecondsLeft;
-        public int LeaderVersion;
+        /// <summary>A hash of the leader set's contents; sent back with each run.</summary>
+        public string LeaderVersion = "";
 
         /// <summary>The run's ghosts as a Core.Net.ReelPacket: today's leaders and the player's own daily ghosts.</summary>
         public string GhostsPacket = "";

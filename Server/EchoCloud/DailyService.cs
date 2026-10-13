@@ -71,7 +71,8 @@ namespace EchoCloud
 
         sealed class LeaderSet
         {
-            public int Version { get; set; }
+            /// <summary>A hash of the day and the set's contents (VersionOf): two different sets never share one.</summary>
+            public string Version { get; set; } = "";
             public DateTime BuiltUtc { get; set; }
             public List<LeaderEntry> Leaders { get; set; } = new List<LeaderEntry>();
         }
@@ -150,7 +151,7 @@ namespace EchoCloud
             return response;
         }
 
-        public async Task<SubmitDailyResponse> SubmitAsync(string playerId, string date, int leaderVersion, string packet, string dateOverride = null)
+        public async Task<SubmitDailyResponse> SubmitAsync(string playerId, string date, string leaderVersion, string packet, string dateOverride = null)
         {
             var response = new SubmitDailyResponse();
             DateTime now = Now(dateOverride);
@@ -172,7 +173,8 @@ namespace EchoCloud
 
             LeaderCache cache = Read<LeaderCache>(await _store.GetGameAsync(CacheKey(date))) ?? new LeaderCache();
             LeaderSet set = cache.Versions.FirstOrDefault(v => v.Version == leaderVersion);
-            if (set == null && !(leaderVersion == 0 && cache.Versions.Count == 0)) return Fail(response, "leader-version");
+            if (set == null && !(cache.Versions.Count == 0 && leaderVersion == VersionOf(date, new List<LeaderEntry>())))
+                return Fail(response, "leader-version");
             var leaders = (set?.Leaders ?? new List<LeaderEntry>()).Where(e => e.PlayerId != playerId).ToList();
 
             PlayerDay day = await ReadDay(playerId, date);
@@ -186,7 +188,8 @@ namespace EchoCloud
 
             int distance = result.Distance;
             response.Corrected = distance != reel.Distance;
-            response.PreviousRank = (await _store.PlayerAsync(playerId))?.Rank ?? 0;
+            response.BoardClosed = lateFromYesterday;
+            if (!lateFromYesterday) response.PreviousRank = (await _store.PlayerAsync(playerId))?.Rank ?? 0;
             GhostRecord run = reel.Run.Clone();
             run.RunIndex = reel.RunIndex;
             if (distance > day.BestDistance)
@@ -195,7 +198,7 @@ namespace EchoCloud
                 day.BestDistance = distance;
                 own.Clear();
                 day.Packet = Container(reel.Seed, own, run);
-                await _store.SubmitAsync(playerId, distance, lateFromYesterday);
+                if (!lateFromYesterday) await _store.SubmitAsync(playerId, distance);   // yesterday's board is closed
                 response.NewBest = true;
             }
             else
@@ -210,7 +213,7 @@ namespace EchoCloud
             response.Distance = distance;
             response.BestDistance = day.BestDistance;
             response.NextRunIndex = day.NextRunIndex;
-            response.Rank = (await _store.PlayerAsync(playerId))?.Rank ?? 0;
+            if (!lateFromYesterday) response.Rank = (await _store.PlayerAsync(playerId))?.Rank ?? 0;
             if (response.NewBest && !lateFromYesterday && response.Rank >= 1 && response.Rank <= DailyRules.Leaders)
                 await CurrentLeaders(date, now, force: true);   // you're now one of the ghosts others meet
             response.LeadersPassed = DailyRules.Passed(leaders.Select(e => e.Distance), distance);
@@ -232,7 +235,7 @@ namespace EchoCloud
             LeaderSet latest = cache.Versions.LastOrDefault();
             if (!force && latest != null && now - latest.BuiltUtc < LeaderRefresh && now >= latest.BuiltUtc) return latest;
 
-            var set = new LeaderSet { Version = (latest?.Version ?? 0) + 1, BuiltUtc = now };
+            var set = new LeaderSet { BuiltUtc = now };
             int rank = 0;
             foreach (LeaderboardRow row in await _store.TopAsync(DailyRules.Leaders))
             {
@@ -247,11 +250,41 @@ namespace EchoCloud
                     Packet = Container(0, new List<GhostRecord>(), ghost),
                 });
             }
-            cache.Versions.Add(set);
+            set.Version = VersionOf(date, set.Leaders);
+            if (latest != null && latest.Version == set.Version)
+                latest.BuiltUtc = now;   // nothing changed: the same set, the same version, fresh for another 5 minutes
+            else
+                cache.Versions.Add(set);
             while (cache.Versions.Count > LeaderVersionsKept) cache.Versions.RemoveAt(0);
             await _store.SetGameAsync(CacheKey(date), JsonSerializer.Serialize(cache));
-            return set;
+            return cache.Versions[cache.Versions.Count - 1];
         }
+
+        /// <summary>
+        /// A leader set's version: SHA-256 over the date and every entry in order, each field length-prefixed so no two
+        /// different sets can write the same bytes. Equal contents give equal versions; different ones differ.
+        /// </summary>
+        public static string VersionOf(string date, IReadOnlyList<(string playerId, string name, int rank, int distance, string packet)> leaders)
+        {
+            var text = new StringBuilder();
+            void Field(string value) => text.Append(value.Length).Append(':').Append(value);
+            Field(date);
+            text.Append(leaders.Count).Append(';');
+            foreach (var e in leaders)
+            {
+                Field(e.playerId);
+                Field(e.name);
+                Field(e.rank.ToString(CultureInfo.InvariantCulture));
+                Field(e.distance.ToString(CultureInfo.InvariantCulture));
+                Field(e.packet);
+            }
+            using var sha = SHA256.Create();
+            byte[] hash = sha.ComputeHash(Encoding.UTF8.GetBytes(text.ToString()));
+            return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+        }
+
+        static string VersionOf(string date, List<LeaderEntry> leaders) =>
+            VersionOf(date, leaders.Select(e => (e.PlayerId, e.Name, e.Rank, e.Distance, e.Packet)).ToList());
 
         static string CacheKey(string date) => "leaders_" + date.Replace("-", "");
         static string DayKey(string date) => "daily_" + date.Replace("-", "");

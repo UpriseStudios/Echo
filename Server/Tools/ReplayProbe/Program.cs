@@ -37,6 +37,9 @@ namespace Echo.Server.Tools
             Console.WriteLine($"Content version {content.ContentVersion}\n");
             if (challengeMode) return await ProbeChallenges(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "daily") return await ProbeDaily(http, projectId, token, content);
+            if (args.Length > 0 && args[0] == "grace") return await ProbeGrace(http, projectId, token, content);
+            if (args.Length > 0 && args[0] == "names") return await ProbeNames(http, token);
+            if (args.Length > 0 && args[0] == "switches") return await ProbeSwitches(http, projectId, token, args.Length > 1 && args[1] == "off");
             Console.WriteLine("  #   course   ghosts  device m  server m  device score  server score  match");
             int sent = 0, matched = 0;
             foreach (uint seed in ParityRuns.Seeds(count * 4, (uint)DateTime.UtcNow.Ticks))
@@ -131,11 +134,11 @@ namespace Echo.Server.Tools
             async Task<JsonElement> Submit(string token, JsonElement d, Echo.Core.Reels.Reel reel) =>
                 await Call(http, projectId, token, "SubmitDailyRun", new
                 {
-                    date = d.GetProperty("date").GetString(), leaderVersion = d.GetProperty("leaderVersion").GetInt32(), packet = ReelPacket.Encode(reel),
+                    date = d.GetProperty("date").GetString(), leaderVersion = d.GetProperty("leaderVersion").GetString(), packet = ReelPacket.Encode(reel),
                 });
 
             var (dA, reelA, _) = await Play(tokenA, 100);
-            Console.WriteLine($"Today {dA.GetProperty("date").GetString()}, seed {dA.GetProperty("seed")}, leader set v{dA.GetProperty("leaderVersion")}, {dA.GetProperty("board").GetArrayLength()} on the board");
+            Console.WriteLine($"Today {dA.GetProperty("date").GetString()}, seed {dA.GetProperty("seed")}, leader set {dA.GetProperty("leaderVersion").GetString()[..12]}, {dA.GetProperty("board").GetArrayLength()} on the board");
             JsonElement rA = await Submit(tokenA, dA, reelA);
             Console.WriteLine($"Player A: ok {rA.GetProperty("ok")} {rA.GetProperty("error").GetString()}, device {reelA.Distance} m, server {rA.GetProperty("distance")} m, new best {rA.GetProperty("newBest")}, rank {rA.GetProperty("rank")}");
 
@@ -154,6 +157,98 @@ namespace Echo.Server.Tools
                 && rB.GetProperty("ok").GetBoolean() && rB.GetProperty("corrected").GetBoolean() && rB.GetProperty("distance").GetInt32() == reelB.Distance - 5000
                 && tomorrow.GetProperty("seed").GetInt64() != dA.GetProperty("seed").GetInt64();
             Console.WriteLine(good ? "\nThe Daily Haunt works on the development server." : "\nSOMETHING DIDN'T MATCH.");
+            return good ? 0 : 1;
+        }
+
+        // The grace window against a real archive: the development board is archived and reset (so an archived
+        // version exists), then a fresh player sends today's run as if it were 00:02 tomorrow. The server takes the
+        // grace path: the run is replayed and kept, but UGS archives are read-only, so it lands on neither board.
+        static async Task<int> ProbeGrace(HttpClient http, string projectId, string token, GameContent content)
+        {
+            Console.WriteLine("Archiving and resetting the development daily board: " + Ugs($"leaderboards reset daily --archive -e {Environment}"));
+            JsonElement d = await Call(http, projectId, token, "GetDaily", new { });
+            ReelPacket.TryDecode(d.GetProperty("ghostsPacket").GetString(), out Echo.Core.Reels.Reel ghosts);
+            Course course = content.CourseFor((uint)d.GetProperty("seed").GetInt64());
+            Echo.Core.Reels.Reel reel = null;
+            for (uint s = 300; reel == null; s++)
+            {
+                var run = Echo.Core.Daily.DailyRules.Start(course,
+                    Echo.Core.Daily.DailyRules.Ghosts(ghosts.Ghosts.Where(g => g.Leader), ghosts.Ghosts.Where(g => !g.Leader)),
+                    d.GetProperty("nextRunIndex").GetInt32(), content.Config);
+                reel = ParityRuns.Drive(run, course, s, content.Config, content.ContentVersion).Reel;
+            }
+            DateTime midnight = DateTime.UtcNow.Date.AddDays(1);
+            string late = midnight.AddMinutes(2).ToString("yyyy-MM-ddTHH:mm:ssZ");
+            Console.WriteLine($"Run on {d.GetProperty("date").GetString()}: {reel.Distance} m, sent as if at {late}");
+            JsonElement r;
+            try
+            {
+                r = await Call(http, projectId, token, "SubmitDailyRun", new
+                {
+                    date = d.GetProperty("date").GetString(), leaderVersion = d.GetProperty("leaderVersion"),
+                    packet = ReelPacket.Encode(reel), dateOverride = late,
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The archive refused the write: " + e.Message);
+                return 1;
+            }
+            Console.WriteLine($"Submit: ok {r.GetProperty("ok")} {r.GetProperty("error").GetString()}, server {r.GetProperty("distance")} m, new best {r.GetProperty("newBest")}");
+
+            JsonElement next = await Call(http, projectId, token, "GetDaily", new { dateOverride = midnight.AddMinutes(3).ToString("yyyy-MM-ddTHH:mm:ssZ") });
+            int yesterdayRank = next.GetProperty("yesterdayRank").GetInt32();
+            bool onToday = next.GetProperty("board").EnumerateArray().Any(e => e.GetProperty("isYou").GetBoolean());
+            Console.WriteLine($"Archived board: player's rank {yesterdayRank}, winner {next.GetProperty("yesterdayWinner").GetString()} {next.GetProperty("yesterdayWinnerDistance")} m; on the live board too: {onToday}");
+            bool good = r.GetProperty("ok").GetBoolean() && r.GetProperty("boardClosed").GetBoolean() && yesterdayRank == 0 && !onToday;
+            Console.WriteLine(good ? "\nThe grace run was accepted and kept with the board closed: it is on neither board." : "\nTHE GRACE RUN WAS NOT HANDLED AS EXPECTED.");
+            return good ? 0 : 1;
+        }
+
+        // The public daily board shows the UGS player name. The game never sets one, so it stays auto-generated; this
+        // checks a player can't rename themselves by calling the Player Names API directly (Access Control denies it).
+        static async Task<int> ProbeNames(HttpClient http, string token)
+        {
+            string payload = token.Split('.')[1].Replace('-', '+').Replace('_', '/');
+            payload = payload.PadRight(payload.Length + (4 - payload.Length % 4) % 4, '=');
+            string playerId = JsonDocument.Parse(Convert.FromBase64String(payload)).RootElement.GetProperty("sub").GetString();
+            async Task<HttpResponseMessage> Send(HttpMethod method, string body)
+            {
+                var request = new HttpRequestMessage(method, $"https://social.services.api.unity.com/v1/names/{playerId}");
+                request.Headers.Add("Authorization", "Bearer " + token);
+                if (body != null) request.Content = new StringContent(body, Encoding.UTF8, "application/json");
+                return await http.SendAsync(request);
+            }
+            HttpResponseMessage got = await Send(HttpMethod.Get, null);
+            Console.WriteLine($"Player {playerId}: name {(int)got.StatusCode} {await got.Content.ReadAsStringAsync()}");
+            HttpResponseMessage put = await Send(HttpMethod.Post, "{\"name\":\"ProbeRename\"}");
+            Console.WriteLine($"Rename attempt: {(int)put.StatusCode} {await put.Content.ReadAsStringAsync()}");
+            HttpResponseMessage after = await Send(HttpMethod.Get, null);
+            Console.WriteLine($"Name now: {(int)after.StatusCode} {await after.Content.ReadAsStringAsync()}");
+            bool blocked = (int)put.StatusCode == 403;
+            Console.WriteLine(blocked ? "\nPlayers can't rename themselves." : "\nA PLAYER CAN SET THEIR OWN NAME.");
+            return blocked ? 0 : 1;
+        }
+
+        // The Remote Config switches as Cloud Code sees them: with "off", every Daily Haunt and challenge endpoint
+        // should answer "disabled"; otherwise none should.
+        static async Task<int> ProbeSwitches(HttpClient http, string projectId, string token, bool expectOff)
+        {
+            var answers = new (string function, JsonElement output)[]
+            {
+                ("GetDaily", await Call(http, projectId, token, "GetDaily", new { })),
+                ("SubmitDailyRun", await Call(http, projectId, token, "SubmitDailyRun", new { date = "2026-01-01", leaderVersion = "", packet = "x" })),
+                ("CreateChallenge", await Call(http, projectId, token, "CreateChallenge", new { packet = "x", name = "Probe" })),
+                ("GetChallenge", await Call(http, projectId, token, "GetChallenge", new { ownerId = "x", challengeId = "y" })),
+            };
+            bool good = true;
+            foreach (var (function, output) in answers)
+            {
+                string error = output.GetProperty("error").GetString();
+                Console.WriteLine($"{function}: error '{error}'");
+                good &= (error == "disabled") == expectOff;
+            }
+            Console.WriteLine(good ? $"\nEvery endpoint {(expectOff ? "is closed" : "is open")}, as its switch says." : "\nAN ENDPOINT IGNORED ITS SWITCH.");
             return good ? 0 : 1;
         }
 

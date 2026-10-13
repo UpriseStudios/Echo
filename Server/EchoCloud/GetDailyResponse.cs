@@ -16,7 +16,7 @@ namespace EchoCloud
         public int SecondsLeft { get; set; }
 
         /// <summary>The leader set this run will face; SubmitDailyRun takes it back so the run replays against it.</summary>
-        public int LeaderVersion { get; set; }
+        public string LeaderVersion { get; set; } = "";
 
         /// <summary>The run's ghosts, as a ReelPacket whose Ghosts are today's leaders (not the player's own) and their daily ghosts.</summary>
         public string GhostsPacket { get; set; } = "";

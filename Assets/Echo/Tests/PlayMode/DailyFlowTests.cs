@@ -91,6 +91,7 @@ namespace Echo.Tests.PlayMode
             while (game.State != GameState.Title) yield return null;
             var backend = (MockBackendService)game.Services.Backend;
             backend.Flags = new BackendFlags(true, true);
+            backend.SecondsLeft = 250;   // the board closes in a little over 4 minutes
             backend.Leaders.Add((DailyRules.AsLeader(new GhostRecord { RunIndex = 1, DeathTick = 900, TapTicks = new int[0] }, 1, "SwiftGhost#4821"), 812));
             StringAssert.StartsWith("Daily Haunt", Find("Title/Daily").GetComponentInChildren<TMP_Text>().text);
 
@@ -100,6 +101,8 @@ namespace Echo.Tests.PlayMode
             Assert.AreEqual(GameState.Menu, game.State);
             StringAssert.Contains("SwiftGhost#4821", Text("DailyLobby/Row0"));
             StringAssert.Contains("812 m", Text("DailyLobby/Row0"));
+            game.TickFrame(1.1f, false);
+            StringAssert.Contains("Board closes in 4:", Text("DailyLobby/Countdown"));
 
             // A daily run: the leader ghost, and no power-ups at all.
             game.ScriptedTaps = t => false;
@@ -110,6 +113,9 @@ namespace Echo.Tests.PlayMode
             Assert.AreEqual(1, game.Run.GhostsAtStart, "today's leader");
             Assert.IsFalse(game.Run.ExtraLifeHeld, "the Extra 1-UP stays at home");
             Assert.IsFalse(Showing("Hud/PowerShield") || Showing("Hud/PowerPhase"));
+            game.TickFrame(1.1f, false);
+            Assert.IsTrue(Showing("Hud/BoardCloses"), "the last 5 minutes, on the HUD too");
+            StringAssert.StartsWith("Board closes in 4:", Text("Hud/BoardCloses"));
 
             yield return ToDeathScreen(game);
             Assert.AreEqual("DISTANCE", Text("DeathScreen/ScoreLabel"));
@@ -147,6 +153,25 @@ namespace Echo.Tests.PlayMode
             yield return null;
             Assert.AreEqual(0, game.CurrentSave.Daily.Pending.Count, "sent when the lobby opened");
             Assert.AreEqual(3, backend.Submissions, "two sent at once, the offline one later");
+
+            // Switched off on the server mid-run (Cloud Code checks the switch too): the run is kept, not lost, and
+            // goes once the switch is back on; while it's off, the lobby rests.
+            Click("DailyLobby/Play");
+            yield return null;
+            backend.ServerDailyOff = true;
+            yield return ToDeathScreen(game);
+            Assert.AreEqual(1, game.CurrentSave.Daily.Pending.Count, "kept for later");
+            Click("DeathScreen/Menu");
+            Click("Title/Daily");
+            yield return null;
+            StringAssert.Contains("resting", Text("DailyLobby/Status"));
+            Assert.AreEqual(1, game.CurrentSave.Daily.Pending.Count);
+            Click("DailyLobby/Back");
+            backend.ServerDailyOff = false;
+            Click("Title/Daily");
+            yield return null;
+            Assert.AreEqual(0, game.CurrentSave.Daily.Pending.Count, "sent once the switch was back on");
+            Assert.AreEqual(4, backend.Submissions);
             Click("DailyLobby/Back");
 
             // The main game never noticed.

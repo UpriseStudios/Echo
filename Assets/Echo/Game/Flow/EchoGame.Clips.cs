@@ -310,7 +310,7 @@ namespace Echo.Game.Flow
             }
             LastClipPath = path;
             _clipEditor.SetStatus(mime == "video/mp4" ? "Video ready to share" : "GIF ready to share");
-            string link = await ChallengeLinkFor(reel, _save.Settings.PlayerName ?? "");
+            string link = await ChallengeLinkFor(reel, ChallengeNames.Clean(_save.Settings.PlayerName));
             _services.Share.ShareFile(path, mime, ClipText(reel, link));
         }
 

@@ -6,7 +6,7 @@ namespace Echo.Game.Persistence
     public sealed class PendingDailyRun
     {
         [JsonProperty("date")] public string Date = "";
-        [JsonProperty("leaderVersion")] public int LeaderVersion;
+        [JsonProperty("leaderVersion")] public string LeaderVersion = "";
         [JsonProperty("packet")] public string Packet = "";
     }
 }

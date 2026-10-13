@@ -24,5 +24,11 @@ namespace EchoCloud
         /// <summary>The client claimed a different distance (logged: a desync bug or tampering).</summary>
         public bool Corrected { get; set; }
         public int NextRunIndex { get; set; }
+
+        /// <summary>
+        /// A run from yesterday sent in the grace period after midnight: replayed and kept as that day's best and
+        /// ghosts, but yesterday's board had closed (UGS archives are read-only), so it isn't ranked.
+        /// </summary>
+        public bool BoardClosed { get; set; }
     }
 }
