@@ -232,7 +232,7 @@ namespace Echo.Game.Flow
             _settings.Closed += CloseMenu;
             _deathScreen.ChallengeClicked += OnSendRunAsChallenge;
             WireReels();
-            _stats.ChallengeClicked += () => SendChallenge(_progress.BestRun);
+            _stats.ChallengeClicked += SendBestChallenge;
             _stats.PasteClicked += OnPasteChallenge;
             _settings.NameClicked += () => AskName(null);
             _settings.StatusRequested += OnSettingsStatusRequested;
@@ -760,127 +760,6 @@ namespace Echo.Game.Flow
 
         bool ChallengeCardOpen => _challenge != null && _challenge.IsOpen;
 
-        /// <summary>Opens a challenge from a link, a pasted message or a bare code. Anything else is ignored.</summary>
-        public void OpenChallengeLink(string text)
-        {
-            if (!ChallengeCode.TryParse(text, out Challenge c)) return;
-            _pendingChallenge = c;
-            if (State == GameState.Title) PresentPendingChallenge();
-        }
-
-        void PresentPendingChallenge()
-        {
-            if (_challenge == null || ChallengeCardOpen) return;
-            Challenge c = _pendingChallenge;
-            _pendingChallenge = null;
-            bool sameVersion = c.ContentVersion == _contentVersion;
-            Log(AnalyticsEvents.ChallengeOpened, ("distance", c.Distance), ("versionMatch", sameVersion));
-            if (!sameVersion)
-            {
-                // Value-adds doc: a challenge from another content version cannot be replayed on today's course.
-                Ask("OLDER CHALLENGE", $"{c.GhostName} comes from another version of Echo, so its course has changed. Send yours instead?",
-                    "Send mine", "Close", () => SendChallenge(_progress.BestRun), null);
-                return;
-            }
-            Ask("GHOST CHALLENGE", $"{c.GhostName} dares you to beat {c.Distance} m on their course.", "Race it", "Not now",
-                () => StartChallenge(c), null);
-        }
-
-        void StartChallenge(Challenge c)
-        {
-            _activeChallenge = c;
-            _passedTheirGrave = false;
-            _title.Hide();
-            HideDeathScreen();
-            _activeChallenge = c;
-            _course = new Course(_library, c.Seed);
-            _run = RunRules.StartChallenge(_progress, _course, _cfg, c);
-            ApplyTwist(Twist.None);
-            _bountySeen = false;
-            _duelNemesis = null;
-            SnapshotPrevious();
-            _ghostViews.ResetPop();
-            _ghostViews.SetNameTag(c.GhostName);
-            if (_graves != null)
-            {
-                // Their grave is the finish line.
-                _graves.Plant(_run.Ghosts, _course, _cfg, null);
-                _graves.SetEpitaph(0, $"{Who(c)} fell here · {c.Distance} m");
-            }
-            _livesEarnedSeen = 0;
-            _livesUsedSeen = 0;
-            _hud.SetLives(0);
-            _hud.QueueToast($"BEAT {WhoUpper(c)}: {c.Distance} M");
-            StartRunning();
-        }
-
-        void EndChallenge()
-        {
-            Challenge c = _activeChallenge;
-            ChallengeOutcome o = RunRules.CommitChallenge(_run, c);
-            Log(AnalyticsEvents.ChallengeResult, ("won", o.Won), ("margin", o.Margin), ("killedByGhost", o.KilledByGhost),
-                ("distance", o.Distance), ("theirDistance", o.TheirDistance));
-            SetState(GameState.DeathScreen);
-            _hud.SetVisible(false);
-            string line = o.Won ? $"You outlasted {Who(c)} by {o.Margin} m"
-                : o.KilledByGhost ? $"{c.GhostName} got you"
-                : o.Margin == 0 ? $"Dead level with {Who(c)}"
-                : $"{Who(c)} wins by {o.Margin} m";
-            _deathScreen.Show(_run.Score, _progress.Best, false, "", line);
-            _deathScreen.SetOffers(false, false);
-            _deathScreen.SetDuel(null);
-            _deathScreen.SetChallenge("Send one back");
-            _deathScreen.SetBanner(o.Won ? "CHALLENGE WON!" : null);
-        }
-
-        // "Jamie", or "your friend" for an unnamed challenge.
-        static string Who(Challenge c) => string.IsNullOrEmpty(c.Name) ? "your friend" : c.Name;
-        static string WhoUpper(Challenge c) => Who(c).ToUpperInvariant();
-
-        void OnSendRunAsChallenge()
-        {
-            if (State != GameState.DeathScreen || !ChallengeRuns.CanSend(_run)) return;
-            Challenge c = ChallengeRuns.FromRun(_run);
-            c.ContentVersion = _contentVersion;
-            SendChallenge(c);
-        }
-
-        void SendChallenge(Challenge c)
-        {
-            if (c == null)
-            {
-                Ask("NO BEST YET", "Set a best score first, then challenge a friend to beat it.", "OK", null, null, null);
-                return;
-            }
-            if (!string.IsNullOrEmpty(c.ContentVersion) && c.ContentVersion != _contentVersion)
-            {
-                Ask("OLD BEST", "Your best was set on an older version of Echo. Set a new best to send a challenge.", "OK", null, null, null);
-                return;
-            }
-            if (string.IsNullOrEmpty(_save.Settings.PlayerName))
-            {
-                AskName(() => SendChallenge(c));
-                return;
-            }
-            c.Name = _save.Settings.PlayerName;
-            c.ContentVersion = _contentVersion;
-            string store = _serviceConfig != null && EchoServiceConfig.IsSet(_serviceConfig.StoreUrl) ? "\nNo Echo yet? " + _serviceConfig.StoreUrl : "";
-            _services.Share.ShareText($"{c.GhostName} challenges you to beat {c.Distance} m in Echo!\n{ChallengeCode.Link(c)}{store}");
-            Log(AnalyticsEvents.ChallengeSent, ("distance", c.Distance));
-        }
-
-        void OnPasteChallenge()
-        {
-            if (ChallengeCode.TryParse(GUIUtility.systemCopyBuffer, out Challenge c))
-            {
-                CloseMenu();
-                _pendingChallenge = c;
-                PresentPendingChallenge();
-                return;
-            }
-            Ask("NOTHING TO PASTE", "Copy a challenge link from a friend's message, then tap Paste challenge.", "OK", null, null, null);
-        }
-
         /// <summary>Asks for the name on challenges ("Jamie's Ghost"), then carries on with <paramref name="then"/>.</summary>
         void AskName(Action then)
         {
@@ -1052,6 +931,7 @@ namespace Echo.Game.Flow
             _title.Show(_progress.Best);
             _title.SetExitVisible(CanQuit);
             if (_pendingChallenge != null) PresentPendingChallenge();
+            ProcessPendingLink();
             Twist week = ThisWeeksTwist();
             if (week == Twist.None) _title.SetTwist(null);
             else if (_save.Settings.PlayTwist)
@@ -1429,6 +1309,7 @@ namespace Echo.Game.Flow
                     : Application.isEditor ? "Editor: mock services (Real Services In Editor is off)."
                     : "Not a phone build: mock services.";
                 LogSessionStart();
+                ServicesSettled();
             }
         }
 
@@ -1441,13 +1322,23 @@ namespace Echo.Game.Flow
                 _services.Adopt(real);
                 _services.StartupNote = real.Note;
                 LogSessionStart();
+                ServicesSettled();
             }
             catch (Exception e)
             {
                 Debug.LogWarning($"[Echo] real services failed to start, staying on mocks: {e}");
                 _services.StartupNote = $"Real services failed to start ({e.Message}): mocks.";
                 LogSessionStart();
+                ServicesSettled();
             }
+        }
+
+        // Server calls (2.0) wait for this: before it, the game is still on mocks, or before the consent choice.
+        void ServicesSettled()
+        {
+            _servicesSettled = true;
+            WireBackend();
+            ProcessPendingLink();
         }
 
         void OnConsentChosen(bool personalisedAds, bool analytics)

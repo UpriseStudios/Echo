@@ -32,12 +32,15 @@ namespace Echo.Game.UI
         [SerializeField] Button[] _watch = new Button[0];
         [SerializeField] Button[] _clip = new Button[0];
         [SerializeField] Button[] _delete = new Button[0];
+        // Balance addendum: a reel holds its ghost snapshot, so it can be sent as a full challenge.
+        [SerializeField] Button[] _challenge = new Button[0];
         [SerializeField] Button[] _replace = new Button[0];
         [SerializeField] Button _close;
 
         public event Action<int> WatchClicked;
         public event Action<int> ClipClicked;
         public event Action<int> DeleteClicked;
+        public event Action<int> ChallengeClicked;
         public event Action<int> ReplaceClicked;
         public event Action CloseClicked;
 
@@ -52,6 +55,7 @@ namespace Echo.Game.UI
                 _watch[i].onClick.AddListener(() => WatchClicked?.Invoke(slot));
                 _clip[i].onClick.AddListener(() => ClipClicked?.Invoke(slot));
                 _delete[i].onClick.AddListener(() => DeleteClicked?.Invoke(slot));
+                if (i < _challenge.Length) _challenge[i].onClick.AddListener(() => ChallengeClicked?.Invoke(slot));
                 _replace[i].onClick.AddListener(() => ReplaceClicked?.Invoke(slot));
             }
             _close.onClick.AddListener(() => CloseClicked?.Invoke());
@@ -78,6 +82,11 @@ namespace Echo.Game.UI
                 _watch[i].gameObject.SetActive(filled && !replaceMode);
                 _clip[i].gameObject.SetActive(filled && !replaceMode);
                 _delete[i].gameObject.SetActive(filled && !replaceMode);
+                if (i < _challenge.Length)
+                {
+                    _challenge[i].gameObject.SetActive(filled && !replaceMode);
+                    _challenge[i].interactable = playable;
+                }
                 _watch[i].interactable = playable;
                 _clip[i].interactable = playable;
                 _replace[i].gameObject.SetActive(filled && replaceMode);

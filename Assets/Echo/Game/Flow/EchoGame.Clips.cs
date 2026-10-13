@@ -310,7 +310,8 @@ namespace Echo.Game.Flow
             }
             LastClipPath = path;
             _clipEditor.SetStatus(mime == "video/mp4" ? "Video ready to share" : "GIF ready to share");
-            _services.Share.ShareFile(path, mime, ClipText(reel));
+            string link = await ChallengeLinkFor(reel, _save.Settings.PlayerName ?? "");
+            _services.Share.ShareFile(path, mime, ClipText(reel, link));
         }
 
         void CancelRecording()
@@ -331,12 +332,7 @@ namespace Echo.Game.Flow
         }
 
         // The clip travels with the run's challenge link, so whoever sees it can race it.
-        string ClipText(Reel reel)
-        {
-            Challenge c = ChallengeRuns.FromReel(reel);
-            c.Name = _save.Settings.PlayerName ?? "";
-            string store = _serviceConfig != null && EchoServiceConfig.IsSet(_serviceConfig.StoreUrl) ? "\nNo Echo yet? " + _serviceConfig.StoreUrl : "";
-            return $"{reel.Score:N0} in Echo with {Plural(reel.GhostsAtStart, "ghost")} after me. Race my run:\n{ChallengeCode.Link(c)}{store}";
-        }
+        string ClipText(Reel reel, string link) =>
+            $"{reel.Score:N0} in Echo with {Plural(reel.GhostsAtStart, "ghost")} after me. Race my run:\n{link}{StoreLine()}";
     }
 }

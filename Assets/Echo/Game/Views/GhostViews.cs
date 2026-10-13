@@ -150,11 +150,18 @@ namespace Echo.Game.Views
 
         /// <param name="playerTicks">Player ticks stepped so far; with alpha it places each ghost between its own ticks.</param>
         /// <summary>Ghost Challenges: name the only ghost ("Jamie's Ghost"); null for ordinary runs.</summary>
-        public void SetNameTag(string name)
+        /// <param name="runIndex">The tagged ghost's run; -1 tags the first ghost (a Lite challenge has only one).</param>
+        /// <param name="nemesisPrefix">Before the Nemesis's name in a full challenge: "Jamie's Nemesis: ".</param>
+        public void SetNameTag(string name, int runIndex = -1, string nemesisPrefix = "")
         {
             _nameTag = name;
+            _nameTagRun = runIndex;
+            _nemesisPrefix = nemesisPrefix ?? "";
             _labelRunIndex = int.MinValue;
         }
+
+        int _nameTagRun = -1;
+        string _nemesisPrefix = "";
 
         public void Render(GhostManager ghosts, int playerTicks, float alpha, in SimConfig cfg,
                            Course course, GhostRecord nemesis, float playerX, bool previews)
@@ -248,7 +255,7 @@ namespace Echo.Game.Views
                     _bountyRenderer.color = new Color(BountyColor.r, BountyColor.g, BountyColor.b, Mathf.Max(a, 0.6f));
                 }
 
-                bool tagged = _nameTag != null && i == 0;
+                bool tagged = _nameTag != null && (_nameTagRun < 0 ? i == 0 : record.RunIndex == _nameTagRun);
                 if (isNemesis || tagged)
                 {
                     hornsShown |= isNemesis;
@@ -265,7 +272,7 @@ namespace Echo.Game.Views
                         if (_labelRunIndex != labelKey)
                         {
                             _labelRunIndex = labelKey;
-                            _nemesisLabel.text = tagged ? _nameTag : NemesisNames.For(record.RunIndex);
+                            _nemesisLabel.text = tagged ? _nameTag : _nemesisPrefix + NemesisNames.For(record.RunIndex);
                         }
                         Color labelColor = tagged ? NameTagColor : NemesisColor;
                         _nemesisLabel.transform.position = new Vector3(pos.x, pos.y + top + 0.45f + lift, 0f);

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Echo Challenge</title>
+<meta name="description" content="A friend has challenged you to race their ghost in Echo.">
+<meta property="og:title" content="You've been challenged in Echo">
+<meta property="og:description" content="Race a friend's run, ghosts and all. Pass their ghost to win.">
+<meta property="og:image" content="https://echo.uprisestudios.co.uk/icon.png">
+<link rel="icon" href="/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans&display=swap">
+<link rel="stylesheet" href="/site.css">
+</head>
+<body>
+<main>
+  <img class="icon" src="/icon.png" alt="Echo">
+  <h1>You've been challenged</h1>
+  <p class="lede">A friend wants you to race their run in Echo, with every ghost they faced. Pass their ghost to win.</p>
+  <div class="buttons">
+    <a class="button primary" id="open" href="echoghost://">Open in Echo</a>
+    <a class="button" href="https://play.google.com/store/apps/details?id=com.uprise.echo">Get it on Google Play</a>
+    <!-- iOS to follow: add the App Store button here once the listing exists -->
+  </div>
+  <p class="note">New to Echo? Install it, then tap your friend's link again to open the challenge.</p>
+  <footer><a href="/">Echo</a> · <a href="/privacy/">Privacy</a> · Uprise Studios</footer>
+</main>
+<script>
+  // /c/OWNER/ID: the game's own scheme opens the same challenge when the app is installed.
+  (function () {
+    var parts = location.pathname.split('/').filter(Boolean);
+    var ok = function (s) { return /^[A-Za-z0-9_-]{1,64}$/.test(s || ''); };
+    if (parts.length >= 3 && parts[0] === 'c' && ok(parts[1]) && ok(parts[2])) {
+      document.getElementById('open').href = 'echoghost://c/' + parts[1] + '/' + parts[2];
+    }
+  })();
+</script>
+</body>
+</html>

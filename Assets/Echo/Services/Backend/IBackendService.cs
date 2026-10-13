@@ -23,5 +23,11 @@ namespace Echo.Services.Backend
 
         /// <summary>Development: the server's own replay of a run packet (Core.Net.ReelPacket).</summary>
         Task<ReplayCheckResult> ReplayCheckAsync(string packet);
+
+        /// <summary>Stores a challenge (a run with its ghosts, as a ReelPacket) and returns its link.</summary>
+        Task<CreateChallengeResult> CreateChallengeAsync(string packet, string name);
+
+        /// <summary>Fetches a challenge someone sent, by the owner and id in its link.</summary>
+        Task<GetChallengeResult> GetChallengeAsync(string ownerId, string challengeId);
     }
 }

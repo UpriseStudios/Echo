@@ -59,6 +59,8 @@ namespace Echo.Game.Persistence
             p.BanishTenUsed = s.BanishTenUsed;
             p.RunsSinceBest = Math.Max(0, s.RunsSinceBest);
             if (!string.IsNullOrEmpty(s.BestRun) && ChallengeCode.TryDecode(s.BestRun, out Challenge bestRun)) p.BestRun = bestRun;
+            // Schema 2 saves have no best reel: their best sends a Lite challenge until a new best is set.
+            if (s.BestReel?.Run != null) p.BestReel = ToReel(s.BestReel);
             if (s.Gallery != null)
                 foreach (GallerySaveData e in s.Gallery)
                 {
@@ -139,6 +141,8 @@ namespace Echo.Game.Persistence
             s.RunsSinceBest = p.RunsSinceBest;
             if (p.BestRun != null && string.IsNullOrEmpty(p.BestRun.ContentVersion)) p.BestRun.ContentVersion = contentVersion;
             s.BestRun = p.BestRun != null ? ChallengeCode.Encode(p.BestRun) : "";
+            if (p.BestReel != null && string.IsNullOrEmpty(p.BestReel.ContentVersion)) p.BestReel.ContentVersion = contentVersion;
+            s.BestReel = p.BestReel != null ? ToSave(p.BestReel) : null;
             s.Gallery = new System.Collections.Generic.List<GallerySaveData>();
             foreach (GalleryEntry e in p.Gallery)
                 s.Gallery.Add(new GallerySaveData

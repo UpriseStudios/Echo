@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.uprise.echo",
+      "sha256_cert_fingerprints": [
+        "5A:BF:B8:5F:90:9B:D9:94:3A:62:58:9C:87:1F:45:C2:64:75:8B:2A:20:5F:DD:E2:A8:72:6E:91:9B:7F:28:42"
+      ]
+    }
+  }
+]

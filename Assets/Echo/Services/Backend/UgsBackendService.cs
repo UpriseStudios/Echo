@@ -71,5 +71,35 @@ namespace Echo.Services.Backend
                 return ReplayCheckResult.Failed(e.Message);
             }
         }
+
+        public async Task<CreateChallengeResult> CreateChallengeAsync(string packet, string name)
+        {
+            if (!await SignInAsync()) return CreateChallengeResult.Failed("offline");
+            try
+            {
+                return await CloudCodeService.Instance.CallModuleEndpointAsync<CreateChallengeResult>(Module, "CreateChallenge",
+                    new Dictionary<string, object> { { "packet", packet }, { "name", name } });
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[Backend] CreateChallenge: " + e.Message);
+                return CreateChallengeResult.Failed("offline");
+            }
+        }
+
+        public async Task<GetChallengeResult> GetChallengeAsync(string ownerId, string challengeId)
+        {
+            if (!await SignInAsync()) return GetChallengeResult.Failed("offline");
+            try
+            {
+                return await CloudCodeService.Instance.CallModuleEndpointAsync<GetChallengeResult>(Module, "GetChallenge",
+                    new Dictionary<string, object> { { "ownerId", ownerId }, { "challengeId", challengeId } });
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[Backend] GetChallenge: " + e.Message);
+                return GetChallengeResult.Failed("offline");
+            }
+        }
     }
 }

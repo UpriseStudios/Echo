@@ -93,7 +93,7 @@ namespace Echo.Tests.EditMode
             SaveMapper.Write(progress, data, Version);
             _saves.Save(data);
             SaveData loaded = _saves.Load();
-            Assert.AreEqual(2, loaded.Schema);
+            Assert.AreEqual(SaveData.CurrentSchema, loaded.Schema);
             Progress p = SaveMapper.ToProgress(loaded, Version, out _);
 
             GhostRecord g = p.Ghosts[0];
@@ -121,6 +121,45 @@ namespace Echo.Tests.EditMode
             Assert.AreEqual(-1, g.DeathX, "the gravestone falls back to a replay");
             Assert.AreEqual(DeathCause.None, g.Cause);
             Assert.AreEqual(0, p.Stats.Deaths);
+        }
+
+        [Test]
+        public void Schema2Saves_MigrateToSchema3_KeepingTheOldFileUntouched()
+        {
+            // Version 2.0: a 1.x save (schema 2) loads with everything intact; the old file is kept as it was.
+            string json = "{\"schema\":2,\"contentVersion\":\"" + Version + "\",\"best\":420,\"bestRun\":\"\",\"ghosts\":[" +
+                          "{\"runIndex\":3,\"tapTicks\":[5],\"deathTick\":90,\"speedPct\":100,\"skinId\":\"char_cat\",\"deathX\":800}]}";
+            File.WriteAllText(_saves.FilePath, json);
+
+            SaveData loaded = _saves.Load();
+            Assert.AreEqual(json, File.ReadAllText(_saves.SchemaBackupPath(2)), "the old file, byte for byte");
+            Progress p = SaveMapper.ToProgress(loaded, Version, out bool discarded);
+            Assert.IsFalse(discarded);
+            Assert.AreEqual(420, p.Best);
+            Assert.AreEqual("char_cat", p.Ghosts[0].SkinId);
+            Assert.IsNull(p.BestReel, "no snapshot before 2.0: Stats sends a Lite challenge");
+
+            var again = new SaveData();
+            SaveMapper.Write(p, again, Version);
+            _saves.Save(again);
+            Assert.AreEqual(SaveData.CurrentSchema, _saves.Load().Schema);
+            Assert.AreEqual(json, File.ReadAllText(_saves.SchemaBackupPath(2)), "the backup is never overwritten");
+        }
+
+        [Test]
+        public void TheBestReel_RoundTrips()
+        {
+            var p = SampleProgress();
+            p.BestReel = new Echo.Core.Reels.Reel { Seed = 77u, SpeedPct = 105, RunIndex = 8, Score = 900, Distance = 640, Run = new GhostRecord { RunIndex = 8, TapTicks = new[] { 3, 9 }, DeathTick = 700 } };
+            p.BestReel.Ghosts.Add(new GhostRecord { RunIndex = 2, TapTicks = new[] { 4 }, DeathTick = 50, Kills = 3 });
+            var data = new SaveData();
+            SaveMapper.Write(p, data, Version);
+            _saves.Save(data);
+            Echo.Core.Reels.Reel back = SaveMapper.ToProgress(_saves.Load(), Version, out _).BestReel;
+            Assert.AreEqual((77u, 105, 8, 900, 640), (back.Seed, back.SpeedPct, back.RunIndex, back.Score, back.Distance));
+            Assert.AreEqual(Version, back.ContentVersion, "stamped with the version it was played on");
+            Assert.AreEqual(3, back.Ghosts[0].Kills);
+            CollectionAssert.AreEqual(new[] { 3, 9 }, back.Run.TapTicks);
         }
 
         [Test]

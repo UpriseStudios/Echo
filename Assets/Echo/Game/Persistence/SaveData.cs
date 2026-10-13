@@ -7,7 +7,8 @@ namespace Echo.Game.Persistence
     public sealed class SaveData
     {
         // 2: ghosts carry skin, death x, cause and killer; stats gain the unlock counters (skins addendum).
-        public const int CurrentSchema = 2;
+        // 3 (version 2.0): the best run keeps its ghost snapshot (bestReel), for full challenges from Stats.
+        public const int CurrentSchema = 3;
 
         [JsonProperty("schema")] public int Schema = CurrentSchema;
         [JsonProperty("contentVersion")] public string ContentVersion = "";
@@ -35,6 +36,9 @@ namespace Echo.Game.Persistence
 
         /// <summary>Ghost Challenges: the run behind the current best, as its challenge code (it carries its own content version).</summary>
         [JsonProperty("bestRun")] public string BestRun = "";
+
+        /// <summary>Schema 3: the best run with the ghosts it started against. Empty before a best set since 2.0.</summary>
+        [JsonProperty("bestReel")] public ReelSaveData BestReel;
 
         /// <summary>Power-ups held, up to PowerUpRules.MaxHeld of each (a user revision).</summary>
         [JsonProperty("powerUps")] public PowerUpsSaveData PowerUps = new PowerUpsSaveData();

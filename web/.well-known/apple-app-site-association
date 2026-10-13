@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["__APPLE_TEAM_ID__.__IOS_BUNDLE_ID__"],
+        "components": [
+          { "/": "/c/*", "comment": "Echo friend challenges" }
+        ]
+      }
+    ]
+  }
+}

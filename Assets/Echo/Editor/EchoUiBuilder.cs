@@ -302,6 +302,7 @@ namespace Echo.Editor
             var watch = new Button[slots];
             var clip = new Button[slots];
             var delete = new Button[slots];
+            var challenge = new Button[slots];
             var replace = new Button[slots];
             for (int i = 0; i < slots; i++)
             {
@@ -327,11 +328,13 @@ namespace Echo.Editor
                 details[i].alignment = TextAlignmentOptions.MidlineLeft;
                 details[i].color = Soft;
 
-                watch[i] = MakeButton(slot, "Watch", "Watch", new Vector2(-150, -62), new Vector2(230, 92), ButtonStyle.Primary);
-                clip[i] = MakeButton(slot, "Clip", "Clip", new Vector2(95, -62), new Vector2(230, 92), ButtonStyle.Secondary);
+                watch[i] = MakeButton(slot, "Watch", "Watch", new Vector2(-260, -62), new Vector2(180, 92), ButtonStyle.Primary);
+                clip[i] = MakeButton(slot, "Clip", "Clip", new Vector2(-70, -62), new Vector2(180, 92), ButtonStyle.Secondary);
                 clip[i].GetComponent<Image>().color = GhostCyan;
                 clip[i].GetComponentInChildren<TMP_Text>().color = Ink;
-                delete[i] = MakeButton(slot, "Delete", "Delete", new Vector2(340, -62), new Vector2(230, 92), ButtonStyle.Secondary);
+                // Balance addendum: send this reel, ghosts and all, as a friend challenge.
+                challenge[i] = MakeButton(slot, "Challenge", "Challenge", new Vector2(120, -62), new Vector2(180, 92), ButtonStyle.Secondary);
+                delete[i] = MakeButton(slot, "Delete", "Delete", new Vector2(310, -62), new Vector2(180, 92), ButtonStyle.Secondary);
                 replace[i] = MakeButton(slot, "Replace", "Replace", new Vector2(95, -62), new Vector2(720, 92), ButtonStyle.Primary);
                 replace[i].GetComponent<Image>().color = NemesisRed;
                 replace[i].GetComponentInChildren<TMP_Text>().color = Color.white;
@@ -348,6 +351,7 @@ namespace Echo.Editor
             WireArray(view, "_watch", watch);
             WireArray(view, "_clip", clip);
             WireArray(view, "_delete", delete);
+            WireArray(view, "_challenge", challenge);
             WireArray(view, "_replace", replace);
             Wire(view, "_close", close);
             root.gameObject.SetActive(false);

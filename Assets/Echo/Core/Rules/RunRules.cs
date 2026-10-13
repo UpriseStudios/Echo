@@ -40,9 +40,25 @@ namespace Echo.Core.Rules
         public static RunSimulation StartChallenge(Progress p, Course course, in SimConfig cfg, Challenge challenge)
         {
             if (course.Seed != challenge.Seed) throw new InvalidOperationException("a challenge is played on its own course");
-            var alone = new GhostSet();
-            alone.Add(challenge.FreshRecord());
-            return new RunSimulation(course, alone, p.NextRunIndex, challenge.SpeedPct, cfg, new RunOptions { Challenge = true });
+            var ghosts = new GhostSet();
+            ghosts.Add(challenge.FreshRecord());
+            if (challenge.Lite)
+                return new RunSimulation(course, ghosts, p.NextRunIndex, challenge.SpeedPct, cfg, new RunOptions { Challenge = true });
+
+            // Balance addendum (fair challenges): the challenger's ghosts as they were when their run started, fresh
+            // copies so kills never carry between attempts, under the twist it was recorded with. The run takes the
+            // challenger's run index, so the same bounty ghost is picked. Duels never become challenges.
+            Echo.Core.Reels.Reel snap = challenge.Snapshot;
+            foreach (GhostRecord g in snap.Ghosts)
+                if (g.RunIndex != challenge.Record.RunIndex) ghosts.Add(g.Clone());
+            var options = new RunOptions
+            {
+                Challenge = true,
+                Bounties = snap.Options.Bounties,
+                Twist = snap.Options.Twist,
+                TwistWeek = snap.Options.TwistWeek,
+            };
+            return new RunSimulation(course, ghosts, challenge.Record.RunIndex, challenge.SpeedPct, cfg, options);
         }
 
         /// <summary>Settles a challenge run. Challenge runs never touch the player's ghosts, best or Nemesis.</summary>
@@ -51,13 +67,19 @@ namespace Echo.Core.Rules
             if (!run.Options.Challenge) throw new InvalidOperationException("not a challenge");
             if (run.Committed) throw new InvalidOperationException("run already committed");
             run.Committed = true;
+            bool byScore = !challenge.Lite;
+            int mine = byScore ? run.Score : run.Distance, theirs = byScore ? challenge.Score : challenge.Distance;
             return new ChallengeOutcome
             {
                 Distance = run.Distance,
                 TheirDistance = challenge.Distance,
-                Won = run.Distance > challenge.Distance,
-                Margin = Math.Abs(run.Distance - challenge.Distance),
-                KilledByGhost = run.Cause == DeathCause.Ghost && run.Killer != null,
+                Score = run.Score,
+                TheirScore = challenge.Score,
+                ByScore = byScore,
+                Won = mine > theirs,
+                Margin = Math.Abs(mine - theirs),
+                // The challenger's own ghost ended it (not just any of their graveyard).
+                KilledByGhost = run.Cause == DeathCause.Ghost && run.Killer != null && run.Killer.RunIndex == challenge.Record.RunIndex,
             };
         }
 
@@ -212,6 +234,8 @@ namespace Echo.Core.Rules
 
                 p.Best = result.Score;
                 p.BestRun = ChallengeRuns.FromRun(run);
+                // Balance addendum: the best run keeps its ghost snapshot, so Stats can send a full challenge.
+                p.BestReel = Echo.Core.Reels.ReelRules.CanSave(run) ? Echo.Core.Reels.ReelRules.From(run, "", "", true) : null;
                 p.Ghosts.Clear();
                 p.CycleBanishes = 0;
                 p.BanishTenUsed = false;

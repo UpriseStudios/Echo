@@ -24,7 +24,8 @@ namespace Echo.Server.Tools
 
         public static async Task<int> Main(string[] args)
         {
-            int count = args.Length > 0 && int.TryParse(args[0], out int n) ? n : 10;
+            bool challengeMode = args.Length > 0 && args[0] == "challenge";
+            int count = !challengeMode && args.Length > 0 && int.TryParse(args[0], out int n) ? n : 10;
             string projectId = System.Environment.GetEnvironmentVariable("ECHO_UGS_PROJECT_ID") ?? Ugs("config get project-id");
             using var http = new HttpClient();
 
@@ -33,6 +34,7 @@ namespace Echo.Server.Tools
 
             GameContent content = GameContent.Shared;
             Console.WriteLine($"Content version {content.ContentVersion}\n");
+            if (challengeMode) return await ProbeChallenges(http, projectId, token, content);
             Console.WriteLine("  #   course   ghosts  device m  server m  device score  server score  match");
             int sent = 0, matched = 0;
             foreach (uint seed in ParityRuns.Seeds(count * 4, (uint)DateTime.UtcNow.Ticks))
@@ -73,12 +75,48 @@ namespace Echo.Server.Tools
             return JsonDocument.Parse(body).RootElement.GetProperty("idToken").GetString();
         }
 
-        static async Task<JsonElement> Call(HttpClient http, string projectId, string token, string function, string packet)
+        // CreateChallenge, then GetChallenge: the stored run comes back with its ghosts and the server's own score;
+        // a faked score is corrected; an unknown id is refused.
+        static async Task<int> ProbeChallenges(HttpClient http, string projectId, string token, GameContent content)
+        {
+            uint seed = (uint)DateTime.UtcNow.Ticks;
+            Course course = content.CourseFor(seed % 100_000 + 1);
+            GhostSet ghosts = ParityRuns.Ghosts(course, 4, seed, content.Config);
+            Echo.Core.Reels.Reel reel = null;
+            foreach (uint s in ParityRuns.Seeds(80, seed))
+                if ((reel = ParityRuns.Play(course, ghosts, s, content.Config, content.ContentVersion).Reel) != null) break;
+            int realScore = reel.Score;
+
+            JsonElement created = await Call(http, projectId, token, "CreateChallenge", new { packet = ReelPacket.Encode(reel), name = "Probe" });
+            Console.WriteLine($"CreateChallenge: ok {created.GetProperty("ok")}, link {created.GetProperty("link").GetString()}, score {created.GetProperty("score")} (device {realScore})");
+            string owner = created.GetProperty("ownerId").GetString(), id = created.GetProperty("challengeId").GetString();
+            JsonElement got = await Call(http, projectId, token, "GetChallenge", new { ownerId = owner, challengeId = id });
+            ReelPacket.TryDecode(got.GetProperty("packet").GetString(), out Echo.Core.Reels.Reel back);
+            Console.WriteLine($"GetChallenge: ok {got.GetProperty("ok")}, name {got.GetProperty("name").GetString()}, score {got.GetProperty("score")}, ghosts {back?.Ghosts.Count} (sent {reel.Ghosts.Count})");
+
+            reel.Score = realScore + 50_000;
+            JsonElement faked = await Call(http, projectId, token, "CreateChallenge", new { packet = ReelPacket.Encode(reel), name = "Cheat" });
+            Console.WriteLine($"Faked score {reel.Score}: stored score {faked.GetProperty("score")}, corrected {faked.GetProperty("corrected")}");
+            JsonElement missing = await Call(http, projectId, token, "GetChallenge", new { ownerId = owner, challengeId = "nothere" });
+            Console.WriteLine($"Unknown id: ok {missing.GetProperty("ok")}, error {missing.GetProperty("error").GetString()}");
+
+            bool good = created.GetProperty("ok").GetBoolean() && created.GetProperty("score").GetInt32() == realScore
+                && got.GetProperty("ok").GetBoolean() && back != null && back.Ghosts.Count == reel.Ghosts.Count
+                && faked.GetProperty("score").GetInt32() == realScore && faked.GetProperty("corrected").GetBoolean()
+                && !missing.GetProperty("ok").GetBoolean();
+            Console.WriteLine(good ? "\nChallenges work on the development server." : "\nSOMETHING DIDN'T MATCH.");
+            return good ? 0 : 1;
+        }
+
+        static Task<JsonElement> Call(HttpClient http, string projectId, string token, string function, string packet) =>
+            Call(http, projectId, token, function, new { packet });
+
+        static async Task<JsonElement> Call(HttpClient http, string projectId, string token, string function, object parameters)
         {
             var request = new HttpRequestMessage(HttpMethod.Post,
                 $"https://cloud-code.services.api.unity.com/v1/projects/{projectId}/modules/{Module}/{function}")
             {
-                Content = new StringContent(JsonSerializer.Serialize(new { @params = new { packet } }), Encoding.UTF8, "application/json"),
+                Content = new StringContent(JsonSerializer.Serialize(new { @params = parameters }), Encoding.UTF8, "application/json"),
             };
             request.Headers.Add("Authorization", "Bearer " + token);
             HttpResponseMessage response = await http.SendAsync(request);

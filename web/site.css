@@ -1,0 +1,58 @@
+/* echo.uprisestudios.co.uk: Echo's own teal, ghost cyan and pixel type. One dark look, set on purpose. */
+:root {
+  color-scheme: dark;
+  --bg: #0b2429;
+  --panel: #12353c;
+  --fg: #e6f7f9;
+  --muted: #9cc4ca;
+  --ghost: #73f2ff;
+  --gold: #ffc94a;
+  --ink: #06171a;
+  --font-display: "Press Start 2P", ui-monospace, "Courier New", monospace;
+  --font-body: "Pixelify Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 19px;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px 18px;
+}
+
+main { width: 100%; max-width: 30rem; display: grid; gap: 22px; text-align: center; justify-items: center; }
+.icon { width: 112px; height: 112px; image-rendering: pixelated; border-radius: 22px; }
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 6vw, 28px);
+  line-height: 1.4;
+  margin: 0;
+  text-wrap: balance;
+  text-shadow: -4px -4px 0 rgba(115, 242, 255, 0.35);
+}
+p { margin: 0; color: var(--muted); }
+.lede { color: var(--fg); font-size: 21px; }
+
+.buttons { display: grid; gap: 12px; width: 100%; }
+.button {
+  display: block;
+  padding: 16px 18px;
+  border-radius: 10px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  text-decoration: none;
+  color: var(--fg);
+  background: var(--panel);
+  border: 2px solid rgba(115, 242, 255, 0.35);
+}
+.button.primary { background: var(--ghost); color: var(--ink); border-color: var(--ghost); }
+.button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.note { font-size: 16px; }
+footer { font-size: 14px; color: var(--muted); }
+footer a { color: var(--muted); }

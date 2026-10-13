@@ -12,5 +12,11 @@ namespace Echo.Core.Challenges
         public bool KilledByGhost;
         public int Distance;
         public int TheirDistance;
+
+        /// <summary>Balance addendum: a full challenge is raced on score (both faced the same ghosts, so the
+        /// multiplier matches); a Lite one on distance. Margin is in points or metres to match.</summary>
+        public bool ByScore;
+        public int Score;
+        public int TheirScore;
     }
 }

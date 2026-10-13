@@ -38,7 +38,7 @@ namespace Echo.Game.Flow
         public bool ReplayEnded => _replayEnded;
 
         // The Nemesis the ghost views mark: the reel's own while one plays.
-        GhostRecord ShownNemesis => _reelPlayer != null ? _replayNemesis : _progress.Ghosts.Nemesis;
+        GhostRecord ShownNemesis => _reelPlayer != null ? _replayNemesis : _activeChallenge != null ? _challengeNemesis : _progress.Ghosts.Nemesis;
 
         bool ReelsOpen => _reels != null && _reels.IsOpen;
 
@@ -48,6 +48,7 @@ namespace Echo.Game.Flow
             {
                 _reels.WatchClicked += StartReplay;
                 _reels.ClipClicked += OpenClipEditor;
+                _reels.ChallengeClicked += SendReelChallenge;
                 _reels.DeleteClicked += AskDeleteReel;
                 _reels.ReplaceClicked += ReplaceReel;
                 _reels.CloseClicked += CloseReels;
@@ -80,7 +81,7 @@ namespace Echo.Game.Flow
         void OnSaveReel()
         {
             if (State != GameState.DeathScreen || _reelSaved || !ReelRules.CanSave(_run)) return;
-            bool newBest = _run.Options.Twist == Twist.None && _run.Score > _progress.Best;
+            bool newBest = _run.Options.Twist == Twist.None && !_run.Options.Challenge && _run.Score > _progress.Best;
             Reel reel = ReelRules.From(_run, _contentVersion, DateTime.Now.ToString("d MMM yyyy", CultureInfo.InvariantCulture), newBest);
             if (ReelRules.Add(_progress.Reels, reel))
             {

@@ -18,6 +18,9 @@ namespace Echo.Game.Persistence
 
         public string FilePath { get; }
         public string BackupPath => FilePath + ".bak";
+
+        /// <summary>Where a save from an older schema is kept, untouched, when it is first loaded.</summary>
+        public string SchemaBackupPath(int schema) => FilePath + ".schema" + schema + ".bak";
         string TempPath => FilePath + ".tmp";
 
         /// <summary>The saved document, or null when there is none or it was unreadable (then backed up).</summary>
@@ -30,6 +33,13 @@ namespace Echo.Game.Persistence
                 if (data == null) throw new InvalidDataException("empty save");
                 // Older schemas load and SaveMapper migrates them; only an unknown (newer) schema is refused.
                 if (data.Schema < 1 || data.Schema > SaveData.CurrentSchema) throw new InvalidDataException($"unknown schema {data.Schema}");
+                // An older schema is kept as it was before the first save in the new one rewrites it (version 2.0
+                // rule: never lose progress), next to the save as save.json.schema2.bak.
+                if (data.Schema < SaveData.CurrentSchema)
+                {
+                    string kept = SchemaBackupPath(data.Schema);
+                    if (!File.Exists(kept)) File.Copy(FilePath, kept);
+                }
                 return data;
             }
             catch (Exception e)
