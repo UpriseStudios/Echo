@@ -43,5 +43,8 @@ namespace Echo.Core.Rules
 
         /// <summary>The highlights reel (a user revision): saved runs, at most ReelRules.Capacity, in the order saved.</summary>
         public readonly System.Collections.Generic.List<Echo.Core.Reels.Reel> Reels = new System.Collections.Generic.List<Echo.Core.Reels.Reel>();
+
+        /// <summary>Daily Haunt history for its achievements (version 2.0). Daily runs never touch anything else here.</summary>
+        public readonly Echo.Core.Daily.DailyProgress Daily = new Echo.Core.Daily.DailyProgress();
     }
 }

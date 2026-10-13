@@ -189,7 +189,7 @@ namespace Echo.Game.Flow
                 CosmeticUnlocks.Earn(_catalog, _progress.Best, _save.Cosmetics.Owned);
                 CosmeticUnlocks.EarnByAds(_catalog, _save.Cosmetics.AdsWatched, _save.Cosmetics.Owned);
                 CosmeticUnlocks.EarnByStats(_catalog, _progress.Stats, _save.Cosmetics.Owned);
-                _awakenPending = ElementalTrial.EarnIfComplete(_catalog, _progress.Achievements.Count, _save.Cosmetics.Owned).Count > 0;
+                _awakenPending = ElementalTrial.EarnIfComplete(_catalog, AchievementCatalog.SinglePlayerEarned(_progress.Achievements), _save.Cosmetics.Owned).Count > 0;
             }
             foreach (string id in AchievementRules.OnSessionStarted(_progress)) ToastAchievement(id);
             // Skins addendum: Pumpkin is free to anyone who plays during Halloween week, and kept after.
@@ -216,6 +216,7 @@ namespace Echo.Game.Flow
             });
             _title.TwistClicked += OnTwistClicked;
             _title.ExitClicked += AskToQuit;
+            WireDaily();
             _title.PowerUpsClicked += OpenPowerUps;
             _deathScreen.PowerUpsClicked += OpenPowerUps;
             _skins.PowerUpsClicked += OpenPowerUps;
@@ -249,6 +250,7 @@ namespace Echo.Game.Flow
             _settings.PrivacyClicked += () => { _settings.Hide(); _consentFromSettings = true; _consentView.Show(); };
             _settings.DevAdFailureToggled += () => _services.ToggleMockAdFailure();
             _settings.ServerCheckClicked += OnServerCheck;
+            _settings.DailyDateClicked += CycleDailyDate;
             _skins.BuyClicked += Buy;
             _skins.WatchAdClicked += WatchUnlockAd;
             _skins.TrialAdClicked += WatchTrialAd;
@@ -291,6 +293,7 @@ namespace Echo.Game.Flow
             tapped |= _injectedTap;
             _injectedTap = false;
             _stateTime += dt;
+            TickDailyLabels(dt);
 
             if (_awakenPending && (State == GameState.Title || State == GameState.DeathScreen) && !ModalOpen) PlayAwakened();
 
@@ -311,6 +314,12 @@ namespace Echo.Game.Flow
 
                 case GameState.DeathScreen:
                     if (_clearAt >= 0f && _stateTime >= _clearAt) PopGhosts();
+                    if (_run.Options.Daily)
+                    {
+                        // Daily death screen: no offers, just tap to try again.
+                        if (tapped && _stateTime >= DeathScreenTapDelay && !ModalOpen) Restart();
+                        break;
+                    }
                     // The next rewarded ad may finish loading after the screen appears: offer it once it does.
                     if ((_offersCheckIn -= dt) <= 0f)
                     {
@@ -486,7 +495,8 @@ namespace Echo.Game.Flow
             if (_ambient != null) _ambient.RenderShield(_run.ShieldArmed && (State == GameState.Running || State == GameState.Paused || State == GameState.Replay), _runnerView.Position);
 
             int ghostsOnScreen = _run.Ghosts.VisibleCount;
-            _hud.SetScore(_run.Score);
+            // The Daily Haunt is scored on distance alone (Daily Haunt doc).
+            _hud.SetScore(_run.Options.Daily ? _run.Distance : _run.Score);
             _hud.SetGhosts(ghostsOnScreen);
             _music.SetGhostsOnScreen(ghostsOnScreen);
         }
@@ -545,7 +555,8 @@ namespace Echo.Game.Flow
                 _shieldBreaksSeen = 0;
                 _ghostViews.SetLantern(false);
                 // The Extra 1-UP comes along whenever one is held; it is only used up if the run spends it.
-                if (PowerUpInventory.Count(_save.PowerUps, PowerUp.ExtraLife) > 0) _run.GrantExtraLife();
+                // No power-ups in the Daily Haunt (a user decision), so the Extra 1-UP stays at home too.
+                if (!_run.Options.Daily && PowerUpInventory.Count(_save.PowerUps, PowerUp.ExtraLife) > 0) _run.GrantExtraLife();
                 if (_ambient != null) _ambient.ResetRun();
             }
             if (freshRun)
@@ -582,7 +593,7 @@ namespace Echo.Game.Flow
             _sfx.Death();
             _cameraRig.Shake(0.16f, 0.28f);
             // A run that is not a new best becomes a ghost, so it gets a grave where it fell.
-            _graveReveal = _graves != null && !_run.Options.Duel && !_run.Options.Challenge && (_run.Options.Twist != Twist.None || _run.Score <= _progress.Best);
+            _graveReveal = _graves != null && !_run.Options.Duel && !_run.Options.Challenge && !_run.Options.Daily && (_run.Options.Twist != Twist.None || _run.Score <= _progress.Best);
             if (_graveReveal)
             {
                 GhostRecord fallen = _run.ToGhostRecord();
@@ -607,8 +618,14 @@ namespace Echo.Game.Flow
                 EndChallenge();
                 return;
             }
+            if (_run.Options.Daily)
+            {
+                EndDaily();
+                return;
+            }
             SetState(GameState.DeathScreen);
             _hud.SetVisible(false);
+            _deathScreen.SetScoreLabel("SCORE");
             // A Weekly Twist run is measured against this week's twist best and never clears the ghosts.
             bool twistRun = _run.Options.Twist != Twist.None;
             int best = RunRules.BestFor(_run, _progress);
@@ -693,7 +710,7 @@ namespace Echo.Game.Flow
         /// <summary>A floor button was tapped: one of each per run, taken from the held ones.</summary>
         void UsePowerUp(PowerUp p)
         {
-            if (State != GameState.Running || PowerUpInventory.Count(_save.PowerUps, p) <= 0) return;
+            if (State != GameState.Running || _run.Options.Daily || PowerUpInventory.Count(_save.PowerUps, p) <= 0) return;
             bool used = false;
             if (p == PowerUp.Shield) used = _run.UseShield();
             else if (p == PowerUp.Phase) used = _run.UsePhase();
@@ -713,7 +730,9 @@ namespace Echo.Game.Flow
         void RefreshPowerUpBar()
         {
             PowerUpsSaveData held = _save.PowerUps;
-            _hud.SetPowerUps(held.Shield > 0 && !_run.ShieldUsed, held.Phase > 0 && !_run.PhaseUsed, held.Lantern > 0 && !_lanternUsed);
+            bool allowed = !_run.Options.Daily;
+            _hud.SetPowerUps(allowed && held.Shield > 0 && !_run.ShieldUsed, allowed && held.Phase > 0 && !_run.PhaseUsed,
+                allowed && held.Lantern > 0 && !_lanternUsed);
         }
 
         // The Shield breaking, and an Extra 1-UP being spent (taken from the held ones only then).
@@ -858,6 +877,11 @@ namespace Echo.Game.Flow
                 StartChallenge(_activeChallenge);
                 return;
             }
+            if (_run.Options.Daily)
+            {
+                PlayDaily();
+                return;
+            }
             bool quick = _diedAt >= 0f && Time.unscaledTime - _diedAt <= QuickRestartSeconds;
             if (!_run.Committed) CommitAndSave();
             if (quick)
@@ -930,6 +954,7 @@ namespace Echo.Game.Flow
         {
             _title.Show(_progress.Best);
             _title.SetExitVisible(CanQuit);
+            RefreshDailyButton();
             if (_pendingChallenge != null) PresentPendingChallenge();
             ProcessPendingLink();
             Twist week = ThisWeeksTwist();
@@ -1023,6 +1048,9 @@ namespace Echo.Game.Flow
         // tech spec 7 commit order: score, best or ghost, then achievements, then save.
         void CommitAndSave()
         {
+            // Challenge and daily runs never touch progress; they settle on their own death screens. This also keeps a
+            // backgrounded app from committing one during the death freeze, before that screen has run.
+            if (_run.Options.Challenge || _run.Options.Daily) return;
             GhostRecord nemesisBefore = _progress.Ghosts.Nemesis;
             CommitResult result = RunRules.Commit(_progress, _run, NewSeed(), _cfg);
             if (result.DefeatedNemesis != null) AddToGallery(result.DefeatedNemesis, _course.Seed);
@@ -1041,7 +1069,7 @@ namespace Echo.Game.Flow
                 foreach (CosmeticItem item in CosmeticUnlocks.EarnByStats(_catalog, _progress.Stats, _save.Cosmetics.Owned))
                     _hud.QueueToast("Unlocked: " + item.DisplayName);
                 // Every achievement earned: the Elementals are yours for good, with their own reward moment.
-                if (ElementalTrial.EarnIfComplete(_catalog, _progress.Achievements.Count, _save.Cosmetics.Owned).Count > 0)
+                if (ElementalTrial.EarnIfComplete(_catalog, AchievementCatalog.SinglePlayerEarned(_progress.Achievements), _save.Cosmetics.Owned).Count > 0)
                     _awakenPending = true;
             }
             Save();
@@ -1118,6 +1146,7 @@ namespace Echo.Game.Flow
             _skins.Hide();
             _stats.Hide();
             _settings.Hide();
+            if (_dailyLobby != null) _dailyLobby.Hide();
             if (_reels != null) _reels.Hide();
             SetState(GameState.Title);
             ShowTitle();
@@ -1364,7 +1393,7 @@ namespace Echo.Game.Flow
 
         void ShowSkins() => _skins.Show(_catalog, _save.Cosmetics, _progress.Best,
             id => _services.Iap.LocalizedPrice(id), id => _services.Iap.Owns(id),
-            () => _services.Ads.IsRewardedReady(AdPlacements.UnlockCharacter), _progress.Stats, _progress.Achievements.Count);
+            () => _services.Ads.IsRewardedReady(AdPlacements.UnlockCharacter), _progress.Stats, AchievementCatalog.SinglePlayerEarned(_progress.Achievements));
 
         // Ad-unlocked characters (user revision): a rewarded ad from the Skins screen, never during a run.
         void WatchUnlockAd()

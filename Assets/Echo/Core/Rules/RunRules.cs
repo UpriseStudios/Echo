@@ -21,6 +21,7 @@ namespace Echo.Core.Rules
         {
             if (course.Seed != p.Seed) throw new ArgumentException("course seed does not match progress seed", nameof(course));
             options.Duel = false;
+            options.Daily = false;
             return new RunSimulation(course, p.Ghosts, p.NextRunIndex, cfg.SpeedPctForClears(p.Clears), cfg, options);
         }
 
@@ -32,7 +33,7 @@ namespace Echo.Core.Rules
         public static bool CanDuel(RunSimulation run, Progress p)
         {
             GhostRecord nemesis = p.Ghosts.Nemesis;
-            return run.IsDead && !run.Options.Duel && !run.Options.Challenge && !p.DuelUsed && nemesis != null && nemesis.Kills >= DuelKills;
+            return run.IsDead && !run.Options.Duel && !run.Options.Challenge && !run.Options.Daily && !p.DuelUsed && nemesis != null && nemesis.Kills >= DuelKills;
         }
 
         /// <summary>The current course with only the Nemesis. Uses up this cycle's duel.</summary>
@@ -124,7 +125,7 @@ namespace Echo.Core.Rules
 
         // Balance addendum: once on every run, with no score condition; never in duels or friend challenges.
         public static bool CanContinue(RunSimulation run) =>
-            run.IsDead && !run.Committed && !run.Options.Duel && !run.Options.Challenge && !run.ContinueUsed && !run.BanishUsed;
+            run.IsDead && !run.Committed && !run.Options.Duel && !run.Options.Challenge && !run.Options.Daily && !run.ContinueUsed && !run.BanishUsed;
 
         /// <summary>
         /// Balance addendum: Banish 10 is offered when the graveyard is full (GhostCap) once this run is committed,
@@ -132,7 +133,7 @@ namespace Echo.Core.Rules
         /// </summary>
         public static bool CanBanishTen(RunSimulation run, Progress p, in SimConfig cfg)
         {
-            if (!run.IsDead || run.Options.Duel || run.Options.Challenge || p.BanishTenUsed) return false;
+            if (!run.IsDead || run.Options.Duel || run.Options.Challenge || run.Options.Daily || p.BanishTenUsed) return false;
             bool clears = run.Options.Twist == Twist.None && run.Score > p.Best;
             int after = run.Committed ? p.Ghosts.Count : clears ? 0 : Math.Min(cfg.GhostCap, p.Ghosts.Count + 1);
             return after >= cfg.GhostCap;
@@ -168,7 +169,7 @@ namespace Echo.Core.Rules
         }
 
         public static bool CanBanish(RunSimulation run, Progress p) =>
-            run.IsDead && !run.Committed && !run.Options.Duel && !run.Options.Challenge && !run.BanishUsed
+            run.IsDead && !run.Committed && !run.Options.Duel && !run.Options.Challenge && !run.Options.Daily && !run.BanishUsed
             && run.Cause == DeathCause.Ghost && run.Killer != null
             && p.CycleBanishes < MaxBanishesPerCycle
             && p.Ghosts.Contains(run.Killer)
@@ -193,6 +194,7 @@ namespace Echo.Core.Rules
             if (run.Committed) throw new InvalidOperationException("run already committed");
             if (run.Options.Duel) throw new InvalidOperationException("duels commit through CommitDuel");
             if (run.Options.Challenge) throw new InvalidOperationException("challenges commit through CommitChallenge");
+            if (run.Options.Daily) throw new InvalidOperationException("daily runs are settled by the server, never committed to progress");
             run.Committed = true;
 
             var result = new CommitResult { Score = run.Score, PreviousBest = p.Best };

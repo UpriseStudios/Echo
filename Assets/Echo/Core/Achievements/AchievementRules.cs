@@ -77,6 +77,28 @@ namespace Echo.Core.Achievements
             return earned;
         }
 
+        /// <summary>
+        /// A Daily Haunt run ended (version 2.0) on <paramref name="day"/> (whole UTC days, from the server), going
+        /// further than <paramref name="leadersPassed"/> of today's leaders.
+        /// </summary>
+        public static List<string> OnDailyRunEnded(Progress p, int day, int leadersPassed)
+        {
+            var earned = new List<string>();
+            Echo.Core.Daily.DailyRules.NotePlayed(p.Daily, day);
+            Report(p, AchievementIds.HauntedByStrangers, p.Daily.DaysPlayed, earned);
+            Report(p, AchievementIds.DailyGrind, p.Daily.Streak, earned);
+            Report(p, AchievementIds.PassingThrough, leadersPassed > 0 ? 1 : 0, earned);
+            return earned;
+        }
+
+        /// <summary>A day the player played has closed; the server reports where they finished (0: no rank).</summary>
+        public static List<string> OnDailyDayClosed(Progress p, int finalRank)
+        {
+            var earned = new List<string>();
+            Report(p, AchievementIds.TopTen, finalRank >= 1 && finalRank <= Echo.Core.Daily.DailyRules.Leaders ? 1 : 0, earned);
+            return earned;
+        }
+
         /// <summary>The player restarted within a second of dying (the game measures the time).</summary>
         public static List<string> OnQuickRestart(Progress p)
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -35,6 +36,7 @@ namespace Echo.Server.Tools
             GameContent content = GameContent.Shared;
             Console.WriteLine($"Content version {content.ContentVersion}\n");
             if (challengeMode) return await ProbeChallenges(http, projectId, token, content);
+            if (args.Length > 0 && args[0] == "daily") return await ProbeDaily(http, projectId, token, content);
             Console.WriteLine("  #   course   ghosts  device m  server m  device score  server score  match");
             int sent = 0, matched = 0;
             foreach (uint seed in ParityRuns.Seeds(count * 4, (uint)DateTime.UtcNow.Ticks))
@@ -105,6 +107,53 @@ namespace Echo.Server.Tools
                 && faked.GetProperty("score").GetInt32() == realScore && faked.GetProperty("corrected").GetBoolean()
                 && !missing.GetProperty("ok").GetBoolean();
             Console.WriteLine(good ? "\nChallenges work on the development server." : "\nSOMETHING DIDN'T MATCH.");
+            return good ? 0 : 1;
+        }
+
+        // Two anonymous players play today's Daily Haunt: the first sets a best, the second meets them as a leader
+        // ghost. A faked distance is corrected, and a date override (development only) gives tomorrow's course.
+        static async Task<int> ProbeDaily(HttpClient http, string projectId, string tokenA, GameContent content)
+        {
+            async Task<(JsonElement daily, Echo.Core.Reels.Reel reel, Echo.Core.Reels.Reel ghosts)> Play(string token, uint style)
+            {
+                JsonElement d = await Call(http, projectId, token, "GetDaily", new { });
+                ReelPacket.TryDecode(d.GetProperty("ghostsPacket").GetString(), out Echo.Core.Reels.Reel ghosts);
+                Course course = content.CourseFor((uint)d.GetProperty("seed").GetInt64());
+                for (uint s = style; ; s++)
+                {
+                    var run = Echo.Core.Daily.DailyRules.Start(course,
+                        Echo.Core.Daily.DailyRules.Ghosts(ghosts.Ghosts.Where(g => g.Leader), ghosts.Ghosts.Where(g => !g.Leader)),
+                        d.GetProperty("nextRunIndex").GetInt32(), content.Config);
+                    ParityRuns.Played p = ParityRuns.Drive(run, course, s, content.Config, content.ContentVersion);
+                    if (p.Reel != null) return (d, p.Reel, ghosts);
+                }
+            }
+            async Task<JsonElement> Submit(string token, JsonElement d, Echo.Core.Reels.Reel reel) =>
+                await Call(http, projectId, token, "SubmitDailyRun", new
+                {
+                    date = d.GetProperty("date").GetString(), leaderVersion = d.GetProperty("leaderVersion").GetInt32(), packet = ReelPacket.Encode(reel),
+                });
+
+            var (dA, reelA, _) = await Play(tokenA, 100);
+            Console.WriteLine($"Today {dA.GetProperty("date").GetString()}, seed {dA.GetProperty("seed")}, leader set v{dA.GetProperty("leaderVersion")}, {dA.GetProperty("board").GetArrayLength()} on the board");
+            JsonElement rA = await Submit(tokenA, dA, reelA);
+            Console.WriteLine($"Player A: ok {rA.GetProperty("ok")} {rA.GetProperty("error").GetString()}, device {reelA.Distance} m, server {rA.GetProperty("distance")} m, new best {rA.GetProperty("newBest")}, rank {rA.GetProperty("rank")}");
+
+            string tokenB = await SignInAnonymously(http, projectId);
+            var (dB, reelB, ghostsB) = await Play(tokenB, 200);
+            Console.WriteLine($"Player B meets {ghostsB.Ghosts.Count(g => g.Leader)} leader ghosts: {string.Join(", ", ghostsB.Ghosts.Where(g => g.Leader).Select(g => g.Name))}");
+            reelB.Distance += 5000;
+            JsonElement rB = await Submit(tokenB, dB, reelB);
+            Console.WriteLine($"Player B claims {reelB.Distance} m: server {rB.GetProperty("distance")} m, corrected {rB.GetProperty("corrected")}, rank {rB.GetProperty("rank")}, next {rB.GetProperty("nextLeaderName").GetString()} {rB.GetProperty("nextLeaderDistance")} m");
+
+            JsonElement tomorrow = await Call(http, projectId, tokenB, "GetDaily", new { dateOverride = DateTime.UtcNow.AddDays(1).ToString("yyyy-MM-dd") });
+            Console.WriteLine($"Date override: {tomorrow.GetProperty("date").GetString()}, seed {tomorrow.GetProperty("seed")}");
+
+            bool good = rA.GetProperty("ok").GetBoolean() && rA.GetProperty("distance").GetInt32() == reelA.Distance
+                && ghostsB.Ghosts.Any(g => g.Leader)
+                && rB.GetProperty("ok").GetBoolean() && rB.GetProperty("corrected").GetBoolean() && rB.GetProperty("distance").GetInt32() == reelB.Distance - 5000
+                && tomorrow.GetProperty("seed").GetInt64() != dA.GetProperty("seed").GetInt64();
+            Console.WriteLine(good ? "\nThe Daily Haunt works on the development server." : "\nSOMETHING DIDN'T MATCH.");
             return good ? 0 : 1;
         }
 

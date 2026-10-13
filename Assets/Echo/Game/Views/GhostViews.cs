@@ -163,6 +163,15 @@ namespace Echo.Game.Views
         int _nameTagRun = -1;
         string _nemesisPrefix = "";
 
+        /// <summary>Daily Haunt (version 2.0): leader ghosts show their player's name.</summary>
+        public void SetLeaderNames(bool on)
+        {
+            _leaderNames = on;
+            _labelRunIndex = int.MinValue;
+        }
+
+        bool _leaderNames;
+
         public void Render(GhostManager ghosts, int playerTicks, float alpha, in SimConfig cfg,
                            Course course, GhostRecord nemesis, float playerX, bool previews)
         {
@@ -255,7 +264,8 @@ namespace Echo.Game.Views
                     _bountyRenderer.color = new Color(BountyColor.r, BountyColor.g, BountyColor.b, Mathf.Max(a, 0.6f));
                 }
 
-                bool tagged = _nameTag != null && (_nameTagRun < 0 ? i == 0 : record.RunIndex == _nameTagRun);
+                bool tagged = _nameTag != null && (_nameTagRun < 0 ? i == 0 : record.RunIndex == _nameTagRun)
+                              || _leaderNames && record.Leader && !string.IsNullOrEmpty(record.Name);
                 if (isNemesis || tagged)
                 {
                     hornsShown |= isNemesis;
@@ -268,11 +278,11 @@ namespace Echo.Game.Views
                     if (_nemesisLabel != null)
                     {
                         labelShown = true;
-                        int labelKey = tagged ? -2 : record.RunIndex;
+                        int labelKey = tagged ? -2 - record.RunIndex : record.RunIndex;
                         if (_labelRunIndex != labelKey)
                         {
                             _labelRunIndex = labelKey;
-                            _nemesisLabel.text = tagged ? _nameTag : _nemesisPrefix + NemesisNames.For(record.RunIndex);
+                            _nemesisLabel.text = tagged ? (record.Leader && _leaderNames ? record.Name : _nameTag) : _nemesisPrefix + NemesisNames.For(record.RunIndex);
                         }
                         Color labelColor = tagged ? NameTagColor : NemesisColor;
                         _nemesisLabel.transform.position = new Vector3(pos.x, pos.y + top + 0.45f + lift, 0f);

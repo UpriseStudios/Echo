@@ -1,0 +1,358 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Threading.Tasks;
+using Echo.Core.Achievements;
+using Echo.Core.Courses;
+using Echo.Core.Daily;
+using Echo.Core.Ghosts;
+using Echo.Core.Net;
+using Echo.Core.Reels;
+using Echo.Core.Rules;
+using Echo.Game.Persistence;
+using Echo.Game.UI;
+using Echo.Services.Analytics;
+using Echo.Services.Backend;
+using UnityEngine;
+
+namespace Echo.Game.Flow
+{
+    /// <summary>
+    /// The Daily Haunt from the game's side (Daily Haunt doc, version 2.0): the title button and its countdown, the
+    /// lobby, daily runs against today's leaders and your own daily ghosts, and the daily death screen. Every run is
+    /// sent to the server, which replays it for its real distance; a run that can't be sent waits in the save and is
+    /// retried until the end of its day. Daily runs never touch the main game's ghosts, best, Nemesis or graveyard.
+    /// </summary>
+    public sealed partial class EchoGame
+    {
+        static readonly TimeSpan SubmitGrace = TimeSpan.FromMinutes(5);
+
+        [SerializeField] DailyLobbyView _dailyLobby;
+
+        DailyInfo _daily;
+        readonly List<GhostRecord> _dailyLeaders = new List<GhostRecord>();
+        readonly List<GhostRecord> _dailyOwn = new List<GhostRecord>();
+        int _dailyNextRun = 1;
+        bool _dailyStale = true;         // fetch today's ghosts again before the next run
+        bool _dailyEnabled = true;       // Remote Config, once known
+        bool _dailyBusy;
+        float _dailyFetchedAt;
+        float _dailyLabelIn;
+
+        /// <summary>Development builds: play another day's course (honoured by the server in development only).</summary>
+        public string DailyDateOverride { get; set; }
+
+        /// <summary>The last daily verdict, for tests.</summary>
+        public DailySubmitResult LastDailyResult { get; private set; }
+
+        void WireDaily()
+        {
+            _title.DailyClicked += OpenDailyLobby;
+            if (_dailyLobby == null) return;
+            _dailyLobby.PlayClicked += PlayDaily;
+            _dailyLobby.BackClicked += CloseMenu;
+        }
+
+        static string TodayUtc() => DateTime.UtcNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+        // ---- the title button ----
+
+        void RefreshDailyButton()
+        {
+            if (!_dailyEnabled)
+            {
+                _title.SetDaily("Daily Haunt · back soon");
+                return;
+            }
+            TimeSpan left = DateTime.UtcNow.Date.AddDays(1) - DateTime.UtcNow;
+            bool played = _save.Daily.LastPlayedDate == TodayUtc();
+            _title.SetDaily($"Daily Haunt · {(int)left.TotalHours}h {left.Minutes:00}m" + (played ? "" : "  <color=#FFC94A>●</color>"));
+        }
+
+        void TickDailyLabels(float dt)
+        {
+            if ((_dailyLabelIn -= dt) > 0f) return;
+            _dailyLabelIn = 1f;
+            if (State == GameState.Title) RefreshDailyButton();
+            if (_dailyLobby != null && _dailyLobby.IsOpen && _daily != null && _daily.Ok)
+            {
+                int left = Math.Max(0, _daily.SecondsLeft - (int)(Time.realtimeSinceStartup - _dailyFetchedAt));
+                _dailyLobby.SetCountdown($"{_daily.Date} · new course in {left / 3600}h {left / 60 % 60:00}m {left % 60:00}s");
+            }
+        }
+
+        // ---- the lobby ----
+
+        void OpenDailyLobby()
+        {
+            if (_dailyLobby == null) return;
+            OpenMenu(() =>
+            {
+                _dailyLobby.Show();
+                _ = LoadDaily();
+            });
+        }
+
+        async Task LoadDaily()
+        {
+            if (!_servicesSettled)
+            {
+                _dailyLobby.SetMessage("Starting up... try again in a moment.", playable: false);
+                return;
+            }
+            BackendFlags flags = await _services.Backend.GetFlagsAsync();
+            if (this == null || !_dailyLobby.IsOpen) return;
+            _dailyEnabled = flags.DailyEnabled;
+            if (!flags.DailyEnabled && _services.Backend.SignedIn)
+            {
+                _dailyLobby.SetMessage("The Daily Haunt is resting. Back soon.", playable: false);
+                return;
+            }
+            if (!await RefreshDaily())
+            {
+                _dailyLobby.SetMessage(_daily != null && _daily.Error == "content-version"
+                    ? "Update Echo to play today's Daily Haunt."
+                    : "The Daily Haunt needs a connection.", playable: false);
+                return;
+            }
+            Log(AnalyticsEvents.DailyOpened, ("date", _daily.Date), ("rank", _daily.Rank), ("best", _daily.BestDistance));
+            ShowDailyDay();
+        }
+
+        // Fetches today: the seed, the leader set and your own daily ghosts. Unsent runs go first, so the ghosts match.
+        async Task<bool> RefreshDaily()
+        {
+            await FlushDailyQueue();
+            DailyInfo info = await _services.Backend.GetDailyAsync(DailyDateOverride);
+            if (this == null) return false;
+            _daily = info;
+            if (!info.Ok) return false;
+            if (info.ContentVersion != _contentVersion)
+            {
+                info.Error = "content-version";
+                info.Ok = false;
+                return false;
+            }
+            _dailyFetchedAt = Time.realtimeSinceStartup;
+            _dailyLeaders.Clear();
+            _dailyOwn.Clear();
+            if (ReelPacket.TryDecode(info.GhostsPacket, out Reel ghosts))
+                foreach (GhostRecord g in ghosts.Ghosts) (g.Leader ? _dailyLeaders : _dailyOwn).Add(g);
+            _dailyNextRun = Math.Max(1, info.NextRunIndex);
+            _dailyStale = false;
+
+            // Top Ten: yesterday has closed, so its final rank is known (once per day).
+            if (info.YesterdayRank > 0 && info.Day - 1 > _save.Daily.ClosedDay)
+            {
+                _save.Daily.ClosedDay = info.Day - 1;
+                foreach (string id in AchievementRules.OnDailyDayClosed(_progress, info.YesterdayRank)) ToastAchievement(id);
+                Save();
+            }
+            return true;
+        }
+
+        void ShowDailyDay()
+        {
+            var board = new List<DailyLobbyView.Line>();
+            foreach (DailyBoardRow row in _daily.Board)
+            {
+                if (board.Count == DailyRules.Leaders) break;
+                board.Add(new DailyLobbyView.Line { Rank = row.Rank, Name = row.Name, Distance = row.Distance, IsYou = row.IsYou });
+            }
+            string you = _daily.BestDistance > 0
+                ? $"Your best today: {_daily.BestDistance} m · #{_daily.Rank}"
+                : "You haven't run today's course yet.";
+            string yesterday = string.IsNullOrEmpty(_daily.YesterdayWinner) ? "" : $"Yesterday's winner: {_daily.YesterdayWinner} · {_daily.YesterdayWinnerDistance} m";
+            string ghosts = _dailyLeaders.Count == 0 ? "No leader ghosts yet: set the pace."
+                : $"{_dailyLeaders.Count} leader ghosts and {_dailyOwn.Count} of yours await. Pass a leader to beat them.";
+            _dailyLobby.SetDay(you, board, yesterday, ghosts);
+            TickDailyLabels(0f);
+        }
+
+        // ---- a daily run ----
+
+        public async void PlayDaily()
+        {
+            if (_dailyBusy) return;
+            _dailyBusy = true;
+            try
+            {
+                bool dayOver = _daily != null && Time.realtimeSinceStartup - _dailyFetchedAt > _daily.SecondsLeft;
+                if (_dailyStale || _daily == null || !_daily.Ok || _save.Daily.Pending.Count > 0 || dayOver)
+                {
+                    if (!await RefreshDaily())
+                    {
+                        string why = _save.Daily.Pending.Count > 0 ? "Saving your last run. Check your connection, then try again."
+                            : "The Daily Haunt needs a connection.";
+                        if (State == GameState.DeathScreen) _deathScreen.SetMessage(why);
+                        else if (_dailyLobby.IsOpen) _dailyLobby.SetMessage(why, playable: true);
+                        return;
+                    }
+                }
+                StartDailyRun();
+            }
+            finally
+            {
+                _dailyBusy = false;
+            }
+        }
+
+        void StartDailyRun()
+        {
+            _dailyLobby.Hide();
+            _title.Hide();
+            HideDeathScreen();
+            _activeChallenge = null;
+            _ghostViews.SetNameTag(null);
+            _course = new Course(_library, (uint)_daily.Seed);
+            _run = DailyRules.Start(_course, DailyRules.Ghosts(_dailyLeaders, _dailyOwn), _dailyNextRun, _cfg);
+            ApplyTwist(Twist.None);
+            _bountySeen = false;
+            _duelNemesis = null;
+            SnapshotPrevious();
+            _ghostViews.ResetPop();
+            _ghostViews.SetLeaderNames(true);
+            if (_graves != null) _graves.Plant(_run.Ghosts, _course, _cfg, null);
+            _livesEarnedSeen = 0;
+            _livesUsedSeen = 0;
+            _hud.SetLives(0);
+            _hud.QueueToast(_dailyLeaders.Count > 0 ? $"DAILY HAUNT · {_dailyLeaders.Count} LEADERS" : "DAILY HAUNT");
+            StartRunning();
+        }
+
+        // The daily death screen: distance, your best today, your rank and the next leader to beat. The run is sent at
+        // once; until the server answers (or if it can't be reached) it says "Saving your run".
+        async void EndDaily()
+        {
+            RunSimulation run = _run;
+            DailyRules.Settle(run);
+            SetState(GameState.DeathScreen);
+            _hud.SetVisible(false);
+            _ghostViews.SetLeaderNames(false);
+            int bestToday = Math.Max(_daily.BestDistance, run.Distance);
+            _deathScreen.Show(run.Distance, bestToday, run.Distance > _daily.BestDistance, "", "Saving your run...", "Best today");
+            _deathScreen.SetScoreLabel("DISTANCE");
+            _deathScreen.SetOffers(false, false);
+            _deathScreen.SetDuel(null);
+            _deathScreen.SetChallenge(null);
+            _deathScreen.SetSaveReel(ReelRules.CanSave(run) ? "Save reel" : null, false, true);
+            _save.Daily.LastPlayedDate = _daily.Date;
+
+            if (!ReelRules.CanSave(run))
+            {
+                // Nowhere near anything to rank: nothing to send.
+                _deathScreen.SetMessage("Tap to try again.");
+                Save();
+                return;
+            }
+            Reel reel = ReelRules.From(run, _contentVersion, "", false);
+            _save.Daily.Pending.Add(new PendingDailyRun { Date = _daily.Date, LeaderVersion = _daily.LeaderVersion, Packet = ReelPacket.Encode(reel) });
+            Save();
+
+            DailySubmitResult r = await FlushDailyQueue();
+            if (this == null || _run != run) return;
+            int passed = r != null && r.Ok ? r.LeadersPassed : DailyRules.Passed(LeaderDistances(), run.Distance);
+            foreach (string id in AchievementRules.OnDailyRunEnded(_progress, _daily.Day, passed)) ToastAchievement(id);
+            Save();
+            if (r == null || !r.Ok)
+            {
+                _deathScreen.SetMessage("Saving your run. It'll be sent when you're back online.");
+                return;
+            }
+            LastDailyResult = r;
+            // Keep today's ghosts in step with the server's (same DailyRules), so the next run can start at once.
+            GhostRecord mine = reel.Run.Clone();
+            mine.RunIndex = reel.RunIndex;
+            if (r.NewBest) _dailyOwn.Clear();
+            else DailyRules.AddOwnGhost(_dailyOwn, mine);
+            _dailyNextRun = Math.Max(_dailyNextRun, r.NextRunIndex);
+            int previousRank = _daily.Rank;
+            _daily.BestDistance = r.BestDistance;
+            _daily.Rank = r.Rank;
+            Log(AnalyticsEvents.DailyRunEnd, ("distance", r.Distance), ("best", r.BestDistance), ("rank", r.Rank), ("leadersPassed", r.LeadersPassed), ("newBest", r.NewBest));
+            if (r.NewBest) Log(AnalyticsEvents.DailyNewBest, ("distance", r.Distance), ("rank", r.Rank));
+
+            _deathScreen.Show(r.Distance, r.BestDistance, r.NewBest, "", NextLeaderLine(r), "Best today");
+            _deathScreen.SetScoreLabel("DISTANCE");
+            _deathScreen.SetOffers(false, false);
+            _deathScreen.SetDuel(null);
+            _deathScreen.SetChallenge(null);
+            _deathScreen.SetSaveReel(ReelRules.CanSave(run) ? "Save reel" : null, false, true);
+            _deathScreen.SetBanner(RankLine(r.Rank, previousRank, r.NewBest));
+        }
+
+        static string NextLeaderLine(DailySubmitResult r) =>
+            !string.IsNullOrEmpty(r.NextLeaderName) ? $"Next: {r.NextLeaderName} · {r.NextLeaderDistance} m"
+            : r.LeadersPassed > 0 ? "You passed every leader ghost!" : "Tap to try again.";
+
+        static string RankLine(int rank, int previous, bool newBest)
+        {
+            if (rank <= 0) return newBest ? "NEW BEST TODAY" : null;
+            string change = previous <= 0 ? "" : rank < previous ? $" (▲{previous - rank})" : rank > previous ? $" (▼{rank - previous})" : "";
+            return (newBest ? "NEW BEST TODAY · " : "") + $"RANK #{rank}{change}";
+        }
+
+        List<int> LeaderDistances()
+        {
+            var distances = new List<int>();
+            foreach (DailyBoardRow row in _daily.Board)
+                if (!row.IsYou && distances.Count < DailyRules.Leaders) distances.Add(row.Distance);
+            return distances;
+        }
+
+        // Sends unsent daily runs in order (Daily Haunt doc: retried until the end of their day). Returns the verdict on
+        // the newest one sent, or null when nothing reached the server.
+        async Task<DailySubmitResult> FlushDailyQueue()
+        {
+            DailySubmitResult last = null;
+            List<PendingDailyRun> pending = _save.Daily.Pending;
+            while (pending.Count > 0)
+            {
+                PendingDailyRun next = pending[0];
+                if (!StillSendable(next.Date))
+                {
+                    pending.RemoveAt(0);
+                    Log(AnalyticsEvents.DailySubmitFailed, ("error", "expired"));
+                    continue;
+                }
+                DailySubmitResult r = await _services.Backend.SubmitDailyRunAsync(next.Date, next.LeaderVersion, next.Packet, DailyDateOverride);
+                if (this == null) return null;
+                if (!r.Ok && (r.Error == "offline" || r.Error == "rate-limit"))
+                {
+                    Log(AnalyticsEvents.DailySubmitFailed, ("error", r.Error));
+                    break;   // try again later
+                }
+                pending.RemoveAt(0);
+                if (!r.Ok) Log(AnalyticsEvents.DailySubmitFailed, ("error", r.Error));
+                if (pending.Count > 0) _dailyStale = true;   // an older run reached the server: refetch before playing
+                last = r;
+            }
+            Save();
+            return last;
+        }
+
+        // Today's runs, or yesterday's for a few minutes after midnight UTC (the server checks the same).
+        bool StillSendable(string date)
+        {
+            // The server's own date for today, while it is still today.
+            if (_daily != null && _daily.Ok && date == _daily.Date && Time.realtimeSinceStartup - _dailyFetchedAt <= _daily.SecondsLeft) return true;
+            if (!string.IsNullOrEmpty(DailyDateOverride)) return date == DailyDateOverride;
+            DateTime now = DateTime.UtcNow;
+            string yesterday = now.Date.AddDays(-1).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            return date == TodayUtc() || date == yesterday && now - now.Date < SubmitGrace;
+        }
+
+        /// <summary>Development builds: the Settings button steps the Daily Haunt's date a day on, then back to today.</summary>
+        string CycleDailyDate()
+        {
+            DateTime today = DateTime.UtcNow.Date;
+            DateTime current = string.IsNullOrEmpty(DailyDateOverride) ? today
+                : DateTime.ParseExact(DailyDateOverride, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            DateTime next = current.AddDays(1);
+            DailyDateOverride = (next - today).TotalDays > 3 ? null : next.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            _daily = null;
+            _dailyStale = true;
+            return DailyDateOverride == null ? "Dev: daily today" : "Dev: daily " + DailyDateOverride;
+        }
+    }
+}

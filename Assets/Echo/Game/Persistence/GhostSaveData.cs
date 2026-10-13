@@ -18,5 +18,9 @@ namespace Echo.Game.Persistence
         [JsonProperty("deathX")] public int DeathX = -1;
         [JsonProperty("cause")] public int Cause;
         [JsonProperty("killerRunIndex")] public int KillerRunIndex;
+
+        // Schema 3 (version 2.0): a Daily Haunt leader ghost in a saved reel, and its player's name.
+        [JsonProperty("leader")] public bool Leader;
+        [JsonProperty("name")] public string Name = "";
     }
 }

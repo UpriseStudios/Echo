@@ -101,5 +101,37 @@ namespace Echo.Services.Backend
                 return GetChallengeResult.Failed("offline");
             }
         }
+
+        public async Task<DailyInfo> GetDailyAsync(string dateOverride)
+        {
+            if (!await SignInAsync()) return DailyInfo.Failed("offline");
+            try
+            {
+                var args = new Dictionary<string, object>();
+                if (!string.IsNullOrEmpty(dateOverride)) args["dateOverride"] = dateOverride;
+                return await CloudCodeService.Instance.CallModuleEndpointAsync<DailyInfo>(Module, "GetDaily", args);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[Backend] GetDaily: " + e.Message);
+                return DailyInfo.Failed("offline");
+            }
+        }
+
+        public async Task<DailySubmitResult> SubmitDailyRunAsync(string date, int leaderVersion, string packet, string dateOverride)
+        {
+            if (!await SignInAsync()) return DailySubmitResult.Failed("offline");
+            try
+            {
+                var args = new Dictionary<string, object> { { "date", date }, { "leaderVersion", leaderVersion }, { "packet", packet } };
+                if (!string.IsNullOrEmpty(dateOverride)) args["dateOverride"] = dateOverride;
+                return await CloudCodeService.Instance.CallModuleEndpointAsync<DailySubmitResult>(Module, "SubmitDailyRun", args);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[Backend] SubmitDailyRun: " + e.Message);
+                return DailySubmitResult.Failed("offline");
+            }
+        }
     }
 }

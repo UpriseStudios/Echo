@@ -16,7 +16,11 @@ namespace Echo.Game.Flow
     {
         void WireBackend()
         {
-            if (_services.Backend is MockBackendService mock) mock.LocalReplay = LocalReplayCheck;
+            if (_services.Backend is MockBackendService mock)
+            {
+                mock.LocalReplay = LocalReplayCheck;
+                mock.ContentVersion = _contentVersion;
+            }
         }
 
         // What the server does, done here: decode, refuse other content, replay with the game's code.

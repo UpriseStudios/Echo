@@ -30,6 +30,10 @@ namespace Echo.Game.UI
         [SerializeField] Button _exit;
         public event Action ExitClicked;
 
+        // Version 2.0: the Daily Haunt, with its countdown and a dot until today is played.
+        [SerializeField] Button _daily;
+        public event Action DailyClicked;
+
         void Awake()
         {
             _skins.onClick.AddListener(() => SkinsClicked?.Invoke());
@@ -39,6 +43,7 @@ namespace Echo.Game.UI
             if (_powerUps != null) _powerUps.onClick.AddListener(() => PowerUpsClicked?.Invoke());
             if (_reels != null) _reels.onClick.AddListener(() => ReelsClicked?.Invoke());
             if (_exit != null) _exit.onClick.AddListener(() => ExitClicked?.Invoke());
+            if (_daily != null) _daily.onClick.AddListener(() => DailyClicked?.Invoke());
         }
 
         public void Show(int best)
@@ -58,6 +63,14 @@ namespace Echo.Game.UI
         }
 
         public void Hide() => _root.SetActive(false);
+
+        /// <summary>The Daily Haunt button's label ("Daily Haunt · 5h 12m left"), or null to hide it.</summary>
+        public void SetDaily(string label)
+        {
+            if (_daily == null) return;
+            _daily.gameObject.SetActive(label != null);
+            if (label != null) _daily.GetComponentInChildren<TMP_Text>().text = label;
+        }
 
         public void SetExitVisible(bool visible)
         {

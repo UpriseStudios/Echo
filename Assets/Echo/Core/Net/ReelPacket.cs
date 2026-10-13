@@ -12,7 +12,8 @@ namespace Echo.Core.Net
     /// </summary>
     public static class ReelPacket
     {
-        const byte Format = 1;
+        // 2 (version 2.0, phase 4): the daily option, and each ghost's leader flag and name.
+        const byte Format = 2;
 
         /// <summary>Limits checked before any replay (Daily Haunt doc: sanity limits on taps, ticks and size).</summary>
         public const int MaxGhosts = 40;
@@ -28,7 +29,7 @@ namespace Echo.Core.Net
             w.Var((uint)reel.SpeedPct);
             w.Var((uint)reel.RunIndex);
             RunOptions o = reel.Options;
-            w.Byte((byte)((o.Bounties ? 1 : 0) | (o.Challenge ? 2 : 0) | (o.Duel ? 4 : 0)));
+            w.Byte((byte)((o.Bounties ? 1 : 0) | (o.Challenge ? 2 : 0) | (o.Duel ? 4 : 0) | (o.Daily ? 8 : 0)));
             w.Var((uint)o.Twist);
             w.Int(o.TwistWeek);
             w.Int(reel.ShieldTick);
@@ -55,12 +56,13 @@ namespace Echo.Core.Net
             var x = new Reel();
             if (!r.Text(out x.ContentVersion) || !r.UInt32(out x.Seed)) return false;
             if (!r.Count(1000, out x.SpeedPct) || x.SpeedPct == 0 || !r.Count(int.MaxValue, out x.RunIndex)) return false;
-            if (!r.Byte(out byte flags) || flags > 7 || !r.Count(16, out int twist) || !r.Int(out int twistWeek)) return false;
+            if (!r.Byte(out byte flags) || flags > 15 || !r.Count(16, out int twist) || !r.Int(out int twistWeek)) return false;
             x.Options = new RunOptions
             {
                 Bounties = (flags & 1) != 0,
                 Challenge = (flags & 2) != 0,
                 Duel = (flags & 4) != 0,
+                Daily = (flags & 8) != 0,
                 Twist = (Twist)twist,
                 TwistWeek = twistWeek,
             };
@@ -99,6 +101,8 @@ namespace Echo.Core.Net
             w.Var((uint)g.KillerRunIndex);
             w.Var((uint)g.Kills);
             w.Var((uint)g.LastKillRun);
+            w.Bool(g.Leader);
+            w.Text(g.Name);
             w.Ticks(g.TapTicks);
             w.Ticks(g.ReleaseTicks);
             w.Ticks(g.ReviveTicks);
@@ -112,6 +116,7 @@ namespace Echo.Core.Net
             if (!r.Count((int)DeathCause.Copycat, out int cause)) return false;
             g.Cause = (DeathCause)cause;
             if (!r.Count(int.MaxValue, out g.KillerRunIndex) || !r.Count(int.MaxValue, out g.Kills) || !r.Count(int.MaxValue, out g.LastKillRun)) return false;
+            if (!r.Bool(out g.Leader) || !r.Text(out g.Name)) return false;
             return r.Ticks(out g.TapTicks) && r.Ticks(out g.ReleaseTicks) && r.Ticks(out g.ReviveTicks);
         }
     }

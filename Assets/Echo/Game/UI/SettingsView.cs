@@ -22,6 +22,9 @@ namespace Echo.Game.UI
         // Version 2.0, development builds: replay the newest reel on the server and compare.
         [SerializeField] Button _serverCheck;
         public event System.Action ServerCheckClicked;
+        // Version 2.0, development builds: step the Daily Haunt's date to test midnight.
+        [SerializeField] Button _dailyDate;
+        public event Func<string> DailyDateClicked;
         [SerializeField] Button _close;
         [Tooltip("The name on Ghost Challenges.")]
         [SerializeField] Button _name;
@@ -56,6 +59,11 @@ namespace Echo.Game.UI
             });
             _close.onClick.AddListener(() => Closed?.Invoke());
             if (_serverCheck != null) _serverCheck.onClick.AddListener(() => ServerCheckClicked?.Invoke());
+            if (_dailyDate != null) _dailyDate.onClick.AddListener(() =>
+            {
+                string label = DailyDateClicked?.Invoke();
+                if (label != null) SetLabel(_dailyDate, label);
+            });
             if (_name != null) _name.onClick.AddListener(() => NameClicked?.Invoke());
             if (_heading != null) _heading.onClick.AddListener(OnHeadingTapped);
         }
@@ -66,6 +74,7 @@ namespace Echo.Game.UI
             _root.SetActive(true);
             _devAdFailure.gameObject.SetActive(showDevToggle);
             if (_serverCheck != null) _serverCheck.gameObject.SetActive(showServerCheck);
+            if (_dailyDate != null) _dailyDate.gameObject.SetActive(showServerCheck);
             Refresh();
         }
 

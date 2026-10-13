@@ -14,6 +14,7 @@ namespace Echo.Game.Persistence
         [JsonProperty("twist")] public int Twist;
         [JsonProperty("twistWeek")] public int TwistWeek;
         [JsonProperty("challenge")] public bool Challenge;
+        [JsonProperty("daily")] public bool Daily;
         [JsonProperty("ghosts")] public List<GhostSaveData> Ghosts = new List<GhostSaveData>();
         [JsonProperty("run")] public GhostSaveData Run = new GhostSaveData();
         [JsonProperty("shieldTick")] public int ShieldTick = -1;

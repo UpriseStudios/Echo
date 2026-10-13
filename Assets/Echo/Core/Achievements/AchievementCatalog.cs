@@ -43,7 +43,36 @@ namespace Echo.Core.Achievements
             new AchievementDef(BadDecisions, "Bad Decisions", "Die 100 times", 100),
             new AchievementDef(ICanFixThis, "I Can Fix This", "Restart within 1 s of dying, 25 times", 25),
             new AchievementDef(JustOneMore, "Just One More", "Play 25 runs in one session", 25),
+
+            // Version 2.0, the Daily Haunt: online extras, not needed for the Elementals.
+            new AchievementDef(HauntedByStrangers, "Haunted by Strangers", "Play the Daily Haunt on 7 different days", 7, online: true),
+            new AchievementDef(PassingThrough, "Passing Through", "Pass a leader ghost in the Daily Haunt", online: true),
+            new AchievementDef(TopTen, "Top Ten", "Finish a day in the Daily Haunt's top 10", online: true),
+            new AchievementDef(DailyGrind, "Daily Grind", "Play the Daily Haunt 3 days in a row", 3, online: true),
         };
+
+        /// <summary>The single-player set (all but the online extras): the Elementals need every one of these.</summary>
+        public static int SinglePlayerCount
+        {
+            get
+            {
+                int n = 0;
+                foreach (AchievementDef def in All) if (!def.Online) n++;
+                return n;
+            }
+        }
+
+        /// <summary>How many of the single-player set are among <paramref name="earned"/>.</summary>
+        public static int SinglePlayerEarned(System.Collections.Generic.IEnumerable<string> earned)
+        {
+            int n = 0;
+            foreach (string id in earned)
+            {
+                AchievementDef def = Find(id);
+                if (def != null && !def.Online) n++;
+            }
+            return n;
+        }
 
         public static AchievementDef Find(string id)
         {

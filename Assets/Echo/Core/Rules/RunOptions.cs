@@ -15,5 +15,11 @@ namespace Echo.Core.Rules
 
         /// <summary>A Ghost Challenge: a friend's run as the only ghost, on its course. Touches no progress.</summary>
         public bool Challenge;
+
+        /// <summary>
+        /// Daily Haunt (version 2.0): today's shared course, scored on distance, with today's leaders and the
+        /// player's own daily ghosts. No Continue, banish, duel, bounty, twist or power-ups. Touches no progress.
+        /// </summary>
+        public bool Daily;
     }
 }

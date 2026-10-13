@@ -15,7 +15,8 @@ namespace Echo.Game.Cosmetics
         public const int AdsForTrial = 5;
         public const int TrialRuns = 5;
 
-        public static int AchievementsNeeded => AchievementCatalog.All.Length;
+        // The single-player set: the Daily Haunt's online extras (version 2.0) are not needed (a user decision).
+        public static int AchievementsNeeded => AchievementCatalog.SinglePlayerCount;
 
         /// <summary>Each Elemental's colour, for the glow when ELEMENTS AWAKENED plays.</summary>
         public static Color ElementColor(string id) => id switch

@@ -136,6 +136,11 @@ namespace Echo.Editor
             exitRt.pivot = new Vector2(0f, 1f);
             exitRt.anchoredPosition = new Vector2(36, -36);
             Wire(view, "_exit", exit);
+            // Version 2.0: the Daily Haunt, above Tap to run, with its countdown.
+            var daily = MakeButton(root, "Daily", "Daily Haunt", new Vector2(0, -350), new Vector2(720, 104), ButtonStyle.Secondary);
+            daily.GetComponent<Image>().color = new Color(Accent.r, Accent.g, Accent.b, 0.85f);
+            daily.GetComponentInChildren<TMP_Text>().color = Ink;
+            Wire(view, "_daily", daily);
             // Weekly Twists banner (value-adds doc): this week's twist, tap to switch to Classic and back.
             var twist = MakeButton(root, "Twist", "THIS WEEK: TWIST", new Vector2(0, 165), new Vector2(820, 120), ButtonStyle.Secondary);
             // Power-ups (a user revision): earned with rewarded ads before a run.
@@ -169,6 +174,7 @@ namespace Echo.Editor
             // zoomed-in ground, the offers and Tap to retry below it.
             Pill(root, "Card", new Vector2(0, 750), new Vector2(920, 300), Card);
             var label = MakeText(root, "ScoreLabel", "SCORE", 28, _black, new Vector2(0.5f, 0.5f), new Vector2(0, 855), new Vector2(600, 60));
+            Wire(view, "_scoreLabel", label);
             label.color = Soft;
             var score = MakeText(root, "Score", "0", 120, _black, new Vector2(0.5f, 0.5f), new Vector2(0, 755), new Vector2(900, 180));
             var best = MakeText(root, "Best", "Best 0", 32, _black, new Vector2(0.5f, 0.5f), new Vector2(0, 650), new Vector2(900, 70));
@@ -461,6 +467,51 @@ namespace Echo.Editor
             return view;
         }
 
+        /// <summary>
+        /// The Daily Haunt lobby (version 2.0): today's date and countdown, your best and rank, the top 10, yesterday's
+        /// winner, Play and Back.
+        /// </summary>
+        static DailyLobbyView BuildDailyLobby(RectTransform parent)
+        {
+            RectTransform root = MenuPanel(parent, "DailyLobby", "Daily Haunt");
+            var view = root.gameObject.AddComponent<DailyLobbyView>();
+            var countdown = MakeText(root, "Countdown", "", 34, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, 750), new Vector2(980, 56));
+            countdown.color = GhostCyan;
+            var you = MakeText(root, "You", "", 40, _black, new Vector2(0.5f, 0.5f), new Vector2(0, 650), new Vector2(980, 70));
+            you.color = Accent;
+
+            Pill(root, "BoardCard", new Vector2(0, 160), new Vector2(980, 820), Card);
+            var rows = new TMP_Text[10];
+            for (int i = 0; i < rows.Length; i++)
+            {
+                rows[i] = MakeText(root, "Row" + i, "", 38, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, 520 - i * 78), new Vector2(900, 70));
+                rows[i].alignment = TextAlignmentOptions.MidlineLeft;
+            }
+            var yesterday = MakeText(root, "Yesterday", "", 32, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -320), new Vector2(980, 56));
+            yesterday.color = Soft;
+            var status = MakeText(root, "Status", "", 36, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -420), new Vector2(980, 110));
+            status.color = Soft;
+            var play = MakeButton(root, "Play", "Play today's course", new Vector2(0, -600), new Vector2(760, 132), ButtonStyle.Primary);
+            var back = MakeButton(root, "Back", "Back", new Vector2(0, -830), new Vector2(500, 120), ButtonStyle.Secondary);
+
+            Wire(view, "_root", root.gameObject);
+            Wire(view, "_countdown", countdown);
+            Wire(view, "_you", you);
+            WireArray(view, "_rows", rows);
+            Wire(view, "_yesterday", yesterday);
+            Wire(view, "_status", status);
+            Wire(view, "_play", play);
+            Wire(view, "_back", back);
+            {
+                var so = new UnityEditor.SerializedObject(view);
+                so.FindProperty("_youColor").colorValue = Accent;
+                so.FindProperty("_rowColor").colorValue = Color.white;
+                so.ApplyModifiedPropertiesWithoutUndo();
+            }
+            root.gameObject.SetActive(false);
+            return view;
+        }
+
         /// <summary>The bar under a reel playing back: Exit and speed, then Watch again, Make clip and Back.</summary>
         static ReplayView BuildReplay(RectTransform parent)
         {
@@ -711,10 +762,12 @@ namespace Echo.Editor
             nameLabel.alignment = TextAlignmentOptions.MidlineLeft;
             nameLabel.margin = new Vector4(36, 0, 36, 0);
             var privacy = MakeButton(root, "Privacy", "Privacy choices", new Vector2(0, -270), new Vector2(760, 124), ButtonStyle.Secondary);
-            var devAds = MakeButton(root, "DevAdFailure", "Dev: ads succeed", new Vector2(-200, -440), new Vector2(380, 112), ButtonStyle.Secondary);
-            // Version 2.0, development builds: the newest reel replayed on the server, against the device.
-            var serverCheck = MakeButton(root, "ServerCheck", "Dev: server check", new Vector2(200, -440), new Vector2(380, 112), ButtonStyle.Secondary);
+            var devAds = MakeButton(root, "DevAdFailure", "Dev: ads succeed", new Vector2(-265, -440), new Vector2(250, 112), ButtonStyle.Secondary);
+            // Version 2.0, development builds: the newest reel replayed on the server, and the Daily Haunt's date.
+            var serverCheck = MakeButton(root, "ServerCheck", "Dev: server check", new Vector2(0, -440), new Vector2(250, 112), ButtonStyle.Secondary);
+            var dailyDate = MakeButton(root, "DailyDate", "Dev: daily today", new Vector2(265, -440), new Vector2(250, 112), ButtonStyle.Secondary);
             Wire(view, "_serverCheck", serverCheck);
+            Wire(view, "_dailyDate", dailyDate);
             var close = MakeButton(root, "Close", "Back", new Vector2(0, -830), new Vector2(500, 120), ButtonStyle.Primary);
             Wire(view, "_root", root.gameObject);
             Wire(view, "_music", music);

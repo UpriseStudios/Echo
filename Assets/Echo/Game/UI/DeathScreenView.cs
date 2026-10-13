@@ -66,6 +66,7 @@ namespace Echo.Game.UI
 
         // Highlights reel (a user revision): keep this run in the reel cupboard.
         [SerializeField] Button _saveReel;
+        [SerializeField] TMP_Text _scoreLabel;
         public event Action SaveReelClicked;
 
         void Awake()
@@ -78,6 +79,12 @@ namespace Echo.Game.UI
             if (_challenge != null) _challenge.onClick.AddListener(() => ChallengeClicked?.Invoke());
             if (_powerUps != null) _powerUps.onClick.AddListener(() => PowerUpsClicked?.Invoke());
             if (_saveReel != null) _saveReel.onClick.AddListener(() => SaveReelClicked?.Invoke());
+        }
+
+        /// <summary>"SCORE", or "DISTANCE" for a Daily Haunt run (scored on distance alone).</summary>
+        public void SetScoreLabel(string text)
+        {
+            if (_scoreLabel != null) _scoreLabel.text = text;
         }
 
         /// <summary>The Save reel button: its label, gold to suggest it on a new best, null to hide it.</summary>

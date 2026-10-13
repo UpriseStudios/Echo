@@ -46,5 +46,11 @@ namespace Echo.Core.Achievements
         public const string BadDecisions = "bad_decisions";
         public const string ICanFixThis = "i_can_fix_this";
         public const string JustOneMore = "just_one_more";
+
+        // Daily Haunt (version 2.0, online extras)
+        public const string HauntedByStrangers = "haunted_by_strangers";
+        public const string PassingThrough = "passing_through";
+        public const string TopTen = "top_ten";
+        public const string DailyGrind = "daily_grind";
     }
 }

@@ -1,0 +1,23 @@
+namespace Echo.Services.Backend
+{
+    /// <summary>The server's verdict on a daily run (mirrors Server/EchoCloud/SubmitDailyResponse).</summary>
+    public sealed class DailySubmitResult
+    {
+        public bool Ok;
+
+        /// <summary>"offline" (queued to retry) or the server's reason for refusing the run.</summary>
+        public string Error = "";
+        public int Distance;
+        public int BestDistance;
+        public bool NewBest;
+        public int Rank;
+        public int PreviousRank;
+        public int LeadersPassed;
+        public string NextLeaderName = "";
+        public int NextLeaderDistance;
+        public bool Corrected;
+        public int NextRunIndex;
+
+        public static DailySubmitResult Failed(string error) => new DailySubmitResult { Error = error };
+    }
+}

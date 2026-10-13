@@ -354,6 +354,7 @@ namespace Echo.Editor
             ReelsView reels = BuildReels(safe);
             ReplayView replay = BuildReplay(safe);
             ClipEditorView clipEditor = BuildClipEditor(safe);
+            DailyLobbyView dailyLobby = BuildDailyLobby(safe);
             ElementsAwakenedView awakened = BuildElementsAwakened(safe);
 
             var flashRect = Stretch(NewRect("Flash", canvasGo.transform));
@@ -391,6 +392,7 @@ namespace Echo.Editor
             Wire(game, "_reels", reels);
             Wire(game, "_replay", replay);
             Wire(game, "_clipEditor", clipEditor);
+            Wire(game, "_dailyLobby", dailyLobby);
             Wire(game, "_audioTap", audioTap);
             Wire(game, "_skins", skins);
             Wire(game, "_flash", flash);

@@ -29,5 +29,11 @@ namespace Echo.Services.Backend
 
         /// <summary>Fetches a challenge someone sent, by the owner and id in its link.</summary>
         Task<GetChallengeResult> GetChallengeAsync(string ownerId, string challengeId);
+
+        /// <summary>Today's Daily Haunt. <paramref name="dateOverride"/> (yyyy-MM-dd) is honoured in development only.</summary>
+        Task<DailyInfo> GetDailyAsync(string dateOverride);
+
+        /// <summary>Sends a finished daily run (its inputs, as a ReelPacket) for the server to replay and rank.</summary>
+        Task<DailySubmitResult> SubmitDailyRunAsync(string date, int leaderVersion, string packet, string dateOverride);
     }
 }

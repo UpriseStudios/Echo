@@ -81,7 +81,7 @@ namespace Echo.Game.Flow
         void OnSaveReel()
         {
             if (State != GameState.DeathScreen || _reelSaved || !ReelRules.CanSave(_run)) return;
-            bool newBest = _run.Options.Twist == Twist.None && !_run.Options.Challenge && _run.Score > _progress.Best;
+            bool newBest = _run.Options.Twist == Twist.None && !_run.Options.Challenge && !_run.Options.Daily && _run.Score > _progress.Best;
             Reel reel = ReelRules.From(_run, _contentVersion, DateTime.Now.ToString("d MMM yyyy", CultureInfo.InvariantCulture), newBest);
             if (ReelRules.Add(_progress.Reels, reel))
             {
@@ -144,7 +144,7 @@ namespace Echo.Game.Flow
             {
                 CosmeticItem skin = _catalog != null ? _catalog.Resolve(reel.Run.SkinId, CosmeticType.Character) : null;
                 bool playable = reel.PlayableOn(_contentVersion);
-                string kind = reel.Options.Challenge ? " · Challenge" : reel.Options.Twist != Twist.None ? " · " + WeeklyTwists.Name(reel.Options.Twist) : "";
+                string kind = reel.Options.Daily ? " · Daily" : reel.Options.Challenge ? " · Challenge" : reel.Options.Twist != Twist.None ? " · " + WeeklyTwists.Name(reel.Options.Twist) : "";
                 cards.Add(new ReelsView.Card
                 {
                     Preview = skin != null && skin.RunFrames.Length > 0 ? skin.RunFrames[0] : null,

@@ -56,6 +56,12 @@ namespace Echo.Game.Persistence
             p.TwistWeek = s.TwistWeek;
             p.TwistBest = Math.Max(0, s.TwistBest);
             p.DuelUsed = s.DuelUsed;
+            if (s.Daily != null)
+            {
+                p.Daily.DaysPlayed = Math.Max(0, s.Daily.DaysPlayed);
+                p.Daily.LastDay = s.Daily.LastDay;
+                p.Daily.Streak = Math.Max(0, s.Daily.Streak);
+            }
             p.BanishTenUsed = s.BanishTenUsed;
             p.RunsSinceBest = Math.Max(0, s.RunsSinceBest);
             if (!string.IsNullOrEmpty(s.BestRun) && ChallengeCode.TryDecode(s.BestRun, out Challenge bestRun)) p.BestRun = bestRun;
@@ -137,6 +143,10 @@ namespace Echo.Game.Persistence
             s.TwistWeek = p.TwistWeek;
             s.TwistBest = p.TwistBest;
             s.DuelUsed = p.DuelUsed;
+            s.Daily = s.Daily ?? new DailySaveData();
+            s.Daily.DaysPlayed = p.Daily.DaysPlayed;
+            s.Daily.LastDay = p.Daily.LastDay;
+            s.Daily.Streak = p.Daily.Streak;
             s.BanishTenUsed = p.BanishTenUsed;
             s.RunsSinceBest = p.RunsSinceBest;
             if (p.BestRun != null && string.IsNullOrEmpty(p.BestRun.ContentVersion)) p.BestRun.ContentVersion = contentVersion;
@@ -168,6 +178,7 @@ namespace Echo.Game.Persistence
                     Twist = Enum.IsDefined(typeof(Twist), r.Twist) ? (Twist)r.Twist : Twist.None,
                     TwistWeek = r.TwistWeek,
                     Challenge = r.Challenge,
+                    Daily = r.Daily,
                 },
                 Run = ToRecord(r.Run, false),
                 ShieldTick = r.ShieldTick,
@@ -193,7 +204,7 @@ namespace Echo.Game.Persistence
             var save = new ReelSaveData
             {
                 ContentVersion = r.ContentVersion, Seed = r.Seed, SpeedPct = r.SpeedPct, RunIndex = r.RunIndex,
-                Bounties = r.Options.Bounties, Twist = (int)r.Options.Twist, TwistWeek = r.Options.TwistWeek, Challenge = r.Options.Challenge,
+                Bounties = r.Options.Bounties, Twist = (int)r.Options.Twist, TwistWeek = r.Options.TwistWeek, Challenge = r.Options.Challenge, Daily = r.Options.Daily,
                 Run = ToSave(r.Run), ShieldTick = r.ShieldTick, PhaseTick = r.PhaseTick, ContinueTick = r.ContinueTick, ExtraLife = r.ExtraLife,
                 Score = r.Score, Distance = r.Distance, NearMisses = r.NearMisses, GhostsAtStart = r.GhostsAtStart,
                 NewBest = r.NewBest, SavedOn = r.SavedOn,
@@ -234,6 +245,8 @@ namespace Echo.Game.Persistence
             DeathX = v1 ? -1 : g.DeathX,
             Cause = v1 || !Enum.IsDefined(typeof(DeathCause), g.Cause) ? DeathCause.None : (DeathCause)g.Cause,
             KillerRunIndex = v1 ? 0 : Math.Max(0, g.KillerRunIndex),
+            Leader = g.Leader,
+            Name = g.Name ?? "",
         };
 
         static GhostSaveData ToSave(GhostRecord g) => new GhostSaveData
@@ -250,6 +263,8 @@ namespace Echo.Game.Persistence
             DeathX = g.DeathX,
             Cause = (int)g.Cause,
             KillerRunIndex = g.KillerRunIndex,
+            Leader = g.Leader,
+            Name = g.Name ?? "",
         };
 
         static bool FindByRunIndex(GhostSet set, int runIndex)

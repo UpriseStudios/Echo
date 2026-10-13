@@ -31,11 +31,19 @@ namespace Echo.Tests.EditMode
             var options = new RunOptions { Bounties = rng.NextInt(2) == 0, Twist = (Twist)rng.NextInt(7), TwistWeek = 2900 };
             int speedPct = 100 + 5 * rng.NextInt(6);
             var run = new RunSimulation(course, ghosts, ghosts.Count + 1, speedPct, cfg, options);
+            return Drive(run, course, rng, cfg, contentVersion, powerUps, continues: rng.NextInt(2) == 0, maxTicks);
+        }
+
+        /// <summary>Plays a run that is already set up (a daily run, say) with the same look-ahead player.</summary>
+        public static Played Drive(RunSimulation run, Course course, uint seed, in SimConfig cfg, string contentVersion, int maxTicks = 6000) =>
+            Drive(run, course, new Xorshift32(seed | 1u), cfg, contentVersion, powerUps: false, continues: false, maxTicks);
+
+        static Played Drive(RunSimulation run, Course course, Xorshift32 rng, in SimConfig cfg, string contentVersion, bool powerUps, bool continues, int maxTicks)
+        {
             if (powerUps) run.GrantExtraLife();
             int shieldAt = powerUps ? 20 + rng.NextInt(600) : -1, phaseAt = powerUps ? 20 + rng.NextInt(1200) : -1;
-            bool continues = rng.NextInt(2) == 0;
             int mistakeOdds = 300 + rng.NextInt(900);
-            int speed = cfg.SpeedForPct(speedPct);
+            int speed = cfg.SpeedForPct(run.SpeedPct);
             int holdUntil = -1;
             while (run.Tick < maxTicks)
             {

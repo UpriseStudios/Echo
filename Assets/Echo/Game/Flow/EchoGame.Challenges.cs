@@ -149,6 +149,7 @@ namespace Echo.Game.Flow
                 ("lite", c.Lite), ("margin", o.Margin), ("killedByGhost", o.KilledByGhost), ("distance", o.Distance), ("theirDistance", o.TheirDistance));
             SetState(GameState.DeathScreen);
             _hud.SetVisible(false);
+            _deathScreen.SetScoreLabel("SCORE");
             string unit = o.ByScore ? "points" : "m";
             string attempt = $" on attempt {_challengeAttempts}";
             string line = o.Won ? (o.ByScore ? $"Beat {Who(c)}'s score by {o.Margin:N0}{attempt}" : $"You outlasted {Who(c)} by {o.Margin} m{attempt}")

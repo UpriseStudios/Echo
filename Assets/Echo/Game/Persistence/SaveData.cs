@@ -7,7 +7,8 @@ namespace Echo.Game.Persistence
     public sealed class SaveData
     {
         // 2: ghosts carry skin, death x, cause and killer; stats gain the unlock counters (skins addendum).
-        // 3 (version 2.0): the best run keeps its ghost snapshot (bestReel), for full challenges from Stats.
+        // 3 (version 2.0): the best run keeps its ghost snapshot (bestReel), for full challenges from Stats; the Daily
+        //   Haunt's history and unsent runs (daily); ghosts in reels can be daily leaders with names.
         public const int CurrentSchema = 3;
 
         [JsonProperty("schema")] public int Schema = CurrentSchema;
@@ -39,6 +40,8 @@ namespace Echo.Game.Persistence
 
         /// <summary>Schema 3: the best run with the ghosts it started against. Empty before a best set since 2.0.</summary>
         [JsonProperty("bestReel")] public ReelSaveData BestReel;
+
+        [JsonProperty("daily")] public DailySaveData Daily = new DailySaveData();
 
         /// <summary>Power-ups held, up to PowerUpRules.MaxHeld of each (a user revision).</summary>
         [JsonProperty("powerUps")] public PowerUpsSaveData PowerUps = new PowerUpsSaveData();

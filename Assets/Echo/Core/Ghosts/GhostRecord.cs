@@ -29,6 +29,13 @@ namespace Echo.Core.Ghosts
         /// <summary>Run index of the ghost that ended the run, 0 if a hazard or fall did.</summary>
         public int KillerRunIndex;
 
+        /// <summary>
+        /// Daily Haunt (version 2.0): one of today's top 10 runs. Leader ghosts claim their meeting points before any
+        /// other ghost (GhostManager.EncounterOrder). Name is the leader's player name, shown on its tag.
+        /// </summary>
+        public bool Leader;
+        public string Name = "";
+
         /// <summary>A copy whose kills can change without touching this one. The tick arrays are never changed, so they are shared.</summary>
         public GhostRecord Clone() => (GhostRecord)MemberwiseClone();
     }

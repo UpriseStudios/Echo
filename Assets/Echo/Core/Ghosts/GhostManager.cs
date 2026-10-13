@@ -134,7 +134,10 @@ namespace Echo.Core.Ghosts
             return order;
         }
 
-        static bool MetBefore(GhostRecord a, GhostRecord b) => KillRank(a) > KillRank(b);
+        // Daily Haunt (version 2.0, a user decision): today's leaders always claim their meeting points first, best
+        // rank first (the highest run index, see DailyRules.AsLeader); then killers, most recent first.
+        static bool MetBefore(GhostRecord a, GhostRecord b) =>
+            a.Leader != b.Leader ? a.Leader : a.Leader ? a.RunIndex > b.RunIndex : KillRank(a) > KillRank(b);
 
         // The run index of its latest kill, or 0 for a ghost that has never killed the player.
         static int KillRank(GhostRecord g) => g.Kills > 0 ? g.LastKillRun : 0;

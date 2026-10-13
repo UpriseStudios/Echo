@@ -12,6 +12,10 @@ namespace Echo.Services.Analytics
         public const string ContinueUsed = "continue_used";
         public const string BanishTenOffered = "banish_ten_offered";   // balance addendum
         public const string BanishTenUsed = "banish_ten_used";
+        public const string DailyOpened = "daily_opened";             // version 2.0, the Daily Haunt
+        public const string DailyRunEnd = "daily_run_end";
+        public const string DailyNewBest = "daily_new_best";
+        public const string DailySubmitFailed = "daily_submit_failed";
         public const string IapPurchase = "iap_purchase";
         public const string UnlockAdWatched = "unlock_ad_watched";   // addition: ad-unlocked characters
         // Value-adds doc.
