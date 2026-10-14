@@ -51,6 +51,14 @@ namespace EchoCloud
                 ? new SubmitDailyResponse { Error = FeatureSwitches.Disabled }
                 : await (await Daily(context, api)).SubmitAsync(context.PlayerId, date, leaderVersion, packet, DevelopmentOnly(context, dateOverride));
 
+        // Privacy policy: Settings › Delete online data. Never behind a switch: deleting must always work.
+        [CloudCodeFunction("DeleteMyData")]
+        public async Task<DeleteMyDataResponse> DeleteMyData(IExecutionContext context, IGameApiClient api)
+        {
+            await Challenges(context, api).ForgetPlayerAsync(context.PlayerId);   // first: it needs their index
+            return await (await Daily(context, api)).ForgetPlayerAsync(context.PlayerId);
+        }
+
         // Daily Haunt doc: the date can be overridden to test midnight, in development only.
         static string DevelopmentOnly(IExecutionContext context, string dateOverride) =>
             context.EnvironmentName == Development ? dateOverride : null;
@@ -59,10 +67,17 @@ namespace EchoCloud
         static async Task<DailyService> Daily(IExecutionContext context, IGameApiClient api)
         {
             var salt = await api.SecretManager.GetSecret(context, "DAILY_SEED_SALT");
-            return new DailyService(GameContent.Shared, new CloudDailyStore(api, context), () => DateTime.UtcNow, salt.Value);
+            return new DailyService(GameContent.Shared, new CloudDailyStore(api, context, () => AdminKey(context, api)), new CloudDayStore(api, context),
+                () => DateTime.UtcNow, salt.Value);
         }
 
+        // A service account key ("keyId:secret") with the Leaderboards admin role, in Secret Manager as
+        // LEADERBOARDS_ADMIN_KEY; only deleting a player's score needs it. Missing: scores stay, everything else goes
+        // (CloudDailyStore reports why).
+        static async Task<string> AdminKey(IExecutionContext context, IGameApiClient api) =>
+            (await api.SecretManager.GetSecret(context, "LEADERBOARDS_ADMIN_KEY")).Value;
+
         static ChallengeService Challenges(IExecutionContext context, IGameApiClient api) =>
-            new ChallengeService(GameContent.Shared, new CloudSaveChallengeStore(api, context), () => DateTime.UtcNow);
+            new ChallengeService(GameContent.Shared, new CloudSaveChallengeStore(api, context), new CloudDayStore(api, context), () => DateTime.UtcNow);
     }
 }

@@ -250,6 +250,7 @@ namespace Echo.Game.Flow
             _settings.PrivacyClicked += () => { _settings.Hide(); _consentFromSettings = true; _consentView.Show(); };
             _settings.DevAdFailureToggled += () => _services.ToggleMockAdFailure();
             _settings.ServerCheckClicked += OnServerCheck;
+            _settings.DeleteOnlineClicked += AskDeleteOnlineData;
             _settings.DailyDateClicked += CycleDailyDate;
             _skins.BuyClicked += Buy;
             _skins.WatchAdClicked += WatchUnlockAd;

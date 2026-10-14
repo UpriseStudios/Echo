@@ -174,6 +174,20 @@ namespace Echo.Tests.PlayMode
             Assert.AreEqual(4, backend.Submissions);
             Click("DailyLobby/Back");
 
+            // Settings › Delete online data: asked first, then gone, with nothing of the old ID left to send.
+            game.CurrentSave.Daily.Pending.Add(new PendingDailyRun { Date = "2026-10-14", LeaderVersion = "x", Packet = "x" });
+            Click("Title/Settings");
+            Click("Settings/DeleteOnline");
+            StringAssert.Contains("DELETE ONLINE DATA", Text("Challenge/Title"));
+            Click("Challenge/Primary");
+            yield return null;
+            Assert.AreEqual(1, backend.Deletions);
+            Assert.IsTrue(game.LastDeleteOnlineData.Ok);
+            Assert.AreEqual(0, game.CurrentSave.Daily.Pending.Count);
+            StringAssert.Contains("DELETED", Text("Challenge/Title"));
+            Click("Challenge/Primary");
+            Click("Settings/Close");
+
             // The main game never noticed.
             Assert.AreEqual(777, game.Progress.Best);
             Assert.AreEqual(2, game.Progress.Ghosts.Count);

@@ -118,6 +118,29 @@ namespace Echo.Services.Backend
             }
         }
 
+        public async Task<DeleteOnlineDataResult> DeleteOnlineDataAsync()
+        {
+            // Never signed in on this device: there is no account and nothing online to delete.
+            if (!SignedIn && !AuthenticationService.Instance.SessionTokenExists) return new DeleteOnlineDataResult { Ok = true };
+            if (!await SignInAsync()) return DeleteOnlineDataResult.Failed("offline");
+            try
+            {
+                DeleteOnlineDataResult r = await CloudCodeService.Instance.CallModuleEndpointAsync<DeleteOnlineDataResult>(Module, "DeleteMyData",
+                    new Dictionary<string, object>());
+                if (!r.Ok) return r;
+                await AuthenticationService.Instance.DeleteAccountAsync();
+                if (AuthenticationService.Instance.IsSignedIn) AuthenticationService.Instance.SignOut(true);
+                AuthenticationService.Instance.ClearSessionToken();
+                _status = "online data deleted; signs in afresh on next use";
+                return r;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[Backend] DeleteMyData: " + e.Message);
+                return DeleteOnlineDataResult.Failed("offline");
+            }
+        }
+
         public async Task<DailySubmitResult> SubmitDailyRunAsync(string date, string leaderVersion, string packet, string dateOverride)
         {
             if (!await SignInAsync()) return DailySubmitResult.Failed("offline");

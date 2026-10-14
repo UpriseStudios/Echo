@@ -35,5 +35,11 @@ namespace Echo.Services.Backend
 
         /// <summary>Sends a finished daily run (its inputs, as a ReelPacket) for the server to replay and rank.</summary>
         Task<DailySubmitResult> SubmitDailyRunAsync(string date, string leaderVersion, string packet, string dateOverride);
+
+        /// <summary>
+        /// Privacy policy: deletes the player's Daily Haunt runs, leaderboard entry and sent challenges on the server,
+        /// then their anonymous account (the next online use starts afresh). Ok with nothing to do if never online.
+        /// </summary>
+        Task<DeleteOnlineDataResult> DeleteOnlineDataAsync();
     }
 }

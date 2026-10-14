@@ -92,6 +92,15 @@ namespace Echo.Game.Flow
             _hud.SetBoardCloses(dailyRun ? DailyClock.Closing(BoardSecondsLeft()) : 0);
         }
 
+        // After Delete online data: the day was fetched for the old online ID.
+        void ForgetDailyDay()
+        {
+            _daily = null;
+            _serverDay = null;
+            _dailyLeaders.Clear();
+            _dailyOwn.Clear();
+        }
+
         // Seconds until the board closes at 00:00 UTC, by the server's clock when it has told us the day.
         int BoardSecondsLeft() =>
             _serverDay != null

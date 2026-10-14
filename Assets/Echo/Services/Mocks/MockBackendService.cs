@@ -126,6 +126,17 @@ namespace Echo.Services.Mocks
             return Task.FromResult(info);
         }
 
+        /// <summary>How many times Delete online data reached the "server".</summary>
+        public int Deletions;
+
+        public Task<DeleteOnlineDataResult> DeleteOnlineDataAsync()
+        {
+            if (Offline) return Task.FromResult(DeleteOnlineDataResult.Failed("offline"));
+            Deletions++;
+            _days.Clear();
+            return Task.FromResult(new DeleteOnlineDataResult { Ok = true, LiveScoreDeleted = true });
+        }
+
         public Task<DailySubmitResult> SubmitDailyRunAsync(string date, string leaderVersion, string packet, string dateOverride)
         {
             if (Offline) return Task.FromResult(DailySubmitResult.Failed("offline"));

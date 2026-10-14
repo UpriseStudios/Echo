@@ -65,9 +65,10 @@
   <header>
     <div class="brand">UPRISE</div>
     <h1>Echo Privacy Policy</h1>
-    <p class="meta">Effective 9 October 2026 · Applies to Echo on Android and iOS</p>
-    <p class="lede">Echo is a one-tap runner where every failed run comes back as a ghost. It has no accounts and no
-      Echo servers: your game lives on your phone. This policy explains the little data that leaves it, and why.</p>
+    <p class="meta">Effective 14 October 2026 · Applies to Echo on Android and iOS</p>
+    <p class="lede">Echo is a one-tap runner where every failed run comes back as a ghost. Your game lives on your
+      phone. Its online features (the Daily Haunt and challenge links, in version 2.0 and later) use an anonymous
+      online ID and our game server, and only once you use them. This policy explains the little data that leaves your phone, and why.</p>
   </header>
 
   <section aria-labelledby="glance">
@@ -81,7 +82,9 @@
           <tr><td>Personalised ads</td><td>Unity LevelPlay and its ad partners</td><td><span class="tag on">Only if you accept</span></td></tr>
           <tr><td>Gameplay analytics</td><td>Unity Analytics</td><td><span class="tag on">Only if you accept</span></td></tr>
           <tr><td>Purchases</td><td>Google Play or the App Store</td><td><span class="tag">Only when you buy</span></td></tr>
-          <tr><td>Challenge links and clips</td><td>Whoever you send them to</td><td><span class="tag">Only when you share</span></td></tr>
+          <tr><td>Daily Haunt runs and your daily board entry</td><td>Our game server (Unity Gaming Services); your best distance and an auto-generated name are public</td><td><span class="tag">Only when you play the Daily Haunt</span></td></tr>
+          <tr><td>Challenges you send</td><td>Our game server, and whoever you send the link to</td><td><span class="tag">Only when you share</span></td></tr>
+          <tr><td>Clips</td><td>Whoever you send them to</td><td><span class="tag">Only when you share</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -100,11 +103,41 @@
       privacy choices, and the name you choose for Ghost Challenges. We never receive this file. Uninstalling Echo
       deletes it.</p>
     <ul>
-      <li><strong>Ghost Challenges.</strong> When you send a challenge, Echo builds a link containing your run, your
-        chosen name and the skin you wore. It goes only to the people you send it to, through the app you pick.</li>
+      <li><strong>Ghost Challenges.</strong> When you send a challenge, your run, the ghosts it met, your chosen name
+        and the skin you wore go into a link, either inside the link itself or kept on our game server for the link to
+        open (see below). It goes to the people you send it to, through the app you pick.</li>
       <li><strong>Highlights reel clips.</strong> Clips are made on your phone and shared only when you choose to, through
         your phone’s share sheet.</li>
     </ul>
+  </section>
+
+  <section aria-labelledby="online">
+    <h2 id="online">Online features: the Daily Haunt and challenges</h2>
+    <p>These features are in Echo version 2.0 and later; earlier versions have no online features. Nothing here
+      happens until you open the Daily Haunt, send or open a challenge, or share a clip with a challenge
+      link. Then:</p>
+    <ul>
+      <li><strong>An anonymous online ID.</strong> Echo signs in to Unity Authentication without any details from
+        you: it creates a random player ID and keeps a sign-in token on your phone. We never ask for your name, email
+        or phone number.</li>
+      <li><strong>Your runs, as taps.</strong> Echo sends a run as the timing of your taps and the ghosts it met, never
+        video, location or contacts. Our server replays it with the game's own rules to check it.</li>
+      <li><strong>The Daily Haunt.</strong> We keep your best run of the day and up to 20 of your other attempts
+        (they come back as your own ghosts), deleted 7 days after that day. The daily leaderboard shows your best
+        distance with a name Unity generates for you, such as SwiftGhost#4821; you can't set it, and it says nothing
+        about you. The day's top 10 runs appear to other players as ghosts with that name. After midnight UTC the
+        day's board is kept as an archive of IDs, generated names and distances.</li>
+      <li><strong>Challenges.</strong> A challenge you send is kept on our server with your chosen name (names on a
+        blocklist become "Runner") and opens for anyone with its link for 30 days, after which it is deleted.</li>
+      <li><strong>Switches.</strong> Echo asks Unity Remote Config whether the online features are switched on,
+        sending your random ID.</li>
+    </ul>
+    <h3>Deleting your online data</h3>
+    <p><strong>Settings › Delete online data</strong> deletes your Daily Haunt runs, your entry on today's board, the
+      challenges you've sent and your online ID. Past days' archived boards can't be edited by anyone; they hold only
+      the random ID, the generated name and a distance, which nothing links to you once your online ID is deleted.
+      Uninstalling Echo does not delete online data, and afterwards nothing tells us which data was yours, so use the
+      button first.</p>
   </section>
 
   <section aria-labelledby="choice">
@@ -130,14 +163,19 @@
       for example when a run starts and ends, its score and distance, and when power-ups, ads, purchases or Ghost
       Challenges are used. Unity also records basic device information and a random installation identifier. We do not
       collect your name, email or contacts. If you later switch analytics off, Echo stops sending events and asks Unity
-      to delete the analytics data it holds for your device.</p>
+      to delete the analytics data it holds for your device. If you have used the online features, Unity Analytics
+      may also see your random online ID.</p>
+
+    <h3>Online features: Unity Gaming Services</h3>
+    <p>The Daily Haunt and challenges run on Unity Gaming Services (Authentication, Cloud Code, Cloud Save,
+      Leaderboards and Remote Config), which store and process this data for us, as described above.</p>
 
     <h3>Purchases: Google Play and the App Store</h3>
     <p>Skin packs are bought through Google Play or the App Store, using Unity IAP. The store handles your payment; we
       only receive confirmation of what was bought so we can unlock it. We never see your card or payment details.</p>
 
     <p>Each partner’s own policy explains how it uses data:
-      <a href="https://unity.com/legal/game-player-and-app-user-privacy-policy">Unity (LevelPlay, Analytics, IAP)</a>,
+      <a href="https://unity.com/legal/game-player-and-app-user-privacy-policy">Unity (LevelPlay, Analytics, IAP, Gaming Services)</a>,
       <a href="https://policies.google.com/privacy">Google</a> and
       <a href="https://www.apple.com/legal/privacy/">Apple</a>.</p>
   </section>
@@ -146,16 +184,17 @@
     <h2 id="basis">Why we may use it</h2>
     <ul>
       <li><strong>Your consent</strong> for personalised ads and analytics. You can withdraw it at any time in Settings.</li>
-      <li><strong>Providing the game you asked for</strong> for showing the rewarded ads you choose to watch and unlocking
-        purchases.</li>
+      <li><strong>Providing the game you asked for</strong> for showing the rewarded ads you choose to watch, unlocking
+        purchases, and running the Daily Haunt and challenges when you use them.</li>
       <li><strong>Legitimate interests</strong> in keeping ads working and free of fraud.</li>
     </ul>
   </section>
 
   <section aria-labelledby="keep">
     <h2 id="keep">How long it is kept, and security</h2>
-    <p>Your save stays on your phone until you uninstall Echo. Data held by Unity, its ad partners and the app stores is
-      kept under their own policies. Everything Echo sends over the internet is encrypted in transit (HTTPS). We do
+    <p>Your save stays on your phone until you uninstall Echo. Daily Haunt runs are deleted 7 days after their day and
+      challenges after 30 days; everything online goes sooner if you use Delete online data. Data held by Unity, its ad
+      partners and the app stores is kept under their own policies. Everything Echo sends over the internet is encrypted in transit (HTTPS). We do
       not sell your data.</p>
   </section>
 
@@ -169,7 +208,8 @@
     <h2 id="rights">Your rights</h2>
     <p>Depending on where you live, including the UK and the EU, you can ask to access, correct or delete personal data
       about you, object to its use, or withdraw consent. Because Echo has no accounts and keeps your game on your phone,
-      the quickest way to remove it is to switch off analytics in Settings and uninstall the app. For anything else,
+      the quickest way to remove your data is Settings › Delete online data, then switching off analytics, then
+      uninstalling the app. For anything else,
       email us. If you are in the UK you can also complain to the Information Commissioner’s Office
       (<a href="https://ico.org.uk">ico.org.uk</a>), or in the EU to your local data protection authority.</p>
   </section>

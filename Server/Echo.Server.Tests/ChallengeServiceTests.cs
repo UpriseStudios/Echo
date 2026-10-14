@@ -27,6 +27,7 @@ namespace Echo.Server.Tests
         }
 
         MemoryStore _store;
+        MemoryDayStore _days;
         DateTime _now;
         ChallengeService _service;
 
@@ -35,7 +36,8 @@ namespace Echo.Server.Tests
         {
             _store = new MemoryStore();
             _now = new DateTime(2026, 10, 14, 12, 0, 0, DateTimeKind.Utc);
-            _service = new ChallengeService(Content, _store, () => _now);
+            _days = new MemoryDayStore();
+            _service = new ChallengeService(Content, _store, _days, () => _now);
         }
 
         static Reel ARun(uint seed, int ghosts)
@@ -105,7 +107,7 @@ namespace Echo.Server.Tests
             crowded.Run.RunIndex = 999;
             Assert.AreEqual("too-many-ghosts", (await _service.CreateAsync("p", ReelPacket.Encode(crowded), "x")).Error);
 
-            Assert.AreEqual(0, _store.Items.Count, "nothing refused is stored");
+            Assert.AreEqual(0, _store.Items.Count + _days.KeysIn(ChallengeService.DayPrefix).Count(), "nothing refused is stored");
         }
 
         [Test]
@@ -128,7 +130,7 @@ namespace Echo.Server.Tests
                 for (int i = 0; i < 15; i++) ids.Add((await _service.CreateAsync("p", packet, "x")).ChallengeId);
             Assert.AreEqual("not-found", (await _service.GetAsync("p", ids[0])).Error, "the oldest is gone");
             Assert.IsTrue((await _service.GetAsync("p", ids[29])).Ok);
-            Assert.AreEqual(ChallengeService.KeepPerPlayer, _store.Items.Keys.Count(k => k.StartsWith("p/challenge_") && !k.EndsWith("index")));
+            Assert.AreEqual(ChallengeService.KeepPerPlayer, _days.KeysIn(ChallengeService.DayPrefix).Count(k => k.Contains("/p_")));
         }
 
         [Test]
@@ -139,6 +141,42 @@ namespace Echo.Server.Tests
             Assert.IsTrue((await _service.GetAsync("p", created.ChallengeId)).Ok);
             _now = _now.AddDays(2);
             Assert.AreEqual("expired", (await _service.GetAsync("p", created.ChallengeId)).Error);
+            Assert.IsFalse(_days.KeysIn(ChallengeService.DayPrefix).Any(k => k.EndsWith(created.ChallengeId)), "deleted, not just refused");
+        }
+
+        [Test]
+        public async Task AChallengeDay_IsDeletedWhole_ThirtyDaysOn_EvenIfNobodyOpensItAgain()
+        {
+            CreateChallengeResponse forgotten = await _service.CreateAsync("quiet", ReelPacket.Encode(ARun(13, 1)), "x");
+            _now = _now.AddDays(31);
+            await _service.GetAsync("someone", "abcdefghij");   // anyone's visit sweeps
+            Assert.IsFalse(_days.KeysIn(ChallengeService.DayPrefix).Any(k => k.EndsWith(forgotten.ChallengeId)));
+        }
+
+        [Test]
+        public async Task DeleteMyData_RemovesEveryChallengeTheySent()
+        {
+            CreateChallengeResponse a = await _service.CreateAsync("p", ReelPacket.Encode(ARun(14, 1)), "x");
+            _now = _now.AddDays(2);
+            CreateChallengeResponse b = await _service.CreateAsync("p", ReelPacket.Encode(ARun(15, 1)), "x");
+            await _service.CreateAsync("other", ReelPacket.Encode(ARun(16, 1)), "x");
+            await _service.ForgetPlayerAsync("p");
+            Assert.AreEqual("not-found", (await _service.GetAsync("p", a.ChallengeId)).Error);
+            Assert.AreEqual("not-found", (await _service.GetAsync("p", b.ChallengeId)).Error);
+            Assert.AreEqual(1, _days.KeysIn(ChallengeService.DayPrefix).Count(), "only the other player's");
+        }
+
+        [Test]
+        public async Task SendingANewChallenge_DeletesTheExpiredOnes()
+        {
+            string packet = ReelPacket.Encode(ARun(12, 1));
+            CreateChallengeResponse old = await _service.CreateAsync("p", packet, "x");
+            _now = _now.AddDays(10);
+            CreateChallengeResponse middle = await _service.CreateAsync("p", packet, "x");
+            _now = _now.AddDays(25);
+            await _service.CreateAsync("p", packet, "x");
+            Assert.IsFalse(_days.KeysIn(ChallengeService.DayPrefix).Any(k => k.EndsWith(old.ChallengeId)), "35 days old: deleted");
+            Assert.IsTrue(_days.KeysIn(ChallengeService.DayPrefix).Any(k => k.EndsWith(middle.ChallengeId)), "25 days old: kept");
         }
 
         [Test]

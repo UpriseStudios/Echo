@@ -28,18 +28,28 @@ namespace EchoCloud
         public static readonly TimeSpan Grace = TimeSpan.FromMinutes(5);
         public static readonly TimeSpan RateLimit = TimeSpan.FromSeconds(2);
         public const int LeaderVersionsKept = 12;
+
+        /// <summary>
+        /// Privacy policy: a day's records (every player's runs and ghosts, and its leader cache) are deleted 7 days
+        /// after that day, all at once (Housekeeping), whether or not their players come back.
+        /// </summary>
+        public const int KeepDays = 7;
+        public const string DayPrefix = "echo_day_";
+        const string LeadersKey = "leaders";
         static readonly DateTime DayZero = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         readonly GameContent _content;
         readonly IDailyStore _store;
+        readonly IDayStore _days;
         readonly Func<DateTime> _clock;
         readonly string _salt;
 
-        public DailyService(GameContent content, IDailyStore store, Func<DateTime> utcNow, string salt)
+        public DailyService(GameContent content, IDailyStore store, IDayStore days, Func<DateTime> utcNow, string salt)
         {
             if (string.IsNullOrEmpty(salt)) throw new ArgumentException("the daily seed salt is missing (Secret Manager DAILY_SEED_SALT)");
             _content = content;
             _store = store;
+            _days = days;
             _clock = utcNow;
             _salt = salt;
         }
@@ -171,7 +181,7 @@ namespace EchoCloud
             if (date != today && !lateFromYesterday) return Fail(response, "wrong-day");
             if (reel.Seed != SeedFor(date, _salt)) return Fail(response, "seed");
 
-            LeaderCache cache = Read<LeaderCache>(await _store.GetGameAsync(CacheKey(date))) ?? new LeaderCache();
+            LeaderCache cache = await ReadCache(date);
             LeaderSet set = cache.Versions.FirstOrDefault(v => v.Version == leaderVersion);
             if (set == null && !(cache.Versions.Count == 0 && leaderVersion == VersionOf(date, new List<LeaderEntry>())))
                 return Fail(response, "leader-version");
@@ -207,7 +217,7 @@ namespace EchoCloud
                 day.Packet = Container(reel.Seed, own, Best(day));
             }
             day.NextRunIndex = Math.Max(day.NextRunIndex, reel.RunIndex + 1);
-            await _store.SetPlayerAsync(playerId, DayKey(date), JsonSerializer.Serialize(day));
+            await _days.SetAsync(Bucket(date), playerId, JsonSerializer.Serialize(day));
 
             response.Ok = true;
             response.Distance = distance;
@@ -231,9 +241,10 @@ namespace EchoCloud
         // and each of those players' best daily run, as a new version.
         async Task<LeaderSet> CurrentLeaders(string date, DateTime now, bool force)
         {
-            LeaderCache cache = Read<LeaderCache>(await _store.GetGameAsync(CacheKey(date))) ?? new LeaderCache();
+            LeaderCache cache = await ReadCache(date);
             LeaderSet latest = cache.Versions.LastOrDefault();
             if (!force && latest != null && now - latest.BuiltUtc < LeaderRefresh && now >= latest.BuiltUtc) return latest;
+            if (cache.Versions.Count == 0) await Housekeeping.SweepAsync(_days, DayPrefix, now, KeepDays);   // the day's first build
 
             var set = new LeaderSet { BuiltUtc = now };
             int rank = 0;
@@ -256,7 +267,7 @@ namespace EchoCloud
             else
                 cache.Versions.Add(set);
             while (cache.Versions.Count > LeaderVersionsKept) cache.Versions.RemoveAt(0);
-            await _store.SetGameAsync(CacheKey(date), JsonSerializer.Serialize(cache));
+            await _days.SetAsync(Bucket(date), LeadersKey, JsonSerializer.Serialize(cache));
             return cache.Versions[cache.Versions.Count - 1];
         }
 
@@ -286,11 +297,36 @@ namespace EchoCloud
         static string VersionOf(string date, List<LeaderEntry> leaders) =>
             VersionOf(date, leaders.Select(e => (e.PlayerId, e.Name, e.Rank, e.Distance, e.Packet)).ToList());
 
-        static string CacheKey(string date) => "leaders_" + date.Replace("-", "");
-        static string DayKey(string date) => "daily_" + date.Replace("-", "");
+        /// <summary>
+        /// Delete online data (Settings): every private item the player has (daily runs and ghosts, the challenges they
+        /// sent), today's live score when the server holds the admin key, and their ghost from today's leaders.
+        /// </summary>
+        public async Task<DeleteMyDataResponse> ForgetPlayerAsync(string playerId, string dateOverride = null)
+        {
+            DateTime now = Now(dateOverride);
+            await _store.DeleteAllPlayerItemsAsync(playerId);
+            string scoreNote = await _store.DeleteScoreAsync(playerId);
+            // Every day still kept: their record, and any leader set that holds their run.
+            for (int back = KeepDays; back >= 0; back--)
+            {
+                string date = DateKey(now.Date.AddDays(-back));
+                await _days.DeleteAsync(Bucket(date), playerId);
+                LeaderCache cache = await ReadCache(date);
+                if (!cache.Versions.Any(v => v.Leaders.Any(e => e.PlayerId == playerId))) continue;
+                if (back == 0) await CurrentLeaders(date, now, force: true);   // today: rebuilt without them
+                cache = await ReadCache(date);
+                cache.Versions.RemoveAll(v => v.Leaders.Any(e => e.PlayerId == playerId));
+                await _days.SetAsync(Bucket(date), LeadersKey, JsonSerializer.Serialize(cache));
+            }
+            return new DeleteMyDataResponse { Ok = true, LiveScoreDeleted = scoreNote == null, LiveScoreNote = scoreNote ?? "" };
+        }
+
+        static string Bucket(string date) => DayPrefix + date.Replace("-", "");
+
+        async Task<LeaderCache> ReadCache(string date) => Read<LeaderCache>(await _days.GetAsync(Bucket(date), LeadersKey)) ?? new LeaderCache();
 
         async Task<PlayerDay> ReadDay(string playerId, string date) =>
-            Read<PlayerDay>(await _store.GetPlayerAsync(playerId, DayKey(date))) ?? new PlayerDay();
+            Read<PlayerDay>(await _days.GetAsync(Bucket(date), playerId)) ?? new PlayerDay();
 
         static List<GhostRecord> OwnGhosts(PlayerDay day) =>
             !string.IsNullOrEmpty(day.Packet) && ReelPacket.TryDecode(day.Packet, out Reel r) ? r.Ghosts : new List<GhostRecord>();

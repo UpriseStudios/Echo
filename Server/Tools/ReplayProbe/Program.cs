@@ -39,6 +39,8 @@ namespace Echo.Server.Tools
             if (args.Length > 0 && args[0] == "daily") return await ProbeDaily(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "grace") return await ProbeGrace(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "names") return await ProbeNames(http, token);
+            if (args.Length > 0 && args[0] == "delete") return await ProbeDelete(http, projectId, token, content);
+            if (args.Length > 0 && args[0] == "tamper") return await TamperProbe.Run(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "switches") return await ProbeSwitches(http, projectId, token, args.Length > 1 && args[1] == "off");
             Console.WriteLine("  #   course   ghosts  device m  server m  device score  server score  match");
             int sent = 0, matched = 0;
@@ -66,7 +68,7 @@ namespace Echo.Server.Tools
             return matched == sent ? 0 : 1;
         }
 
-        static async Task<string> SignInAnonymously(HttpClient http, string projectId)
+        internal static async Task<string> SignInAnonymously(HttpClient http, string projectId)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "https://player-auth.services.api.unity.com/v1/authentication/anonymous")
             {
@@ -252,10 +254,44 @@ namespace Echo.Server.Tools
             return good ? 0 : 1;
         }
 
+        // Settings › Delete online data: a player plays today and sends a challenge, then deletes; their day, their
+        // challenge and (with the admin key in Secret Manager) their live score are gone.
+        static async Task<int> ProbeDelete(HttpClient http, string projectId, string token, GameContent content)
+        {
+            JsonElement d = await Call(http, projectId, token, "GetDaily", new { });
+            ReelPacket.TryDecode(d.GetProperty("ghostsPacket").GetString(), out Echo.Core.Reels.Reel ghosts);
+            Course course = content.CourseFor((uint)d.GetProperty("seed").GetInt64());
+            Echo.Core.Reels.Reel reel = null;
+            for (uint s = 700; reel == null; s++)
+                reel = ParityRuns.Drive(Echo.Core.Daily.DailyRules.Start(course,
+                    Echo.Core.Daily.DailyRules.Ghosts(ghosts.Ghosts.Where(g => g.Leader), ghosts.Ghosts.Where(g => !g.Leader)),
+                    d.GetProperty("nextRunIndex").GetInt32(), content.Config), course, s, content.Config, content.ContentVersion).Reel;
+            JsonElement sent = await Call(http, projectId, token, "SubmitDailyRun",
+                new { date = d.GetProperty("date").GetString(), leaderVersion = d.GetProperty("leaderVersion").GetString(), packet = ReelPacket.Encode(reel) });
+            Course other = content.CourseFor(12345);
+            Echo.Core.Reels.Reel run = null;
+            foreach (uint s in ParityRuns.Seeds(80, 99))
+                if ((run = ParityRuns.Play(other, ParityRuns.Ghosts(other, 1, 99, content.Config), s, content.Config, content.ContentVersion).Reel) != null) break;
+            JsonElement made = await Call(http, projectId, token, "CreateChallenge", new { packet = ReelPacket.Encode(run), name = "Probe" });
+            Console.WriteLine($"Before: daily best {sent.GetProperty("bestDistance")} m, rank {sent.GetProperty("rank")}, challenge {made.GetProperty("challengeId").GetString()}");
+
+            JsonElement deleted = await Call(http, projectId, token, "DeleteMyData", new { });
+            Console.WriteLine($"DeleteMyData: ok {deleted.GetProperty("ok")}, live score deleted {deleted.GetProperty("liveScoreDeleted")} {deleted.GetProperty("liveScoreNote").GetString()}");
+            JsonElement after = await Call(http, projectId, token, "GetDaily", new { });
+            JsonElement challenge = await Call(http, projectId, token, "GetChallenge",
+                new { ownerId = made.GetProperty("ownerId").GetString(), challengeId = made.GetProperty("challengeId").GetString() });
+            bool onBoard = after.GetProperty("board").EnumerateArray().Any(e => e.GetProperty("isYou").GetBoolean());
+            Console.WriteLine($"After: daily best {after.GetProperty("bestDistance")} m, on the board {onBoard}, challenge {challenge.GetProperty("error").GetString()}");
+            bool good = deleted.GetProperty("ok").GetBoolean() && after.GetProperty("bestDistance").GetInt32() == 0
+                && challenge.GetProperty("error").GetString() == "not-found" && onBoard == !deleted.GetProperty("liveScoreDeleted").GetBoolean();
+            Console.WriteLine(good ? "\nThe player's online data was deleted" + (deleted.GetProperty("liveScoreDeleted").GetBoolean() ? ", live score included." : "; the live score stays until LEADERBOARDS_ADMIN_KEY is in Secret Manager.") : "\nDELETION DID NOT DO WHAT IT SAYS.");
+            return good ? 0 : 1;
+        }
+
         static Task<JsonElement> Call(HttpClient http, string projectId, string token, string function, string packet) =>
             Call(http, projectId, token, function, new { packet });
 
-        static async Task<JsonElement> Call(HttpClient http, string projectId, string token, string function, object parameters)
+        internal static async Task<JsonElement> Call(HttpClient http, string projectId, string token, string function, object parameters)
         {
             var request = new HttpRequestMessage(HttpMethod.Post,
                 $"https://cloud-code.services.api.unity.com/v1/projects/{projectId}/modules/{Module}/{function}")
@@ -269,7 +305,7 @@ namespace Echo.Server.Tools
             return JsonDocument.Parse(body).RootElement.GetProperty("output").Clone();
         }
 
-        static string Ugs(string arguments)
+        internal static string Ugs(string arguments)
         {
             // On Windows the CLI is a .cmd shim, which only the command shell can start.
             bool windows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows);

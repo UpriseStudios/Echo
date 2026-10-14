@@ -69,6 +69,42 @@ namespace Echo.Game.Flow
             Debug.Log("[Backend] " + verdict);
         }
 
+        // ---- Privacy policy: Settings › Delete online data ----
+
+        void AskDeleteOnlineData() =>
+            Ask("DELETE ONLINE DATA?",
+                "This deletes your Daily Haunt runs, your place on today's board, the challenges you've sent and your online ID from our server. Your game on this phone stays as it is.",
+                "Delete", "Cancel", DeleteOnlineData, null);
+
+        /// <summary>Also a test hook.</summary>
+        public async void DeleteOnlineData()
+        {
+            if (!_servicesSettled)
+            {
+                Ask("ONE MOMENT", "Echo is still starting up. Try again in a moment.", "OK", null, null, null);
+                return;
+            }
+            DeleteOnlineDataResult r = await _services.Backend.DeleteOnlineDataAsync();
+            if (this == null) return;
+            LastDeleteOnlineData = r;
+            if (!r.Ok)
+            {
+                Ask("COULDN'T DELETE", r.Error == "offline"
+                    ? "Deleting needs a connection. Check yours and try again."
+                    : "Something went wrong. Try again, or email hello@uprisestudios.co.uk.", "OK", null, null, null);
+                return;
+            }
+            // Nothing of the old online ID is sent again: unsent daily runs and today's fetched day go too.
+            _save.Daily.Pending.Clear();
+            ForgetDailyDay();
+            Save();
+            Ask("ONLINE DATA DELETED", "Your Daily Haunt runs, board entry and sent challenges are gone, and links to your challenges no longer open.",
+                "OK", null, null, null);
+        }
+
+        /// <summary>The last Delete online data answer, for tests.</summary>
+        public DeleteOnlineDataResult LastDeleteOnlineData { get; private set; }
+
         /// <summary>The last server check's answer, for tests.</summary>
         public ReplayCheckResult LastServerCheck { get; private set; }
     }

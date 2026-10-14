@@ -767,10 +767,13 @@ namespace Echo.Editor
             nameLabel.alignment = TextAlignmentOptions.MidlineLeft;
             nameLabel.margin = new Vector4(36, 0, 36, 0);
             var privacy = MakeButton(root, "Privacy", "Privacy choices", new Vector2(0, -270), new Vector2(760, 124), ButtonStyle.Secondary);
-            var devAds = MakeButton(root, "DevAdFailure", "Dev: ads succeed", new Vector2(-265, -440), new Vector2(250, 112), ButtonStyle.Secondary);
+            // Privacy policy (2.0): the Daily Haunt runs, board entry and challenges kept on the server, deleted on request.
+            var deleteOnline = MakeButton(root, "DeleteOnline", "Delete online data", new Vector2(0, -410), new Vector2(760, 110), ButtonStyle.Secondary);
+            Wire(view, "_deleteOnline", deleteOnline);
+            var devAds = MakeButton(root, "DevAdFailure", "Dev: ads succeed", new Vector2(-265, -560), new Vector2(250, 100), ButtonStyle.Secondary);
             // Version 2.0, development builds: the newest reel replayed on the server, and the Daily Haunt's date.
-            var serverCheck = MakeButton(root, "ServerCheck", "Dev: server check", new Vector2(0, -440), new Vector2(250, 112), ButtonStyle.Secondary);
-            var dailyDate = MakeButton(root, "DailyDate", "Dev: daily today", new Vector2(265, -440), new Vector2(250, 112), ButtonStyle.Secondary);
+            var serverCheck = MakeButton(root, "ServerCheck", "Dev: server check", new Vector2(0, -560), new Vector2(250, 100), ButtonStyle.Secondary);
+            var dailyDate = MakeButton(root, "DailyDate", "Dev: daily today", new Vector2(265, -560), new Vector2(250, 100), ButtonStyle.Secondary);
             Wire(view, "_serverCheck", serverCheck);
             Wire(view, "_dailyDate", dailyDate);
             var close = MakeButton(root, "Close", "Back", new Vector2(0, -830), new Vector2(500, 120), ButtonStyle.Primary);
@@ -786,7 +789,7 @@ namespace Echo.Editor
             var heading = root.Find("Heading").gameObject;
             heading.GetComponent<TMP_Text>().raycastTarget = true;
             Wire(view, "_heading", heading.AddComponent<Button>());
-            var status = MakeText(root, "ServicesStatus", "", 26, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -620), new Vector2(980, 260));
+            var status = MakeText(root, "ServicesStatus", "", 24, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -690), new Vector2(980, 150));
             status.alignment = TextAlignmentOptions.TopLeft;
             status.color = Soft;
             status.gameObject.SetActive(false);

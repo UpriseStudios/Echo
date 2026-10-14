@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
@@ -14,17 +17,23 @@ namespace EchoCloud
     public sealed class CloudDailyStore : IDailyStore
     {
         public const string LeaderboardId = "daily";
-        public const string GameDataId = "echo_daily";
 
         readonly IGameApiClient _api;
         readonly IExecutionContext _context;
         readonly Guid _project;
+        readonly Func<Task<string>> _adminKey;
+        static readonly HttpClient Http = new HttpClient();
 
-        public CloudDailyStore(IGameApiClient api, IExecutionContext context)
+        /// <param name="adminKey">
+        /// "keyId:secret" of a service account with the Leaderboards admin role, read from Secret Manager only when a
+        /// score is deleted (Cloud Code's own token can't delete scores).
+        /// </param>
+        public CloudDailyStore(IGameApiClient api, IExecutionContext context, Func<Task<string>> adminKey = null)
         {
             _api = api;
             _context = context;
             _project = Guid.Parse(context.ProjectId);
+            _adminKey = adminKey;
         }
 
         public async Task<string> GetPlayerAsync(string playerId, string key)
@@ -37,17 +46,6 @@ namespace EchoCloud
 
         public Task SetPlayerAsync(string playerId, string key, string json) =>
             _api.CloudSaveData.SetPrivateItemAsync(_context, _context.ServiceToken, _context.ProjectId, playerId, new SetItemBody(key, json));
-
-        public async Task<string> GetGameAsync(string key)
-        {
-            var response = await _api.CloudSaveData.GetPrivateCustomItemsAsync(_context, _context.ServiceToken, _context.ProjectId, GameDataId, new List<string> { key });
-            foreach (Item item in response.Data.Results)
-                if (item.Key == key) return item.Value?.ToString();
-            return null;
-        }
-
-        public Task SetGameAsync(string key, string json) =>
-            _api.CloudSaveData.SetPrivateCustomItemAsync(_context, _context.ServiceToken, _context.ProjectId, GameDataId, new SetItemBody(key, json));
 
         public Task SubmitAsync(string playerId, int distance) =>
             _api.Leaderboards.AddLeaderboardPlayerScoreAsync(_context, _context.ServiceToken, _project, LeaderboardId, playerId,
@@ -97,6 +95,42 @@ namespace EchoCloud
             {
                 return null;
             }
+        }
+
+        public async Task DeleteAllPlayerItemsAsync(string playerId)
+        {
+            try
+            {
+                await _api.CloudSaveData.DeletePrivateItemsAsync(_context, _context.ServiceToken, _context.ProjectId, playerId);
+            }
+            catch (ApiException e) when (e.Response?.StatusCode == HttpStatusCode.NotFound)
+            {
+                // nothing stored
+            }
+        }
+
+        // Leaderboards admin API (Delete Player Score), with the service account's key: Basic auth.
+        public async Task<string> DeleteScoreAsync(string playerId)
+        {
+            string key;
+            try
+            {
+                key = _adminKey == null ? null : await _adminKey();
+            }
+            catch (Exception e)
+            {
+                // Never the secret itself: only why it couldn't be read (missing, or not visible to this environment).
+                string why = e.Message.Length > 120 ? e.Message.Substring(0, 120) : e.Message;
+                return $"no-admin-key ({e.GetType().Name}: {why})";
+            }
+            if (string.IsNullOrEmpty(key)) return "no-admin-key (empty)";
+            if (key.IndexOf(':') <= 0) return "admin-key-format (expected keyId:secret)";
+            var request = new HttpRequestMessage(HttpMethod.Delete,
+                $"https://services.api.unity.com/leaderboards/v1/projects/{_context.ProjectId}/environments/{_context.EnvironmentId}/leaderboards/{LeaderboardId}/scores/players/{playerId}");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(key)));
+            HttpResponseMessage response = await Http.SendAsync(request);
+            if (response.IsSuccessStatusCode || response.StatusCode == HttpStatusCode.NotFound) return null;   // 404: no score today
+            return "HTTP " + (int)response.StatusCode;
         }
 
         async Task<string> LastArchivedVersion()

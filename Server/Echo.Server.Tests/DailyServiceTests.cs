@@ -28,8 +28,6 @@ namespace Echo.Server.Tests
 
             public Task<string> GetPlayerAsync(string p, string k) => Task.FromResult(Items.TryGetValue(p + "/" + k, out string v) ? v : null);
             public Task SetPlayerAsync(string p, string k, string json) { Items[p + "/" + k] = json; return Task.CompletedTask; }
-            public Task<string> GetGameAsync(string k) => Task.FromResult(Items.TryGetValue("game/" + k, out string v) ? v : null);
-            public Task SetGameAsync(string k, string json) { Items["game/" + k] = json; return Task.CompletedTask; }
 
             public Task SubmitAsync(string playerId, int distance)
             {
@@ -47,6 +45,20 @@ namespace Echo.Server.Tests
             public Task<LeaderboardRow> YesterdaysWinnerAsync() => Task.FromResult(Rows(Yesterday).FirstOrDefault());
             public Task<LeaderboardRow> YesterdaysPlaceAsync(string id) => Task.FromResult(Rows(Yesterday).FirstOrDefault(r => r.PlayerId == id));
 
+            public bool HasAdminKey = true;
+
+            public Task DeleteAllPlayerItemsAsync(string p)
+            {
+                foreach (string k in Items.Keys.Where(k => k.StartsWith(p + "/", StringComparison.Ordinal)).ToList()) Items.Remove(k);
+                return Task.CompletedTask;
+            }
+
+            public Task<string> DeleteScoreAsync(string p)
+            {
+                if (HasAdminKey) Today.Remove(p);
+                return Task.FromResult(HasAdminKey ? null : "no-admin-key (missing)");
+            }
+
             // The leaderboard resets at 00:00 UTC with an archive.
             public void Midnight()
             {
@@ -56,6 +68,7 @@ namespace Echo.Server.Tests
         }
 
         MemoryDailyStore _store;
+        MemoryDayStore _days;
         DateTime _now;
         DailyService _daily;
 
@@ -64,7 +77,8 @@ namespace Echo.Server.Tests
         {
             _store = new MemoryDailyStore();
             _now = new DateTime(2026, 10, 14, 12, 0, 0, DateTimeKind.Utc);
-            _daily = new DailyService(Content, _store, () => _now, Salt);
+            _days = new MemoryDayStore();
+            _daily = new DailyService(Content, _store, _days, () => _now, Salt);
         }
 
         // A player opens the Daily Haunt and plays one run against the ghosts they were given, as the game does.
@@ -137,11 +151,13 @@ namespace Echo.Server.Tests
             Assert.AreEqual(bestDistance, d.BestDistance);
         }
 
+        static string Day(string yyyyMMdd) => DailyService.DayPrefix + yyyyMMdd;
+        string Today() => Day(DailyService.DateKey(_now).Replace("-", ""));
+
         // Another player joins the top of today's board with the given player's best run, so the leader set changes.
         void Overtake(string from, string player, int distance)
         {
-            string key = "/daily_" + DailyService.DateKey(_now).Replace("-", "");
-            _store.Items[player + key] = _store.Items[from + key];
+            _days.Buckets[Today()][player] = _days.Buckets[Today()][from];
             _store.Today[player] = distance;
         }
 
@@ -260,7 +276,7 @@ namespace Echo.Server.Tests
             Assert.AreEqual(0, r.Rank, "not ranked");
             Assert.IsFalse(_store.Yesterday.ContainsKey("late"), "UGS archives are read-only");
             Assert.IsFalse(_store.Today.ContainsKey("late"), "and it never lands on today's board");
-            Assert.IsNotNull(_store.Items["late/daily_20261014"]);
+            Assert.IsTrue(_days.Has(Day("20261014"), "late"), "kept as that day's run");
 
             var (d2, reel2) = await Play("later", 22);   // today's course now
             Assert.AreNotEqual(d.Seed, d2.Seed);
@@ -270,6 +286,63 @@ namespace Echo.Server.Tests
             GetDailyResponse next = await _daily.GetDailyAsync("late");
             Assert.AreEqual(0, next.YesterdayRank);
             Assert.AreEqual("", next.YesterdayWinner);
+        }
+
+        [Test]
+        public async Task DeleteMyData_RemovesTheirRuns_TheirScore_AndTheirLeaderGhost()
+        {
+            Assert.IsTrue((await PlayAndSubmit("alice", 51)).Ok);
+            _store.Items["alice/challenge_index"] = "{}";
+            GetDailyResponse before = await _daily.GetDailyAsync("bob");
+            Assert.IsTrue(ReelPacket.TryDecode(before.GhostsPacket, out Reel had));
+            Assert.AreEqual(1, had.Ghosts.Count(g => g.Leader));
+
+            DeleteMyDataResponse r = await _daily.ForgetPlayerAsync("alice");
+            Assert.IsTrue(r.Ok);
+            Assert.IsTrue(r.LiveScoreDeleted);
+            Assert.IsFalse(_store.Items.Keys.Any(k => k.StartsWith("alice/")), "her private items");
+            Assert.IsFalse(_days.Has(Day("20261014"), "alice"), "her day");
+            Assert.IsFalse(_store.Today.ContainsKey("alice"));
+            GetDailyResponse after = await _daily.GetDailyAsync("bob");
+            Assert.IsTrue(ReelPacket.TryDecode(after.GhostsPacket, out Reel now));
+            Assert.AreEqual(0, now.Ghosts.Count(g => g.Leader), "her ghost no longer haunts anyone");
+            Assert.IsFalse(_days.Buckets[Day("20261014")]["leaders"].Contains("alice"), "no cached version holds her run");
+        }
+
+        [Test]
+        public async Task WithoutTheAdminKey_TheScoreStays_ButHerRunAndGhostGo()
+        {
+            _store.HasAdminKey = false;
+            Assert.IsTrue((await PlayAndSubmit("alice", 52)).Ok);
+            DeleteMyDataResponse r = await _daily.ForgetPlayerAsync("alice");
+            Assert.IsTrue(r.Ok);
+            Assert.IsFalse(r.LiveScoreDeleted);
+            StringAssert.StartsWith("no-admin-key", r.LiveScoreNote);
+            GetDailyResponse bob = await _daily.GetDailyAsync("bob");
+            Assert.IsTrue(ReelPacket.TryDecode(bob.GhostsPacket, out Reel ghosts));
+            Assert.AreEqual(0, ghosts.Ghosts.Count(g => g.Leader));
+        }
+
+        [Test]
+        public async Task ADay_IsDeletedWhole_SevenDaysOn_EvenForPlayersWhoNeverComeBack()
+        {
+            Assert.IsTrue((await PlayAndSubmit("p", 53)).Ok);
+            Assert.IsTrue((await PlayAndSubmit("gone", 54)).Ok);   // never plays again
+            Assert.IsTrue(_days.Has(Day("20261014"), "gone"));
+            Assert.IsTrue(_days.Has(Day("20261014"), "leaders"));
+
+            _now = new DateTime(2026, 10, 21, 12, 0, 0, DateTimeKind.Utc);
+            await _daily.GetDailyAsync("someone");
+            Assert.IsTrue(_days.Buckets.ContainsKey(Day("20261014")), "7 days on: kept");
+            _now = new DateTime(2026, 10, 22, 12, 0, 0, DateTimeKind.Utc);
+            await _daily.GetDailyAsync("someone");
+            Assert.IsFalse(_days.Buckets.ContainsKey(Day("20261014")), "8 days on: the whole day is gone, leaders and all");
+            Assert.IsTrue(_store.Items.ContainsKey("p/daily_meta"), "not a day");
+
+            // A quiet month later the sweep still catches up in one call.
+            _now = new DateTime(2026, 11, 30, 12, 0, 0, DateTimeKind.Utc);
+            await _daily.GetDailyAsync("someone");
+            Assert.IsFalse(_days.Buckets.Keys.Any(b => b.StartsWith(DailyService.DayPrefix, StringComparison.Ordinal) && string.CompareOrdinal(b, Day("20261122")) <= 0));
         }
 
         [Test]
