@@ -34,6 +34,9 @@ namespace Echo.Game.UI
         [SerializeField] Button _daily;
         public event Action DailyClicked;
 
+        // A build talking to the development server says so, so it is never mistaken for the store build.
+        [SerializeField] GameObject _devServer;
+
         void Awake()
         {
             _skins.onClick.AddListener(() => SkinsClicked?.Invoke());
@@ -44,6 +47,11 @@ namespace Echo.Game.UI
             if (_reels != null) _reels.onClick.AddListener(() => ReelsClicked?.Invoke());
             if (_exit != null) _exit.onClick.AddListener(() => ExitClicked?.Invoke());
             if (_daily != null) _daily.onClick.AddListener(() => DailyClicked?.Invoke());
+        }
+
+        public void SetDevServer(bool on)
+        {
+            if (_devServer != null && _devServer.activeSelf != on) _devServer.SetActive(on);
         }
 
         public void Show(int best)

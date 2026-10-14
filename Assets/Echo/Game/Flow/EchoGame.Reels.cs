@@ -266,7 +266,11 @@ namespace Echo.Game.Flow
             _shards.Burst(new Vector2(pos.x - w / 2f, pos.y), new Vector2(w, h), Color.white, 40);
             _sfx.Death();
             _cameraRig.Shake(0.16f, 0.28f);
-            if (_clipStage == ClipStage.None) _replay.ShowEnded();
+            if (_clipStage == ClipStage.None)
+            {
+                _replay.ShowEnded();
+                Screen.sleepTimeout = SleepTimeout.SystemSetting;   // waiting on Watch again / Back: the phone may sleep again
+            }
         }
 
         void EndReplay()

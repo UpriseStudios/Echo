@@ -57,7 +57,11 @@ All of this is in the **production** environment. Development stays as it is for
 
 ## 4. Build and test
 
-- [ ] In the editor: **Echo > Build > Android App Bundle** (it needs your keystore passwords, so not from batch mode).
+- [ ] To test server changes on phones **before** production is ready: **Echo > Build > Android App Bundle (development
+      server)**. It writes `Echo-devserver.aab`, talks to the development environment and shows **DEV SERVER** on the
+      title. Use it on internal testing only, never on the production track.
+- [ ] For release: **Echo > Build > Android App Bundle** (it needs your keystore passwords, so not from batch mode). No
+      DEV SERVER tag on the title means it talks to production.
 - [ ] Upload to an **internal testing** track and check on a phone:
   - Daily Haunt opens, plays and ranks; the board shows generated names.
   - Send a challenge, open its link on a second phone, race it.

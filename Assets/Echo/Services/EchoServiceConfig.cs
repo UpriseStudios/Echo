@@ -39,7 +39,7 @@ namespace Echo.Services
         public string StoreUrlIos = Placeholder;
 
         [Header("Unity Gaming Services")]
-        [Tooltip("UGS environment for development builds (and the editor). Never production.")]
+        [Tooltip("UGS environment for development builds, the editor and development-server builds. Never production.")]
         public string UgsEnvironmentDevelopment = "development";
         [Tooltip("UGS environment for release builds.")]
         public string UgsEnvironmentRelease = "production";
@@ -49,7 +49,21 @@ namespace Echo.Services
         public bool RealServicesInEditor;
 
         public string LevelPlayAppKey => IsIos ? LevelPlayAppKeyIos : LevelPlayAppKeyAndroid;
-        public string UgsEnvironment => Debug.isDebugBuild ? UgsEnvironmentDevelopment : UgsEnvironmentRelease;
+        public string UgsEnvironment => Debug.isDebugBuild || DevelopmentServerBuild ? UgsEnvironmentDevelopment : UgsEnvironmentRelease;
+
+        /// <summary>
+        /// A release build made with Echo › Build › Android App Bundle (development server): store-ready (Play's testing
+        /// tracks take it) but it talks to the development environment, so server changes can be tested on phones before
+        /// production has them. Never for a production release; the title shows DEV SERVER.
+        /// </summary>
+#if ECHO_DEV_SERVER
+        public static readonly bool DevelopmentServerBuild = true;
+#else
+        public static readonly bool DevelopmentServerBuild = false;
+#endif
+
+        /// <summary>A player build talking to development (not the editor): the title says so.</summary>
+        public bool ShowsDevServerTag => !Application.isEditor && UgsEnvironment != UgsEnvironmentRelease;
         public string BanishAdUnit => IsIos ? BanishAdUnitIos : BanishAdUnitAndroid;
         public string BanishTenAdUnit => IsSet(IsIos ? BanishTenAdUnitIos : BanishTenAdUnitAndroid) ? (IsIos ? BanishTenAdUnitIos : BanishTenAdUnitAndroid) : BanishAdUnit;
         public string ContinueAdUnit => IsIos ? ContinueAdUnitIos : ContinueAdUnitAndroid;

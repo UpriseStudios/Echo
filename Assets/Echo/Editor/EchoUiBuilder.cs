@@ -141,6 +141,11 @@ namespace Echo.Editor
             exitRt.pivot = new Vector2(0f, 1f);
             exitRt.anchoredPosition = new Vector2(36, -36);
             Wire(view, "_exit", exit);
+            // Development-server builds: a tag top right, so one is never mistaken for the store build.
+            var devServer = MakeText(root, "DevServer", "DEV SERVER", 30, _black, new Vector2(1f, 1f), new Vector2(-190, -60), new Vector2(320, 60));
+            devServer.color = NemesisRed;
+            devServer.gameObject.SetActive(false);
+            Wire(view, "_devServer", devServer.gameObject);
             // Version 2.0: the Daily Haunt, above Tap to run, with its countdown.
             var daily = MakeButton(root, "Daily", "Daily Haunt", new Vector2(0, -350), new Vector2(720, 104), ButtonStyle.Secondary);
             daily.GetComponent<Image>().color = new Color(Accent.r, Accent.g, Accent.b, 0.85f);
@@ -545,6 +550,48 @@ namespace Echo.Editor
             return view;
         }
 
+        /// <summary>
+        /// How to play (a user revision): the overlay on the tutorial clips. The caption card sits high over the world,
+        /// the topic and its dots above it, Skip beside them, and "Tap for next" low down.
+        /// </summary>
+        static HowToPlayView BuildHowToPlay(RectTransform parent)
+        {
+            RectTransform root = Stretch(NewRect("HowToPlay", parent));
+            var view = root.gameObject.AddComponent<HowToPlayView>();
+            var topic = MakeText(root, "Topic", "HOW TO PLAY", 34, _black, new Vector2(0.5f, 0.5f), new Vector2(-90, 650), new Vector2(760, 70));
+            topic.color = GhostCyan;
+            var dots = new Image[4];
+            for (int i = 0; i < dots.Length; i++)
+            {
+                dots[i] = Pill(root, "Dot" + i, new Vector2(-90 + (i - 1.5f) * 56, 592), new Vector2(36, 36), Color.white);
+            }
+            var skip = MakeButton(root, "Skip", "Skip", new Vector2(400, 650), new Vector2(210, 96), ButtonStyle.Secondary);
+
+            Image card = Pill(root, "Caption", new Vector2(0, 400), new Vector2(980, 250), new Color(Ink.r, Ink.g, Ink.b, 0.88f));
+            var caption = MakeText((RectTransform)card.transform, "Text", "", 40, _black, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(900, 210));
+            caption.color = Color.white;
+            var hint = MakeText(root, "Hint", "TAP FOR NEXT", 30, _black, new Vector2(0.5f, 0.5f), new Vector2(0, -470), new Vector2(900, 60));
+            hint.color = Soft;
+            hint.gameObject.AddComponent<Pulse>();
+
+            Wire(view, "_root", root.gameObject);
+            Wire(view, "_captionCard", card.gameObject);
+            Wire(view, "_caption", caption);
+            Wire(view, "_topic", topic);
+            Wire(view, "_hint", hint);
+            WireArray(view, "_dots", dots);
+            Wire(view, "_skip", skip);
+            {
+                var so = new UnityEditor.SerializedObject(view);
+                so.FindProperty("_dotOn").colorValue = Accent;
+                so.FindProperty("_dotOff").colorValue = new Color(1f, 1f, 1f, 0.3f);
+                so.ApplyModifiedPropertiesWithoutUndo();
+            }
+            card.gameObject.SetActive(false);
+            root.gameObject.SetActive(false);
+            return view;
+        }
+
         /// <summary>The 30th achievement's reward moment (a user revision): darkness, four silhouettes, ELEMENTS AWAKENED.</summary>
         static ElementsAwakenedView BuildElementsAwakened(RectTransform parent)
         {
@@ -751,10 +798,10 @@ namespace Echo.Editor
         {
             RectTransform root = MenuPanel(parent, "Settings", "Settings");
             var view = root.gameObject.AddComponent<SettingsView>();
-            var music = MakeButton(root, "Music", "Music: On", new Vector2(0, 480), new Vector2(760, 124), ButtonStyle.Secondary);
-            var sfx = MakeButton(root, "Sfx", "Sound effects: On", new Vector2(0, 330), new Vector2(760, 124), ButtonStyle.Secondary);
-            var haptics = MakeButton(root, "Haptics", "Haptics: On", new Vector2(0, 180), new Vector2(760, 124), ButtonStyle.Secondary);
-            var glow = MakeButton(root, "Glow", "Glow: On", new Vector2(0, 30), new Vector2(760, 124), ButtonStyle.Secondary);
+            var music = MakeButton(root, "Music", "Music: On", new Vector2(0, 520), new Vector2(760, 112), ButtonStyle.Secondary);
+            var sfx = MakeButton(root, "Sfx", "Sound effects: On", new Vector2(0, 390), new Vector2(760, 112), ButtonStyle.Secondary);
+            var haptics = MakeButton(root, "Haptics", "Haptics: On", new Vector2(0, 260), new Vector2(760, 112), ButtonStyle.Secondary);
+            var glow = MakeButton(root, "Glow", "Glow: On", new Vector2(0, 130), new Vector2(760, 112), ButtonStyle.Secondary);
             foreach (var toggle in new[] { music, sfx, haptics, glow })
             {
                 var label = toggle.GetComponentInChildren<TMP_Text>();
@@ -762,18 +809,21 @@ namespace Echo.Editor
                 label.margin = new Vector4(36, 0, 36, 0);
             }
             // The name friends see on Ghost Challenges.
-            var name = MakeButton(root, "Name", "Name", new Vector2(0, -120), new Vector2(760, 124), ButtonStyle.Secondary);
+            var name = MakeButton(root, "Name", "Name", new Vector2(0, 0), new Vector2(760, 112), ButtonStyle.Secondary);
             var nameLabel = name.GetComponentInChildren<TMP_Text>();
             nameLabel.alignment = TextAlignmentOptions.MidlineLeft;
             nameLabel.margin = new Vector4(36, 0, 36, 0);
-            var privacy = MakeButton(root, "Privacy", "Privacy choices", new Vector2(0, -270), new Vector2(760, 124), ButtonStyle.Secondary);
+            // How to play (a user revision): the tutorial clips again.
+            var howTo = MakeButton(root, "HowToPlay", "How to play", new Vector2(0, -130), new Vector2(760, 112), ButtonStyle.Secondary);
+            Wire(view, "_howToPlay", howTo);
+            var privacy = MakeButton(root, "Privacy", "Privacy choices", new Vector2(0, -260), new Vector2(760, 112), ButtonStyle.Secondary);
             // Privacy policy (2.0): the Daily Haunt runs, board entry and challenges kept on the server, deleted on request.
-            var deleteOnline = MakeButton(root, "DeleteOnline", "Delete online data", new Vector2(0, -410), new Vector2(760, 110), ButtonStyle.Secondary);
+            var deleteOnline = MakeButton(root, "DeleteOnline", "Delete online data", new Vector2(0, -390), new Vector2(760, 112), ButtonStyle.Secondary);
             Wire(view, "_deleteOnline", deleteOnline);
-            var devAds = MakeButton(root, "DevAdFailure", "Dev: ads succeed", new Vector2(-265, -560), new Vector2(250, 100), ButtonStyle.Secondary);
+            var devAds = MakeButton(root, "DevAdFailure", "Dev: ads succeed", new Vector2(-265, -530), new Vector2(250, 100), ButtonStyle.Secondary);
             // Version 2.0, development builds: the newest reel replayed on the server, and the Daily Haunt's date.
-            var serverCheck = MakeButton(root, "ServerCheck", "Dev: server check", new Vector2(0, -560), new Vector2(250, 100), ButtonStyle.Secondary);
-            var dailyDate = MakeButton(root, "DailyDate", "Dev: daily today", new Vector2(265, -560), new Vector2(250, 100), ButtonStyle.Secondary);
+            var serverCheck = MakeButton(root, "ServerCheck", "Dev: server check", new Vector2(0, -530), new Vector2(250, 100), ButtonStyle.Secondary);
+            var dailyDate = MakeButton(root, "DailyDate", "Dev: daily today", new Vector2(265, -530), new Vector2(250, 100), ButtonStyle.Secondary);
             Wire(view, "_serverCheck", serverCheck);
             Wire(view, "_dailyDate", dailyDate);
             var close = MakeButton(root, "Close", "Back", new Vector2(0, -830), new Vector2(500, 120), ButtonStyle.Primary);
@@ -789,7 +839,7 @@ namespace Echo.Editor
             var heading = root.Find("Heading").gameObject;
             heading.GetComponent<TMP_Text>().raycastTarget = true;
             Wire(view, "_heading", heading.AddComponent<Button>());
-            var status = MakeText(root, "ServicesStatus", "", 24, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -690), new Vector2(980, 150));
+            var status = MakeText(root, "ServicesStatus", "", 24, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -670), new Vector2(980, 150));
             status.alignment = TextAlignmentOptions.TopLeft;
             status.color = Soft;
             status.gameObject.SetActive(false);

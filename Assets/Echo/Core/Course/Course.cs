@@ -14,6 +14,7 @@ namespace Echo.Core.Courses
         public const int LookaheadChunks = 3;
 
         readonly ChunkLibrary _library;
+        readonly IReadOnlyList<Chunk> _opening;
         readonly List<Chunk> _chunks = new List<Chunk>(256);
         readonly List<int> _starts = new List<int>(256);
         Xorshift32 _rng;
@@ -24,6 +25,15 @@ namespace Echo.Core.Courses
             _library = library;
             Seed = seed;
             _rng = new Xorshift32(seed);
+        }
+
+        /// <summary>
+        /// How to play (a user revision): a course that opens with the given chunks instead of the tutorial ones, then
+        /// carries on as the seed would. Only the how-to-play clips use it; real runs never do.
+        /// </summary>
+        public Course(ChunkLibrary library, IReadOnlyList<Chunk> opening, uint seed) : this(library, seed)
+        {
+            _opening = opening;
         }
 
         public uint Seed { get; }
@@ -103,8 +113,9 @@ namespace Echo.Core.Courses
         void Generate()
         {
             int index = _chunks.Count;
-            Chunk chunk = index < _library.Tutorial.Length
-                ? _library.Tutorial[index]
+            IReadOnlyList<Chunk> opening = _opening ?? _library.Tutorial;
+            Chunk chunk = index < opening.Count
+                ? opening[index]
                 : Pick(TierSchedule.MaxTierAt(_endX));
             _chunks.Add(chunk);
             _starts.Add(_endX);

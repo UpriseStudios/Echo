@@ -9,7 +9,9 @@ namespace Echo.Game.Persistence
         // 2: ghosts carry skin, death x, cause and killer; stats gain the unlock counters (skins addendum).
         // 3 (version 2.0): the best run keeps its ghost snapshot (bestReel), for full challenges from Stats; the Daily
         //   Haunt's history and unsent runs (daily); ghosts in reels can be daily leaders with names.
-        public const int CurrentSchema = 3;
+        // 4 (version 2.0): tutorial.seenHowToPlay. Older saves migrate with it false, so everyone sees the how-to-play
+        //   clips once (skippable); the old file is kept as save.json.schema3.bak like every schema change.
+        public const int CurrentSchema = 4;
 
         [JsonProperty("schema")] public int Schema = CurrentSchema;
         [JsonProperty("contentVersion")] public string ContentVersion = "";

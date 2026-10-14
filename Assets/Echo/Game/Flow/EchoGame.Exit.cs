@@ -30,6 +30,11 @@ namespace Echo.Game.Flow
         // Back: closes an open card or menu, and on the title asks to leave.
         void OnBack()
         {
+            if (HowToPlaying)
+            {
+                EndHowToPlay();
+                return;
+            }
             if (ChallengeCardOpen)
             {
                 CloseChallengeCard(_challengeNo);

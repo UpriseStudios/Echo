@@ -233,6 +233,7 @@ namespace Echo.Game.Flow
             _settings.Closed += CloseMenu;
             _deathScreen.ChallengeClicked += OnSendRunAsChallenge;
             WireReels();
+            WireHowToPlay();
             _stats.ChallengeClicked += SendBestChallenge;
             _stats.PasteClicked += OnPasteChallenge;
             _settings.NameClicked += () => AskName(null);
@@ -270,7 +271,11 @@ namespace Echo.Game.Flow
             EnterTitle();
 
             // tech spec 19: no ad or analytics SDK starts before the player has chosen.
-            if (_save.Consent.Decided) StartRealServices();
+            if (_save.Consent.Decided)
+            {
+                StartRealServices();
+                MaybeStartHowToPlay();
+            }
             else
             {
                 _title.Hide();
@@ -331,7 +336,8 @@ namespace Echo.Game.Flow
                     break;
 
                 case GameState.Replay:
-                    TickReplay(dt);
+                    if (HowToPlaying) TickHowTo(dt, tapped);
+                    else TickReplay(dt);
                     break;
 
                 case GameState.Paused:
@@ -527,7 +533,18 @@ namespace Echo.Game.Flow
         {
             State = state;
             _stateTime = 0f;
+            int sleep = SleepTimeoutFor(state);
+            if (Screen.sleepTimeout != sleep) Screen.sleepTimeout = sleep;
         }
+
+        /// <summary>
+        /// The screen stays on while something plays without the player touching it (a reel, a clip being made, the
+        /// how-to-play clips: all the Replay state) and through a run; everywhere else the phone's own setting applies.
+        /// </summary>
+        public static int SleepTimeoutFor(GameState state) =>
+            state == GameState.Replay || state == GameState.Running || state == GameState.Dying
+                ? SleepTimeout.NeverSleep
+                : SleepTimeout.SystemSetting;
 
         void EnterTitle()
         {
@@ -950,6 +967,7 @@ namespace Echo.Game.Flow
         {
             _title.Show(_progress.Best);
             _title.SetExitVisible(CanQuit);
+            _title.SetDevServer(_serviceConfig != null && _serviceConfig.ShowsDevServerTag);
             RefreshDailyButton();
             if (_pendingChallenge != null) PresentPendingChallenge();
             ProcessPendingLink();
@@ -1385,6 +1403,7 @@ namespace Echo.Game.Flow
             SetState(GameState.Title);
             ShowTitle();
             StartRealServices();
+            MaybeStartHowToPlay();
         }
 
         void ShowSkins() => _skins.Show(_catalog, _save.Cosmetics, _progress.Best,

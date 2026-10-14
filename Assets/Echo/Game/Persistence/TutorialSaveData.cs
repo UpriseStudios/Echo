@@ -9,5 +9,8 @@ namespace Echo.Game.Persistence
         [JsonProperty("seenGhostHint")] public bool SeenGhostHint;
         [JsonProperty("usedDoubleJump")] public bool UsedDoubleJump;
         [JsonProperty("seenHopHint")] public bool SeenHopHint;
+
+        /// <summary>How to play (schema 4): the tutorial clips have been shown (or skipped) once.</summary>
+        [JsonProperty("seenHowToPlay")] public bool SeenHowToPlay;
     }
 }

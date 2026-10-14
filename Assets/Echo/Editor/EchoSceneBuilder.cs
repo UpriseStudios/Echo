@@ -141,7 +141,8 @@ namespace Echo.Editor
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.Portrait;
             PlayerSettings.productName = "Echo";
 
-            // tech spec 19: IL2CPP + ARM64 on both; Android App Bundle, API 26+, target the latest installed;
+            // tech spec 19: IL2CPP on both; Android ARMv7 + ARM64 (a user revision: older 32-bit phones too); Android App
+            // Bundle, API 26+, target the latest installed;
             // iOS 15+ (tech spec 1). The application id is a placeholder until the store listing exists.
             foreach (var target in new[] { NamedBuildTarget.Android, NamedBuildTarget.iOS })
             {
@@ -150,7 +151,11 @@ namespace Echo.Editor
                     || string.IsNullOrEmpty(PlayerSettings.GetApplicationIdentifier(target)))
                     PlayerSettings.SetApplicationIdentifier(target, ApplicationId);
             }
-            PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
+            PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7 | AndroidArchitecture.ARM64;
+            // Native debug symbols (function names only) inside the bundle, so Play Console can read native crashes and
+            // ANRs without a separate symbols upload.
+            UnityEditor.Android.UserBuildSettings.DebugSymbols.level = Unity.Android.Types.DebugSymbolLevel.SymbolTable;
+            UnityEditor.Android.UserBuildSettings.DebugSymbols.format = Unity.Android.Types.DebugSymbolFormat.IncludeInBundle;
             PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel26;
             PlayerSettings.Android.targetSdkVersion = AndroidSdkVersions.AndroidApiLevelAuto;
             EditorUserBuildSettings.buildAppBundle = true;
@@ -356,6 +361,7 @@ namespace Echo.Editor
             ClipEditorView clipEditor = BuildClipEditor(safe);
             DailyLobbyView dailyLobby = BuildDailyLobby(safe);
             ElementsAwakenedView awakened = BuildElementsAwakened(safe);
+            HowToPlayView howTo = BuildHowToPlay(safe);
 
             var flashRect = Stretch(NewRect("Flash", canvasGo.transform));
             var flashImage = flashRect.gameObject.AddComponent<Image>();
@@ -393,6 +399,7 @@ namespace Echo.Editor
             Wire(game, "_replay", replay);
             Wire(game, "_clipEditor", clipEditor);
             Wire(game, "_dailyLobby", dailyLobby);
+            Wire(game, "_howTo", howTo);
             Wire(game, "_audioTap", audioTap);
             Wire(game, "_skins", skins);
             Wire(game, "_flash", flash);

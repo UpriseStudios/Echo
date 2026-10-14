@@ -19,6 +19,7 @@ namespace Echo.Game.UI
         [SerializeField] Button _glow;
         [SerializeField] Button _privacy;
         [SerializeField] Button _deleteOnline;
+        [SerializeField] Button _howToPlay;
         [SerializeField] Button _devAdFailure;
         // Version 2.0, development builds: replay the newest reel on the server and compare.
         [SerializeField] Button _serverCheck;
@@ -42,6 +43,7 @@ namespace Echo.Game.UI
         public event Action Changed;
         public event Action PrivacyClicked;
         public event Action DeleteOnlineClicked;
+        public event Action HowToPlayClicked;
         public event Func<bool> DevAdFailureToggled;
         public event Action Closed;
         public event Action NameClicked;
@@ -55,6 +57,7 @@ namespace Echo.Game.UI
             _glow.onClick.AddListener(() => Toggle(() => _settings.Glow = !_settings.Glow));
             _privacy.onClick.AddListener(() => PrivacyClicked?.Invoke());
             if (_deleteOnline != null) _deleteOnline.onClick.AddListener(() => DeleteOnlineClicked?.Invoke());
+            if (_howToPlay != null) _howToPlay.onClick.AddListener(() => HowToPlayClicked?.Invoke());
             _devAdFailure.onClick.AddListener(() =>
             {
                 bool failing = DevAdFailureToggled?.Invoke() ?? false;
