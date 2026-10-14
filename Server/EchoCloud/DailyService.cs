@@ -61,6 +61,12 @@ namespace EchoCloud
             /// <summary>The best run (as a ReelPacket's Run) and the daily ghosts (its Ghosts).</summary>
             public string Packet { get; set; } = "";
             public int NextRunIndex { get; set; } = 1;
+
+            /// <summary>Own ghosts banished today with a rewarded ad (DailyRules.BanishesPerDay at most).</summary>
+            public int BanishesUsed { get; set; }
+
+            /// <summary>The best run whole, with the ghosts it faced and the server's own result, for others to watch.</summary>
+            public string BestReel { get; set; } = "";
         }
 
         sealed class PlayerMeta
@@ -140,6 +146,7 @@ namespace EchoCloud
                 GhostsPacket = Container(seed, ghosts, null),
                 BestDistance = day.BestDistance,
                 NextRunIndex = day.NextRunIndex,
+                BanishesLeft = Math.Max(0, DailyRules.BanishesPerDay - day.BanishesUsed),
             };
             foreach (LeaderboardRow row in await _store.TopAsync(100))
                 response.Board.Add(new DailyBoardEntry { Rank = row.Rank, Name = row.Name, Distance = row.Distance, IsYou = row.PlayerId == playerId });
@@ -208,6 +215,9 @@ namespace EchoCloud
                 day.BestDistance = distance;
                 own.Clear();
                 day.Packet = Container(reel.Seed, own, run);
+                reel.Distance = distance;
+                reel.Score = result.Score;
+                day.BestReel = ReelPacket.Encode(reel);
                 if (!lateFromYesterday) await _store.SubmitAsync(playerId, distance);   // yesterday's board is closed
                 response.NewBest = true;
             }
@@ -234,6 +244,70 @@ namespace EchoCloud
                 response.NextLeaderName = ahead.Name;
                 response.NextLeaderDistance = ahead.Distance;
             }
+            return response;
+        }
+
+        /// <summary>
+        /// Banish (a user decision): after a rewarded ad, one of the player's own daily ghosts goes, never a leader, at
+        /// most DailyRules.BanishesPerDay a day. The ad can't be checked from here, so the daily cap is what bounds it:
+        /// skipping the ad gains no more than an honest player who watches three.
+        /// </summary>
+        public async Task<BanishDailyGhostResponse> BanishAsync(string playerId, string date, int runIndex, string dateOverride = null)
+        {
+            var response = new BanishDailyGhostResponse();
+            DateTime now = Now(dateOverride);
+            if (date != DateKey(now))
+            {
+                response.Error = "wrong-day";
+                return response;
+            }
+            PlayerDay day = await ReadDay(playerId, date);
+            response.BanishesLeft = Math.Max(0, DailyRules.BanishesPerDay - day.BanishesUsed);
+            if (response.BanishesLeft == 0)
+            {
+                response.Error = "none-left";
+                return response;
+            }
+            List<GhostRecord> own = OwnGhosts(day);
+            if (!DailyRules.BanishOwn(own, runIndex))
+            {
+                response.Error = "not-yours";
+                return response;
+            }
+            day.BanishesUsed++;
+            day.Packet = Container(SeedFor(date, _salt), own, Best(day));
+            await _days.SetAsync(Bucket(date), playerId, JsonSerializer.Serialize(day));
+            response.Ok = true;
+            response.BanishesLeft = DailyRules.BanishesPerDay - day.BanishesUsed;
+            return response;
+        }
+
+        /// <summary>
+        /// Watching a run on today's board (after a rewarded ad in the lobby): the player at that rank's best run, whole,
+        /// so it replays exactly, ghosts and all.
+        /// </summary>
+        public async Task<GetDailyRunResponse> GetRunAsync(int rank, string dateOverride = null)
+        {
+            var response = new GetDailyRunResponse();
+            string date = DateKey(Now(dateOverride));
+            List<LeaderboardRow> top = rank >= 1 && rank <= 100 ? await _store.TopAsync(rank) : new List<LeaderboardRow>();
+            LeaderboardRow row = top.Count >= rank && rank >= 1 ? top[rank - 1] : null;
+            if (row == null)
+            {
+                response.Error = "not-found";
+                return response;
+            }
+            PlayerDay day = await ReadDay(row.PlayerId, date);
+            if (string.IsNullOrEmpty(day.BestReel))
+            {
+                response.Error = "not-available";
+                return response;
+            }
+            response.Ok = true;
+            response.Packet = day.BestReel;
+            response.Name = row.Name;
+            response.Rank = row.Rank;
+            response.Distance = day.BestDistance;
             return response;
         }
 

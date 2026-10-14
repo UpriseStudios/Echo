@@ -27,6 +27,11 @@ namespace Echo.Game.UI
 
         public bool IsOpen => _root.activeSelf;
 
+        // Someone else's run (the Daily Haunt board) can be watched, not clipped.
+        bool _clipAllowed = true;
+
+        public void SetClipAllowed(bool allowed) => _clipAllowed = allowed;
+
         void Awake()
         {
             _exit.onClick.AddListener(() => ExitClicked?.Invoke());
@@ -71,7 +76,7 @@ namespace Echo.Game.UI
             _exit.gameObject.SetActive(playing);
             _speed.gameObject.SetActive(playing);
             _again.gameObject.SetActive(ended);
-            _clip.gameObject.SetActive(ended);
+            _clip.gameObject.SetActive(ended && _clipAllowed);
             _back.gameObject.SetActive(ended);
         }
     }

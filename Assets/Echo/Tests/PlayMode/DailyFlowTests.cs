@@ -7,6 +7,7 @@ using Echo.Core.Ghosts;
 using Echo.Core.Sim;
 using Echo.Game.Flow;
 using Echo.Game.Persistence;
+using Echo.Services.Ads;
 using Echo.Services.Backend;
 using Echo.Services.Mocks;
 using Newtonsoft.Json;
@@ -193,6 +194,104 @@ namespace Echo.Tests.PlayMode
             Assert.AreEqual(2, game.Progress.Ghosts.Count);
             Assert.AreEqual(3, game.CurrentSave.NextRunIndex);
             Assert.AreEqual(2, game.CurrentSave.PowerUps.Shield, "no power-up was used up");
+        }
+
+        [UnityTest]
+        public IEnumerator YourOwnGhost_CanBeBanishedForAnAd_AndRunsOnTheBoardCanBeWatched()
+        {
+            var cfg = SimConfig.Default;
+            var library = ChunkLibrary.FromJson(Directory.GetFiles(Path.Combine(Application.dataPath, "Echo", "Content", "Chunks"), "*.json")
+                .Select(File.ReadAllText));
+            _savePath = Path.Combine(Path.GetTempPath(), "echo_daily_banish_" + System.Guid.NewGuid().ToString("N") + ".json");
+            File.WriteAllText(_savePath, JsonConvert.SerializeObject(new SaveData
+            {
+                ContentVersion = ContentVersion.Compute(library, cfg),
+                Seed = 31,
+                Consent = new ConsentSaveData { Version = ConsentSaveData.CurrentVersion },
+                Tutorial = new TutorialSaveData { SeenTapHint = true, SeenGhostHint = true, SeenHopHint = true, UsedDoubleJump = true },
+            }));
+            EchoGame.SavePathOverride = _savePath;
+
+            yield return SceneManager.LoadSceneAsync("Echo");
+            var game = Object.FindAnyObjectByType<EchoGame>();
+            while (game.State != GameState.Title) yield return null;
+            var backend = (MockBackendService)game.Services.Backend;
+            var ads = (MockAdsService)game.Services.Ads;
+            backend.Flags = new BackendFlags(true, true);
+
+            // Runs that get past the first chunks and then stop jumping: a best, then failed attempts that become your
+            // own ghosts (met from chunk 2 on), until one of them ends a run. A run that ignores them soon meets one.
+            Click("Title/Daily");
+            yield return null;
+            uint seed = (uint)backend.GetDailyAsync(null).Result.Seed;
+            int speed = cfg.SpeedForPct(DailyRules.SpeedPct);
+            var rng = new System.Random(5);
+            Schedule schedule = null;
+            game.ScriptedTaps = t => schedule != null && schedule.TapAt(t);
+            game.ScriptedHeld = t => schedule == null || schedule.HeldAt(t);
+            bool endedByOwnGhost = false;
+            for (int run = 0; run < 10 && !endedByOwnGhost; run++)
+            {
+                // Each shorter than the last, so the first stays the best and the rest become your own ghosts.
+                schedule = SurvivingSchedule.Build(new Course(library, seed), speed, 480 - 60 * (run % 4), rng, cfg);
+                if (run == 0) Click("DailyLobby/Play");
+                else
+                {
+                    yield return new WaitForSecondsRealtime(0.4f);
+                    game.InjectTap();
+                    game.TickFrame(Dt, false);
+                }
+                yield return null;
+                yield return ToDeathScreen(game);
+                endedByOwnGhost = game.Run.Killer != null && !game.Run.Killer.Leader;
+            }
+            game.ScriptedTaps = null;
+            game.ScriptedHeld = null;
+            Assert.IsTrue(endedByOwnGhost, "one of your own ghosts ended a run");
+            Assert.AreEqual(DailyRules.BanishesPerDay, game.DailyBanishesLeft);
+
+            // Banish: an ad, then the ghost is gone from your next run.
+            Assert.IsTrue(Showing("DeathScreen/Banish"), "offered for your own ghost");
+            StringAssert.Contains("3 left today", Find("DeathScreen/Banish").GetComponentInChildren<TMP_Text>().text);
+            Click("DeathScreen/Banish");
+            yield return null;
+            Assert.AreEqual(AdPlacements.DailyBanish, ads.Shown.Last());
+            Assert.AreEqual(1, backend.Banishes);
+            Assert.AreEqual(DailyRules.BanishesPerDay - 1, game.DailyBanishesLeft);
+            StringAssert.Contains("banished", Text("DeathScreen/Message"));
+            Assert.IsFalse(Showing("DeathScreen/Banish"), "once per death");
+
+            // Watching runs on the board: your own is free.
+            Click("DeathScreen/Menu");
+            Click("Title/Daily");
+            yield return null;
+            int adsBefore = ads.Shown.Count;
+            Assert.IsTrue(Showing("DailyLobby/WatchHint"));
+            Click("DailyLobby/Row0");
+            yield return null;
+            Assert.AreEqual(adsBefore, ads.Shown.Count, "your own run needs no ad");
+            Assert.AreEqual(GameState.Replay, game.State);
+            Assert.IsNotNull(game.CurrentReplay);
+            Assert.IsTrue(game.CurrentReplay.Reel.Options.Daily);
+            StringAssert.Contains("#1", Text("Replay/Label"));
+            Click("Replay/Exit");
+            yield return null;
+            Assert.IsTrue(Showing("DailyLobby/Play"), "back in the lobby");
+
+            // Someone else's run: an ad first.
+            backend.Leaders.Add((DailyRules.AsLeader(new GhostRecord { RunIndex = 1, DeathTick = 900, TapTicks = new int[0] }, 1, "SwiftGhost#4821"), 99999));
+            Click("DailyLobby/Back");
+            Click("Title/Daily");
+            yield return null;
+            Click("DailyLobby/Row0");
+            yield return null;
+            Assert.AreEqual(AdPlacements.WatchRun, ads.Shown.Last());
+            Assert.AreEqual(GameState.Replay, game.State);
+            Assert.AreEqual("SwiftGhost#4821", game.LastDailyRunWatched.Name);
+            StringAssert.Contains("SwiftGhost#4821", Text("Replay/Label"));
+            Click("Replay/Exit");
+            yield return null;
+            Assert.IsTrue(Showing("DailyLobby/Play"));
         }
     }
 }

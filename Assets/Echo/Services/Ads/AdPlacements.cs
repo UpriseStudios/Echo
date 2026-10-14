@@ -14,5 +14,11 @@ namespace Echo.Services.Ads
 
         /// <summary>Earns a power-up (a user revision): from the title, the death screen or the Skins screen, never during a run.</summary>
         public const string PowerUp = "power_up";
+
+        /// <summary>Daily Haunt (a user decision): banishes one of your own daily ghosts, 3 a day. Daily death screen only.</summary>
+        public const string DailyBanish = "daily_banish";
+
+        /// <summary>Daily Haunt: watch someone else's run on today's board, from the lobby.</summary>
+        public const string WatchRun = "watch_run";
     }
 }

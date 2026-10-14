@@ -26,6 +26,7 @@ namespace Echo.Game.UI
         [SerializeField] TMP_Text _countdown;
         [SerializeField] TMP_Text _you;
         [SerializeField] TMP_Text[] _rows = new TMP_Text[0];
+        [SerializeField] TMP_Text _watchHint;
         [SerializeField] TMP_Text _yesterday;
         [SerializeField] TMP_Text _status;
         [SerializeField] Button _play;
@@ -36,12 +37,23 @@ namespace Echo.Game.UI
         public event Action PlayClicked;
         public event Action BackClicked;
 
+        /// <summary>A run on the board was tapped (its index in the lines given to SetDay): watch it.</summary>
+        public event Action<int> RowClicked;
+
+        int _lines;
+
         public bool IsOpen => _root.activeSelf;
 
         void Awake()
         {
             _play.onClick.AddListener(() => PlayClicked?.Invoke());
             _back.onClick.AddListener(() => BackClicked?.Invoke());
+            for (int i = 0; i < _rows.Length; i++)
+            {
+                int index = i;
+                var button = _rows[i].GetComponent<Button>();
+                if (button != null) button.onClick.AddListener(() => { if (index < _lines) RowClicked?.Invoke(index); });
+            }
         }
 
         public void Show()
@@ -60,6 +72,8 @@ namespace Echo.Game.UI
             if (playable) return;
             _you.text = "";
             _yesterday.text = "";
+            _lines = 0;
+            if (_watchHint != null) _watchHint.gameObject.SetActive(false);
             foreach (TMP_Text row in _rows) row.text = "";
         }
 
@@ -74,8 +88,13 @@ namespace Echo.Game.UI
                 _rows[i].text = filled ? $"{board[i].Rank,2}  {board[i].Name}" + $"<pos=78%>{board[i].Distance} m" : (i == 0 ? "No runs yet today. Be the first ghost." : "");
                 _rows[i].color = filled && board[i].IsYou ? _youColor : _rowColor;
             }
+            _lines = board.Count;
+            if (_watchHint != null) _watchHint.gameObject.SetActive(board.Count > 0);
             _play.gameObject.SetActive(true);
         }
+
+        /// <summary>The status line alone (watching a run: fetching, no ad ready, offline).</summary>
+        public void SetStatus(string text) => _status.text = text;
 
         public void SetCountdown(string text) => _countdown.text = text;
     }

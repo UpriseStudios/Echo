@@ -29,5 +29,8 @@ namespace EchoCloud
 
         /// <summary>Where the player finished yesterday (0 if they didn't play), for the Top Ten achievement.</summary>
         public int YesterdayRank { get; set; }
+
+        /// <summary>Own-ghost banishes left today (DailyRules.BanishesPerDay a day).</summary>
+        public int BanishesLeft { get; set; }
     }
 }

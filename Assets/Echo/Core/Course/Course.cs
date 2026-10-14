@@ -37,6 +37,9 @@ namespace Echo.Core.Courses
         }
 
         public uint Seed { get; }
+
+        /// <summary>Opens with chosen chunks (how to play): never the course of a real run with the same seed.</summary>
+        public bool Scripted => _opening != null;
         public int GeneratedChunkCount => _chunks.Count;
 
         public Chunk ChunkAt(int index)

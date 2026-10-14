@@ -27,6 +27,9 @@ namespace Echo.Services.Backend
         public int YesterdayWinnerDistance;
         public int YesterdayRank;
 
+        /// <summary>Own-ghost banishes left today (DailyRules.BanishesPerDay a day).</summary>
+        public int BanishesLeft;
+
         public static DailyInfo Failed(string error) => new DailyInfo { Error = error };
     }
 }

@@ -32,6 +32,12 @@ namespace Echo.Services
         [Tooltip("Rewarded ad unit for power-ups; while it is REPLACE_ME the unlock ad unit is used.")]
         public string PowerUpAdUnitAndroid = Placeholder;
         public string PowerUpAdUnitIos = Placeholder;
+        [Tooltip("Rewarded ad unit for banishing your own Daily Haunt ghost; while it is REPLACE_ME the banish ad unit is used.")]
+        public string DailyBanishAdUnitAndroid = Placeholder;
+        public string DailyBanishAdUnitIos = Placeholder;
+        [Tooltip("Rewarded ad unit for watching a run on the Daily Haunt board; while it is REPLACE_ME the unlock ad unit is used.")]
+        public string WatchRunAdUnitAndroid = Placeholder;
+        public string WatchRunAdUnitIos = Placeholder;
 
         [Header("Stores")]
         [Tooltip("Store pages, added to Ghost Challenge messages for friends who don't have Echo yet.")]
@@ -69,6 +75,8 @@ namespace Echo.Services
         public string ContinueAdUnit => IsIos ? ContinueAdUnitIos : ContinueAdUnitAndroid;
         public string UnlockAdUnit => IsIos ? UnlockAdUnitIos : UnlockAdUnitAndroid;
         public string PowerUpAdUnit => IsSet(IsIos ? PowerUpAdUnitIos : PowerUpAdUnitAndroid) ? (IsIos ? PowerUpAdUnitIos : PowerUpAdUnitAndroid) : UnlockAdUnit;
+        public string DailyBanishAdUnit => IsSet(IsIos ? DailyBanishAdUnitIos : DailyBanishAdUnitAndroid) ? (IsIos ? DailyBanishAdUnitIos : DailyBanishAdUnitAndroid) : BanishAdUnit;
+        public string WatchRunAdUnit => IsSet(IsIos ? WatchRunAdUnitIos : WatchRunAdUnitAndroid) ? (IsIos ? WatchRunAdUnitIos : WatchRunAdUnitAndroid) : UnlockAdUnit;
         public string StoreUrl => IsIos ? StoreUrlIos : StoreUrlAndroid;
 
         public bool AdsConfigured => IsSet(LevelPlayAppKey) && IsSet(BanishAdUnit) && IsSet(ContinueAdUnit) && IsSet(UnlockAdUnit);

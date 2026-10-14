@@ -51,6 +51,19 @@ namespace EchoCloud
                 ? new SubmitDailyResponse { Error = FeatureSwitches.Disabled }
                 : await (await Daily(context, api)).SubmitAsync(context.PlayerId, date, leaderVersion, packet, DevelopmentOnly(context, dateOverride));
 
+        [CloudCodeFunction("BanishDailyGhost")]
+        public async Task<BanishDailyGhostResponse> BanishDailyGhost(IExecutionContext context, IGameApiClient api, string date, int runIndex,
+            string dateOverride = null) =>
+            !(await FeatureSwitches.ReadAsync(context, api)).Daily
+                ? new BanishDailyGhostResponse { Error = FeatureSwitches.Disabled }
+                : await (await Daily(context, api)).BanishAsync(context.PlayerId, date, runIndex, DevelopmentOnly(context, dateOverride));
+
+        [CloudCodeFunction("GetDailyRun")]
+        public async Task<GetDailyRunResponse> GetDailyRun(IExecutionContext context, IGameApiClient api, int rank, string dateOverride = null) =>
+            !(await FeatureSwitches.ReadAsync(context, api)).Daily
+                ? new GetDailyRunResponse { Error = FeatureSwitches.Disabled }
+                : await (await Daily(context, api)).GetRunAsync(rank, DevelopmentOnly(context, dateOverride));
+
         // Privacy policy: Settings › Delete online data. Never behind a switch: deleting must always work.
         [CloudCodeFunction("DeleteMyData")]
         public async Task<DeleteMyDataResponse> DeleteMyData(IExecutionContext context, IGameApiClient api)

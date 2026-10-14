@@ -174,5 +174,19 @@ namespace Echo.Tests.EditMode
             }
             Assert.Greater(matched, 20);
         }
+
+        [Test]
+        public void Banish_TakesOnlyYourOwnGhosts_ByRunIndex()
+        {
+            var own = new List<GhostRecord> { new GhostRecord { RunIndex = 2 }, new GhostRecord { RunIndex = 5 } };
+            var leader = DailyRules.AsLeader(new GhostRecord { RunIndex = 9 }, 1, "LEADER#1");
+            own.Add(leader);   // never in the own list in the game, but never banished if it were
+            Assert.IsTrue(DailyRules.BanishOwn(own, 5));
+            CollectionAssert.AreEqual(new[] { 2, leader.RunIndex }, own.Select(g => g.RunIndex).ToArray());
+            Assert.IsFalse(DailyRules.BanishOwn(own, 5), "already gone");
+            Assert.IsFalse(DailyRules.BanishOwn(own, leader.RunIndex), "a leader can't be banished");
+            Assert.IsFalse(DailyRules.CanBanish(null, DailyRules.BanishesPerDay));
+            Assert.AreEqual(3, DailyRules.BanishesPerDay);
+        }
     }
 }

@@ -118,6 +118,38 @@ namespace Echo.Services.Backend
             }
         }
 
+        public async Task<DailyBanishResult> BanishDailyGhostAsync(string date, int runIndex, string dateOverride)
+        {
+            if (!await SignInAsync()) return DailyBanishResult.Failed("offline");
+            try
+            {
+                var args = new Dictionary<string, object> { { "date", date }, { "runIndex", runIndex } };
+                if (!string.IsNullOrEmpty(dateOverride)) args["dateOverride"] = dateOverride;
+                return await CloudCodeService.Instance.CallModuleEndpointAsync<DailyBanishResult>(Module, "BanishDailyGhost", args);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[Backend] BanishDailyGhost: " + e.Message);
+                return DailyBanishResult.Failed("offline");
+            }
+        }
+
+        public async Task<DailyRunResult> GetDailyRunAsync(int rank, string dateOverride)
+        {
+            if (!await SignInAsync()) return DailyRunResult.Failed("offline");
+            try
+            {
+                var args = new Dictionary<string, object> { { "rank", rank } };
+                if (!string.IsNullOrEmpty(dateOverride)) args["dateOverride"] = dateOverride;
+                return await CloudCodeService.Instance.CallModuleEndpointAsync<DailyRunResult>(Module, "GetDailyRun", args);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[Backend] GetDailyRun: " + e.Message);
+                return DailyRunResult.Failed("offline");
+            }
+        }
+
         public async Task<DeleteOnlineDataResult> DeleteOnlineDataAsync()
         {
             // Never signed in on this device: there is no account and nothing online to delete.

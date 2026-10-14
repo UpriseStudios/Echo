@@ -491,11 +491,18 @@ namespace Echo.Editor
             you.color = Accent;
 
             Pill(root, "BoardCard", new Vector2(0, 160), new Vector2(980, 820), Card);
+            // A user decision: any run on the board can be watched (a rewarded ad, unless it's your own).
+            var watchHint = MakeText(root, "WatchHint", "TAP A RUN TO WATCH IT", 24, _black, new Vector2(0.5f, 0.5f), new Vector2(0, 584), new Vector2(900, 36));
+            watchHint.color = GhostCyan;
             var rows = new TMP_Text[10];
             for (int i = 0; i < rows.Length; i++)
             {
                 rows[i] = MakeText(root, "Row" + i, "", 38, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, 520 - i * 78), new Vector2(900, 70));
                 rows[i].alignment = TextAlignmentOptions.MidlineLeft;
+                rows[i].raycastTarget = true;
+                var tap = rows[i].gameObject.AddComponent<Button>();
+                tap.targetGraphic = rows[i];
+                tap.transition = Selectable.Transition.ColorTint;
             }
             var yesterday = MakeText(root, "Yesterday", "", 32, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -320), new Vector2(980, 56));
             yesterday.color = Soft;
@@ -508,6 +515,7 @@ namespace Echo.Editor
             Wire(view, "_countdown", countdown);
             Wire(view, "_you", you);
             WireArray(view, "_rows", rows);
+            Wire(view, "_watchHint", watchHint);
             Wire(view, "_yesterday", yesterday);
             Wire(view, "_status", status);
             Wire(view, "_play", play);

@@ -16,6 +16,8 @@ namespace Echo.Services.Analytics
         public const string DailyRunEnd = "daily_run_end";
         public const string DailyNewBest = "daily_new_best";
         public const string DailySubmitFailed = "daily_submit_failed";
+        public const string DailyBanishUsed = "daily_banish_used";
+        public const string DailyRunWatched = "daily_run_watched";
         public const string IapPurchase = "iap_purchase";
         public const string UnlockAdWatched = "unlock_ad_watched";   // addition: ad-unlocked characters
         // Value-adds doc.

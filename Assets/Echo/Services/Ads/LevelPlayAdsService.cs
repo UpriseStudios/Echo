@@ -36,6 +36,8 @@ namespace Echo.Services.Ads
                 { AdPlacements.Continue, config.ContinueAdUnit },
                 { AdPlacements.UnlockCharacter, config.UnlockAdUnit },
                 { AdPlacements.PowerUp, config.PowerUpAdUnit },
+                { AdPlacements.DailyBanish, config.DailyBanishAdUnit },
+                { AdPlacements.WatchRun, config.WatchRunAdUnit },
             };
 
             // GDPR: consent must reach the SDK before initialisation; without it networks serve non-personalised ads.

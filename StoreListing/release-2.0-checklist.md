@@ -41,6 +41,37 @@ All of this is in the **production** environment. Development stays as it is for
   - Access Control: four statements, all Deny for Player: leaderboard writes, Cloud Save writes, Cloud Code
     scripts, and `urn:ugs:social:/*/names/*` (player names).
 
+- [ ] **Analytics events** (Unity Analytics > Event Manager, in production; events or parameters that aren't defined
+      are dropped). Integer = whole number, Boolean = true/false, String = text.
+
+      New in 2.0:
+
+      | Event | Parameters |
+      |---|---|
+      | `banish_ten_offered` | `ghostCount` integer, `deathsSinceBest` integer |
+      | `banish_ten_used` | `killsRemoved` integer, `nemesisPresent` boolean |
+      | `daily_opened` | `date` string, `rank` integer, `best` integer |
+      | `daily_run_end` | `distance` integer, `best` integer, `rank` integer, `leadersPassed` integer, `newBest` boolean |
+      | `daily_new_best` | `distance` integer, `rank` integer |
+      | `daily_submit_failed` | `error` string |
+      | `daily_banish_used` | `ghostRunIndex` integer, `left` integer |
+      | `daily_run_watched` | `rank` integer, `own` boolean |
+
+      Changed in 2.0 (add the new parameters to the existing events):
+
+      | Event | Add | Notes |
+      |---|---|---|
+      | `challenge_sent` | `ghostCount` integer, `hasNemesis` boolean, `twist` string, `lite` boolean | `distance` is no longer sent |
+      | `challenge_opened` | `lite` boolean | still sends `distance`, `versionMatch` |
+      | `challenge_result` | `attempts` integer, `ghostCount` integer, `lite` boolean | still sends `won`, `margin`, `killedByGhost`, `distance`, `theirDistance` |
+
+      `banish_ten_*` were already in the first commit on `main`, but they came with the balance update, which ships in
+      2.0; skip them if 1.4's dashboard already has them. Every other event is unchanged from 1.4.
+- [ ] **Ad units (optional)**: Daily Haunt banish and "watch a run" have their own placements (`daily_banish`,
+      `watch_run`). Until you create ad units for them in LevelPlay and put them in `EchoServiceConfig`
+      (`DailyBanishAdUnit*`, `WatchRunAdUnit*`), they use the banish and unlock ad units, which works but mixes their
+      reporting.
+
 ## 3. Website (Cloudflare Pages, project `echo-links`)
 
 - [ ] Deploy `/web` to `echo-links` with the custom domain `echo.uprisestudios.co.uk`.

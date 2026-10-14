@@ -125,6 +125,9 @@ namespace Echo.Game.UI
 
         public void SetMessage(string message) => _message.text = message;
 
+        /// <summary>The Banish button's own words (the Daily Haunt's own-ghost banish), shown with SetOffers.</summary>
+        public void SetBanishLabel(string label) => _banish.GetComponentInChildren<TMP_Text>().text = label;
+
         /// <summary>The Challenge button's label, or null to hide it.</summary>
         public void SetChallenge(string label)
         {

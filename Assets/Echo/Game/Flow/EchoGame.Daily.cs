@@ -11,6 +11,7 @@ using Echo.Core.Reels;
 using Echo.Core.Rules;
 using Echo.Game.Persistence;
 using Echo.Game.UI;
+using Echo.Services.Ads;
 using Echo.Services.Analytics;
 using Echo.Services.Backend;
 using UnityEngine;
@@ -57,6 +58,7 @@ namespace Echo.Game.Flow
             if (_dailyLobby == null) return;
             _dailyLobby.PlayClicked += PlayDaily;
             _dailyLobby.BackClicked += CloseMenu;
+            _dailyLobby.RowClicked += OnDailyRowClicked;
         }
 
         static string TodayUtc() => DateTime.UtcNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -100,6 +102,126 @@ namespace Echo.Game.Flow
             _dailyLeaders.Clear();
             _dailyOwn.Clear();
         }
+
+        // ---- Banish your own ghost (a user decision: own ghosts only, 3 a day, a rewarded ad) ----
+
+        int _dailyBanishesLeft;
+        int _dailyBanishCredit = -1;   // the ghost an ad has paid for whose banish hasn't reached the server yet
+        bool _dailyBoardClosed;
+
+        /// <summary>Test hook: own-ghost banishes left today.</summary>
+        public int DailyBanishesLeft => _dailyBanishesLeft;
+
+        void OfferDailyBanish()
+        {
+            bool paid = _run != null && _run.Killer != null && _dailyBanishCredit == _run.Killer.RunIndex;
+            bool can = !_dailyBoardClosed && DailyRules.CanBanish(_run, _dailyBanishesLeft)
+                       && (paid || _services.Ads.IsRewardedReady(AdPlacements.DailyBanish));
+            _deathScreen.SetOffers(false, can);
+            if (!can) return;
+            _deathScreen.SetBanishLabel(paid
+                ? "Banish this ghost\n<size=60%>Try again: the ad is already watched</size>"
+                : $"Banish this ghost · ad\n<size=60%>Your own ghost · {_dailyBanishesLeft} left today</size>");
+        }
+
+        void OnDailyBanish()
+        {
+            if (State != GameState.DeathScreen || _dailyBoardClosed || !DailyRules.CanBanish(_run, _dailyBanishesLeft)) return;
+            int runIndex = _run.Killer.RunIndex;
+            if (_dailyBanishCredit == runIndex)
+            {
+                SendDailyBanish(runIndex);
+                return;
+            }
+            ShowRewardedAd(AdPlacements.DailyBanish, rewarded =>
+            {
+                if (!rewarded || State != GameState.DeathScreen) return;
+                CountAdWatched(equipUnlocked: false);
+                _dailyBanishCredit = runIndex;
+                SendDailyBanish(runIndex);
+            });
+        }
+
+        async void SendDailyBanish(int runIndex)
+        {
+            RunSimulation run = _run;
+            _deathScreen.SetOffers(false, false);
+            _deathScreen.SetMessage("Banishing your ghost...");
+            DailyBanishResult r = await _services.Backend.BanishDailyGhostAsync(_daily.Date, runIndex, DailyDateOverride);
+            if (this == null || _run != run) return;
+            if (r.Ok)
+            {
+                _dailyBanishCredit = -1;
+                _dailyBanishesLeft = r.BanishesLeft;
+                DailyRules.BanishOwn(_dailyOwn, runIndex);
+                if (_graves != null) _graves.Crumble(run.Killer);
+                _sfx.GhostClear();
+                Log(AnalyticsEvents.DailyBanishUsed, ("ghostRunIndex", runIndex), ("left", r.BanishesLeft));
+                _deathScreen.SetMessage(r.BanishesLeft == 1 ? "Your ghost is banished · 1 banish left today"
+                    : $"Your ghost is banished · {r.BanishesLeft} banishes left today");
+                _hud.QueueToast("GHOST BANISHED");
+                return;
+            }
+            if (r.Error == "none-left" || r.Error == "not-yours" || r.Error == "wrong-day")
+            {
+                _dailyBanishCredit = -1;
+                if (r.Error == "none-left") _dailyBanishesLeft = 0;
+                _deathScreen.SetMessage(r.Error == "none-left" ? "No banishes left today." : "That ghost can't be banished.");
+                return;
+            }
+            _deathScreen.SetMessage("Couldn't banish it: check your connection and try again.");
+            OfferDailyBanish();   // the ad already watched still counts
+        }
+
+        // ---- Watching a run on the board (a user decision: a rewarded ad, unless it's your own) ----
+
+        bool _dailyWatchBusy;
+        int _dailyWatchCredit;   // the rank an ad has paid for whose run hasn't arrived yet
+
+        void OnDailyRowClicked(int index)
+        {
+            if (_daily == null || !_daily.Ok || index < 0 || index >= _daily.Board.Count || _dailyWatchBusy || !_dailyLobby.IsOpen) return;
+            DailyBoardRow row = _daily.Board[index];
+            if (row.IsYou || _dailyWatchCredit == row.Rank)
+            {
+                WatchDailyRun(row);
+                return;
+            }
+            if (!_services.Ads.IsRewardedReady(AdPlacements.WatchRun))
+            {
+                _dailyLobby.SetStatus("No ad is ready right now. Try again in a moment.");
+                return;
+            }
+            ShowRewardedAd(AdPlacements.WatchRun, rewarded =>
+            {
+                if (!rewarded || !_dailyLobby.IsOpen) return;
+                CountAdWatched(equipUnlocked: false);
+                _dailyWatchCredit = row.Rank;
+                WatchDailyRun(row);
+            });
+        }
+
+        async void WatchDailyRun(DailyBoardRow row)
+        {
+            _dailyWatchBusy = true;
+            _dailyLobby.SetStatus(row.IsYou ? "Fetching your run..." : $"Fetching {row.Name}'s run...");
+            DailyRunResult r = await _services.Backend.GetDailyRunAsync(row.Rank, DailyDateOverride);
+            _dailyWatchBusy = false;
+            if (this == null || !_dailyLobby.IsOpen) return;
+            if (!r.Ok || !ReelPacket.TryDecode(r.Packet, out Reel reel) || !reel.PlayableOn(_contentVersion))
+            {
+                _dailyLobby.SetStatus(r.Error == "offline" ? "Watching a run needs a connection." : "That run can't be watched right now.");
+                return;
+            }
+            _dailyWatchCredit = 0;
+            LastDailyRunWatched = r;
+            Log(AnalyticsEvents.DailyRunWatched, ("rank", r.Rank), ("own", row.IsYou));
+            _dailyLobby.Hide();
+            StartExternalReplay(reel, $"#{r.Rank} · {r.Name} · {r.Distance} m", OpenDailyLobby);
+        }
+
+        /// <summary>The last run fetched to watch, for tests.</summary>
+        public DailyRunResult LastDailyRunWatched { get; private set; }
 
         // Seconds until the board closes at 00:00 UTC, by the server's clock when it has told us the day.
         int BoardSecondsLeft() =>
@@ -165,6 +287,7 @@ namespace Echo.Game.Flow
                 return false;
             }
             _dailyFetchedAt = Time.realtimeSinceStartup;
+            _dailyBanishesLeft = info.BanishesLeft;
             _dailyLeaders.Clear();
             _dailyOwn.Clear();
             if (ReelPacket.TryDecode(info.GhostsPacket, out Reel ghosts))
@@ -313,6 +436,8 @@ namespace Echo.Game.Flow
             _deathScreen.SetChallenge(null);
             _deathScreen.SetSaveReel(ReelRules.CanSave(run) ? "Save reel" : null, false, true);
             _deathScreen.SetBanner(r.BoardClosed ? "BOARD CLOSED" : RankLine(r.Rank, previousRank, r.NewBest));
+            _dailyBoardClosed = r.BoardClosed;
+            OfferDailyBanish();
         }
 
         static string NextLeaderLine(DailySubmitResult r) =>

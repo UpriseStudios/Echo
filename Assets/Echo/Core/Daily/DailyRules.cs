@@ -21,6 +21,9 @@ namespace Echo.Core.Daily
         public const int OwnGhostCap = 20;
         public const int SpeedPct = 100;
 
+        /// <summary>A user decision: a rewarded ad banishes one of your own daily ghosts, never a leader; 3 a day.</summary>
+        public const int BanishesPerDay = 3;
+
         /// <summary>
         /// Leader ghosts take run indices above any player's own (rank 1 highest), so they never collide with the
         /// player's daily attempts and the best rank claims its meeting point first.
@@ -101,6 +104,22 @@ namespace Echo.Core.Daily
         {
             if (!run.Options.Daily) throw new InvalidOperationException("not a daily run");
             run.Committed = true;
+        }
+
+        /// <summary>
+        /// The daily death screen offers Banish when the run was ended by one of the player's own ghosts (never a
+        /// leader's) and they have banishes left today.
+        /// </summary>
+        public static bool CanBanish(RunSimulation run, int banishesLeft) =>
+            run != null && run.Options.Daily && run.IsDead && run.Killer != null && !run.Killer.Leader && banishesLeft > 0;
+
+        /// <summary>Removes one of the player's own daily ghosts by run index; false when it isn't one of them.</summary>
+        public static bool BanishOwn(List<GhostRecord> own, int runIndex)
+        {
+            int i = own.FindIndex(g => g.RunIndex == runIndex && !g.Leader);
+            if (i < 0) return false;
+            own.RemoveAt(i);
+            return true;
         }
 
         /// <summary>A failed attempt joins the player's daily ghosts, the oldest dropping past the cap.</summary>

@@ -12,6 +12,9 @@ namespace Echo.Services.Mocks
 
         /// <summary>Tests: hold the ad "on screen" until CompleteShowing, as a real ad does while the app is paused.</summary>
         public bool HoldUntilCompleted;
+
+        /// <summary>Every placement asked for, in order (tests).</summary>
+        public readonly System.Collections.Generic.List<string> Shown = new System.Collections.Generic.List<string>();
         Action<bool> _held;
 
         public bool IsRewardedReady(string placement) => !SimulateNotReady && MockPolicy.Grants;
@@ -20,6 +23,7 @@ namespace Echo.Services.Mocks
 
         public void ShowRewarded(string placement, Action<bool> onComplete)
         {
+            Shown.Add(placement);
             bool success = !SimulateNotReady && !SimulateFailure && MockPolicy.Grants;
             Debug.Log($"[MockAds] rewarded '{placement}' -> {(success ? "rewarded" : "failed")}");
             if (HoldUntilCompleted)

@@ -516,7 +516,7 @@ namespace Echo.Game.Flow
         void PrepareRun()
         {
             ApplyCosmetics(); // an Elementals trial that has run out falls back to the free character here
-            if (_course == null || _course.Seed != _progress.Seed) _course = new Course(_library, _progress.Seed);
+            if (!CourseIs(_progress.Seed)) _course = new Course(_library, _progress.Seed);
             _run = RunRules.StartRun(_progress, _course, _cfg, RunOptionsNow());
             ApplyTwist(_run.Options.Twist);
             _bountySeen = false;
@@ -528,6 +528,9 @@ namespace Echo.Game.Flow
             _livesUsedSeen = 0;
             _hud.SetLives(0);
         }
+
+        // The current course is the seed's own (a how-to-play course with the same seed is not).
+        bool CourseIs(uint seed) => _course != null && !_course.Scripted && _course.Seed == seed;
 
         void SetState(GameState state)
         {
@@ -1026,7 +1029,7 @@ namespace Echo.Game.Flow
             if (!_run.Committed) CommitAndSave();
             _duelNemesis = _progress.Ghosts.Nemesis;
             if (_duelNemesis == null) return; // that commit set a new best and cleared it
-            if (_course.Seed != _progress.Seed) _course = new Course(_library, _progress.Seed);
+            if (!CourseIs(_progress.Seed)) _course = new Course(_library, _progress.Seed);
             _run = RunRules.StartDuel(_progress, _course, _cfg);
             Save();
             SnapshotPrevious();
@@ -1189,6 +1192,11 @@ namespace Echo.Game.Flow
 
         void OnBanish()
         {
+            if (_run != null && _run.Options.Daily)
+            {
+                OnDailyBanish();
+                return;
+            }
             if (_offerBanishTen)
             {
                 OnBanishTen();

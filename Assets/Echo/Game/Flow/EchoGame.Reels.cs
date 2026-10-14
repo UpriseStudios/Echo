@@ -32,6 +32,11 @@ namespace Echo.Game.Flow
         float _replayEndedFor;
         bool _hintBeforeReplay;
 
+        // A reel that isn't in the cupboard (a run from the Daily Haunt board): what it's called and where Back goes.
+        Reel _externalReel;
+        string _externalLabel;
+        Action _replayExit;
+
         /// <summary>A reel is playing back (or in the clip editor). Test hook.</summary>
         public ReelPlayer CurrentReplay => _reelPlayer;
 
@@ -62,7 +67,11 @@ namespace Echo.Game.Flow
                     _replaySpeed = _replaySpeed > 1f ? 1f : 2f;
                     _replay.SetSpeed(_replaySpeed);
                 };
-                _replay.AgainClicked += () => StartReplay(_reelIndex);
+                _replay.AgainClicked += () =>
+                {
+                    if (_externalReel != null) StartExternalReplay(_externalReel, _externalLabel, _replayExit);
+                    else StartReplay(_reelIndex);
+                };
                 _replay.ClipClicked += () => OpenClipEditor(_reelIndex);
             }
             _deathScreen.SaveReelClicked += OnSaveReel;
@@ -166,25 +175,49 @@ namespace Echo.Game.Flow
         {
             if (!SetUpReplay(index)) return;
             _hud.SetVisible(true);
+            _replay.SetClipAllowed(true);
             _replay.ShowPlaying($"REPLAY · RUN #{_reelPlayer.Reel.RunIndex}", _replaySpeed);
             SetState(GameState.Replay);
         }
 
-        // The reel from its start on its own course, wearing its own skin, with its ghosts and graves.
+        /// <summary>
+        /// Watches a reel that isn't in the cupboard (a run from the Daily Haunt board): the same exact replay, no clip,
+        /// and Back goes to <paramref name="onExit"/>.
+        /// </summary>
+        void StartExternalReplay(Reel reel, string label, Action onExit)
+        {
+            if (!SetUpReplayOf(reel)) return;
+            _externalReel = reel;
+            _externalLabel = label;
+            _replayExit = onExit;
+            _hud.SetVisible(true);
+            _replay.SetClipAllowed(false);
+            _replay.ShowPlaying(label, _replaySpeed);
+            SetState(GameState.Replay);
+        }
+
         bool SetUpReplay(int index)
         {
             if (index < 0 || index >= _progress.Reels.Count) return false;
+            if (!SetUpReplayOf(_progress.Reels[index])) return false;
+            _reelIndex = index;
+            _externalReel = null;
+            _replayExit = null;
+            _reels.Hide();
+            return true;
+        }
+
+        // The reel from its start on its own course, wearing its own skin, with its ghosts and graves.
+        bool SetUpReplayOf(Reel reel)
+        {
             if (State != GameState.Menu && State != GameState.Replay) return false;
-            Reel reel = _progress.Reels[index];
             if (!reel.PlayableOn(_contentVersion)) return false;
 
             CloseClipEditor();
             if (_reelPlayer == null) _hintBeforeReplay = _doubleJumpHintShown;
             _doubleJumpHintShown = true;  // no tutorial hints over a replay
-            _reelIndex = index;
-            _reels.Hide();
             _title.Hide();
-            if (_course == null || _course.Seed != reel.Seed) _course = new Course(_library, reel.Seed);
+            if (!CourseIs(reel.Seed)) _course = new Course(_library, reel.Seed);
             _replayNemesis = NemesisRules.Select(reel.Ghosts);
             RestartReelPlayer(reel);
 
@@ -192,6 +225,7 @@ namespace Echo.Game.Flow
             ApplyTwist(reel.Options.Twist);
             _ghostViews.SetLantern(false);
             _ghostViews.SetNameTag(null);
+            _ghostViews.SetLeaderNames(reel.Options.Daily);   // a daily run's leader ghosts wear their names
             if (_graves != null) _graves.Plant(_run.Ghosts, _course, _cfg, _replayNemesis);
             _cameraRig.ClearFocus();
             _extraLifeTaken = true;  // a replayed Extra 1-UP must never be taken from the save
@@ -282,10 +316,15 @@ namespace Echo.Game.Flow
             _doubleJumpHintShown = _hintBeforeReplay;
             _replay.Hide();
             _hud.SetVisible(false);
+            _ghostViews.SetLeaderNames(false);
             ApplySettings();
             ApplyCosmetics();
             EnterTitle();
-            OpenMenu(ShowReels);
+            Action exit = _replayExit;
+            _externalReel = null;
+            _replayExit = null;
+            if (exit != null) exit();
+            else OpenMenu(ShowReels);
         }
     }
 }

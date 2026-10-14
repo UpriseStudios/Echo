@@ -151,13 +151,29 @@ namespace Echo.Server.Tools
             JsonElement rB = await Submit(tokenB, dB, reelB);
             Console.WriteLine($"Player B claims {reelB.Distance} m: server {rB.GetProperty("distance")} m, corrected {rB.GetProperty("corrected")}, rank {rB.GetProperty("rank")}, next {rB.GetProperty("nextLeaderName").GetString()} {rB.GetProperty("nextLeaderDistance")} m");
 
+            // Watching player A's run from the board: it comes whole and replays to the server's distance.
+            JsonElement board = await Call(http, projectId, tokenB, "GetDaily", new { });
+            int rankA = board.GetProperty("board").EnumerateArray().First(e => e.GetProperty("distance").GetInt32() == reelA.Distance).GetProperty("rank").GetInt32();
+            JsonElement watched = await Call(http, projectId, tokenB, "GetDailyRun", new { rank = rankA });
+            ReelPacket.TryDecode(watched.GetProperty("packet").GetString(), out Echo.Core.Reels.Reel watchedReel);
+            int watchedDistance = watchedReel == null ? -1
+                : Echo.Core.Reels.RunReplay.Replay(watchedReel, content.CourseFor(watchedReel.Seed), content.Config).Distance;
+            Console.WriteLine($"Watch rank {rankA} ({watched.GetProperty("name").GetString()}): ok {watched.GetProperty("ok")} {watched.GetProperty("error").GetString()}, replays to {watchedDistance} m (board {reelA.Distance} m), {watchedReel?.Ghosts.Count} ghosts");
+            // Banish: a leader ghost (A, for B) is never B's to banish.
+            int leaderIndex = ghostsB.Ghosts.First(g => g.Leader).RunIndex;
+            JsonElement banish = await Call(http, projectId, tokenB, "BanishDailyGhost", new { date = dB.GetProperty("date").GetString(), runIndex = leaderIndex });
+            Console.WriteLine($"Banish a leader ghost: ok {banish.GetProperty("ok")}, error {banish.GetProperty("error").GetString()}, left {banish.GetProperty("banishesLeft")}");
+
             JsonElement tomorrow = await Call(http, projectId, tokenB, "GetDaily", new { dateOverride = DateTime.UtcNow.AddDays(1).ToString("yyyy-MM-dd") });
             Console.WriteLine($"Date override: {tomorrow.GetProperty("date").GetString()}, seed {tomorrow.GetProperty("seed")}");
 
             bool good = rA.GetProperty("ok").GetBoolean() && rA.GetProperty("distance").GetInt32() == reelA.Distance
                 && ghostsB.Ghosts.Any(g => g.Leader)
                 && rB.GetProperty("ok").GetBoolean() && rB.GetProperty("corrected").GetBoolean() && rB.GetProperty("distance").GetInt32() == reelB.Distance - 5000
-                && tomorrow.GetProperty("seed").GetInt64() != dA.GetProperty("seed").GetInt64();
+                && tomorrow.GetProperty("seed").GetInt64() != dA.GetProperty("seed").GetInt64()
+                && watched.GetProperty("ok").GetBoolean() && watchedDistance == reelA.Distance
+                && !banish.GetProperty("ok").GetBoolean() && banish.GetProperty("error").GetString() == "not-yours"
+                && banish.GetProperty("banishesLeft").GetInt32() == Echo.Core.Daily.DailyRules.BanishesPerDay;
             Console.WriteLine(good ? "\nThe Daily Haunt works on the development server." : "\nSOMETHING DIDN'T MATCH.");
             return good ? 0 : 1;
         }

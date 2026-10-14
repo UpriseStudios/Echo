@@ -6,6 +6,7 @@ using Echo.Core.Daily;
 using Echo.Core.Ghosts;
 using Echo.Core.Net;
 using Echo.Core.Reels;
+using Echo.Core.Rules;
 using Echo.Services.Backend;
 
 namespace Echo.Services.Mocks
@@ -116,7 +117,7 @@ namespace Echo.Services.Mocks
             var info = new DailyInfo
             {
                 Ok = true, Date = date, Day = 100, Seed = SeedFor(date), ContentVersion = ContentVersion, SecondsLeft = SecondsLeft,
-                LeaderVersion = "mock-leaders", BestDistance = day.best, NextRunIndex = day.next,
+                LeaderVersion = "mock-leaders", BestDistance = day.best, NextRunIndex = day.next, BanishesLeft = BanishesLeft(date),
                 GhostsPacket = ReelPacket.Encode(new Reel { ContentVersion = ContentVersion, Seed = (uint)SeedFor(date), SpeedPct = DailyRules.SpeedPct, RunIndex = 1, Run = new GhostRecord(), Ghosts = ghosts }),
             };
             int rank = 1;
@@ -124,6 +125,50 @@ namespace Echo.Services.Mocks
             if (day.best > 0) info.Board.Add(new DailyBoardRow { Rank = rank, Name = "You", Distance = day.best, IsYou = true });
             info.Rank = day.best > 0 ? rank : 0;
             return Task.FromResult(info);
+        }
+
+        readonly Dictionary<string, int> _banishes = new Dictionary<string, int>();
+        readonly Dictionary<string, string> _bestReels = new Dictionary<string, string>();
+
+        /// <summary>Banishes and runs watched that reached the "server".</summary>
+        public int Banishes, RunsFetched;
+
+        int BanishesLeft(string date) => DailyRules.BanishesPerDay - (_banishes.TryGetValue(date, out int used) ? used : 0);
+
+        public Task<DailyBanishResult> BanishDailyGhostAsync(string date, int runIndex, string dateOverride)
+        {
+            if (Offline) return Task.FromResult(DailyBanishResult.Failed("offline"));
+            if (ServerDailyOff) return Task.FromResult(DailyBanishResult.Failed(BackendFlags.Disabled));
+            if (BanishesLeft(date) <= 0) return Task.FromResult(new DailyBanishResult { Error = "none-left" });
+            var day = Day(date);
+            if (!DailyRules.BanishOwn(day.own, runIndex)) return Task.FromResult(new DailyBanishResult { Error = "not-yours", BanishesLeft = BanishesLeft(date) });
+            _days[date] = day;
+            _banishes[date] = DailyRules.BanishesPerDay - BanishesLeft(date) + 1;
+            Banishes++;
+            return Task.FromResult(new DailyBanishResult { Ok = true, BanishesLeft = BanishesLeft(date) });
+        }
+
+        public Task<DailyRunResult> GetDailyRunAsync(int rank, string dateOverride)
+        {
+            if (Offline) return Task.FromResult(DailyRunResult.Failed("offline"));
+            if (ServerDailyOff) return Task.FromResult(DailyRunResult.Failed(BackendFlags.Disabled));
+            string date = string.IsNullOrEmpty(dateOverride) ? Today : dateOverride;
+            RunsFetched++;
+            if (rank >= 1 && rank <= Leaders.Count)
+            {
+                var (ghost, distance) = Leaders[rank - 1];
+                GhostRecord run = ghost.Clone();
+                run.Leader = false;
+                var reel = new Reel
+                {
+                    ContentVersion = ContentVersion, Seed = (uint)SeedFor(date), SpeedPct = DailyRules.SpeedPct, RunIndex = 1,
+                    Options = new RunOptions { Daily = true }, Run = run, Distance = distance,
+                };
+                return Task.FromResult(new DailyRunResult { Ok = true, Packet = ReelPacket.Encode(reel), Name = ghost.Name, Rank = rank, Distance = distance });
+            }
+            if (rank == Leaders.Count + 1 && _bestReels.TryGetValue(date, out string mine))
+                return Task.FromResult(new DailyRunResult { Ok = true, Packet = mine, Name = "You", Rank = rank, Distance = Day(date).best });
+            return Task.FromResult(DailyRunResult.Failed("not-found"));
         }
 
         /// <summary>How many times Delete online data reached the "server".</summary>
@@ -155,6 +200,8 @@ namespace Echo.Services.Mocks
             {
                 day.best = distance;
                 day.own.Clear();
+                reel.Distance = distance;
+                _bestReels[date] = ReelPacket.Encode(reel);
             }
             else DailyRules.AddOwnGhost(day.own, run);
             day.next = Math.Max(day.next, reel.RunIndex + 1);

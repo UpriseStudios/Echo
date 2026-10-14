@@ -345,6 +345,81 @@ namespace Echo.Server.Tests
             Assert.IsFalse(_days.Buckets.Keys.Any(b => b.StartsWith(DailyService.DayPrefix, StringComparison.Ordinal) && string.CompareOrdinal(b, Day("20261122")) <= 0));
         }
 
+        // The player's own daily ghosts as the server hands them out (run indexes).
+        async Task<List<int>> OwnGhosts(string player)
+        {
+            GetDailyResponse d = await _daily.GetDailyAsync(player);
+            Assert.IsTrue(ReelPacket.TryDecode(d.GhostsPacket, out Reel ghosts));
+            return ghosts.Ghosts.Where(g => !g.Leader).Select(g => g.RunIndex).ToList();
+        }
+
+        // A best, then failed attempts until the player has at least `count` ghosts of their own.
+        async Task Haunted(string player, int count)
+        {
+            Assert.IsTrue((await PlayAndSubmit(player, 7)).Ok);
+            for (uint style = 100; style < 400 && (await OwnGhosts(player)).Count < count; style++)
+                Assert.IsTrue((await PlayAndSubmit(player, style)).Ok);
+            Assert.GreaterOrEqual((await OwnGhosts(player)).Count, count);
+        }
+
+        [Test]
+        public async Task Banish_RemovesOneOfYourOwnGhosts_ThreeADay_NeverALeader()
+        {
+            await PlayAndSubmit("leader", 61);
+            await Haunted("p", 4);
+            GetDailyResponse d = await _daily.GetDailyAsync("p");
+            Assert.AreEqual(DailyRules.BanishesPerDay, d.BanishesLeft);
+            Assert.IsTrue(ReelPacket.TryDecode(d.GhostsPacket, out Reel given));
+            GhostRecord leader = given.Ghosts.FirstOrDefault(g => g.Leader);
+            Assert.IsNotNull(leader, "a leader ghost is in the run");
+            Assert.AreEqual("not-yours", (await _daily.BanishAsync("p", d.Date, leader.RunIndex)).Error, "leaders can't be banished");
+            Assert.AreEqual("not-yours", (await _daily.BanishAsync("p", d.Date, 999_999)).Error);
+
+            List<int> own = await OwnGhosts("p");
+            for (int i = 0; i < DailyRules.BanishesPerDay; i++)
+            {
+                BanishDailyGhostResponse r = await _daily.BanishAsync("p", d.Date, own[i]);
+                Assert.IsTrue(r.Ok, r.Error);
+                Assert.AreEqual(DailyRules.BanishesPerDay - 1 - i, r.BanishesLeft);
+                CollectionAssert.DoesNotContain(await OwnGhosts("p"), own[i]);
+            }
+            Assert.AreEqual("none-left", (await _daily.BanishAsync("p", d.Date, own[3])).Error);
+            Assert.AreEqual(0, (await _daily.GetDailyAsync("p")).BanishesLeft);
+            Assert.AreEqual("wrong-day", (await _daily.BanishAsync("q", "2026-10-01", 1)).Error);
+
+            // The next run meets the ghosts that are left, and the server checks it against the same.
+            _now = _now.AddSeconds(3);
+            Assert.IsTrue((await PlayAndSubmit("p", 450)).Ok);
+
+            // A new day: three more.
+            _now = _now.AddDays(1);
+            Assert.AreEqual(DailyRules.BanishesPerDay, (await _daily.GetDailyAsync("p")).BanishesLeft);
+        }
+
+        [Test]
+        public async Task ARunOnTheBoard_CanBeWatched_WholeWithItsGhosts_AndReplaysToItsDistance()
+        {
+            await PlayAndSubmit("alice", 71);
+            SubmitDailyResponse bob = await PlayAndSubmit("bob", 72);   // bob met alice's ghost
+            Assert.IsTrue(bob.Ok, bob.Error);
+            GetDailyResponse d = await _daily.GetDailyAsync("x");
+            for (int rank = 1; rank <= d.Board.Count; rank++)
+            {
+                GetDailyRunResponse r = await _daily.GetRunAsync(rank);
+                Assert.IsTrue(r.Ok, r.Error);
+                Assert.AreEqual(d.Board[rank - 1].Name, r.Name);
+                Assert.IsTrue(ReelPacket.TryDecode(r.Packet, out Reel reel));
+                ReplayResult replay = RunReplay.Replay(reel, Content.CourseFor(reel.Seed), Content.Config);
+                Assert.AreEqual(r.Distance, replay.Distance, $"rank {rank} replays exactly");
+                Assert.AreEqual(r.Distance, reel.Distance, "the server's own distance, not the claim");
+            }
+            GetDailyRunResponse bobs = await _daily.GetRunAsync(d.Board.First(e => e.Name == "BOB#1").Rank);
+            Assert.IsTrue(ReelPacket.TryDecode(bobs.Packet, out Reel bobReel));
+            Assert.IsTrue(bobReel.Ghosts.Any(g => g.Leader && g.Name == "ALICE#1"), "with the leader ghost bob faced");
+            Assert.AreEqual("not-found", (await _daily.GetRunAsync(d.Board.Count + 1)).Error);
+            Assert.AreEqual("not-found", (await _daily.GetRunAsync(0)).Error);
+        }
+
         [Test]
         public async Task TheNextLeaderToBeat_IsTheNearestAhead()
         {
