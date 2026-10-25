@@ -15,9 +15,9 @@ All of this is in the **production** environment. Development stays as it is for
 
 - [ ] **Authentication**: Anonymous sign-in is enabled (it is by default).
 - [ ] **Secret Manager** (production), two secrets:
-  - [ ] `DAILY_SEED_SALT`: a **new** long random string, not the development one. Example:
+  - [ ] `DAILY_SEED_SALT_PROD`: a **new** long random string, not the development one. Example:
         `openssl rand -base64 48`. Never change it after launch: it would change the day's course mid-day.
-  - [ ] `LEADERBOARDS_ADMIN_KEY`: `keyId:secret` of a service account with the Leaderboards admin role
+  - [ ] `LEADERBOARDS_ADMIN_KEY_PROD`: `keyId:secret` of a service account with the Leaderboards admin role
         (Administration > Service accounts > New, add the project role that allows deleting leaderboard scores, then
         create a key). Delete online data uses it to remove the player's live board score. Without it, everything else
         is still deleted and the score stays until midnight's archive.

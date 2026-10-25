@@ -5,7 +5,7 @@
 #   - the daily leaderboard's first reset is set to the next midnight UTC (UGS needs it in the future);
 #   - -SwitchesOff deploys the Remote Config switches as false, to launch the backend dark and turn the Daily Haunt
 #     and server challenges on later in the dashboard.
-# Production also needs DAILY_SEED_SALT and LEADERBOARDS_ADMIN_KEY in its own Secret Manager (see
+# Production also needs DAILY_SEED_SALT_PROD and LEADERBOARDS_ADMIN_KEY_PROD in Secret Manager (see
 # StoreListing/release-2.0-checklist.md); run `ReplayProbe smoke production` afterwards to check them.
 #
 #   powershell -ExecutionPolicy Bypass -File Server/deploy-prod.ps1 -DryRun

@@ -76,19 +76,20 @@ namespace EchoCloud
         static string DevelopmentOnly(IExecutionContext context, string dateOverride) =>
             context.EnvironmentName == Development ? dateOverride : null;
 
-        // The seed salt lives in Secret Manager (DAILY_SEED_SALT), never in the client or the repo.
+        // The seed salt lives in Secret Manager (DAILY_SEED_SALT, DAILY_SEED_SALT_PROD in production), never in the
+        // client or the repo.
         static async Task<DailyService> Daily(IExecutionContext context, IGameApiClient api)
         {
-            var salt = await api.SecretManager.GetSecret(context, "DAILY_SEED_SALT");
+            var salt = await api.SecretManager.GetSecret(context, SecretNames.For(context.EnvironmentName, SecretNames.DailySeedSalt));
             return new DailyService(GameContent.Shared, new CloudDailyStore(api, context, () => AdminKey(context, api)), new CloudDayStore(api, context),
                 () => DateTime.UtcNow, salt.Value);
         }
 
         // A service account key ("keyId:secret") with the Leaderboards admin role, in Secret Manager as
-        // LEADERBOARDS_ADMIN_KEY; only deleting a player's score needs it. Missing: scores stay, everything else goes
+        // LEADERBOARDS_ADMIN_KEY (LEADERBOARDS_ADMIN_KEY_PROD in production); only deleting a player's score needs it. Missing: scores stay, everything else goes
         // (CloudDailyStore reports why).
         static async Task<string> AdminKey(IExecutionContext context, IGameApiClient api) =>
-            (await api.SecretManager.GetSecret(context, "LEADERBOARDS_ADMIN_KEY")).Value;
+            (await api.SecretManager.GetSecret(context, SecretNames.For(context.EnvironmentName, SecretNames.LeaderboardsAdminKey))).Value;
 
         static ChallengeService Challenges(IExecutionContext context, IGameApiClient api) =>
             new ChallengeService(GameContent.Shared, new CloudSaveChallengeStore(api, context), new CloudDayStore(api, context), () => DateTime.UtcNow);

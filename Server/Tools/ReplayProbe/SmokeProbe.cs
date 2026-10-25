@@ -25,7 +25,7 @@ namespace Echo.Server.Tools
 
             // The Daily Haunt: its switch, the seed salt (GetDaily fails without it) and the content version.
             (JsonElement? daily, string dailyFault) = await TryCall(http, projectId, token, "GetDaily", new { });
-            if (daily == null) Check("daily: GetDaily answers", false, dailyFault + " (DAILY_SEED_SALT missing from this environment's Secret Manager?)");
+            if (daily == null) Check("daily: GetDaily answers", false, dailyFault + $" ({(environment == "production" ? "DAILY_SEED_SALT_PROD" : "DAILY_SEED_SALT")} missing from Secret Manager?)");
             else if (daily.Value.GetProperty("error").GetString() == "disabled") Console.WriteLine("  INFO  daily: switched off in Remote Config");
             else
             {
@@ -66,7 +66,7 @@ namespace Echo.Server.Tools
             (JsonElement? deleted, string deleteFault) = await TryCall(http, projectId, token, "DeleteMyData", new { });
             Check("Delete online data works", deleted?.GetProperty("ok").GetBoolean() == true, deleteFault ?? "ok");
             string note = deleted?.GetProperty("liveScoreNote").GetString() ?? "";
-            Check("the Leaderboards admin key works", deleted != null && note == "", note == "" ? "LEADERBOARDS_ADMIN_KEY found" : note);
+            Check("the Leaderboards admin key works", deleted != null && note == "", note == "" ? (environment == "production" ? "LEADERBOARDS_ADMIN_KEY_PROD" : "LEADERBOARDS_ADMIN_KEY") + " found" : note);
 
             Console.WriteLine(_failed == 0 ? $"\nThe {environment} backend is ready." : $"\n{_failed} CHECK(S) FAILED.");
             return _failed == 0 ? 0 : 1;

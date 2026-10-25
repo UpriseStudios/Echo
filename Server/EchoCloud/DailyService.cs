@@ -46,7 +46,7 @@ namespace EchoCloud
 
         public DailyService(GameContent content, IDailyStore store, IDayStore days, Func<DateTime> utcNow, string salt)
         {
-            if (string.IsNullOrEmpty(salt)) throw new ArgumentException("the daily seed salt is missing (Secret Manager DAILY_SEED_SALT)");
+            if (string.IsNullOrEmpty(salt)) throw new ArgumentException("the daily seed salt is missing (Secret Manager DAILY_SEED_SALT, or DAILY_SEED_SALT_PROD in production)");
             _content = content;
             _store = store;
             _days = days;
