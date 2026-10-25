@@ -25,13 +25,24 @@ All of this is in the **production** environment. Development stays as it is for
         score deletion with `ReplayProbe delete`.
 - [ ] **Leaderboard start date**: in `Server/Config/daily.lb`, set `ResetConfig.Start` to midnight UTC on or after
       launch day (UGS needs it in the future when the leaderboard is created). It's 2026-10-15 for development.
-- [ ] **Deploy to production** from the repo root (the dev script refuses production on purpose):
+- [ ] **CLI access**: the CLI must be logged in with Echo's service account (production roles for Cloud Code, Remote
+      Config, Leaderboards and Access Control). If it's logged in for another project, set `UGS_CLI_SERVICE_KEY_ID` and
+      `UGS_CLI_SERVICE_SECRET_KEY` in the deploying terminal instead of logging in again. The scripts always target Echo's
+      project (from `ProjectSettings`), whatever project the CLI is set to.
+- [ ] **Deploy to production** from the repo root:
   ```
-  dotnet test Server/Echo.Server.Tests -c Release
-  dotnet build Server/EchoCloud/EchoCloud.csproj -c Release -t:ZipModule
-  ugs deploy Server/EchoCloud/bin/Release/net8.0/Module/EchoCloud.ccm Server/Config/echo.rc Server/Config/daily.lb Server/Config/echo-project-policy.ac -e production
+  powershell -ExecutionPolicy Bypass -File Server/deploy-prod.ps1 -DryRun
+  powershell -ExecutionPolicy Bypass -File Server/deploy-prod.ps1 -Confirm production [-SwitchesOff]
   ```
-  `-e production` applies to this command only; it doesn't change the CLI's saved environment.
+  It runs the server tests, packages the module, sets the first daily reset to the next midnight UTC and deploys the
+  module, Remote Config, the leaderboard and the Access Control policy with `-p <Echo> -e production` (the CLI's saved
+  settings are untouched).
+- [ ] **Smoke check** (no runs submitted, nothing on the public board; the test player deletes its own data):
+  ```
+  $env:ECHO_PROBE_PRODUCTION = 'yes'; dotnet run --project Server/Tools/ReplayProbe -- smoke production
+  ```
+  Every line should PASS (or INFO for a switch left off): the seed salt, the content version, ReplayCheck refused,
+  direct writes refused, Delete online data and the Leaderboards admin key.
 - [ ] **Remote Config switches**: the deploy turns `daily_enabled` and `server_challenges_enabled` on. To launch the
       app first and the online features later, set both to `false` in the dashboard straight after deploying, then
       back to `true` when ready. Both the game and the server obey them within seconds.

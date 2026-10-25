@@ -20,14 +20,25 @@ namespace Echo.Server.Tools
     /// </summary>
     public static class Program
     {
-        const string Environment = "development";
+        // Development, always, except `smoke production` with ECHO_PROBE_PRODUCTION=yes (a deliberate release check).
+        static string Environment = "development";
         const string Module = "EchoCloud";
 
         public static async Task<int> Main(string[] args)
         {
             bool challengeMode = args.Length > 0 && args[0] == "challenge";
             int count = !challengeMode && args.Length > 0 && int.TryParse(args[0], out int n) ? n : 10;
-            string projectId = System.Environment.GetEnvironmentVariable("ECHO_UGS_PROJECT_ID") ?? Ugs("config get project-id");
+            if (args.Length > 1 && args[0] == "smoke" && args[1] == "production")
+            {
+                if (System.Environment.GetEnvironmentVariable("ECHO_PROBE_PRODUCTION") != "yes")
+                {
+                    Console.WriteLine("This would sign a test player in to PRODUCTION. Set ECHO_PROBE_PRODUCTION=yes to go ahead.");
+                    return 2;
+                }
+                Environment = "production";
+            }
+            // Echo's own project (the Unity project's cloudProjectId), never the CLI's saved one, which may be another game.
+            string projectId = System.Environment.GetEnvironmentVariable("ECHO_UGS_PROJECT_ID") ?? EchoProjectId();
             using var http = new HttpClient();
 
             string token = await SignInAnonymously(http, projectId);
@@ -39,6 +50,7 @@ namespace Echo.Server.Tools
             if (args.Length > 0 && args[0] == "daily") return await ProbeDaily(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "grace") return await ProbeGrace(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "names") return await ProbeNames(http, token);
+            if (args.Length > 0 && args[0] == "smoke") return await SmokeProbe.Run(http, projectId, token, content.ContentVersion, Environment);
             if (args.Length > 0 && args[0] == "delete") return await ProbeDelete(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "tamper") return await TamperProbe.Run(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "switches") return await ProbeSwitches(http, projectId, token, args.Length > 1 && args[1] == "off");
@@ -183,7 +195,7 @@ namespace Echo.Server.Tools
         // grace path: the run is replayed and kept, but UGS archives are read-only, so it lands on neither board.
         static async Task<int> ProbeGrace(HttpClient http, string projectId, string token, GameContent content)
         {
-            Console.WriteLine("Archiving and resetting the development daily board: " + Ugs($"leaderboards reset daily --archive -e {Environment}"));
+            Console.WriteLine("Archiving and resetting the development daily board: " + Ugs($"leaderboards reset daily --archive -p {EchoProjectId()} -e {Environment}"));
             JsonElement d = await Call(http, projectId, token, "GetDaily", new { });
             ReelPacket.TryDecode(d.GetProperty("ghostsPacket").GetString(), out Echo.Core.Reels.Reel ghosts);
             Course course = content.CourseFor((uint)d.GetProperty("seed").GetInt64());
@@ -319,6 +331,20 @@ namespace Echo.Server.Tools
             string body = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode) throw new Exception($"{function} failed: {(int)response.StatusCode} {body}");
             return JsonDocument.Parse(body).RootElement.GetProperty("output").Clone();
+        }
+
+        internal static string EchoProjectId()
+        {
+            string dir = AppContext.BaseDirectory;
+            while (dir != null && !System.IO.File.Exists(System.IO.Path.Combine(dir, "ProjectSettings", "ProjectSettings.asset")))
+                dir = System.IO.Path.GetDirectoryName(dir);
+            if (dir == null) throw new Exception("Can't find the Unity project's ProjectSettings to read Echo's cloudProjectId.");
+            foreach (string line in System.IO.File.ReadLines(System.IO.Path.Combine(dir, "ProjectSettings", "ProjectSettings.asset")))
+            {
+                string t = line.Trim();
+                if (t.StartsWith("cloudProjectId:", StringComparison.Ordinal)) return t.Substring("cloudProjectId:".Length).Trim();
+            }
+            throw new Exception("No cloudProjectId in ProjectSettings.asset.");
         }
 
         internal static string Ugs(string arguments)
