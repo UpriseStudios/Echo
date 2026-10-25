@@ -1,4 +1,5 @@
 # Challenge links that reach the browser (no app, or opened outside the app) show the landing page.
-# 200 serves challenge.html at the same address, so the page can read the owner and id from it.
-/c/*  /challenge.html  200
+# 200 serves challenge.html at the same address, so the page can read the owner and id from it. The target has no
+# ".html": Pages redirects any .html address to its pretty form, which would lose the challenge's address.
+/c/*  /challenge  200
 /privacy  /privacy/  301
