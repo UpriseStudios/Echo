@@ -152,6 +152,22 @@ namespace Echo.Services.Backend
             }
         }
 
+        public async Task<ModesResult> GetModesAsync(string dateOverride, bool forceAll)
+        {
+            if (!await SignInAsync()) return ModesResult.Failed("offline");
+            try
+            {
+                var args = new Dictionary<string, object> { { "forceAll", forceAll } };
+                if (!string.IsNullOrEmpty(dateOverride)) args["dateOverride"] = dateOverride;
+                return await CloudCodeService.Instance.CallModuleEndpointAsync<ModesResult>(Module, "GetModes", args);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[Backend] GetModes: " + e.Message);
+                return ModesResult.Failed("offline");
+            }
+        }
+
         public async Task<DeleteOnlineDataResult> DeleteOnlineDataAsync()
         {
             // Never signed in on this device: there is no account and nothing online to delete.

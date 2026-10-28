@@ -64,6 +64,15 @@ namespace EchoCloud
                 ? new GetDailyRunResponse { Error = FeatureSwitches.Disabled }
                 : await (await Daily(context, api)).GetRunAsync(rank, DevelopmentOnly(context, dateOverride));
 
+        // Modes doc: the modes on show and the server's clock. Development can force every mode open and set the date.
+        [CloudCodeFunction("GetModes")]
+        public async Task<GetModesResponse> GetModes(IExecutionContext context, IGameApiClient api, string dateOverride = null, bool forceAll = false)
+        {
+            FeatureSwitches switches = await FeatureSwitches.ReadAsync(context, api);
+            return ModeService.Describe(switches.Modes, ModeSchedule.Now(DevelopmentOnly(context, dateOverride)),
+                forceAll && context.EnvironmentName == Development);
+        }
+
         // Privacy policy: Settings › Delete online data. Never behind a switch: deleting must always work.
         [CloudCodeFunction("DeleteMyData")]
         public async Task<DeleteMyDataResponse> DeleteMyData(IExecutionContext context, IGameApiClient api)

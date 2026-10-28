@@ -34,6 +34,10 @@ namespace Echo.Game.UI
         [SerializeField] Button _daily;
         public event Action DailyClicked;
 
+        // Modes doc: the Modes screen (the main game, the Daily Haunt and live event modes).
+        [SerializeField] Button _modes;
+        public event Action ModesClicked;
+
         // A build talking to the development server says so, so it is never mistaken for the store build.
         [SerializeField] GameObject _devServer;
 
@@ -47,6 +51,7 @@ namespace Echo.Game.UI
             if (_reels != null) _reels.onClick.AddListener(() => ReelsClicked?.Invoke());
             if (_exit != null) _exit.onClick.AddListener(() => ExitClicked?.Invoke());
             if (_daily != null) _daily.onClick.AddListener(() => DailyClicked?.Invoke());
+            if (_modes != null) _modes.onClick.AddListener(() => ModesClicked?.Invoke());
         }
 
         /// <summary>Recording mode hides the buttons that lead to ads (power-ups).</summary>

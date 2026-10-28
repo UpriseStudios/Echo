@@ -159,6 +159,20 @@ namespace Echo.Services.Mocks
             return Task.FromResult(new DailyBanishResult { Ok = true, BanishesLeft = BanishesLeft(date) });
         }
 
+        /// <summary>The modes on show (tests set them); forcing shows every mode open.</summary>
+        public readonly List<ModeState> Modes = new List<ModeState>();
+
+        public Task<ModesResult> GetModesAsync(string dateOverride, bool forceAll)
+        {
+            if (Offline) return Task.FromResult(ModesResult.Failed("offline"));
+            var result = new ModesResult { Ok = true, Now = DateTimeOffset.UtcNow.ToUnixTimeSeconds() };
+            if (forceAll)
+                foreach (string id in Echo.Core.Modes.ModeIds.All) result.Modes.Add(new ModeState { Id = id, Open = true, SecondsLeft = 3600 });
+            else
+                result.Modes.AddRange(Modes);
+            return Task.FromResult(result);
+        }
+
         public Task<DailyRunResult> GetDailyRunAsync(int rank, string dateOverride)
         {
             if (Offline) return Task.FromResult(DailyRunResult.Failed("offline"));

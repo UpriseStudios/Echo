@@ -32,6 +32,9 @@ namespace Echo.Game.UI
         // Seasons doc: development builds (and the recording APK) can force any season.
         [SerializeField] Button _season;
         public event Func<string> SeasonClicked;
+        // Modes doc: development builds can force every competitive mode open.
+        [SerializeField] Button _devModes;
+        public event Func<string> DevModesClicked;
         [SerializeField] Button _close;
         [Tooltip("The name on Ghost Challenges.")]
         [SerializeField] Button _name;
@@ -79,6 +82,11 @@ namespace Echo.Game.UI
                 string label = DailyDateClicked?.Invoke();
                 if (label != null) SetLabel(_dailyDate, label);
             });
+            if (_devModes != null) _devModes.onClick.AddListener(() =>
+            {
+                string label = DevModesClicked?.Invoke();
+                if (label != null) SetLabel(_devModes, label);
+            });
             if (_season != null) _season.onClick.AddListener(() =>
             {
                 string label = SeasonClicked?.Invoke();
@@ -113,6 +121,7 @@ namespace Echo.Game.UI
             _devAdFailure.gameObject.SetActive(showDevToggle);
             if (_serverCheck != null) _serverCheck.gameObject.SetActive(showServerCheck);
             if (_dailyDate != null) _dailyDate.gameObject.SetActive(showServerCheck);
+            if (_devModes != null) _devModes.gameObject.SetActive(showServerCheck);
             Refresh();
         }
 

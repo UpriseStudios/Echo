@@ -259,6 +259,13 @@ namespace Echo.Game.Flow
             _settings.ServerCheckClicked += OnServerCheck;
             _settings.DeleteOnlineClicked += AskDeleteOnlineData;
             _settings.DailyDateClicked += CycleDailyDate;
+            _settings.DevModesClicked += ToggleForceModes;
+            _title.ModesClicked += OpenModes;
+            if (_modesView != null)
+            {
+                _modesView.CardClicked += OnModeCard;
+                _modesView.BackClicked += CloseMenu;
+            }
             _settings.SeasonClicked += CycleSeason;
             _skins.BuyClicked += Buy;
             _skins.WatchAdClicked += WatchUnlockAd;
@@ -308,6 +315,7 @@ namespace Echo.Game.Flow
             _injectedTap = false;
             _stateTime += dt;
             TickDailyLabels(dt);
+            TickModeLabels(dt);
 
             if (_awakenPending && (State == GameState.Title || State == GameState.DeathScreen) && !ModalOpen) PlayAwakened();
 
@@ -1185,6 +1193,7 @@ namespace Echo.Game.Flow
             _stats.Hide();
             _settings.Hide();
             if (_dailyLobby != null) _dailyLobby.Hide();
+            if (_modesView != null) _modesView.Hide();
             if (_reels != null) _reels.Hide();
             SetState(GameState.Title);
             ShowTitle();

@@ -147,10 +147,13 @@ namespace Echo.Editor
             devServer.gameObject.SetActive(false);
             Wire(view, "_devServer", devServer.gameObject);
             // Version 2.0: the Daily Haunt, above Tap to run, with its countdown.
-            var daily = MakeButton(root, "Daily", "Daily Haunt", new Vector2(0, -350), new Vector2(720, 104), ButtonStyle.Secondary);
+            var daily = MakeButton(root, "Daily", "Daily Haunt", new Vector2(-120, -350), new Vector2(620, 104), ButtonStyle.Secondary);
             daily.GetComponent<Image>().color = new Color(Accent.r, Accent.g, Accent.b, 0.85f);
             daily.GetComponentInChildren<TMP_Text>().color = Ink;
             Wire(view, "_daily", daily);
+            // Modes doc: the Modes screen, beside the Daily Haunt.
+            var modes = MakeButton(root, "Modes", "Modes", new Vector2(330, -350), new Vector2(240, 104), ButtonStyle.Secondary);
+            Wire(view, "_modes", modes);
             // Weekly Twists banner (value-adds doc): this week's twist, tap to switch to Classic and back.
             var twist = MakeButton(root, "Twist", "THIS WEEK: TWIST", new Vector2(0, 165), new Vector2(820, 120), ButtonStyle.Secondary);
             // Power-ups (a user revision): earned with rewarded ads before a run.
@@ -526,6 +529,32 @@ namespace Echo.Editor
             return view;
         }
 
+        /// <summary>The Modes screen (modes doc): up to six cards (the main game, the Daily Haunt, live modes), a status line and Back.</summary>
+        static ModesView BuildModes(RectTransform parent)
+        {
+            RectTransform root = MenuPanel(parent, "Modes", "Modes");
+            var view = root.gameObject.AddComponent<ModesView>();
+            var cards = new Button[6];
+            for (int i = 0; i < cards.Length; i++)
+            {
+                cards[i] = MakeButton(root, "Card" + i, "", new Vector2(0, 620 - i * 200), new Vector2(940, 176), i == 0 ? ButtonStyle.Primary : ButtonStyle.Secondary);
+                var label = cards[i].GetComponentInChildren<TMP_Text>();
+                label.alignment = TextAlignmentOptions.MidlineLeft;
+                label.margin = new Vector4(40, 0, 40, 0);
+                label.enableAutoSizing = false;
+                label.fontSize = 40;
+            }
+            var status = MakeText(root, "Status", "", 32, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -620), new Vector2(980, 110));
+            status.color = Soft;
+            var back = MakeButton(root, "Back", "Back", new Vector2(0, -830), new Vector2(500, 120), ButtonStyle.Secondary);
+            Wire(view, "_root", root.gameObject);
+            WireArray(view, "_cards", cards);
+            Wire(view, "_status", status);
+            Wire(view, "_back", back);
+            root.gameObject.SetActive(false);
+            return view;
+        }
+
         /// <summary>
         /// The Daily Haunt lobby (version 2.0): today's date and countdown, your best and rank, the top 10, yesterday's
         /// winner, Play and Back.
@@ -894,12 +923,15 @@ namespace Echo.Editor
             // Privacy policy (2.0): the Daily Haunt runs, board entry and challenges kept on the server, deleted on request.
             var deleteOnline = MakeButton(root, "DeleteOnline", "Delete online data", new Vector2(0, -390), new Vector2(760, 112), ButtonStyle.Secondary);
             Wire(view, "_deleteOnline", deleteOnline);
-            var devAds = MakeButton(root, "DevAdFailure", "Dev: ads succeed", new Vector2(-265, -530), new Vector2(250, 100), ButtonStyle.Secondary);
+            var devAds = MakeButton(root, "DevAdFailure", "Dev: ads succeed", new Vector2(-375, -530), new Vector2(240, 100), ButtonStyle.Secondary);
             // Version 2.0, development builds: the newest reel replayed on the server, and the Daily Haunt's date.
-            var serverCheck = MakeButton(root, "ServerCheck", "Dev: server check", new Vector2(0, -530), new Vector2(250, 100), ButtonStyle.Secondary);
-            var dailyDate = MakeButton(root, "DailyDate", "Dev: daily today", new Vector2(265, -530), new Vector2(250, 100), ButtonStyle.Secondary);
+            var serverCheck = MakeButton(root, "ServerCheck", "Dev: server check", new Vector2(-125, -530), new Vector2(240, 100), ButtonStyle.Secondary);
+            var dailyDate = MakeButton(root, "DailyDate", "Dev: daily today", new Vector2(125, -530), new Vector2(240, 100), ButtonStyle.Secondary);
+            // Modes doc: every competitive mode forced open (the date is the Daily Haunt's).
+            var devModes = MakeButton(root, "DevModes", "Dev: modes live", new Vector2(375, -530), new Vector2(240, 100), ButtonStyle.Secondary);
             Wire(view, "_serverCheck", serverCheck);
             Wire(view, "_dailyDate", dailyDate);
+            Wire(view, "_devModes", devModes);
             var close = MakeButton(root, "Close", "Back", new Vector2(0, -830), new Vector2(500, 120), ButtonStyle.Primary);
             Wire(view, "_root", root.gameObject);
             Wire(view, "_music", music);

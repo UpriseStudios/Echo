@@ -43,6 +43,12 @@ namespace Echo.Services.Backend
         Task<DailyRunResult> GetDailyRunAsync(int rank, string dateOverride);
 
         /// <summary>
+        /// Modes doc: the competitive modes on show and the server's clock. Development builds can force every mode open
+        /// and set the date (the server honours both in development only).
+        /// </summary>
+        Task<ModesResult> GetModesAsync(string dateOverride, bool forceAll);
+
+        /// <summary>
         /// Privacy policy: deletes the player's Daily Haunt runs, leaderboard entry and sent challenges on the server,
         /// then their anonymous account (the next online use starts afresh). Ok with nothing to do if never online.
         /// </summary>

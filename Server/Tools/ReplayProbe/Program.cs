@@ -53,6 +53,7 @@ namespace Echo.Server.Tools
             if (args.Length > 0 && args[0] == "smoke") return await SmokeProbe.Run(http, projectId, token, content.ContentVersion, Environment);
             if (args.Length > 0 && args[0] == "delete") return await ProbeDelete(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "tamper") return await TamperProbe.Run(http, projectId, token, content);
+            if (args.Length > 0 && args[0] == "modes") return await ProbeModes(http, projectId, token, args.Length > 1 ? args[1] : null);
             if (args.Length > 0 && args[0] == "switches") return await ProbeSwitches(http, projectId, token, args.Length > 1 && args[1] == "off");
             Console.WriteLine("  #   course   ghosts  device m  server m  device score  server score  match");
             int sent = 0, matched = 0;
@@ -279,6 +280,26 @@ namespace Echo.Server.Tools
                 good &= (error == "disabled") == expectOff;
             }
             Console.WriteLine(good ? $"\nEvery endpoint {(expectOff ? "is closed" : "is open")}, as its switch says." : "\nAN ENDPOINT IGNORED ITS SWITCH.");
+            return good ? 0 : 1;
+        }
+
+        // Modes doc: GetModes reads the "modes" key as deployed. Forced (development) shows every mode open; on a test date
+        // in December, Naughty vs Nice is open only if the deployed schedule switches it on (expectOpen names it).
+        static async Task<int> ProbeModes(HttpClient http, string projectId, string token, string expectOpen)
+        {
+            JsonElement forced = await Call(http, projectId, token, "GetModes", new { forceAll = true });
+            int forcedCount = forced.GetProperty("modes").GetArrayLength();
+            Console.WriteLine($"Forced: {forcedCount} modes open");
+            JsonElement december = await Call(http, projectId, token, "GetModes", new { dateOverride = "2026-12-10" });
+            var open = new System.Collections.Generic.List<string>();
+            foreach (JsonElement m in december.GetProperty("modes").EnumerateArray())
+            {
+                Console.WriteLine($"10 December: {m.GetProperty("id").GetString()} open {m.GetProperty("open").GetBoolean()}, {m.GetProperty("secondsLeft").GetInt64()} s left");
+                if (m.GetProperty("open").GetBoolean()) open.Add(m.GetProperty("id").GetString());
+            }
+            bool good = forcedCount == Echo.Core.Modes.ModeIds.All.Length
+                && (expectOpen == null ? open.Count == 0 : open.Count == 1 && open[0] == expectOpen);
+            Console.WriteLine(good ? "\nThe modes follow the deployed schedule." : "\nTHE MODES DON'T MATCH THE SCHEDULE.");
             return good ? 0 : 1;
         }
 

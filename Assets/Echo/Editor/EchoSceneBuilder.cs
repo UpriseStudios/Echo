@@ -364,6 +364,7 @@ namespace Echo.Editor
             ReplayView replay = BuildReplay(safe);
             ClipEditorView clipEditor = BuildClipEditor(safe);
             DailyLobbyView dailyLobby = BuildDailyLobby(safe);
+            ModesView modes = BuildModes(safe);
             ElementsAwakenedView awakened = BuildElementsAwakened(safe);
             HowToPlayView howTo = BuildHowToPlay(safe);
 
@@ -403,6 +404,7 @@ namespace Echo.Editor
             Wire(game, "_replay", replay);
             Wire(game, "_clipEditor", clipEditor);
             Wire(game, "_dailyLobby", dailyLobby);
+            Wire(game, "_modesView", modes);
             Wire(game, "_howTo", howTo);
             Wire(game, "_audioTap", audioTap);
             Wire(game, "_skins", skins);
