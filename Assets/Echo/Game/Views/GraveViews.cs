@@ -48,6 +48,8 @@ namespace Echo.Game.Views
         int _epitaphShown = -1;
         float _epitaphHalf;   // half the label's width as a fraction of the screen, kept on screen
         int _count;
+        Sprite _baseGrave;
+        bool _graveInColour;
 
         void Awake()
         {
@@ -61,6 +63,7 @@ namespace Echo.Game.Views
                 _epitaph.ForceMeshUpdate();
                 _epitaph.gameObject.SetActive(false);
             }
+            _baseGrave = _grave;
             _graves = new SpriteRenderer[GhostGraves + 1];
             for (int i = 0; i < _graves.Length; i++)
             {
@@ -73,6 +76,15 @@ namespace Echo.Game.Views
                 sr.enabled = false;
                 _graves[i] = sr;
             }
+        }
+
+        /// <summary>A season's gravestone (seasons doc); null keeps the stone. In colour, it isn't tinted like stone.</summary>
+        public void SetSeason(Sprite grave, bool inColour)
+        {
+            _grave = grave != null ? grave : _baseGrave;
+            _graveInColour = grave != null && inColour;
+            if (_graves == null) return;
+            foreach (SpriteRenderer sr in _graves) sr.sprite = _grave;
         }
 
         /// <summary>Places a grave for every ghost in this run. Called once when a run is prepared.</summary>
@@ -188,7 +200,7 @@ namespace Echo.Game.Views
                 sr.transform.localScale = new Vector3(s, s * rise, 1f);
 
                 Color tint = _nemesis[i] ? NemesisRed : GhostCyan;
-                Color c = Color.Lerp(stone, tint, Mathf.Lerp(0.22f, 0.45f, _age[i]));
+                Color c = _graveInColour ? Color.white : Color.Lerp(stone, tint, Mathf.Lerp(0.22f, 0.45f, _age[i]));
                 c.a = Mathf.Lerp(0.75f, 1f, _age[i]);
                 sr.color = c;
 

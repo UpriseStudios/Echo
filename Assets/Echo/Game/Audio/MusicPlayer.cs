@@ -41,6 +41,20 @@ namespace Echo.Game.Audio
 
         public void SetEnabled(bool enabled) => _enabled = enabled;
 
+        AudioSource _stinger;
+
+        /// <summary>A season's short festive variation (seasons doc), once over the music; silent with the music off.</summary>
+        public void PlayStinger(AudioClip clip)
+        {
+            if (clip == null || !_enabled) return;
+            if (_stinger == null)
+            {
+                _stinger = gameObject.AddComponent<AudioSource>();
+                _stinger.playOnAwake = false;
+            }
+            _stinger.PlayOneShot(clip, MasterVolume);
+        }
+
         public static bool LayerWanted(int stem, int ghostsOnScreen) => stem == 0 || ghostsOnScreen >= GhostsPerLayer * stem;
 
         void Update()

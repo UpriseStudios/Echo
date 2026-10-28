@@ -248,7 +248,7 @@ namespace Echo.Game.Flow
                 _dailyLobby.SetMessage("Starting up... try again in a moment.", playable: false);
                 return;
             }
-            BackendFlags flags = await _services.Backend.GetFlagsAsync();
+            BackendFlags flags = await Flags();
             if (this == null || !_dailyLobby.IsOpen) return;
             _dailyEnabled = flags.DailyEnabled;
             if (!flags.DailyEnabled && _services.Backend.SignedIn)

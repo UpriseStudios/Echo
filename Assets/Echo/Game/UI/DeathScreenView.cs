@@ -180,6 +180,23 @@ namespace Echo.Game.UI
         /// Starts the grave reveal: after <paramref name="delay"/> the stone grows from the world grave to its place
         /// over <paramref name="seconds"/> (the camera's zoom uses the same timing), then the lines are chiselled.
         /// </summary>
+        Sprite _baseHeadstone;
+        bool _headstoneKept;
+
+        /// <summary>A season's headstone (seasons doc), the same size with the same plain face; null keeps the stone.</summary>
+        public void SetHeadstoneSprite(Sprite sprite)
+        {
+            if (_headstone == null) return;
+            var image = _headstone.GetComponent<Image>();
+            if (image == null) return;
+            if (!_headstoneKept)
+            {
+                _baseHeadstone = image.sprite;
+                _headstoneKept = true;
+            }
+            image.sprite = sprite != null ? sprite : _baseHeadstone;
+        }
+
         public void ShowHeadstone(string name, string line, string footer, float delay, float seconds)
         {
             if (_headstone == null) return;

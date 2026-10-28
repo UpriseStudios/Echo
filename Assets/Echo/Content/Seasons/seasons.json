@@ -1,0 +1,11 @@
+{
+  "seasons": [
+    { "id": "halloween", "start": "10-24", "end": "11-02", "enabled": false, "achievements": false },
+    { "id": "bonfire", "start": "11-04", "end": "11-06", "enabled": false, "achievements": false },
+    { "id": "christmas", "start": "12-01", "end": "12-31", "enabled": true, "achievements": true },
+    { "id": "newyear", "start": "12-31", "end": "01-01", "enabled": true, "achievements": true },
+    { "id": "valentines", "start": "02-13", "end": "02-15", "enabled": true, "achievements": true },
+    { "id": "easter", "start": "2027-03-26", "end": "2027-03-29", "enabled": false, "achievements": false },
+    { "id": "aprilfools", "start": "04-01", "end": "04-01", "enabled": false, "achievements": false }
+  ]
+}

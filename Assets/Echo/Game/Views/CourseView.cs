@@ -31,6 +31,24 @@ namespace Echo.Game.Views
         [SerializeField] Sprite _groundTop;
         [SerializeField] Sprite _groundFill;
 
+        // Seasons doc: a season can reskin the hazards and the floor's edge; the boxes they fill never change.
+        Sprite _baseSpike, _baseBlock, _baseGroundTop;
+        bool _baseKept;
+
+        public void SetSeason(Sprite spike, Sprite block, Sprite groundTop)
+        {
+            if (!_baseKept)
+            {
+                _baseSpike = _spike;
+                _baseBlock = _block;
+                _baseGroundTop = _groundTop;
+                _baseKept = true;
+            }
+            _spike = spike != null ? spike : _baseSpike;
+            _block = block != null ? block : _baseBlock;
+            _groundTop = groundTop != null ? groundTop : _baseGroundTop;
+        }
+
         readonly List<SpriteRenderer> _pool = new List<SpriteRenderer>(PrewarmPieces);
         int _used;
 

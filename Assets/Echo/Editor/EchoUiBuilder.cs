@@ -901,8 +901,12 @@ namespace Echo.Editor
             heading.GetComponent<TMP_Text>().raycastTarget = true;
             Wire(view, "_heading", heading.AddComponent<Button>());
             // Marketing content plan: recording mode for screen recordings (development builds, or five taps on the heading).
-            var recording = MakeButton(root, "Recording", "Recording: off", new Vector2(-135, -635), new Vector2(250, 90), ButtonStyle.Secondary);
-            var recordingHud = MakeButton(root, "RecordingHud", "HUD: shown", new Vector2(135, -635), new Vector2(250, 90), ButtonStyle.Secondary);
+            var recording = MakeButton(root, "Recording", "Recording: off", new Vector2(-265, -635), new Vector2(250, 90), ButtonStyle.Secondary);
+            var recordingHud = MakeButton(root, "RecordingHud", "HUD: shown", new Vector2(0, -635), new Vector2(250, 90), ButtonStyle.Secondary);
+            // Seasons doc: force any season (development builds and the recording APK).
+            var season = MakeButton(root, "Season", "Dev: season auto", new Vector2(265, -635), new Vector2(250, 90), ButtonStyle.Secondary);
+            Wire(view, "_season", season);
+            season.gameObject.SetActive(false);
             Wire(view, "_recording", recording);
             Wire(view, "_recordingHud", recordingHud);
             recording.gameObject.SetActive(false);

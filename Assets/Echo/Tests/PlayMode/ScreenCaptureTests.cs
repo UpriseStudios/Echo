@@ -212,6 +212,16 @@ namespace Echo.Tests.PlayMode
                 for (int f = 0; f < 20; f++) { game.TickFrame(dt, false); yield return null; }
                 yield return Capture(shot);
             }
+            // Seasons phase 1: the test theme (every override on) by day in the Graveyard and at night.
+            game.PreviewCharacter("char_hooded");
+            game.ForceSeason(Echo.Game.Seasons.SeasonIds.Test);
+            foreach (var (metres, shot) in new[] { (150f, "22_season_test_graveyard"), (600f, "23_season_test_night") })
+            {
+                game.PreviewMetres = metres;
+                for (int f = 0; f < 20; f++) { game.TickFrame(dt, false); yield return null; }
+                yield return Capture(shot);
+            }
+            game.ForceSeason(null);
             game.PreviewMetres = null;
             ui.enabled = true;
             Object.Destroy(plain);

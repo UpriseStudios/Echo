@@ -175,7 +175,9 @@ namespace Echo.Game.Flow
 
             _services = EchoServices.CreateMocks();
             WireBackend();
-            _saves = new SaveSystem(SavePathOverride ?? Path.Combine(Application.persistentDataPath, "echo_save.json"));
+            string savePath = SavePathOverride ?? Path.Combine(Application.persistentDataPath, "echo_save.json");
+            _saves = new SaveSystem(savePath);
+            InitSeasons(savePath);
             _save = _saves.Load() ?? new SaveData();
             _save.Tutorial ??= new TutorialSaveData();
             _save.Settings ??= new SettingsSaveData();
@@ -254,6 +256,7 @@ namespace Echo.Game.Flow
             _settings.ServerCheckClicked += OnServerCheck;
             _settings.DeleteOnlineClicked += AskDeleteOnlineData;
             _settings.DailyDateClicked += CycleDailyDate;
+            _settings.SeasonClicked += CycleSeason;
             _skins.BuyClicked += Buy;
             _skins.WatchAdClicked += WatchUnlockAd;
             _skins.TrialAdClicked += WatchTrialAd;
@@ -474,11 +477,12 @@ namespace Echo.Game.Flow
                 _announcedBiome = env.Biome;
                 _hud.QueueToast(Biomes.Name(env.Biome));
             }
-            Color day = PaletteSampler.Sample(_paletteStops, metres);
+            Color day = SeasonDay(PaletteSampler.Sample(_paletteStops, metres), metres);
             Color background = NightSky(day, env);
             _cameraRig.Background = background;
             float viewW = _cameraRig.Right - _cameraRig.Left;
             if (_background != null) _background.Render(_cameraRig.transform.position.x, viewW, _cameraRig.Bottom, _cameraRig.Height, background, env);
+            RenderSeasonEffects();
             // Obstacles keep their contrast at night: against a dark sky they turn pale instead of dark.
             Color obstacles = Color.Lerp(PaletteSampler.Darker(day, 0.5f), Color.Lerp(day, Color.white, 0.3f), env.Night * 0.75f);
             _courseView.Render(_course, _cameraRig.Left, _cameraRig.Right, Mathf.Max(0, _run.Tick - 1),
@@ -516,6 +520,7 @@ namespace Echo.Game.Flow
 
         void PrepareRun()
         {
+            RefreshSeason();
             ApplyCosmetics(); // an Elementals trial that has run out falls back to the free character here
             if (!CourseIs(_progress.Seed)) _course = new Course(_library, _progress.Seed);
             _run = RunRules.StartRun(_progress, _course, _cfg, RunOptionsNow());
@@ -661,6 +666,7 @@ namespace Echo.Game.Flow
                 message = FirstGhostDeathMessage;
             }
 
+            message = WithSeasonLine(message, _run, _progress.Ghosts.Nemesis);
             _deathScreen.Show(_run.Score, best, newBest, DeathScreenText.KillerLine(_run, _progress.Ghosts.Nemesis), message,
                 twistRun ? "Week best" : "Best");
             OfferSaveReel(newBest && !twistRun);
@@ -969,6 +975,7 @@ namespace Echo.Game.Flow
 
         void ShowTitle()
         {
+            RefreshSeason();
             _title.Show(_progress.Best);
             _title.SetExitVisible(CanQuit);
             _title.SetDevServer(!_recordingMode && _serviceConfig != null && _serviceConfig.ShowsDevServerTag);
@@ -1475,6 +1482,7 @@ namespace Echo.Game.Flow
         void ShowSettings()
         {
             _settings.Show(_save.Settings, Debug.isDebugBuild && _services.UsingMockAds, Debug.isDebugBuild);
+            _settings.SetSeason(SeasonDevSetting, SeasonLabel());
             // Development builds only: what the ad and store SDKs are doing, readable on the phone itself.
             _settings.SetStatus(Debug.isDebugBuild ? _services.StatusReport : null);
             ApplyRecordingMode();

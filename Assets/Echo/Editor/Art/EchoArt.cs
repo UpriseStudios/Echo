@@ -195,9 +195,10 @@ namespace Echo.Editor.Art
             ImportIcon(IconPath);
             ImportIcon(AdaptiveBackgroundPath);
             ImportIcon(AdaptiveForegroundPath);
+            SeasonArt.Generate();
         }
 
-        static void EnsureFolder(string path)
+        internal static void EnsureFolder(string path)
         {
             if (AssetDatabase.IsValidFolder(path)) return;
             string parent = Path.GetDirectoryName(path).Replace('\\', '/');
@@ -205,14 +206,14 @@ namespace Echo.Editor.Art
             AssetDatabase.CreateFolder(parent, Path.GetFileName(path));
         }
 
-        static void Write(string path, PixelCanvas canvas)
+        internal static void Write(string path, PixelCanvas canvas)
         {
             var tex = canvas.ToTexture();
             File.WriteAllBytes(path, tex.EncodeToPNG());
             Object.DestroyImmediate(tex);
         }
 
-        static void ImportSprite(string path, float ppu, Vector2 pivot, Vector4 border = default, TextureWrapMode wrap = TextureWrapMode.Clamp)
+        internal static void ImportSprite(string path, float ppu, Vector2 pivot, Vector4 border = default, TextureWrapMode wrap = TextureWrapMode.Clamp)
         {
             var importer = (TextureImporter)AssetImporter.GetAtPath(path);
             importer.textureType = TextureImporterType.Sprite;

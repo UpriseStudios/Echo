@@ -29,6 +29,9 @@ namespace Echo.Game.UI
         // Version 2.0, development builds: step the Daily Haunt's date to test midnight.
         [SerializeField] Button _dailyDate;
         public event Func<string> DailyDateClicked;
+        // Seasons doc: development builds (and the recording APK) can force any season.
+        [SerializeField] Button _season;
+        public event Func<string> SeasonClicked;
         [SerializeField] Button _close;
         [Tooltip("The name on Ghost Challenges.")]
         [SerializeField] Button _name;
@@ -76,8 +79,21 @@ namespace Echo.Game.UI
                 string label = DailyDateClicked?.Invoke();
                 if (label != null) SetLabel(_dailyDate, label);
             });
+            if (_season != null) _season.onClick.AddListener(() =>
+            {
+                string label = SeasonClicked?.Invoke();
+                if (label != null) SetLabel(_season, label);
+            });
             if (_name != null) _name.onClick.AddListener(() => NameClicked?.Invoke());
             if (_heading != null) _heading.onClick.AddListener(OnHeadingTapped);
+        }
+
+        /// <summary>The forced-season button and its label.</summary>
+        public void SetSeason(bool visible, string label)
+        {
+            if (_season == null) return;
+            _season.gameObject.SetActive(visible);
+            if (visible) SetLabel(_season, label);
         }
 
         /// <summary>Recording mode's two buttons (development builds, or after five taps on the heading).</summary>

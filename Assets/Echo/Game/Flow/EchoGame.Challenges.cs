@@ -55,7 +55,7 @@ namespace Echo.Game.Flow
         async Task FetchServerChallenge(string owner, string id)
         {
             _hud.QueueToast("OPENING CHALLENGE...");
-            BackendFlags flags = await _services.Backend.GetFlagsAsync();
+            BackendFlags flags = await Flags();
             if (!flags.ServerChallengesEnabled)
             {
                 Ask("CHALLENGES ARE RESTING", "Friend challenges are switched off for a moment. Try the link again soon.", "OK", null, null, null);
@@ -222,7 +222,7 @@ namespace Echo.Game.Flow
             }
             string name = ChallengeNames.Clean(_save.Settings.PlayerName);
             bool full = ChallengeRuns.CanSendFull(reel) && reel.PlayableOn(_contentVersion);
-            if (full && _servicesSettled) full = (await _services.Backend.GetFlagsAsync()).ServerChallengesEnabled;
+            if (full && _servicesSettled) full = (await Flags()).ServerChallengesEnabled;
             else full = false;
             if (!full)
             {
@@ -271,7 +271,7 @@ namespace Echo.Game.Flow
         /// </summary>
         async Task<string> ChallengeLinkFor(Reel reel, string name)
         {
-            if (ChallengeRuns.CanSendFull(reel) && _servicesSettled && (await _services.Backend.GetFlagsAsync()).ServerChallengesEnabled)
+            if (ChallengeRuns.CanSendFull(reel) && _servicesSettled && (await Flags()).ServerChallengesEnabled)
             {
                 CreateChallengeResult r = await _services.Backend.CreateChallengeAsync(ReelPacket.Encode(reel), name);
                 if (r.Ok)

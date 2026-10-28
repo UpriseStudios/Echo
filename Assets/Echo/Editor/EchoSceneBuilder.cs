@@ -266,6 +266,10 @@ namespace Echo.Editor
                 so.ApplyModifiedPropertiesWithoutUndo();
             }
 
+            // Seasons doc: the season's effects layer, sorted behind the floor and everything on it.
+            var seasonEffects = Child<SeasonEffectsView>(world, "SeasonEffects");
+            Wire(seasonEffects, "_material", material);
+
             var courseView = Child<CourseView>(world, "Course");
             Wire(courseView, "_material", material);
             Wire(courseView, "_spike", LoadSprite(EchoArt.SpikePath));
@@ -416,6 +420,10 @@ namespace Echo.Editor
             Wire(game, "_twistOverlay", twistOverlay);
             Wire(game, "_copycatView", copycat);
             Wire(game, "_ambient", ambient);
+            Wire(game, "_seasonEffects", seasonEffects);
+            WireArray(game, "_seasonThemes", SeasonThemes.Build());
+            Wire(game, "_seasonSchedule", AssetDatabase.LoadAssetAtPath<TextAsset>(SeasonThemes.SchedulePath)
+                ?? throw new InvalidOperationException($"missing {SeasonThemes.SchedulePath}"));
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };

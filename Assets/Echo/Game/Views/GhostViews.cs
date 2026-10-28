@@ -49,6 +49,10 @@ namespace Echo.Game.Views
 
         SpriteRenderer[] _boxes;
         SpriteRenderer _hornsRenderer;
+        // Seasons doc: every ghost but the Nemesis can wear the season's accessory; the Nemesis's replaces its horns.
+        SpriteRenderer[] _accessories;
+        Sprite _ghostAccessory;
+        bool _nemesisAccessory;
         SpriteRenderer _bountyRenderer;
         Twist _twist;
         int _bountyIndex = -1;
@@ -71,8 +75,16 @@ namespace Echo.Game.Views
         {
             _boxes = new SpriteRenderer[PoolSize];
             _trails = new LineRenderer[PoolSize];
+            _accessories = new SpriteRenderer[PoolSize];
             for (int i = 0; i < PoolSize; i++)
             {
+                var accessoryGo = new GameObject("Accessory" + i);
+                accessoryGo.transform.SetParent(transform, false);
+                _accessories[i] = accessoryGo.AddComponent<SpriteRenderer>();
+                _accessories[i].sharedMaterial = _material;
+                _accessories[i].sortingOrder = 6;
+                _accessories[i].enabled = false;
+
                 _boxes[i] = _runFrames.Length > 0
                     ? BoxSprite.Create(transform, "Ghost" + i, _material, 5)
                     : BoxSprite.CreateOutline(transform, "Ghost" + i, _material, 5);
@@ -111,6 +123,14 @@ namespace Echo.Game.Views
                 _hornsRenderer.enabled = false;
             }
             if (_nemesisLabel != null) _nemesisLabel.gameObject.SetActive(false);
+        }
+
+        /// <summary>A season's ghost and Nemesis accessories (seasons doc); null keeps plain ghosts and the horns.</summary>
+        public void SetSeason(Sprite ghostAccessory, Sprite nemesisAccessory)
+        {
+            _ghostAccessory = ghostAccessory;
+            _nemesisAccessory = nemesisAccessory != null;
+            if (_hornsRenderer != null) _hornsRenderer.sprite = nemesisAccessory != null ? nemesisAccessory : _horns;
         }
 
         /// <summary>This run's twist (value-adds doc). Mirror flips the camera, so the world-space name is flipped back.</summary>
@@ -209,6 +229,7 @@ namespace Echo.Game.Views
                 {
                     box.enabled = false;
                     trail.enabled = false;
+                    _accessories[i].enabled = false;
                     continue;
                 }
 
@@ -272,6 +293,16 @@ namespace Echo.Game.Views
                 box.sortingOrder = isNemesis ? 6 : 5;
                 box.enabled = true;
 
+                SpriteRenderer accessory = _accessories[i];
+                accessory.enabled = _ghostAccessory != null && !isNemesis;
+                if (accessory.enabled)
+                {
+                    accessory.sprite = _ghostAccessory;
+                    accessory.transform.localPosition = new Vector3(SimUnits.Pixel(pos.x), SimUnits.Pixel(pos.y + lift + headTop * scale), 0f);
+                    accessory.transform.localScale = new Vector3(scale, scale, 1f);
+                    accessory.color = new Color(1f, 1f, 1f, a);
+                }
+
                 // Ghost Bounties: a coin over the bounty ghost until it is claimed.
                 if (i == _bountyIndex && !_bountyClaimed && r.Phase == GhostPhase.Replaying && _bountyRenderer != null)
                 {
@@ -289,7 +320,7 @@ namespace Echo.Game.Views
                     if (isNemesis && _hornsRenderer != null)
                     {
                         _hornsRenderer.transform.localPosition = new Vector3(SimUnits.Pixel(pos.x), SimUnits.Pixel(pos.y + lift + top), 0f);
-                        _hornsRenderer.color = new Color(NemesisColor.r, NemesisColor.g, NemesisColor.b, a);
+                        _hornsRenderer.color = _nemesisAccessory ? new Color(1f, 1f, 1f, a) : new Color(NemesisColor.r, NemesisColor.g, NemesisColor.b, a);
                     }
                     if (_nemesisLabel != null)
                     {

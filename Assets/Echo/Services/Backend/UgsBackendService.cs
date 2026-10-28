@@ -48,7 +48,9 @@ namespace Echo.Services.Backend
             try
             {
                 RuntimeConfig config = await RemoteConfigService.Instance.FetchConfigsAsync(new UserAttributes(), new AppAttributes());
-                return new BackendFlags(config.GetBool(BackendFlags.DailyKey, false), config.GetBool(BackendFlags.ServerChallengesKey, false));
+                string seasons = config.GetJson(BackendFlags.SeasonsKey, "");
+                return new BackendFlags(config.GetBool(BackendFlags.DailyKey, false), config.GetBool(BackendFlags.ServerChallengesKey, false),
+                    string.IsNullOrEmpty(seasons) ? null : seasons);
             }
             catch (Exception e)
             {

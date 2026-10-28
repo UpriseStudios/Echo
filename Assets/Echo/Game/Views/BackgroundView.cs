@@ -26,6 +26,7 @@ namespace Echo.Game.Views
         [SerializeField] float _nearScale = 1f;
 
         SpriteRenderer _farLayer, _nearLayer, _castleLayer, _bannerLayer, _spaceLayer, _planetSprite;
+        Sprite _baseFar, _baseNear;
         bool _banners;
 
         /// <summary>World x where the Graveyard layer's tiles start this frame, and the tile width (for the wisps).</summary>
@@ -34,6 +35,8 @@ namespace Echo.Game.Views
 
         void Awake()
         {
+            _baseFar = _far;
+            _baseNear = _near;
             _planetSprite = Layer("Planet", _planet, -21, false);
             _farLayer = Layer("Far", _far, -20);
             _nearLayer = Layer("Near", _near, -19);
@@ -53,6 +56,15 @@ namespace Echo.Game.Views
             sr.sortingOrder = order;
             sr.enabled = sprite != null;
             return sr;
+        }
+
+        /// <summary>A season's far and Graveyard layers (seasons doc); null keeps the normal art.</summary>
+        public void SetSeason(Sprite far, Sprite near)
+        {
+            _far = far != null ? far : _baseFar;
+            _near = near != null ? near : _baseNear;
+            if (_farLayer != null) _farLayer.sprite = _far;
+            if (_nearLayer != null) _nearLayer.sprite = _near;
         }
 
         /// <summary>The RoyalBanners flourish: pennants, lit windows and torches over the Castle.</summary>
