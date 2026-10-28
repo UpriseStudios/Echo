@@ -213,6 +213,27 @@ namespace Echo.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator TheSeasonEvents_AreLogged()
+        {
+            yield return LoadGame();
+            var game = Object.FindAnyObjectByType<EchoGame>();
+            var analytics = (MockAnalytics)game.Services.Analytics;
+            game.ForceSeason(SeasonIds.Christmas);
+            game.ForceSeason(EchoGame.NoSeason);
+            game.ForceSeason(SeasonIds.Christmas);
+            Assert.AreEqual(1, analytics.Events.Count(e => e == "season_active season=christmas forced=True"), "once a session per season");
+
+            // A seasonal skin put on in the Skins screen.
+            game.CurrentSave.Cosmetics.Owned.Add("char_santa");
+            Click("Title/Skins");
+            var santa = Find("Skins").GetComponentsInChildren<UnityEngine.UI.Button>()
+                .First(b => b.GetComponentInChildren<TMPro.TMP_Text>().text.StartsWith("Santa"));
+            santa.onClick.Invoke();
+            CollectionAssert.Contains(analytics.Events, "seasonal_skin_equipped skin=char_santa");
+            Click("Skins/Close");
+        }
+
+        [UnityTest]
         public IEnumerator RemoteConfigsSchedule_IsTakenWithTheFlags_AndKeptForNextTime()
         {
             yield return LoadGame();

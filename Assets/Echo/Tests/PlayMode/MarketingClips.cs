@@ -111,7 +111,7 @@ namespace Echo.Tests.PlayMode
         }
 
         // Genuine failed runs on the course, each lasting a little longer than the last so the graves spread out.
-        static List<GhostRecord> Ghosts(MarketingClipSpec spec, ChunkLibrary library, in SimConfig cfg, int speed, Random rng)
+        internal static List<GhostRecord> Ghosts(MarketingClipSpec spec, ChunkLibrary library, in SimConfig cfg, int speed, Random rng)
         {
             var records = new List<GhostRecord>();
             for (int i = 1; i <= spec.Ghosts; i++)
@@ -136,7 +136,7 @@ namespace Echo.Tests.PlayMode
 
         // The bot avoids every lethal ghost and hazard with ordinary jumps for a while, then stops jumping. For a Nemesis
         // ending it stops just before the Nemesis is met.
-        static Schedule PlayerRun(MarketingClipSpec spec, List<GhostRecord> records, ChunkLibrary library, in SimConfig cfg, int speed, Random rng)
+        internal static Schedule PlayerRun(MarketingClipSpec spec, List<GhostRecord> records, ChunkLibrary library, in SimConfig cfg, int speed, Random rng)
         {
             var course = new Course(library, spec.Seed);
             var manager = new GhostManager();

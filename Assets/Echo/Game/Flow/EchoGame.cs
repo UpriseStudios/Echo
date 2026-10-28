@@ -252,7 +252,7 @@ namespace Echo.Game.Flow
             // A challenge link that launched the game, or arrives while it runs (echoghost://challenge/CODE).
             Application.deepLinkActivated += OpenChallengeLink;
             if (!string.IsNullOrEmpty(Application.absoluteURL)) OpenChallengeLink(Application.absoluteURL);
-            _skins.Changed += () => { ApplyCosmetics(); Save(); };
+            _skins.Changed += () => { ApplyCosmetics(); LogSeasonalEquip(); Save(); };
             _settings.Changed += () => { ApplySettings(); Save(); };
             _settings.PrivacyClicked += () => { _settings.Hide(); _consentFromSettings = true; _consentView.Show(); };
             _settings.DevAdFailureToggled += () => _services.ToggleMockAdFailure();
@@ -273,6 +273,7 @@ namespace Echo.Game.Flow
             if (_serviceConfig == null) _serviceConfig = EchoServiceConfig.Load();
             _services.AdoptShare(RealServices.CreateShare(_serviceConfig));
             ApplyCosmetics();
+            LogSeasonalEquip();   // what's worn at startup is the baseline, not an equip
             ApplySettings();
             _sessionStart = Time.realtimeSinceStartup;
             EnterTitle();
@@ -1538,6 +1539,9 @@ namespace Echo.Game.Flow
             _sessionStart = Time.realtimeSinceStartup;
             _sessionRuns = 0;
             Log(AnalyticsEvents.SessionStart, ("runs", _progress.Stats.TotalRuns), ("duration", 0));
+            _sessionLive = true;
+            _seasonLogged = null;
+            LogSeasonActive();
         }
 
         void LogSessionEnd() =>

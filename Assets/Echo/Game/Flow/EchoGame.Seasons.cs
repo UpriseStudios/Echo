@@ -9,6 +9,7 @@ using Echo.Core.Rules;
 using Echo.Game.Cosmetics;
 using Echo.Game.Seasons;
 using Echo.Game.Views;
+using Echo.Services.Analytics;
 using Echo.Services.Backend;
 using UnityEngine;
 
@@ -131,6 +132,7 @@ namespace Echo.Game.Flow
             if (_seasonEffects != null) _seasonEffects.SetTheme(theme);
             if (theme != null && theme.Stinger != null && _stingersPlayed.Add(theme.Id) && _music != null) _music.PlayStinger(theme.Stinger);
             Debug.Log($"[Seasons] {(theme != null ? theme.Id : "no season")}{(ForcedSeason != null ? " (forced)" : "")}");
+            LogSeasonActive();
         }
 
         CosmeticItem _equippedGrave;
@@ -202,7 +204,7 @@ namespace Echo.Game.Flow
             SeasonalContext s = SeasonalOn(UkCalendar.Date(SeasonNowUtc()));
             if (!s.Any) return;
             bool byNemesis = _run.Cause == DeathCause.Ghost && _run.Killer != null && _run.Killer == nemesisBefore;
-            foreach (string id in AchievementRules.OnSeasonalRunEnded(_progress, _run, s, byNemesis)) ToastAchievement(id);
+            foreach (string id in AchievementRules.OnSeasonalRunEnded(_progress, _run, s, byNemesis)) SeasonalEarned(id);
             GrantAchievementRewards();
         }
 
@@ -212,8 +214,45 @@ namespace Echo.Game.Flow
             if (!DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime ukDate)) return;
             SeasonalContext s = SeasonalOn(ukDate);
             if (!s.Any) return;
-            foreach (string id in AchievementRules.OnSeasonalDailyRun(_progress, day, leadersPassed, s)) ToastAchievement(id);
+            foreach (string id in AchievementRules.OnSeasonalDailyRun(_progress, day, leadersPassed, s)) SeasonalEarned(id);
             GrantAchievementRewards();
+        }
+
+        void SeasonalEarned(string id)
+        {
+            ToastAchievement(id);
+            Log(AnalyticsEvents.SeasonalAchievement, ("id", id));
+        }
+
+        // ---- analytics (seasons doc) ----
+
+        bool _sessionLive;
+        string _seasonLogged;
+        readonly Dictionary<CosmeticType, string> _equipLogged = new Dictionary<CosmeticType, string>();
+
+        // season_active: once a session for each season shown, after the session has started (so after consent).
+        void LogSeasonActive()
+        {
+            if (!_sessionLive || _season == null || _seasonLogged == _season.Id) return;
+            _seasonLogged = _season.Id;
+            Log(AnalyticsEvents.SeasonActive, ("season", _season.Id), ("forced", ForcedSeason != null));
+        }
+
+        // seasonal_skin_equipped: a seasonal character, trail or gravestone put on (the Christmas Pack included).
+        void LogSeasonalEquip()
+        {
+            if (_catalog == null) return;
+            var e = _save.Cosmetics.Equipped;
+            foreach (var (type, id) in new[] { (CosmeticType.Character, e.Character), (CosmeticType.Trail, e.Trail), (CosmeticType.Grave, e.Grave) })
+            {
+                if (_equipLogged.TryGetValue(type, out string had) && had == id) continue;
+                bool first = !_equipLogged.ContainsKey(type);
+                _equipLogged[type] = id;
+                CosmeticItem item = _catalog.Find(id);
+                if (first || item == null) continue;
+                if (!string.IsNullOrEmpty(item.UnlockAchievement) || item.ProductId == Echo.Services.Iap.ProductIds.PackChristmas)
+                    Log(AnalyticsEvents.SeasonalSkinEquipped, ("skin", id));
+            }
         }
 
         // Seasons doc: a seasonal reward is kept for good once its achievement is earned.

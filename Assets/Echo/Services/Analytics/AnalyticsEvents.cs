@@ -21,6 +21,9 @@ namespace Echo.Services.Analytics
         public const string ClipExported = "clip_exported";           // marketing content plan
         public const string ClipShared = "clip_shared";               // the share sheet opened with a clip
         public const string ClipSaved = "clip_saved";                 // a user revision: a clip kept in the gallery
+        public const string SeasonActive = "season_active";           // seasons doc (version 2.1)
+        public const string SeasonalAchievement = "seasonal_achievement";
+        public const string SeasonalSkinEquipped = "seasonal_skin_equipped";
         public const string IapPurchase = "iap_purchase";
         public const string UnlockAdWatched = "unlock_ad_watched";   // addition: ad-unlocked characters
         // Value-adds doc.

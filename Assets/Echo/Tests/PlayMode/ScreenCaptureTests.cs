@@ -309,7 +309,7 @@ namespace Echo.Tests.PlayMode
             yield return new WaitForSecondsRealtime(0.3f);
         }
 
-        static IEnumerator Capture(string name)
+        internal static IEnumerator Capture(string name)
         {
             yield return null;
             var cam = Camera.main;
