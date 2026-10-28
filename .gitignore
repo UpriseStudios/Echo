@@ -50,3 +50,6 @@ crashlytics-build.properties
 # Server build output
 /Server/**/bin/
 /Server/**/obj/
+
+# Marketing clips rendered by Marketing/render-clips.ps1 (regenerate rather than commit)
+/Marketing/Clips/

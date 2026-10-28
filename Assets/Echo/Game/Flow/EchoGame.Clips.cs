@@ -76,6 +76,9 @@ namespace Echo.Game.Flow
             _clipEditor.CancelClicked += CancelRecording;
         }
 
+        /// <summary>Opens the clip editor on a cupboard reel, as its Clip button does (the marketing clip generator).</summary>
+        public void OpenClipEditorFor(int reelIndex) => OpenClipEditor(reelIndex);
+
         void OpenClipEditor(int index)
         {
             if (_clipEditor == null || !SetUpReplay(index)) return;

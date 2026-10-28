@@ -10,7 +10,12 @@ namespace Echo.Game.Cosmetics
     public static class CosmeticUnlocks
     {
         public static bool IsOwned(CosmeticItem item, int best, IList<string> owned) =>
+#if ECHO_RECORDING
+            // The recording APK (a user revision): every pack and skin is wearable for footage; nothing is saved as owned.
+            true;
+#else
             owned.Contains(item.Id) || (item.EarnedByScore && item.UnlockScore <= best);
+#endif
 
         /// <summary>Adds every item whose milestone <paramref name="best"/> has reached to <paramref name="owned"/>; returns the new ones.</summary>
         public static List<CosmeticItem> Earn(CosmeticCatalog catalog, int best, IList<string> owned)

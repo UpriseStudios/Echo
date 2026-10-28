@@ -1,0 +1,92 @@
+[
+  {
+    "id": "mechanic-10-ghosts",
+    "seed": 101,
+    "ghosts": 10,
+    "ghostSkins": ["char_hooded"],
+    "skin": "char_hooded",
+    "surviveSeconds": 22,
+    "seconds": 15,
+    "hook": "Every time I die, I make it harder.",
+    "endCard": true
+  },
+  {
+    "id": "full-graveyard",
+    "seed": 202,
+    "ghosts": 30,
+    "ghostSkins": ["char_hooded", "char_knight", "char_skeleton", "char_wizard"],
+    "skin": "char_hooded",
+    "surviveSeconds": 25,
+    "seconds": 18,
+    "hook": "My 30 deaths are trying to kill me",
+    "endCard": true
+  },
+  {
+    "id": "nemesis-9-kills",
+    "seed": 303,
+    "ghosts": 8,
+    "ghostSkins": ["char_knight"],
+    "skin": "char_knight",
+    "nemesisKills": 9,
+    "ending": "nemesis",
+    "seconds": 12,
+    "hook": "This ghost has killed me 9 times",
+    "endCard": true
+  },
+  {
+    "id": "thirty-ghosts-survivable",
+    "seed": 404,
+    "ghosts": 30,
+    "ghostSkins": ["char_robot", "char_cat", "char_ninja"],
+    "skin": "char_ninja",
+    "surviveSeconds": 35,
+    "seconds": 20,
+    "hook": "I thought 30 ghosts was survivable",
+    "endCard": true
+  },
+  {
+    "id": "skins-crowd",
+    "seed": 505,
+    "ghosts": 12,
+    "ghostSkins": ["char_ninja", "char_cat", "char_robot"],
+    "skin": "char_robot",
+    "surviveSeconds": 20,
+    "seconds": 15,
+    "hook": "My ghosts wear whatever I was wearing",
+    "endCard": true
+  },
+  {
+    "id": "bounty-skim",
+    "seed": 606,
+    "ghosts": 6,
+    "ghostSkins": ["char_wizard", "char_princess"],
+    "skin": "char_wizard",
+    "ending": "bounty",
+    "surviveSeconds": 25,
+    "seconds": 12,
+    "hook": "Skimming this ghost is worth 50 points",
+    "endCard": true
+  },
+  {
+    "id": "challenge-distance",
+    "seed": 707,
+    "ghosts": 10,
+    "ghostSkins": ["char_hooded", "char_astronaut"],
+    "skin": "char_astronaut",
+    "surviveSeconds": 45,
+    "seconds": 15,
+    "hook": "Can anyone beat this ghost? {distance} m",
+    "endCard": true
+  },
+  {
+    "id": "frog-rain",
+    "seed": 808,
+    "ghosts": 8,
+    "ghostSkins": ["char_frog"],
+    "skin": "char_frog",
+    "surviveSeconds": 20,
+    "seconds": 12,
+    "hook": "Some skins secretly change the world",
+    "endCard": true
+  }
+]

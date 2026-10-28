@@ -11,8 +11,10 @@ namespace Echo.Game.Clips
     public sealed class EditorVideoClipWriter : IVideoClipWriter
     {
         MediaEncoder _encoder;
-        Texture2D _texture;
+        NativeArray<byte> _frame;
         byte[] _scaled;
+        readonly System.Diagnostics.Stopwatch _scaleTime = new System.Diagnostics.Stopwatch(), _encodeTime = new System.Diagnostics.Stopwatch();
+        int _frames;
         int _width, _height, _scale, _channels;
 
         public int Scale => _scale;
@@ -46,30 +48,40 @@ namespace Echo.Game.Clips
             };
             _encoder = sampleRate > 0 && channels > 0 ? new MediaEncoder(path, video, audio) : new MediaEncoder(path, video);
             _hasAudio = sampleRate > 0 && channels > 0;
-            _texture = new Texture2D(w, h, TextureFormat.RGBA32, false);
             _scaled = new byte[w * h * 4];
+            _frame = new NativeArray<byte>(w * h * 4, Allocator.Persistent);
             return true;
         }
 
         public void AddFrame(byte[] rgba)
         {
-            int w = _width * _scale, h = _height * _scale;
-            for (int y = 0; y < h; y++)
+            _scaleTime.Start();
+            int w = _width * _scale, rowBytes = w * 4;
+            // Each source row is widened once, then copied for the other rows it covers. The encoder's first row is
+            // the bottom one, like a texture's.
+            for (int sy = 0; sy < _height; sy++)
             {
-                int src = (_height - 1 - y / _scale) * _width;   // the texture's first row is the bottom
-                int dst = y * w;
-                for (int x = 0; x < w; x++)
+                int src = sy * _width * 4;
+                int first = (_height - 1 - sy) * _scale * rowBytes;
+                for (int x = 0, d = first; x < _width; x++)
                 {
-                    int s = (src + x / _scale) * 4, d = (dst + x) * 4;
-                    _scaled[d] = rgba[s];
-                    _scaled[d + 1] = rgba[s + 1];
-                    _scaled[d + 2] = rgba[s + 2];
-                    _scaled[d + 3] = 255;
+                    int s = src + x * 4;
+                    for (int k = 0; k < _scale; k++, d += 4)
+                    {
+                        _scaled[d] = rgba[s];
+                        _scaled[d + 1] = rgba[s + 1];
+                        _scaled[d + 2] = rgba[s + 2];
+                        _scaled[d + 3] = 255;
+                    }
                 }
+                for (int k = 1; k < _scale; k++) System.Buffer.BlockCopy(_scaled, first, _scaled, first + k * rowBytes, rowBytes);
             }
-            _texture.SetPixelData(_scaled, 0);
-            _texture.Apply(false);
-            _encoder.AddFrame(_texture);
+            NativeArray<byte>.Copy(_scaled, _frame);
+            _scaleTime.Stop();
+            _encodeTime.Start();
+            _encoder.AddFrame(w, _height * _scale, rowBytes, TextureFormat.RGBA32, _frame);
+            _encodeTime.Stop();
+            _frames++;
         }
 
         public void AddAudio(float[] interleaved, int frames)
@@ -83,7 +95,8 @@ namespace Echo.Game.Clips
         public Task<bool> FinishAsync()
         {
             _encoder.Dispose();
-            Object.Destroy(_texture);
+            if (_frame.IsCreated) _frame.Dispose();
+            Debug.Log($"[Clips] editor video: {_frames} frames, widening {_scaleTime.ElapsedMilliseconds / System.Math.Max(1, _frames)} ms and encoding {_encodeTime.ElapsedMilliseconds / System.Math.Max(1, _frames)} ms a frame");
             return Task.FromResult(File.Exists(_path));
         }
     }
