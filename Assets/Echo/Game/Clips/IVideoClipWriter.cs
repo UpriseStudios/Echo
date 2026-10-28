@@ -13,6 +13,13 @@ namespace Echo.Game.Clips
         /// <param name="sampleRate">Game audio rate; 0 for no sound track.</param>
         bool Begin(string path, int width, int height, int scale, int fps, int sampleRate, int channels);
 
+        /// <summary>
+        /// The scale and frame rate in use after Begin: a phone whose encoder can't do what was asked steps down
+        /// (x3, then 30 fps), and frames must then be sent at this rate.
+        /// </summary>
+        int Scale { get; }
+        int Fps { get; }
+
         /// <param name="rgba">One frame, RGBA, top row first.</param>
         void AddFrame(byte[] rgba);
 

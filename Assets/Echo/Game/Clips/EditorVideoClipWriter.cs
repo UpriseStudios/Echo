@@ -14,6 +14,9 @@ namespace Echo.Game.Clips
         Texture2D _texture;
         byte[] _scaled;
         int _width, _height, _scale, _channels;
+
+        public int Scale => _scale;
+        public int Fps { get; private set; }
         string _path;
         bool _hasAudio;
 
@@ -23,6 +26,7 @@ namespace Echo.Game.Clips
             _width = width;
             _height = height;
             _scale = scale;
+            Fps = fps;
             _channels = channels;
             int w = width * scale, h = height * scale;
             if (File.Exists(path)) File.Delete(path);

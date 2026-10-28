@@ -7,6 +7,10 @@ namespace Echo.Game.Clips
         public const int TicksPerFrame = 2;
         public const int Scale = 3;   // 288 x 512 world pixels make an 864 x 1536 video, 9:16
 
+        // The Vertical preset (a user choice): x4 keeps every pixel square at 1152 x 2048, at the sim's own 60 fps.
+        public const int VerticalScale = 4;
+        public const int VerticalFps = 60;
+
         public static bool Supported =>
 #if UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
             true;

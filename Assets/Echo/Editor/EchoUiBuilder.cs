@@ -438,14 +438,46 @@ namespace Echo.Editor
             end.alignment = TextAlignmentOptions.MidlineRight;
             end.color = Soft;
 
-            var gif = MakeButton(root, "Gif", "GIF", new Vector2(-235, -440), new Vector2(440, 108), ButtonStyle.Secondary);
-            var video = MakeButton(root, "Video", "Video", new Vector2(235, -440), new Vector2(440, 108), ButtonStyle.Secondary);
+            var gif = MakeButton(root, "Gif", "GIF", new Vector2(-310, -440), new Vector2(290, 108), ButtonStyle.Secondary);
+            var video = MakeButton(root, "Video", "Video", new Vector2(0, -440), new Vector2(290, 108), ButtonStyle.Secondary);
+            // Marketing content plan: the Vertical preset (1152 x 2048, 60 fps, 9-20 s) with a hook line and an end card.
+            var vertical = MakeButton(root, "Vertical", "Vertical", new Vector2(310, -440), new Vector2(290, 108), ButtonStyle.Secondary);
             var play = MakeButton(root, "Play", "Preview", new Vector2(-235, -575), new Vector2(440, 116), ButtonStyle.Secondary);
             var make = MakeButton(root, "Make", "Make GIF", new Vector2(235, -575), new Vector2(440, 116), ButtonStyle.Primary);
             var cancel = MakeButton(root, "Cancel", "Cancel", new Vector2(0, -575), new Vector2(500, 116), ButtonStyle.Secondary);
             cancel.gameObject.SetActive(false);
-            var back = MakeButton(root, "Back", "Back", new Vector2(0, -710), new Vector2(500, 112), ButtonStyle.Secondary);
-            var status = MakeText(root, "Status", "", 36, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -820), new Vector2(1000, 64));
+            RectTransform options = NewRect("VerticalOptions", root);
+            options.anchorMin = options.anchorMax = new Vector2(0.5f, 0.5f);
+            options.anchoredPosition = new Vector2(0, -690);
+            options.sizeDelta = new Vector2(940, 100);
+            GameObject hookGo = TMP_DefaultControls.CreateInputField(new TMP_DefaultControls.Resources());
+            hookGo.name = "Hook";
+            var hookRt = (RectTransform)hookGo.transform;
+            hookRt.SetParent(options, false);
+            hookRt.anchorMin = hookRt.anchorMax = new Vector2(0.5f, 0.5f);
+            hookRt.anchoredPosition = new Vector2(-150, 0);
+            hookRt.sizeDelta = new Vector2(620, 96);
+            var hookBg = hookGo.GetComponent<Image>();
+            hookBg.sprite = Frame;
+            hookBg.type = Image.Type.Sliced;
+            hookBg.pixelsPerUnitMultiplier = FramePixelScale;
+            hookBg.color = SecondaryButton;
+            var hook = hookGo.GetComponent<TMP_InputField>();
+            hook.characterLimit = 60;
+            hook.lineType = TMP_InputField.LineType.SingleLine;
+            foreach (TMP_Text t in hookGo.GetComponentsInChildren<TMP_Text>(true))
+            {
+                t.font = _black;
+                t.fontSize = 26;
+                t.alignment = TextAlignmentOptions.Center;
+                t.color = t == hook.placeholder ? new Color(1f, 1f, 1f, 0.35f) : Color.white;
+            }
+            ((TMP_Text)hook.placeholder).text = "HOOK (UP TO 8 WORDS)";
+            var endCard = MakeButton(options, "EndCard", "End card: on", new Vector2(330, 0), new Vector2(270, 96), ButtonStyle.Secondary);
+            options.gameObject.SetActive(false);
+
+            var back = MakeButton(root, "Back", "Back", new Vector2(0, -800), new Vector2(500, 100), ButtonStyle.Secondary);
+            var status = MakeText(root, "Status", "", 34, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -890), new Vector2(1000, 56));
             status.color = Soft;
 
             Wire(trim, "_track", track);
@@ -463,6 +495,10 @@ namespace Echo.Editor
             Wire(view, "_recording", rec.gameObject);
             Wire(view, "_gif", gif);
             Wire(view, "_video", video);
+            Wire(view, "_vertical", vertical);
+            Wire(view, "_verticalOptions", options.gameObject);
+            Wire(view, "_hook", hook);
+            Wire(view, "_endCard", endCard);
             Wire(view, "_play", play);
             Wire(view, "_make", make);
             Wire(view, "_back", back);
@@ -847,7 +883,14 @@ namespace Echo.Editor
             var heading = root.Find("Heading").gameObject;
             heading.GetComponent<TMP_Text>().raycastTarget = true;
             Wire(view, "_heading", heading.AddComponent<Button>());
-            var status = MakeText(root, "ServicesStatus", "", 24, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -670), new Vector2(980, 150));
+            // Marketing content plan: recording mode for screen recordings (development builds, or five taps on the heading).
+            var recording = MakeButton(root, "Recording", "Recording: off", new Vector2(-135, -635), new Vector2(250, 90), ButtonStyle.Secondary);
+            var recordingHud = MakeButton(root, "RecordingHud", "HUD: shown", new Vector2(135, -635), new Vector2(250, 90), ButtonStyle.Secondary);
+            Wire(view, "_recording", recording);
+            Wire(view, "_recordingHud", recordingHud);
+            recording.gameObject.SetActive(false);
+            recordingHud.gameObject.SetActive(false);
+            var status = MakeText(root, "ServicesStatus", "", 22, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -730), new Vector2(980, 70));
             status.alignment = TextAlignmentOptions.TopLeft;
             status.color = Soft;
             status.gameObject.SetActive(false);

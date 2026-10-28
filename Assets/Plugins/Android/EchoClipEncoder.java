@@ -49,8 +49,33 @@ public final class EchoClipEncoder {
         }
     }
 
+    /** The scale and frame rate actually used: begin() steps down when the phone's encoder can't do what was asked. */
+    public int getScale() { return scale; }
+    public int getFps() { return fps; }
+
+    // The first of: what was asked, x3 at that rate, what was asked at 30 fps, x3 at 30 fps, that this phone's H.264
+    // encoder says it can do (a 1080p-only encoder can't take the vertical preset's 1152 x 2048).
+    private static int[] chooseMode(int width, int height, int scale, int fps) {
+        int[][] tries = { { scale, fps }, { Math.min(scale, 3), fps }, { scale, Math.min(fps, 30) }, { Math.min(scale, 3), Math.min(fps, 30) } };
+        MediaCodecInfo.VideoCapabilities caps = null;
+        try {
+            MediaCodec probe = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC);
+            caps = probe.getCodecInfo().getCapabilitiesForType(MediaFormat.MIMETYPE_VIDEO_AVC).getVideoCapabilities();
+            probe.release();
+        } catch (Exception e) {
+            Log.w(TAG, "couldn't read the encoder's capabilities", e);
+        }
+        if (caps != null)
+            for (int[] t : tries)
+                if (caps.areSizeAndRateSupported(width * t[0], height * t[0], t[1])) return t;
+        return tries[tries.length - 1];
+    }
+
     public boolean begin(String path, int width, int height, int scale, int fps, int sampleRate, int channels) {
         try {
+            int[] mode = chooseMode(width, height, scale, fps);
+            scale = mode[0];
+            fps = mode[1];
             this.width = width;
             this.height = height;
             this.scale = scale;
@@ -67,7 +92,9 @@ public final class EchoClipEncoder {
 
             MediaFormat vf = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, outW, outH);
             vf.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible);
-            vf.setInteger(MediaFormat.KEY_BIT_RATE, 8_000_000);
+            // 8 Mbps for the 864 x 1536 30 fps video, more for bigger and smoother (14 Mbps at 1152 x 2048 60 fps).
+            long bits = (long) outW * outH * fps / 10;
+            vf.setInteger(MediaFormat.KEY_BIT_RATE, (int) Math.max(8_000_000L, Math.min(20_000_000L, bits)));
             vf.setInteger(MediaFormat.KEY_FRAME_RATE, fps);
             vf.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1);
             if (Build.VERSION.SDK_INT >= 24) {

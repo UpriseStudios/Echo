@@ -234,6 +234,7 @@ namespace Echo.Game.Flow
             _deathScreen.ChallengeClicked += OnSendRunAsChallenge;
             WireReels();
             WireHowToPlay();
+            WireRecording();
             _stats.ChallengeClicked += SendBestChallenge;
             _stats.PasteClicked += OnPasteChallenge;
             _settings.NameClicked += () => AskName(null);
@@ -592,7 +593,7 @@ namespace Echo.Game.Flow
             _driver.Reset();
             _title.Hide();
             HideDeathScreen();
-            _hud.SetVisible(true);
+            _hud.SetVisible(!HudHiddenForRecording);
             _hud.SetCountdown(0);
             _hud.SetTapHint(!_save.Tutorial.SeenTapHint);
             SetState(GameState.Running);
@@ -970,7 +971,8 @@ namespace Echo.Game.Flow
         {
             _title.Show(_progress.Best);
             _title.SetExitVisible(CanQuit);
-            _title.SetDevServer(_serviceConfig != null && _serviceConfig.ShowsDevServerTag);
+            _title.SetDevServer(!_recordingMode && _serviceConfig != null && _serviceConfig.ShowsDevServerTag);
+            _title.SetAdButtons(!_recordingMode);
             RefreshDailyButton();
             if (_pendingChallenge != null) PresentPendingChallenge();
             ProcessPendingLink();
@@ -1474,10 +1476,16 @@ namespace Echo.Game.Flow
             _settings.Show(_save.Settings, Debug.isDebugBuild && _services.UsingMockAds, Debug.isDebugBuild);
             // Development builds only: what the ad and store SDKs are doing, readable on the phone itself.
             _settings.SetStatus(Debug.isDebugBuild ? _services.StatusReport : null);
+            ApplyRecordingMode();
         }
 
         // Release builds: five taps on the Settings heading show the services status, for testing store builds.
-        void OnSettingsStatusRequested() => _settings.SetStatus(_services.StatusReport);
+        void OnSettingsStatusRequested()
+        {
+            _settings.SetStatus(_services.StatusReport);
+            _recordingOffered = true;   // release builds: the same five taps offer recording mode
+            ApplyRecordingMode();
+        }
 
         void Buy(string productId)
         {

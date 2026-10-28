@@ -18,8 +18,15 @@ namespace Echo.Game.Clips
 
         bool _begun;
 
-        public bool Begin(string path, int width, int height, int scale, int fps, int sampleRate, int channels) =>
-            _begun = EchoClip_Begin(path, width, height, scale, fps, sampleRate, channels);
+        public bool Begin(string path, int width, int height, int scale, int fps, int sampleRate, int channels)
+        {
+            Scale = scale;
+            Fps = fps;
+            return _begun = EchoClip_Begin(path, width, height, scale, fps, sampleRate, channels);
+        }
+
+        public int Scale { get; private set; }
+        public int Fps { get; private set; }
 
         public void AddFrame(byte[] rgba)
         {

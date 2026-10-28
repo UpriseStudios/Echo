@@ -112,8 +112,24 @@ namespace Echo.Game.UI
             SetBanner(null);
         }
 
+        // Recording mode: no ad buttons on screen, whatever is on offer.
+        bool _adsHidden;
+
+        public void SetAdsHidden(bool hidden)
+        {
+            _adsHidden = hidden;
+            if (hidden)
+            {
+                _continue.gameObject.SetActive(false);
+                _banish.gameObject.SetActive(false);
+            }
+            if (_powerUps != null) _powerUps.gameObject.SetActive(!hidden);
+        }
+
         public void SetOffers(bool canContinue, bool canBanish, bool banishTen = false)
         {
+            canContinue &= !_adsHidden;
+            canBanish &= !_adsHidden;
             _continue.gameObject.SetActive(canContinue);
             _banish.gameObject.SetActive(canBanish);
             // Balance addendum: Banish 10 takes the single Banish's place while it is available.

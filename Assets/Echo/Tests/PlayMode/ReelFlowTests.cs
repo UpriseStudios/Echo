@@ -181,6 +181,19 @@ namespace Echo.Tests.PlayMode
             Assert.AreEqual("video/mp4", share.LastMime);
             Debug.Log($"[ReelFlowTests] video {mp4.Length / 1024} KB");
 
+            // Marketing content plan: the Vertical preset, x4 (1152 x 2048) at 60 fps, with a hook line and the end card.
+            Click("ClipEditor/Vertical");
+            Assert.IsTrue(Showing("ClipEditor/VerticalOptions"), "the hook and end card show for Vertical only");
+            Find("ClipEditor/VerticalOptions/Hook").GetComponent<TMPro.TMP_InputField>().text = "every death makes it harder";
+            yield return MakeClip(game, "Make");
+            StringAssert.EndsWith("echo_clip_vertical.mp4", game.LastClipPath);
+            Assert.AreEqual(VideoClipWriters.VerticalScale, game.LastClipScale, "the editor's encoder takes the full size");
+            byte[] vertical = File.ReadAllBytes(game.LastClipPath);
+            Assert.AreEqual("ftyp", System.Text.Encoding.ASCII.GetString(vertical, 4, 4), "an MP4 file");
+            Debug.Log($"[ReelFlowTests] vertical {vertical.Length / 1024} KB for {game.ClipRange.Seconds:0.0} s plus the 1 s end card");
+            Click("ClipEditor/Gif");
+            Assert.IsFalse(Showing("ClipEditor/VerticalOptions"));
+
             Click("ClipEditor/Back");
             Assert.IsFalse(Showing("ClipEditor"));
 

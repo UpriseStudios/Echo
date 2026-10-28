@@ -17,6 +17,11 @@ namespace Echo.Game.Clips
         public const int GifDefaultTicks = 5 * TicksPerSecond;
         public const int VideoDefaultTicks = 15 * TicksPerSecond;
 
+        // Marketing content plan: short-form clips are 9 to 20 s.
+        public const int VerticalMinTicks = 9 * TicksPerSecond;
+        public const int VerticalMaxTicks = 20 * TicksPerSecond;
+        public const int VerticalDefaultTicks = 15 * TicksPerSecond;
+
         public readonly int Start;
         public readonly int End;
 
@@ -32,13 +37,16 @@ namespace Echo.Game.Clips
         /// <summary>The whole timeline of a run that ended at <paramref name="deathTick"/>.</summary>
         public static int Length(int deathTick) => Math.Max(0, deathTick) + TailTicks;
 
-        public static int MaxTicks(ClipFormat format) => format == ClipFormat.Gif ? GifMaxTicks : VideoMaxTicks;
+        public static int MaxTicks(ClipFormat format) =>
+            format == ClipFormat.Gif ? GifMaxTicks : format == ClipFormat.Vertical ? VerticalMaxTicks : VideoMaxTicks;
+
+        public static int MinTicksFor(ClipFormat format) => format == ClipFormat.Vertical ? VerticalMinTicks : MinTicks;
 
         /// <summary>The final moments, ending just after the death: what a highlight usually is.</summary>
         public static ClipRange Default(ClipFormat format, int deathTick)
         {
             int length = Length(deathTick);
-            int ticks = format == ClipFormat.Gif ? GifDefaultTicks : VideoDefaultTicks;
+            int ticks = format == ClipFormat.Gif ? GifDefaultTicks : format == ClipFormat.Vertical ? VerticalDefaultTicks : VideoDefaultTicks;
             return new ClipRange(Math.Max(0, length - ticks), length);
         }
 
@@ -49,7 +57,7 @@ namespace Echo.Game.Clips
         public static ClipRange Clamp(int start, int end, ClipFormat format, int deathTick, bool movingEnd)
         {
             int length = Length(deathTick);
-            int min = Math.Min(MinTicks, length), max = MaxTicks(format);
+            int min = Math.Min(MinTicksFor(format), length), max = MaxTicks(format);
             start = Math.Max(0, Math.Min(start, length));
             end = Math.Max(0, Math.Min(end, length));
             if (movingEnd)

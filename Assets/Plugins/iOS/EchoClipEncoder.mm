@@ -39,7 +39,7 @@ extern "C" bool EchoClip_Begin(const char *path, int width, int height, int scal
         AVVideoCodecKey: AVVideoCodecTypeH264,
         AVVideoWidthKey: @(outW),
         AVVideoHeightKey: @(outH),
-        AVVideoCompressionPropertiesKey: @{ AVVideoAverageBitRateKey: @(8000000), AVVideoMaxKeyFrameIntervalKey: @(fps) },
+        AVVideoCompressionPropertiesKey: @{ AVVideoAverageBitRateKey: @(MAX(8000000L, MIN(20000000L, (long)outW * outH * fps / 10))), AVVideoMaxKeyFrameIntervalKey: @(fps) },
     };
     gVideo = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
     gVideo.expectsMediaDataInRealTime = YES;

@@ -16,13 +16,22 @@ namespace Echo.Game.Clips
         sbyte[] _frame = new sbyte[0];
         int _channels;
 
+        public int Scale { get; private set; }
+        public int Fps { get; private set; }
+
         public bool Begin(string path, int width, int height, int scale, int fps, int sampleRate, int channels)
         {
             _channels = channels;
             try
             {
                 _encoder = new AndroidJavaObject("com.uprise.echo.EchoClipEncoder");
-                return _encoder.Call<bool>("begin", path, width, height, scale, fps, sampleRate, channels);
+                bool begun = _encoder.Call<bool>("begin", path, width, height, scale, fps, sampleRate, channels);
+                if (begun)
+                {
+                    Scale = _encoder.Call<int>("getScale");
+                    Fps = _encoder.Call<int>("getFps");
+                }
+                return begun;
             }
             catch (System.Exception e)
             {

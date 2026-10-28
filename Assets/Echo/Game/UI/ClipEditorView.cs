@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Echo.Game.Clips;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +23,12 @@ namespace Echo.Game.UI
         [SerializeField] GameObject _recording;
         [SerializeField] Button _gif;
         [SerializeField] Button _video;
+        [SerializeField] Button _vertical;
+
+        // The Vertical preset's options (marketing content plan): a hook line and a 1-second end card.
+        [SerializeField] GameObject _verticalOptions;
+        [SerializeField] TMP_InputField _hook;
+        [SerializeField] Button _endCard;
         [SerializeField] Button _play;
         [SerializeField] Button _make;
         [SerializeField] Button _back;
@@ -33,6 +40,11 @@ namespace Echo.Game.UI
         public event Action HandleReleased;
         public event Action GifClicked;
         public event Action VideoClicked;
+        public event Action VerticalClicked;
+        public event Action EndCardClicked;
+
+        /// <summary>The hook typed for a Vertical clip ("" for none).</summary>
+        public string Hook => _hook != null ? _hook.text : "";
         public event Action PlayClicked;
         public event Action MakeClicked;
         public event Action BackClicked;
@@ -47,6 +59,8 @@ namespace Echo.Game.UI
             _trim.HandleReleased += () => HandleReleased?.Invoke();
             _gif.onClick.AddListener(() => GifClicked?.Invoke());
             _video.onClick.AddListener(() => VideoClicked?.Invoke());
+            if (_vertical != null) _vertical.onClick.AddListener(() => VerticalClicked?.Invoke());
+            if (_endCard != null) _endCard.onClick.AddListener(() => EndCardClicked?.Invoke());
             _play.onClick.AddListener(() => PlayClicked?.Invoke());
             _make.onClick.AddListener(() => MakeClicked?.Invoke());
             _back.onClick.AddListener(() => BackClicked?.Invoke());
@@ -75,12 +89,23 @@ namespace Echo.Game.UI
 
         public void SetPlayhead(int tick, int length, bool visible) => _trim.SetPlayhead(tick / (float)Mathf.Max(1, length), visible);
 
-        public void SetFormat(bool video)
+        public void SetFormat(ClipFormat format)
         {
-            Tint(_gif, !video);
-            Tint(_video, video);
-            _make.GetComponentInChildren<TMP_Text>().text = video ? "Make video" : "Make GIF";
+            Tint(_gif, format == ClipFormat.Gif);
+            Tint(_video, format == ClipFormat.Video);
+            if (_vertical != null) Tint(_vertical, format == ClipFormat.Vertical);
+            _format = format;
+            if (_verticalOptions != null) _verticalOptions.SetActive(format == ClipFormat.Vertical && !_busy);
+            _make.GetComponentInChildren<TMP_Text>().text = format == ClipFormat.Gif ? "Make GIF" : "Make video";
         }
+
+        public void SetEndCard(bool on)
+        {
+            if (_endCard != null) _endCard.GetComponentInChildren<TMP_Text>().text = on ? "End card: on" : "End card: off";
+        }
+
+        ClipFormat _format;
+        bool _busy;
 
         public void SetPlaying(bool playing) => _play.GetComponentInChildren<TMP_Text>().text = playing ? "Stop" : "Preview";
 
@@ -89,9 +114,12 @@ namespace Echo.Game.UI
         /// <summary>Recording or saving: only the progress and Cancel (while recording) show.</summary>
         public void SetBusy(bool busy, bool recording)
         {
+            _busy = busy;
             _recording.SetActive(recording);
             foreach (Button b in new[] { _gif, _play, _make, _back }) b.gameObject.SetActive(!busy);
             _video.gameObject.SetActive(!busy && _videoAllowed);
+            if (_vertical != null) _vertical.gameObject.SetActive(!busy && _videoAllowed);
+            if (_verticalOptions != null) _verticalOptions.SetActive(!busy && _format == ClipFormat.Vertical);
             _cancel.gameObject.SetActive(recording);
             _trim.enabled = !busy;
         }

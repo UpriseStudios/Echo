@@ -18,6 +18,8 @@ namespace Echo.Services.Analytics
         public const string DailySubmitFailed = "daily_submit_failed";
         public const string DailyBanishUsed = "daily_banish_used";
         public const string DailyRunWatched = "daily_run_watched";
+        public const string ClipExported = "clip_exported";           // marketing content plan
+        public const string ClipShared = "clip_shared";               // the share sheet opened with a clip
         public const string IapPurchase = "iap_purchase";
         public const string UnlockAdWatched = "unlock_ad_watched";   // addition: ad-unlocked characters
         // Value-adds doc.

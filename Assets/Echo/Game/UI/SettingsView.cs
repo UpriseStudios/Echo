@@ -20,6 +20,8 @@ namespace Echo.Game.UI
         [SerializeField] Button _privacy;
         [SerializeField] Button _deleteOnline;
         [SerializeField] Button _howToPlay;
+        [SerializeField] Button _recording;
+        [SerializeField] Button _recordingHud;
         [SerializeField] Button _devAdFailure;
         // Version 2.0, development builds: replay the newest reel on the server and compare.
         [SerializeField] Button _serverCheck;
@@ -44,6 +46,8 @@ namespace Echo.Game.UI
         public event Action PrivacyClicked;
         public event Action DeleteOnlineClicked;
         public event Action HowToPlayClicked;
+        public event Action RecordingClicked;
+        public event Action RecordingHudClicked;
         public event Func<bool> DevAdFailureToggled;
         public event Action Closed;
         public event Action NameClicked;
@@ -58,6 +62,8 @@ namespace Echo.Game.UI
             _privacy.onClick.AddListener(() => PrivacyClicked?.Invoke());
             if (_deleteOnline != null) _deleteOnline.onClick.AddListener(() => DeleteOnlineClicked?.Invoke());
             if (_howToPlay != null) _howToPlay.onClick.AddListener(() => HowToPlayClicked?.Invoke());
+            if (_recording != null) _recording.onClick.AddListener(() => RecordingClicked?.Invoke());
+            if (_recordingHud != null) _recordingHud.onClick.AddListener(() => RecordingHudClicked?.Invoke());
             _devAdFailure.onClick.AddListener(() =>
             {
                 bool failing = DevAdFailureToggled?.Invoke() ?? false;
@@ -72,6 +78,16 @@ namespace Echo.Game.UI
             });
             if (_name != null) _name.onClick.AddListener(() => NameClicked?.Invoke());
             if (_heading != null) _heading.onClick.AddListener(OnHeadingTapped);
+        }
+
+        /// <summary>Recording mode's two buttons (development builds, or after five taps on the heading).</summary>
+        public void SetRecording(bool visible, bool on, bool hideHud)
+        {
+            if (_recording == null || _recordingHud == null) return;
+            _recording.gameObject.SetActive(visible);
+            _recordingHud.gameObject.SetActive(visible && on);
+            _recording.GetComponentInChildren<TMP_Text>().text = on ? "Recording: on" : "Recording: off";
+            _recordingHud.GetComponentInChildren<TMP_Text>().text = hideHud ? "HUD: hidden" : "HUD: shown";
         }
 
         public void Show(SettingsSaveData settings, bool showDevToggle, bool showServerCheck = false)

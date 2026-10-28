@@ -6,6 +6,7 @@ using Echo.Core.Reels;
 using Echo.Game.Clips;
 using Echo.Game.UI;
 using Echo.Services;
+using Echo.Services.Analytics;
 using UnityEngine;
 
 namespace Echo.Game.Flow
@@ -32,6 +33,10 @@ namespace Echo.Game.Flow
         GifClipWriter _gif;
         IVideoClipWriter _video;
         int _clipNextTick, _clipFrames;
+        int _clipFps = VideoClipWriters.Fps;       // what the video writer settled on (a phone may step down)
+        int _clipStep = VideoClipWriters.TicksPerFrame;
+        bool _clipEndCard = true;
+        string _clipHook = "";
         long _clipAudioFrames;
         float[] _audioScratch;
         bool _seekPending;
@@ -59,6 +64,12 @@ namespace Echo.Game.Flow
             _clipEditor.HandleReleased += () => { if (_seekPending) SeekNow(); };
             _clipEditor.GifClicked += () => SetClipFormat(ClipFormat.Gif);
             _clipEditor.VideoClicked += () => SetClipFormat(ClipFormat.Video);
+            _clipEditor.VerticalClicked += () => SetClipFormat(ClipFormat.Vertical);
+            _clipEditor.EndCardClicked += () =>
+            {
+                _clipEndCard = !_clipEndCard;
+                _clipEditor.SetEndCard(_clipEndCard);
+            };
             _clipEditor.PlayClicked += ToggleClipPreview;
             _clipEditor.MakeClicked += MakeClip;
             _clipEditor.BackClicked += EndReplay;
@@ -76,6 +87,7 @@ namespace Echo.Game.Flow
             _worldCamera.enabled = false;   // drawn by hand after each frame's views, so it can be read back in step
             _clipStage = ClipStage.Editing;
             _clipEditor.Show(_capture.Target, VideoClipWriters.Supported);
+            _clipEditor.SetEndCard(_clipEndCard);
             SetClipFormat(ClipFormat.Gif);
             ClipRange range = ClipRange.Default(_clipFormat, _reelPlayer.Reel.Run.DeathTick);
             SetClipRange(range.Start, range.End);
@@ -103,16 +115,18 @@ namespace Echo.Game.Flow
             ClipRange r = ClipRange.Clamp(start, end, _clipFormat, _reelPlayer.Reel.Run.DeathTick, movingEnd);
             _clipStart = r.Start;
             _clipEnd = r.End;
-            string kind = _clipFormat == ClipFormat.Gif ? $"GIF · up to {ClipRange.GifMaxTicks / ClipRange.TicksPerSecond} s" : $"Video · up to {ClipRange.VideoMaxTicks / ClipRange.TicksPerSecond} s";
+            string kind = _clipFormat == ClipFormat.Gif ? $"GIF · up to {ClipRange.GifMaxTicks / ClipRange.TicksPerSecond} s"
+                : _clipFormat == ClipFormat.Vertical ? $"Vertical · {ClipRange.VerticalMinTicks / ClipRange.TicksPerSecond}-{ClipRange.VerticalMaxTicks / ClipRange.TicksPerSecond} s"
+                : $"Video · up to {ClipRange.VideoMaxTicks / ClipRange.TicksPerSecond} s";
             _clipEditor.SetRange(r.Start, r.End, ClipLength, ClipRange.Time(r.Start), ClipRange.Time(r.End), $"{r.Seconds:0.0} s  ·  {kind}");
         }
 
-        /// <summary>GIF or video; the stretch is trimmed to the format's limit from its end. Also a test hook.</summary>
+        /// <summary>GIF, video or Vertical; the stretch is trimmed to the format's limits from its end. Also a test hook.</summary>
         public void SetClipFormat(ClipFormat format)
         {
-            if (format == ClipFormat.Video && !VideoClipWriters.Supported) return;
+            if (format != ClipFormat.Gif && !VideoClipWriters.Supported) return;
             _clipFormat = format;
-            _clipEditor.SetFormat(format == ClipFormat.Video);
+            _clipEditor.SetFormat(format);
             if (_reelPlayer != null && _clipEnd > 0) SetClipRange(_clipStart, _clipEnd);
         }
 
@@ -189,17 +203,25 @@ namespace Echo.Game.Flow
             if (_clipStage != ClipStage.Editing && _clipStage != ClipStage.Previewing) return;
             if (_clipStage == ClipStage.Previewing) StopClipPreview(seek: false);
             SeekReplay(_clipStart);
-            string path = Path.Combine(Application.temporaryCachePath, _clipFormat == ClipFormat.Gif ? "echo_clip.gif" : "echo_clip.mp4");
-            if (_clipFormat == ClipFormat.Video)
+            bool vertical = _clipFormat == ClipFormat.Vertical;
+            string path = Path.Combine(Application.temporaryCachePath,
+                _clipFormat == ClipFormat.Gif ? "echo_clip.gif" : vertical ? "echo_clip_vertical.mp4" : "echo_clip.mp4");
+            _clipHook = vertical ? ClipHook.Clean(_clipEditor.Hook) : "";
+            if (_clipFormat != ClipFormat.Gif)
             {
                 _video = VideoClipWriters.Create();
-                if (_video == null || !_video.Begin(path, ClipCapture.Width, ClipCapture.Height, VideoClipWriters.Scale,
-                        VideoClipWriters.Fps, ClipAudioTap.SampleRate, ClipAudioTap.Channels))
+                if (_video == null || !_video.Begin(path, ClipCapture.Width, ClipCapture.Height,
+                        vertical ? VideoClipWriters.VerticalScale : VideoClipWriters.Scale,
+                        vertical ? VideoClipWriters.VerticalFps : VideoClipWriters.Fps, ClipAudioTap.SampleRate, ClipAudioTap.Channels))
                 {
                     _video = null;
                     _clipEditor.SetStatus("Video isn't available on this device. Try a GIF.");
                     return;
                 }
+                // A phone whose encoder can't do 1152 x 2048 at 60 fps steps down; frames follow what it chose.
+                _clipFps = Mathf.Max(1, _video.Fps);
+                LastClipScale = _video.Scale;
+                _clipStep = Mathf.Max(1, ClipRange.TicksPerSecond / _clipFps);
                 if (_audioTap != null) _audioTap.Begin();
             }
             else _gif = new GifClipWriter(ClipCapture.Width, ClipCapture.Height);
@@ -224,10 +246,11 @@ namespace Echo.Game.Flow
             if (_clipStage == ClipStage.Previewing && tick >= _clipEnd) StopClipPreview(seek: true);
             if (_clipStage != ClipStage.Recording) return;
 
-            int step = _clipFormat == ClipFormat.Gif ? GifClipWriter.TicksPerFrame : VideoClipWriters.TicksPerFrame;
+            int step = _clipFormat == ClipFormat.Gif ? GifClipWriter.TicksPerFrame : _clipStep;
             if (tick >= _clipNextTick)
             {
                 _capture.Read(_run.Score, _run.GhostsAtStart, _reelPlayer.Reel.NewBest);
+                if (_clipHook.Length > 0) ClipHook.Draw(_capture.Frame, ClipCapture.Width, ClipCapture.Height, _clipHook);
                 // A slow frame owes more than one: the same picture repeats so the clip keeps its timing.
                 while (tick >= _clipNextTick && _clipNextTick < _clipEnd)
                 {
@@ -255,7 +278,7 @@ namespace Echo.Game.Flow
         void PadAudio()
         {
             if (ClipAudioTap.SampleRate <= 0) return;
-            long wanted = (long)_clipFrames * ClipAudioTap.SampleRate / VideoClipWriters.Fps;
+            long wanted = (long)_clipFrames * ClipAudioTap.SampleRate / _clipFps;
             int chunk = 4096;
             if (_audioScratch == null || _audioScratch.Length < chunk * ClipAudioTap.Channels) _audioScratch = new float[chunk * ClipAudioTap.Channels];
             Array.Clear(_audioScratch, 0, chunk * ClipAudioTap.Channels);
@@ -288,6 +311,7 @@ namespace Echo.Game.Flow
                 {
                     if (_audioTap != null) _audioTap.End();
                     PassAudio();
+                    if (_clipFormat == ClipFormat.Vertical && _clipEndCard) AddEndCard();
                     PadAudio();
                     IVideoClipWriter video = _video;
                     _video = null;
@@ -309,10 +333,31 @@ namespace Echo.Game.Flow
                 return;
             }
             LastClipPath = path;
-            _clipEditor.SetStatus(mime == "video/mp4" ? "Video ready to share" : "GIF ready to share");
+            string preset = _clipFormat == ClipFormat.Gif ? "gif" : _clipFormat == ClipFormat.Vertical ? "vertical" : "video";
+            string size = _clipFormat == ClipFormat.Gif ? "" : $" ({ClipCapture.Width * LastClipScale} x {ClipCapture.Height * LastClipScale}, {_clipFps} fps)";
+            _clipEditor.SetStatus(mime == "video/mp4" ? $"Video ready to share{size}" : "GIF ready to share");
+            Log(AnalyticsEvents.ClipExported, ("preset", preset), ("length", Mathf.RoundToInt(ClipRange.Seconds)), ("has_hook", _clipHook.Length > 0));
             string link = await ChallengeLinkFor(reel, ChallengeNames.Clean(_save.Settings.PlayerName));
             _services.Share.ShareFile(path, mime, ClipText(reel, link));
+            Log(AnalyticsEvents.ClipShared, ("preset", preset));
         }
+
+        /// <summary>The scale the last video was written at (a phone may step down from the Vertical preset's x4). Tests.</summary>
+        public int LastClipScale { get; private set; } = VideoClipWriters.Scale;
+
+        // Marketing content plan: one second of the end card after the clip, with silence under it.
+        void AddEndCard()
+        {
+            var card = new byte[ClipCapture.Width * ClipCapture.Height * 4];
+            ClipEndCard.Draw(card, ClipCapture.Width, ClipCapture.Height, StoreCardLine);
+            for (int i = 0; i < _clipFps; i++)
+            {
+                _video.AddFrame(card);
+                _clipFrames++;
+            }
+        }
+
+        static string StoreCardLine => Application.platform == RuntimePlatform.IPhonePlayer ? "Free on the App Store" : "Free on Google Play";
 
         void CancelRecording()
         {

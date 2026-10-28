@@ -8,7 +8,7 @@ namespace Echo.Game.Clips
     {
         public const int Width = 5, Height = 7, Advance = 6;
 
-        const string Chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ,.!:#-";
+        const string Chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ,.!:#-?'&/()+";
 
         // One string per character in Chars: 7 rows of 5, top row first.
         static readonly string[] Glyphs =
@@ -55,6 +55,13 @@ namespace Echo.Game.Clips
             "       #    #         #    #       ", // :
             " # # ##### # # ##### # #           ", // #
             "               #####               ", // -
+            " ### #   #    #   #   #         #  ", // ?
+            "  #    #   #                       ", // '
+            " ##  #  # # #   #   # # ##  #  ## #", // &
+            "    #    #   #   #   #   #    #    ", // /
+            "   #   #   #    #    #     #     # ", // (
+            " #     #     #    #    #   #   #   ", // )
+            "       #    #  #####  #    #       ", // +
         };
 
         /// <summary>Whether the pixel at (x, y) of a character is set; y = 0 is the top row.</summary>
@@ -68,6 +75,18 @@ namespace Echo.Game.Clips
         }
 
         public static int Measure(string text, int scale) => text.Length == 0 ? 0 : (text.Length * Advance - 1) * scale;
+
+        /// <summary>A character this font can draw (a space always can).</summary>
+        public static bool Supports(char c) => c == ' ' || Chars.IndexOf(char.ToUpperInvariant(c)) >= 0;
+
+        /// <summary>Draws text with a one-pixel outline all round (the vertical clip's hook), so it reads over anything.</summary>
+        public static void DrawOutlined(byte[] rgba, int width, int height, string text, int x, int y, int scale, uint color, uint outline)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+                for (int dx = -1; dx <= 1; dx++)
+                    if (dx != 0 || dy != 0) DrawPass(rgba, width, height, text, x + dx, y + dy, scale, outline);
+            DrawPass(rgba, width, height, text, x, y, scale, color);
+        }
 
         /// <summary>Draws text into an RGBA frame (top row first) at (x, y), its top-left, with a one-pixel dark shadow.</summary>
         public static void Draw(byte[] rgba, int width, int height, string text, int x, int y, int scale, uint color, uint shadow)

@@ -49,6 +49,12 @@ namespace Echo.Game.UI
             if (_daily != null) _daily.onClick.AddListener(() => DailyClicked?.Invoke());
         }
 
+        /// <summary>Recording mode hides the buttons that lead to ads (power-ups).</summary>
+        public void SetAdButtons(bool visible)
+        {
+            if (_powerUps != null && _powerUps.gameObject.activeSelf != visible) _powerUps.gameObject.SetActive(visible);
+        }
+
         public void SetDevServer(bool on)
         {
             if (_devServer != null && _devServer.activeSelf != on) _devServer.SetActive(on);
