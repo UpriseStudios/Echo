@@ -20,7 +20,7 @@ namespace Echo.Editor
         public static SeasonTheme[] Build()
         {
             if (!AssetDatabase.IsValidFolder(Dir)) AssetDatabase.CreateFolder("Assets/Echo/Content/Seasons", "Themes");
-            var themes = new List<SeasonTheme> { Christmas(), NewYear(), Test() };
+            var themes = new List<SeasonTheme> { Halloween(), BonfireNight(), Christmas(), NewYear(), Valentines(), Test() };
             foreach (SeasonTheme t in themes) EditorUtility.SetDirty(t);
             return themes.ToArray();
         }
@@ -38,6 +38,64 @@ namespace Echo.Editor
             t.FireworksPerMinute = 5f;
             t.ResetShowSeconds = 120f;
             t.ResetShowToast = "HAPPY NEW YEAR!";
+            t.Stinger = null;
+            return t;
+        }
+
+        // Seasons doc: the Nemesis wears a heart, and when it gets you the death screen reads "It's complicated."
+        static SeasonTheme Valentines()
+        {
+            SeasonTheme t = Plain(Load(SeasonIds.Valentines), "Valentine's");
+            t.NemesisAccessory = Sprite(SeasonIds.Valentines, SeasonArt.NemesisAccessory);
+            t.DeathLine = "It's complicated.";
+            t.DeathLineNemesisOnly = true;
+            return t;
+        }
+
+        // Seasons doc: a purple-orange sky, pumpkin gravestones, cobwebs on ghosts. Ships switched off until next year.
+        static SeasonTheme Halloween()
+        {
+            SeasonTheme t = Plain(Load(SeasonIds.Halloween), "Halloween");
+            t.PaletteStops = new[] { Hex(0x5A2A7A), Hex(0x8A3A5A), Hex(0xB0562A) };
+            t.PaletteBlend = 0.75f;
+            t.Grave = Sprite(SeasonIds.Halloween, SeasonArt.Grave);
+            t.GraveInColour = true;
+            t.GhostAccessory = Sprite(SeasonIds.Halloween, SeasonArt.GhostAccessory);
+            return t;
+        }
+
+        // Seasons doc: fireworks bursting in the background. Ships switched off until next year.
+        static SeasonTheme BonfireNight()
+        {
+            SeasonTheme t = Plain(Load(SeasonIds.BonfireNight), "Bonfire Night");
+            t.Fireworks = true;
+            t.FireworkSpark = Load<Sprite>(SeasonArt.SparkPath);
+            t.FireworkColours = new[] { Hex(0xFFB03A), Hex(0xFF5A3A), Hex(0xFFE36A), Hex(0xFFFFFF), Hex(0x6AC8FF) };
+            t.FireworksPerMinute = 14f;
+            return t;
+        }
+
+        // Every override off, for a theme to switch on only what it needs.
+        static SeasonTheme Plain(SeasonTheme t, string title)
+        {
+            t.Title = title;
+            t.PaletteStops = new Color[0];
+            t.PaletteBlend = 1f;
+            t.FarLayer = t.NearLayer = null;
+            t.Effect = SeasonEffect.None;
+            t.EffectSprites = new Sprite[0];
+            t.EffectColours = new Color[0];
+            t.Fireworks = false;
+            t.FireworkSpark = null;
+            t.FireworkColours = new Color[0];
+            t.ResetShowSeconds = 0f;
+            t.ResetShowToast = "";
+            t.Spike = t.Block = t.GroundTop = null;
+            t.Grave = t.Headstone = null;
+            t.GraveInColour = false;
+            t.GhostAccessory = t.NemesisAccessory = null;
+            t.DeathLine = "";
+            t.DeathLineNemesisOnly = false;
             t.Stinger = null;
             return t;
         }

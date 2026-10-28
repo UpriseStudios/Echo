@@ -27,9 +27,21 @@ dotnet build $module -c Release -t:ZipModule
 if ($LASTEXITCODE -ne 0) { throw 'Module packaging failed; nothing deployed.' }
 $ccm = Join-Path $server 'EchoCloud/bin/Release/net8.0/Module/EchoCloud.ccm'
 
-$targets = @($ccm, (Join-Path $server 'Config/echo.rc'), (Join-Path $server 'Config/daily.lb'))
-if (-not $SkipAccessControl) { $targets += (Join-Path $server 'Config/echo-project-policy.ac') }
-$extra = @('-p', $project, '-e', $Environment)
-if ($DryRun) { $extra += '--dry-run' }
-ugs deploy @targets @extra
-if ($LASTEXITCODE -ne 0) { throw 'Deploy reported errors.' }
+# UGS refuses a leaderboard whose first reset has passed, so a copy starts at the next midnight UTC (as deploy-prod.ps1).
+$staging = Join-Path ([System.IO.Path]::GetTempPath()) ('echo-dev-' + [guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Path $staging | Out-Null
+try {
+    $lb = Get-Content (Join-Path $server 'Config/daily.lb') -Raw | ConvertFrom-Json
+    $lb.ResetConfig.Start = [DateTime]::UtcNow.Date.AddDays(1).ToString("yyyy-MM-ddT00:00:00Z")
+    [System.IO.File]::WriteAllText((Join-Path $staging 'daily.lb'), ($lb | ConvertTo-Json -Depth 5), (New-Object System.Text.UTF8Encoding $false))
+
+    $targets = @($ccm, (Join-Path $server 'Config/echo.rc'), (Join-Path $staging 'daily.lb'))
+    if (-not $SkipAccessControl) { $targets += (Join-Path $server 'Config/echo-project-policy.ac') }
+    $extra = @('-p', $project, '-e', $Environment)
+    if ($DryRun) { $extra += '--dry-run' }
+    ugs deploy @targets @extra
+    if ($LASTEXITCODE -ne 0) { throw 'Deploy reported errors.' }
+}
+finally {
+    Remove-Item -Recurse -Force $staging
+}

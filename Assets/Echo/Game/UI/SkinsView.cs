@@ -131,6 +131,7 @@ namespace Echo.Game.UI
             Section("Colours", "for the Hooded runner", CosmeticType.Runner);
             Section("Trails", null, CosmeticType.Trail);
             Section("Palettes", null, CosmeticType.Palette);
+            Section("Gravestones", null, CosmeticType.Grave);
 
             // Colour packs (a user revision: no longer sold): each unlocks at a score, or after enough rewarded ads.
             Header("Colour packs", "score or ads");
@@ -161,7 +162,8 @@ namespace Echo.Game.UI
             ProductButton($"{name} Pack", productId, PackOwned(productId));
         }
 
-        static bool Seasonal(CosmeticItem item) => !string.IsNullOrEmpty(item.UnlockAchievement);
+        // Earned only in an event; Pumpkin also unlocks with ads, so it stays with the main cast.
+        static bool Seasonal(CosmeticItem item) => !string.IsNullOrEmpty(item.UnlockAchievement) && item.AdsToUnlock == 0;
 
         void AdPackButton(string pack)
         {
@@ -339,6 +341,7 @@ namespace Echo.Game.UI
                 case CosmeticType.Character: e.Character = item.Id; break;
                 case CosmeticType.Runner: e.Runner = item.Id; break;
                 case CosmeticType.Trail: e.Trail = item.Id; break;
+                case CosmeticType.Grave: e.Grave = item.Id; break;
                 default: e.Palette = item.Id; break;
             }
             Refresh();
@@ -350,6 +353,7 @@ namespace Echo.Game.UI
             CosmeticType.Character => _cosmetics.Equipped.Character,
             CosmeticType.Runner => _cosmetics.Equipped.Runner,
             CosmeticType.Trail => _cosmetics.Equipped.Trail,
+            CosmeticType.Grave => _cosmetics.Equipped.Grave,
             _ => _cosmetics.Equipped.Palette,
         };
 

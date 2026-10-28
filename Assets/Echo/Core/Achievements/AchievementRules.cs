@@ -102,13 +102,25 @@ namespace Echo.Core.Achievements
         /// <summary>Seasons doc: Snowed Under's ghosts, the graveyard's cap.</summary>
         public const int SnowedUnderGhosts = 30;
 
-        /// <summary>A main-game run ended during a seasonal event (seasons doc).</summary>
-        public static List<string> OnSeasonalRunEnded(Progress p, RunSimulation run, SeasonalContext s)
+        /// <summary>
+        /// A main-game run ended during a seasonal event (seasons doc). <paramref name="killedByNemesis"/>: the Nemesis as it
+        /// stood before the run ended its life.
+        /// </summary>
+        public static List<string> OnSeasonalRunEnded(Progress p, RunSimulation run, SeasonalContext s, bool killedByNemesis)
         {
             var earned = new List<string>();
             if (s.Christmas != null)
                 ReportSeasonal(p, AchievementIds.SnowedUnder, s.Christmas, run.GhostsAtStart >= SnowedUnderGhosts ? 1 : 0, earned);
+            CountHalloweenRun(p, s, earned);
+            if (s.ValentinesDay != null) ReportSeasonal(p, AchievementIds.ItsComplicated, s.ValentinesDay, killedByNemesis ? 1 : 0, earned);
             return earned;
+        }
+
+        // Trick or Treat: every run counts, the main game's and the Daily Haunt's.
+        static void CountHalloweenRun(Progress p, SeasonalContext s, List<string> earned)
+        {
+            if (s.Halloween == null) return;
+            ReportSeasonal(p, AchievementIds.TrickOrTreat, s.Halloween, Fresh(p, AchievementIds.TrickOrTreat, s.Halloween) + 1, earned);
         }
 
         /// <summary>
@@ -127,6 +139,7 @@ namespace Echo.Core.Achievements
                 ReportSeasonal(p, AchievementIds.LeadTheWay, s.Christmas, Fresh(p, AchievementIds.LeadTheWay, s.Christmas) + Math.Max(0, leadersPassed), earned);
             }
             if (s.NewYearsDay != null) ReportSeasonal(p, AchievementIds.FirstFooter, s.NewYearsDay, 1, earned);
+            CountHalloweenRun(p, s, earned);
             return earned;
         }
 

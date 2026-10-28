@@ -196,8 +196,9 @@ namespace Echo.Game.Flow
                 _awakenPending = ElementalTrial.EarnIfComplete(_catalog, AchievementCatalog.SinglePlayerEarned(_progress.Achievements), _save.Cosmetics.Owned).Count > 0;
             }
             foreach (string id in AchievementRules.OnSessionStarted(_progress)) ToastAchievement(id);
-            // Skins addendum: Pumpkin is free to anyone who plays during Halloween week, and kept after.
-            if (_features != null && _features.HalloweenPumpkin && IsHalloweenWeek(DateTime.UtcNow)
+            // Skins addendum: Pumpkin is free to anyone who plays during Halloween week, and kept after. Seasons doc: once
+            // the schedule switches Halloween on, Trick or Treat (10 runs during Halloween) earns it instead.
+            if (_features != null && _features.HalloweenPumpkin && IsHalloweenWeek(DateTime.UtcNow) && !HalloweenScheduled()
                 && !_save.Cosmetics.Owned.Contains(HalloweenCharacter))
             {
                 _save.Cosmetics.Owned.Add(HalloweenCharacter);
@@ -1090,7 +1091,7 @@ namespace Echo.Game.Flow
                 Log(AnalyticsEvents.NewBest, ("score", result.Score), ("ghostsCleared", result.GhostsCleared), ("nemesisDefeated", result.NemesisDefeated));
 
             foreach (string id in AchievementRules.OnRunEnded(_run, result, _progress, _sessionRuns)) ToastAchievement(id);
-            CountSeasonalRun();
+            CountSeasonalRun(nemesisBefore);
             if (_catalog != null)
             {
                 foreach (CosmeticItem item in CosmeticUnlocks.Earn(_catalog, _progress.Best, _save.Cosmetics.Owned))
@@ -1141,6 +1142,8 @@ namespace Echo.Game.Flow
                 character = _catalog.Resolve(null, CosmeticType.Character);
             CosmeticItem trail = _catalog.Resolve(e.Trail, CosmeticType.Trail);
             CosmeticItem palette = _catalog.Resolve(e.Palette, CosmeticType.Palette);
+            _equippedGrave = characterId == null ? _catalog.Resolve(e.Grave, CosmeticType.Grave) : null;
+            ApplyGrave();
             if (character != null)
             {
                 Color tint = character.Tintable && runner != null ? runner.Color : Color.white;

@@ -58,6 +58,13 @@ namespace Echo.Editor
                 Seasonal(Trail("trail_fireworks", "Fireworks", 0, "", 1f, 0.86f, 0.45f), AchievementIds.FirstFooter, "New Year: First Footer",
                     false, Hex(0xFFD24A), Hex(0xFF5A8A), Hex(0x8A6AFF), Hex(0x4AD8FF), Hex(0x8AFF6A)),
 
+                // Seasons doc: gravestones. The stone is everyone's; the Heart is It's Complicated's reward.
+                new CosmeticItem { Id = "grave_stone", DisplayName = "Stone", Type = CosmeticType.Grave, Color = Hex(0x8A9AA4), Tintable = true,
+                    Sprite = AssetDatabase.LoadAssetAtPath<Sprite>(EchoArt.GravePath) },
+                new CosmeticItem { Id = "grave_heart", DisplayName = "Heart", Type = CosmeticType.Grave, Color = Hex(0xF2607A),
+                    UnlockAchievement = AchievementIds.ItsComplicated, UnlockText = "Valentine's: It's Complicated",
+                    Sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SeasonArt.HeartGravePath) },
+
                 Palette("palette_default", "Teal to Red", 0, "", Hex(0x297380), Hex(0x5B3C8C), Hex(0x8C2E3A)),
                 Ads(Palette("palette_mono", "Monochrome", 300, "", Hex(0x5A5A5A), Hex(0x3D3D3D), Hex(0x222222)), "Mono", MonoAds),
                 Stat(Palette("palette_forest", "Forest", 0, "", Hex(0x2F6B3A), Hex(0x6B6A2F), Hex(0x6B3A2F)), CosmeticUnlockStat.Distance, 100, "Reach 100 m"),

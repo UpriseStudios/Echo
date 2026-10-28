@@ -49,7 +49,7 @@ try {
         $rc.entries.daily_enabled = $false
         $rc.entries.server_challenges_enabled = $false
     }
-    [System.IO.File]::WriteAllText((Join-Path $staging 'echo.rc'), ($rc | ConvertTo-Json -Depth 5), $utf8)
+    [System.IO.File]::WriteAllText((Join-Path $staging 'echo.rc'), ($rc | ConvertTo-Json -Depth 10)   # deep enough for the seasons schedule, $utf8)
 
     Write-Host "Deploying to Echo project $project, $Environment (first daily reset $($lb.ResetConfig.Start); switches daily=$($rc.entries.daily_enabled), challenges=$($rc.entries.server_challenges_enabled))"
     $targets = @($ccm, (Join-Path $staging 'echo.rc'), (Join-Path $staging 'daily.lb'), (Join-Path $server 'Config/echo-project-policy.ac'))

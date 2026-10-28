@@ -58,5 +58,7 @@ namespace Echo.Core.Achievements
         public const string LeadTheWay = "lead_the_way";
         public const string SnowedUnder = "snowed_under";
         public const string FirstFooter = "first_footer";
+        public const string TrickOrTreat = "trick_or_treat";
+        public const string ItsComplicated = "its_complicated";
     }
 }

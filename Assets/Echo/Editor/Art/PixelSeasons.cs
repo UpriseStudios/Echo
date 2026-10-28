@@ -134,6 +134,105 @@ namespace Echo.Editor.Art
             return c;
         }
 
+        // ---- Valentine's (placeholders) ----
+
+        /// <summary>The Heart gravestone (It's Complicated's reward), 12 x 16 like the stone, in its own colours.</summary>
+        public static PixelCanvas HeartGrave()
+        {
+            var c = new PixelCanvas(12, 16);
+            c.Blit(new[]
+            {
+                "............",
+                "..pp....pp..",
+                ".pwpp..pppp.",
+                ".wppppppppP.",
+                ".pppppppppP.",
+                ".pppppppppP.",
+                "..pppppppP..",
+                "...ppppPP...",
+                "....pppP....",
+                ".....pP.....",
+                ".....pP.....",
+                ".....pP.....",
+                "....sssss...",
+                "...sssssss..",
+                "mmmmmmmmmmmm",
+                "mmmmmmmmmmmm",
+            }, new Dictionary<char, Color32>
+            {
+                ['p'] = Hex(0xF2607A), ['P'] = Hex(0xC03A58), ['w'] = Hex(0xFFD8E0), ['s'] = Hex(0xB8C3CA), ['m'] = Hex(0x5A4636),
+            }, 0, 0);
+            c.Outline(Hex(0x3A1020));
+            return c;
+        }
+
+        /// <summary>A heart over the Nemesis's head, in place of its horns.</summary>
+        public static PixelCanvas NemesisHeart()
+        {
+            var c = new PixelCanvas(11, 9);
+            c.Blit(new[]
+            {
+                ".rr.rr.",
+                "rwrrrrr",
+                "rrrrrrR",
+                ".rrrrR.",
+                "..rrR..",
+                "...R...",
+            }, new Dictionary<char, Color32> { ['r'] = Hex(0xFF3A5A), ['R'] = Hex(0xC01A38), ['w'] = Hex(0xFFD0D8) }, 2, 1);
+            c.Outline(Hex(0x4A0A18));
+            return c;
+        }
+
+        // ---- Halloween (placeholders; switched off until next year) ----
+
+        /// <summary>A jack-o'-lantern for a gravestone, 12 x 16 in its own colours.</summary>
+        public static PixelCanvas PumpkinGrave()
+        {
+            var c = new PixelCanvas(12, 16);
+            c.Blit(new[]
+            {
+                "............",
+                "............",
+                "............",
+                ".....gg.....",
+                "......g.....",
+                "..ooOoOoo...",
+                ".ooOooOoOoo.",
+                "ooyyoOoyyOoo",
+                "ooOoooOoooOo",
+                "ooOyoyoyoyOo",
+                "ooOyyyyyyyOo",
+                ".ooOoooOooo.",
+                "..ooOoOooo..",
+                "....oooo....",
+                "mmmmmmmmmmmm",
+                "mmmmmmmmmmmm",
+            }, new Dictionary<char, Color32>
+            {
+                ['o'] = Hex(0xF08A24), ['O'] = Hex(0xC0601A), ['g'] = Hex(0x3FA34D), ['y'] = Hex(0xFFE45C), ['m'] = Hex(0x4A3A2E),
+            }, 0, 0);
+            c.Outline(Hex(0x2A1408));
+            return c;
+        }
+
+        /// <summary>A cobweb draped over a ghost's head from the back; pivot low so it hangs down over the head.</summary>
+        public static PixelCanvas Cobweb()
+        {
+            var c = new PixelCanvas(12, 9);
+            c.Blit(new[]
+            {
+                "w.w.w.w.....",
+                ".w.www......",
+                "wwwww.w.....",
+                ".w.w.ww.....",
+                "w.www.......",
+                ".ww.w.......",
+                "w.w.........",
+                ".w..........",
+            }, new Dictionary<char, Color32> { ['w'] = Hex(0xE8E8F0, 210) }, 0, 0);
+            return c;
+        }
+
         // ---- the test theme (placeholders) ----
 
         /// <summary>The spike painted in diagonal bands: same silhouette, still greyscale.</summary>

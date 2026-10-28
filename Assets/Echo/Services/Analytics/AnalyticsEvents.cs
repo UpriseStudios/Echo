@@ -20,6 +20,7 @@ namespace Echo.Services.Analytics
         public const string DailyRunWatched = "daily_run_watched";
         public const string ClipExported = "clip_exported";           // marketing content plan
         public const string ClipShared = "clip_shared";               // the share sheet opened with a clip
+        public const string ClipSaved = "clip_saved";                 // a user revision: a clip kept in the gallery
         public const string IapPurchase = "iap_purchase";
         public const string UnlockAdWatched = "unlock_ad_watched";   // addition: ad-unlocked characters
         // Value-adds doc.

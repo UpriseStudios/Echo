@@ -33,6 +33,10 @@ namespace Echo.Game.UI
         [SerializeField] Button _make;
         [SerializeField] Button _back;
         [SerializeField] Button _cancel;
+        // A user revision: a made clip can be saved to the gallery or shared; any change to the clip puts these away.
+        [SerializeField] GameObject _ready;
+        [SerializeField] Button _saveClip;
+        [SerializeField] Button _shareClip;
         [SerializeField] Color _selected = Color.white;
         [SerializeField] Color _unselected = Color.gray;
 
@@ -49,20 +53,28 @@ namespace Echo.Game.UI
         public event Action MakeClicked;
         public event Action BackClicked;
         public event Action CancelClicked;
+        public event Action SaveClicked;
+        public event Action ShareClicked;
 
         public bool IsOpen => _root.activeSelf;
         public bool Dragging => _trim.Dragging;
 
         void Awake()
         {
-            _trim.HandleMoved += (end, at) => HandleMoved?.Invoke(end, at);
+            _trim.HandleMoved += (end, at) =>
+            {
+                SetReady(false);
+                HandleMoved?.Invoke(end, at);
+            };
             _trim.HandleReleased += () => HandleReleased?.Invoke();
-            _gif.onClick.AddListener(() => GifClicked?.Invoke());
-            _video.onClick.AddListener(() => VideoClicked?.Invoke());
-            if (_vertical != null) _vertical.onClick.AddListener(() => VerticalClicked?.Invoke());
+            _gif.onClick.AddListener(() => { SetReady(false); GifClicked?.Invoke(); });
+            _video.onClick.AddListener(() => { SetReady(false); VideoClicked?.Invoke(); });
+            if (_vertical != null) _vertical.onClick.AddListener(() => { SetReady(false); VerticalClicked?.Invoke(); });
             if (_endCard != null) _endCard.onClick.AddListener(() => EndCardClicked?.Invoke());
             _play.onClick.AddListener(() => PlayClicked?.Invoke());
-            _make.onClick.AddListener(() => MakeClicked?.Invoke());
+            _make.onClick.AddListener(() => { SetReady(false); MakeClicked?.Invoke(); });
+            if (_saveClip != null) _saveClip.onClick.AddListener(() => SaveClicked?.Invoke());
+            if (_shareClip != null) _shareClip.onClick.AddListener(() => ShareClicked?.Invoke());
             _back.onClick.AddListener(() => BackClicked?.Invoke());
             _cancel.onClick.AddListener(() => CancelClicked?.Invoke());
         }
@@ -73,6 +85,7 @@ namespace Echo.Game.UI
             _preview.texture = preview;
             _videoAllowed = videoSupported;
             SetStatus("");
+            SetReady(false);
             SetBusy(false, false);
         }
 
@@ -95,7 +108,7 @@ namespace Echo.Game.UI
             Tint(_video, format == ClipFormat.Video);
             if (_vertical != null) Tint(_vertical, format == ClipFormat.Vertical);
             _format = format;
-            if (_verticalOptions != null) _verticalOptions.SetActive(format == ClipFormat.Vertical && !_busy);
+            if (_verticalOptions != null) _verticalOptions.SetActive(format == ClipFormat.Vertical && !_busy && !_isReady);
             _make.GetComponentInChildren<TMP_Text>().text = format == ClipFormat.Gif ? "Make GIF" : "Make video";
         }
 
@@ -105,7 +118,17 @@ namespace Echo.Game.UI
         }
 
         ClipFormat _format;
-        bool _busy;
+        bool _busy, _isReady;
+
+        /// <summary>A clip has been made: Save to gallery and Share take the hook's place until the clip is changed.</summary>
+        public void SetReady(bool ready)
+        {
+            _isReady = ready;
+            if (_ready != null) _ready.SetActive(ready && !_busy);
+            if (_verticalOptions != null) _verticalOptions.SetActive(!ready && !_busy && _format == ClipFormat.Vertical);
+        }
+
+        public bool Ready => _isReady;
 
         public void SetPlaying(bool playing) => _play.GetComponentInChildren<TMP_Text>().text = playing ? "Stop" : "Preview";
 
@@ -119,7 +142,8 @@ namespace Echo.Game.UI
             foreach (Button b in new[] { _gif, _play, _make, _back }) b.gameObject.SetActive(!busy);
             _video.gameObject.SetActive(!busy && _videoAllowed);
             if (_vertical != null) _vertical.gameObject.SetActive(!busy && _videoAllowed);
-            if (_verticalOptions != null) _verticalOptions.SetActive(!busy && _format == ClipFormat.Vertical);
+            if (_verticalOptions != null) _verticalOptions.SetActive(!busy && !_isReady && _format == ClipFormat.Vertical);
+            if (_ready != null) _ready.SetActive(!busy && _isReady);
             _cancel.gameObject.SetActive(recording);
             _trim.enabled = !busy;
         }

@@ -125,12 +125,24 @@ namespace Echo.Game.Flow
             _seasonApplied = true;
             if (_background != null) _background.SetSeason(theme != null ? theme.FarLayer : null, theme != null ? theme.NearLayer : null);
             _courseView.SetSeason(theme != null ? theme.Spike : null, theme != null ? theme.Block : null, theme != null ? theme.GroundTop : null);
-            if (_graves != null) _graves.SetSeason(theme != null ? theme.Grave : null, theme != null && theme.GraveInColour);
+            ApplyGrave();
             _ghostViews.SetSeason(theme != null ? theme.GhostAccessory : null, theme != null ? theme.NemesisAccessory : null);
             _deathScreen.SetHeadstoneSprite(theme != null ? theme.Headstone : null);
             if (_seasonEffects != null) _seasonEffects.SetTheme(theme);
             if (theme != null && theme.Stinger != null && _stingersPlayed.Add(theme.Id) && _music != null) _music.PlayStinger(theme.Stinger);
             Debug.Log($"[Seasons] {(theme != null ? theme.Id : "no season")}{(ForcedSeason != null ? " (forced)" : "")}");
+        }
+
+        CosmeticItem _equippedGrave;
+
+        // A season's gravestone shows during its season; otherwise the one the player wears (the stone by default). A
+        // reel watched back wears the stone, as its run's own grave isn't recorded.
+        void ApplyGrave()
+        {
+            if (_graves == null) return;
+            if (_season != null && _season.Grave != null) _graves.SetSeason(_season.Grave, _season.GraveInColour);
+            else if (_equippedGrave != null && !_equippedGrave.Tintable && _equippedGrave.Sprite != null) _graves.SetSeason(_equippedGrave.Sprite, true);
+            else _graves.SetSeason(null, false);
         }
 
         // The season's sky, blended over the player's palette.
@@ -185,11 +197,12 @@ namespace Echo.Game.Flow
         public SeasonalContext SeasonalOn(DateTime ukDate) => SeasonalEvents.On(_schedule, ukDate);
 
         // A main-game run, on today's date (seasons doc rule 6: the server's when it has told us, the device's otherwise).
-        void CountSeasonalRun()
+        void CountSeasonalRun(GhostRecord nemesisBefore)
         {
             SeasonalContext s = SeasonalOn(UkCalendar.Date(SeasonNowUtc()));
             if (!s.Any) return;
-            foreach (string id in AchievementRules.OnSeasonalRunEnded(_progress, _run, s)) ToastAchievement(id);
+            bool byNemesis = _run.Cause == DeathCause.Ghost && _run.Killer != null && _run.Killer == nemesisBefore;
+            foreach (string id in AchievementRules.OnSeasonalRunEnded(_progress, _run, s, byNemesis)) ToastAchievement(id);
             GrantAchievementRewards();
         }
 
@@ -209,6 +222,14 @@ namespace Echo.Game.Flow
             if (_catalog == null) return;
             foreach (CosmeticItem item in CosmeticUnlocks.EarnByAchievements(_catalog, _progress.Achievements, _save.Cosmetics.Owned))
                 _hud.QueueToast("Unlocked: " + item.DisplayName);
+        }
+
+        // Whether the schedule runs Halloween this year (2.1 ships it switched off, so 2.0's free week carries on).
+        bool HalloweenScheduled()
+        {
+            foreach (SeasonWindow w in _schedule.Seasons)
+                if (w.Id == SeasonIds.Halloween && w.Enabled) return true;
+            return false;
         }
 
         /// <summary>Seasons doc: the Christmas Pack is on sale during Christmas and New Year (by the schedule, or forced).</summary>

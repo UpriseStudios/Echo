@@ -164,7 +164,17 @@ namespace Echo.Tests.PlayMode
             yield return MakeClip(game, "Make");
             byte[] gif = File.ReadAllBytes(game.LastClipPath);
             Assert.AreEqual("GIF89a", System.Text.Encoding.ASCII.GetString(gif, 0, 6));
+            // A user revision: a made clip waits for Save to gallery or Share.
+            Assert.IsTrue(Showing("ClipEditor/Ready/Save"));
+            Click("ClipEditor/Ready/Share");
             Assert.AreEqual(game.LastClipPath, share.LastFile);
+            Click("ClipEditor/Ready/Save");
+            StringAssert.EndsWith(".gif", share.LastSaved);
+            StringAssert.Contains("Saved to your gallery", Find("ClipEditor/Status").GetComponent<TMPro.TMP_Text>().text);
+            share.SaveFails = true;
+            Click("ClipEditor/Ready/Save");
+            StringAssert.Contains("Use Share", Find("ClipEditor/Status").GetComponent<TMPro.TMP_Text>().text);
+            share.SaveFails = false;
             StringAssert.Contains("echoghost://challenge/", share.LastText);
             Debug.Log($"[ReelFlowTests] GIF {gif.Length / 1024} KB");
 
@@ -178,6 +188,7 @@ namespace Echo.Tests.PlayMode
             StringAssert.EndsWith(".mp4", game.LastClipPath);
             byte[] mp4 = File.ReadAllBytes(game.LastClipPath);
             Assert.AreEqual("ftyp", System.Text.Encoding.ASCII.GetString(mp4, 4, 4), "an MP4 file");
+            Click("ClipEditor/Ready/Share");
             Assert.AreEqual("video/mp4", share.LastMime);
             Debug.Log($"[ReelFlowTests] video {mp4.Length / 1024} KB");
 

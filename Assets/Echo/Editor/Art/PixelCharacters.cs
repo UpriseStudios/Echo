@@ -116,6 +116,8 @@ namespace Echo.Editor.Art
         static PixelCharacter Pumpkin() => new PixelCharacter
         {
             Id = "char_pumpkin", Name = "Pumpkin", AdsToUnlock = 5,
+            // Seasons doc: Trick or Treat (10 runs during Halloween) earns it too, each year.
+            UnlockAchievement = Echo.Core.Achievements.AchievementIds.TrickOrTreat,
             Torso = Hex(0x3A2E5A), TorsoShade = Hex(0x2A2042), Legs = Hex(0x2A2042), Boots = Hex(0x1A1424),
             Sleeve = Hex(0x3A2E5A), Hand = Hex(0x3FA34D), Outline = Hex(0x1A0E08),
             Head = new[]

@@ -221,6 +221,9 @@ namespace Echo.Tests.PlayMode
                          (Echo.Game.Seasons.SeasonIds.Christmas, "char_rudolph", 150f, "24_season_christmas_rudolph"),
                          (Echo.Game.Seasons.SeasonIds.Christmas, "char_santa", 600f, "25_season_christmas_night_santa"),
                          (Echo.Game.Seasons.SeasonIds.NewYear, "char_snowman", 640f, "26_season_newyear_show"),
+                         (Echo.Game.Seasons.SeasonIds.Valentines, "char_hooded", 150f, "27_season_valentines"),
+                         (Echo.Game.Seasons.SeasonIds.Halloween, "char_pumpkin", 150f, "28_season_halloween"),
+                         (Echo.Game.Seasons.SeasonIds.BonfireNight, "char_hooded", 600f, "29_season_bonfire"),
                      })
             {
                 game.ForceSeason(season);

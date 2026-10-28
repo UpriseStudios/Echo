@@ -363,7 +363,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
-    UnlockAchievement: 
+    UnlockAchievement: trick_or_treat
     UnlockText: Watch 5 ads
     RunFrames:
     - {fileID: 21300000, guid: db3478d3c0e7f054ab156a352489dabe, type: 3}
@@ -2558,6 +2558,64 @@ MonoBehaviour:
     UnlockTarget: 0
     UnlockAchievement: first_footer
     UnlockText: 'New Year: First Footer'
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: grave_stone
+    DisplayName: Stone
+    Type: 4
+    Color: {r: 0.5411765, g: 0.6039216, b: 0.6431373, a: 1}
+    Sprite: {fileID: 21300000, guid: 03784a3e46c5b594c8b5d0619f5dfe60, type: 3}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 1
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: grave_heart
+    DisplayName: Heart
+    Type: 4
+    Color: {r: 0.9490196, g: 0.3764706, b: 0.47843137, a: 1}
+    Sprite: {fileID: 21300000, guid: 1868e9ed541b099439d5233bcece5dd7, type: 3}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: its_complicated
+    UnlockText: 'Valentine''s: It''s Complicated'
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []

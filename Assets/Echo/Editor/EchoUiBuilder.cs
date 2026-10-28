@@ -475,6 +475,16 @@ namespace Echo.Editor
             ((TMP_Text)hook.placeholder).text = "HOOK (UP TO 8 WORDS)";
             var endCard = MakeButton(options, "EndCard", "End card: on", new Vector2(330, 0), new Vector2(270, 96), ButtonStyle.Secondary);
             options.gameObject.SetActive(false);
+            // A user revision: once a clip is made, keep it in the gallery or share it (in the hook row's place).
+            RectTransform ready = NewRect("Ready", root);
+            ready.anchorMin = ready.anchorMax = new Vector2(0.5f, 0.5f);
+            ready.anchoredPosition = new Vector2(0, -690);
+            ready.sizeDelta = new Vector2(940, 100);
+            var saveClip = MakeButton(ready, "Save", "Save to gallery", new Vector2(-235, 0), new Vector2(440, 100), ButtonStyle.Primary);
+            var shareClip = MakeButton(ready, "Share", "Share", new Vector2(235, 0), new Vector2(440, 100), ButtonStyle.Secondary);
+            shareClip.GetComponent<Image>().color = GhostCyan;
+            shareClip.GetComponentInChildren<TMP_Text>().color = Ink;
+            ready.gameObject.SetActive(false);
 
             var back = MakeButton(root, "Back", "Back", new Vector2(0, -800), new Vector2(500, 100), ButtonStyle.Secondary);
             var status = MakeText(root, "Status", "", 34, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -890), new Vector2(1000, 56));
@@ -503,6 +513,9 @@ namespace Echo.Editor
             Wire(view, "_make", make);
             Wire(view, "_back", back);
             Wire(view, "_cancel", cancel);
+            Wire(view, "_ready", ready.gameObject);
+            Wire(view, "_saveClip", saveClip);
+            Wire(view, "_shareClip", shareClip);
             {
                 var so = new UnityEditor.SerializedObject(view);
                 so.FindProperty("_selected").colorValue = new Color(GhostCyan.r, GhostCyan.g, GhostCyan.b, 0.6f);

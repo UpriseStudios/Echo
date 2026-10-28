@@ -55,11 +55,15 @@ namespace Echo.Core.Achievements
             new AchievementDef(LeadTheWay, "Lead the Way", "Pass 25 leader ghosts in the Daily Haunt during December", 25, online: true, season: Christmas),
             new AchievementDef(SnowedUnder, "Snowed Under", "Have 30 ghosts active during December", season: Christmas),
             new AchievementDef(FirstFooter, "First Footer", "Finish a Daily Haunt run on 1 January", online: true, season: NewYear),
+            new AchievementDef(TrickOrTreat, "Trick or Treat", "Play 10 runs during Halloween", 10, season: Halloween),
+            new AchievementDef(ItsComplicated, "It's Complicated", "Get killed by your Nemesis on 14 February", season: Valentines),
         };
 
         // Season ids (the game's schedule names them the same).
         public const string Christmas = "christmas";
         public const string NewYear = "newyear";
+        public const string Halloween = "halloween";
+        public const string Valentines = "valentines";
 
         /// <summary>The single-player set (all but the online extras): the Elementals need every one of these.</summary>
         public static int SinglePlayerCount

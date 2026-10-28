@@ -14,7 +14,11 @@ namespace Echo.Game.Seasons
         {
             string christmas = Key(schedule, SeasonIds.Christmas, ukDate);
             string newYear = ukDate.Month == 1 && ukDate.Day == 1 ? Key(schedule, SeasonIds.NewYear, ukDate) : null;
-            return christmas == null && newYear == null ? SeasonalContext.None : new SeasonalContext(christmas, newYear);
+            string halloween = Key(schedule, SeasonIds.Halloween, ukDate);
+            // It's Complicated asks for 14 February itself, inside Valentine's 13 to 15.
+            string valentines = ukDate.Month == 2 && ukDate.Day == 14 ? Key(schedule, SeasonIds.Valentines, ukDate) : null;
+            var s = new SeasonalContext(christmas, newYear, halloween, valentines);
+            return s.Any ? s : SeasonalContext.None;
         }
 
         /// <summary>The event's key, its season id and the year its window opened (e.g. "newyear-2026"), or null.</summary>

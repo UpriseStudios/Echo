@@ -92,12 +92,37 @@ namespace Echo.Tests.EditMode
         }
 
         [Test]
+        public void TrickOrTreat_CountsTenRuns_AndItsComplicated_NeedsTheNemesisOnValentinesDay()
+        {
+            Assert.IsTrue(SeasonSchedule.TryParse(@"{ ""seasons"": [
+                { ""id"": ""halloween"", ""start"": ""10-24"", ""end"": ""11-02"", ""achievements"": true },
+                { ""id"": ""valentines"", ""start"": ""02-13"", ""end"": ""02-15"", ""achievements"": true } ] }", out SeasonSchedule on));
+            SeasonalContext halloween = SeasonalEvents.On(on, new DateTime(2027, 10, 28));
+            Assert.AreEqual("halloween-2027", halloween.Halloween);
+            Assert.IsNull(SeasonalEvents.On(BuiltIn(), new DateTime(2026, 10, 28)).Halloween, "2.1 ships Halloween switched off");
+            Assert.IsNull(SeasonalEvents.On(on, new DateTime(2027, 2, 13)).ValentinesDay, "It's Complicated is the 14th only");
+            SeasonalContext fourteenth = SeasonalEvents.On(on, new DateTime(2027, 2, 14));
+            Assert.AreEqual("valentines-2027", fourteenth.ValentinesDay);
+
+            var p = new Progress();
+            var run = new RunSimulation(TestCourses.Flat(), new Echo.Core.Ghosts.GhostSet(), 1, 100, Echo.Core.Sim.SimConfig.Default);
+            for (int i = 0; i < 6; i++) AchievementRules.OnSeasonalRunEnded(p, run, halloween, false);
+            for (int day = 0; day < 3; day++) AchievementRules.OnSeasonalDailyRun(p, 600 + day, 0, halloween);
+            Assert.AreEqual(9, AchievementRules.SeasonalProgressNow(p, AchievementIds.TrickOrTreat, halloween));
+            CollectionAssert.Contains(AchievementRules.OnSeasonalRunEnded(p, run, halloween, false), AchievementIds.TrickOrTreat);
+
+            Assert.IsEmpty(AchievementRules.OnSeasonalRunEnded(p, run, fourteenth, false), "killed by something else");
+            CollectionAssert.AreEqual(new[] { AchievementIds.ItsComplicated }, AchievementRules.OnSeasonalRunEnded(p, run, fourteenth, true));
+        }
+
+        [Test]
         public void Seasonal_NeverCountTowardsTheThirty()
         {
             Assert.AreEqual(30, AchievementCatalog.SinglePlayerCount);
             string[] seasonal = AchievementCatalog.All.Where(d => d.Seasonal).Select(d => d.Id).ToArray();
             Assert.AreEqual(0, AchievementCatalog.SinglePlayerEarned(seasonal));
-            Assert.IsTrue(AchievementCatalog.All.Where(d => d.Seasonal).All(d => d.Season == AchievementCatalog.Christmas || d.Season == AchievementCatalog.NewYear));
+            foreach (AchievementDef def in AchievementCatalog.All.Where(d => d.Seasonal))
+                Assert.IsNotNull(new SeasonalContext("c", "n", "h", "v").KeyFor(def.Season), def.Id + " belongs to a known event");
         }
 
         static CosmeticCatalog Catalog()
@@ -116,6 +141,11 @@ namespace Echo.Tests.EditMode
             Assert.AreEqual(AchievementIds.LeadTheWay, rewards["char_rudolph"]);
             Assert.AreEqual(AchievementIds.SnowedUnder, rewards["trail_candy_cane"]);
             Assert.AreEqual(AchievementIds.FirstFooter, rewards["trail_fireworks"]);
+            Assert.AreEqual(AchievementIds.TrickOrTreat, rewards["char_pumpkin"]);
+            Assert.AreEqual(AchievementIds.ItsComplicated, rewards["grave_heart"]);
+            Assert.AreEqual(CosmeticType.Grave, catalog.Items.First(i => i.Id == "grave_heart").Type);
+            Assert.IsTrue(CosmeticUnlocks.IsOwned(catalog.Resolve(null, CosmeticType.Grave), 0, new System.Collections.Generic.List<string>()),
+                "the stone is everyone's");
             foreach (CosmeticItem item in catalog.Items.Where(i => rewards.ContainsKey(i.Id)))
             {
                 Assert.IsFalse(item.PurchaseOnly || item.EarnedByScore, item.Id);

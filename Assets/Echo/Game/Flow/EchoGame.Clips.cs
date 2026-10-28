@@ -72,6 +72,8 @@ namespace Echo.Game.Flow
             };
             _clipEditor.PlayClicked += ToggleClipPreview;
             _clipEditor.MakeClicked += MakeClip;
+            _clipEditor.SaveClicked += SaveMadeClip;
+            _clipEditor.ShareClicked += ShareMadeClip;
             _clipEditor.BackClicked += EndReplay;
             _clipEditor.CancelClicked += CancelRecording;
         }
@@ -338,11 +340,37 @@ namespace Echo.Game.Flow
             LastClipPath = path;
             string preset = _clipFormat == ClipFormat.Gif ? "gif" : _clipFormat == ClipFormat.Vertical ? "vertical" : "video";
             string size = _clipFormat == ClipFormat.Gif ? "" : $" ({ClipCapture.Width * LastClipScale} x {ClipCapture.Height * LastClipScale}, {_clipFps} fps)";
-            _clipEditor.SetStatus(mime == "video/mp4" ? $"Video ready to share{size}" : "GIF ready to share");
+            _clipEditor.SetStatus(mime == "video/mp4" ? $"Video ready{size}" : "GIF ready");
             Log(AnalyticsEvents.ClipExported, ("preset", preset), ("length", Mathf.RoundToInt(ClipRange.Seconds)), ("has_hook", _clipHook.Length > 0));
+            _madeClip = (path, mime, reel, preset);
+            _clipEditor.SetReady(true);
+        }
+
+        // A user revision: the clip just made, kept in the gallery or shared (or both) until the clip is changed.
+        (string Path, string Mime, Reel Reel, string Preset) _madeClip;
+
+        async void ShareMadeClip()
+        {
+            var (path, mime, reel, preset) = _madeClip;
+            if (!_clipEditor.Ready || path == null) return;
             string link = await ChallengeLinkFor(reel, ChallengeNames.Clean(_save.Settings.PlayerName));
+            if (this == null) return;
             _services.Share.ShareFile(path, mime, ClipText(reel, link));
             Log(AnalyticsEvents.ClipShared, ("preset", preset));
+        }
+
+        void SaveMadeClip()
+        {
+            var (path, mime, _, preset) = _madeClip;
+            if (!_clipEditor.Ready || path == null) return;
+            string name = $"Echo_{DateTime.Now:yyyyMMdd_HHmmss}{(mime == "image/gif" ? ".gif" : ".mp4")}";
+            _clipEditor.SetStatus("Saving...");
+            _services.Share.SaveToGallery(path, mime, name, saved =>
+            {
+                if (this == null) return;
+                _clipEditor.SetStatus(saved ? "Saved to your gallery" : "Couldn't save it here. Use Share to keep it.");
+                Log(AnalyticsEvents.ClipSaved, ("preset", preset), ("saved", saved));
+            });
         }
 
         /// <summary>The scale the last video was written at (a phone may step down from the Vertical preset's x4). Tests.</summary>

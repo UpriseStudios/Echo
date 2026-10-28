@@ -18,6 +18,9 @@ namespace Echo.Editor.Art
 
         public static string EffectPath(string season, int i) => PathFor(season, "fx_" + i);
 
+        /// <summary>The Heart gravestone, a cosmetic (It's Complicated's reward).</summary>
+        public static string HeartGravePath => $"{Dir}/grave_heart.png";
+
         /// <summary>A firework spark, shared by every season with fireworks.</summary>
         public static string SparkPath => $"{Dir}/fx_spark.png";
 
@@ -50,6 +53,14 @@ namespace Echo.Editor.Art
             EchoArt.Write(EffectPath(x, 0), PixelSeasons.Snowflake(0));
             EchoArt.Write(EffectPath(x, 1), PixelSeasons.Snowflake(1));
             EchoArt.Write(SparkPath, PixelSeasons.Spark());
+            // Valentine's, and the Heart gravestone (a cosmetic earned then, worn all year).
+            const string v = Game.Seasons.SeasonIds.Valentines;
+            EchoArt.Write(PathFor(v, NemesisAccessory), PixelSeasons.NemesisHeart());
+            EchoArt.Write(HeartGravePath, PixelSeasons.HeartGrave());
+            // Halloween (switched off until next year).
+            const string h = Game.Seasons.SeasonIds.Halloween;
+            EchoArt.Write(PathFor(h, Grave), PixelSeasons.PumpkinGrave());
+            EchoArt.Write(PathFor(h, GhostAccessory), PixelSeasons.Cobweb());
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
 
             ImportAs(x);
@@ -58,6 +69,12 @@ namespace Echo.Editor.Art
             EchoArt.ImportSprite(PathFor(x, NemesisAccessory), EchoArt.WorldPpu, new Vector2((2.5f - 5f) / 5f, (2.5f + 6f) / 5f));
             foreach (string fx in new[] { EffectPath(x, 0), EffectPath(x, 1), SparkPath })
                 EchoArt.ImportSprite(fx, EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
+
+            EchoArt.ImportSprite(PathFor(v, NemesisAccessory), EchoArt.WorldPpu, new Vector2(0.5f, -1f / 9f));
+            EchoArt.ImportSprite(HeartGravePath, EchoArt.WorldPpu, new Vector2(0.5f, 2f / 16f));
+            EchoArt.ImportSprite(PathFor(h, Grave), EchoArt.WorldPpu, new Vector2(0.5f, 2f / 16f));
+            // The web's top row sits 3 px above the head's top, so it drapes down over the back of the head.
+            EchoArt.ImportSprite(PathFor(h, GhostAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 5f / 9f));
 
             ImportAs(t);
             EchoArt.ImportSprite(PathFor(t, GhostAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 1f / 10f));
