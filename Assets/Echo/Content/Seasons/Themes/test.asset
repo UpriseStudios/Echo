@@ -34,6 +34,12 @@ MonoBehaviour:
   EffectFall: 1.2
   EffectSway: 0.3
   EffectParallax: 0.3
+  Fireworks: 0
+  FireworkSpark: {fileID: 0}
+  FireworkColours: []
+  FireworksPerMinute: 6
+  ResetShowSeconds: 0
+  ResetShowToast: 
   Spike: {fileID: 21300000, guid: 8d48bb3d15400334f9fcbd444ac3e8df, type: 3}
   Block: {fileID: 21300000, guid: fa509a8da0ada9846a50a152671d2585, type: 3}
   GroundTop: {fileID: 21300000, guid: e630ccd6edf59a349a9287dc32c986f5, type: 3}

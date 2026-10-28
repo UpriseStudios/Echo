@@ -75,6 +75,17 @@ namespace Echo.Game.Seasons
             return date >= start || date <= end;
         }
 
+        /// <summary>
+        /// The first day of the window's occurrence that holds the date (last year's for early January in a window over
+        /// New Year), so an event has one key however long it runs, e.g. "newyear-2026" for 31 Dec 2026 to 1 Jan 2027.
+        /// </summary>
+        public static DateTime OccurrenceStart(SeasonWindow w, DateTime date)
+        {
+            date = date.Date;
+            TryDate(w.Start, date.Year, out DateTime start, out bool yearly);
+            return yearly && start > date ? start.AddYears(-1) : start;
+        }
+
         // "MM-dd" in the given year, or "yyyy-MM-dd".
         static bool TryDate(string text, int year, out DateTime date, out bool yearly)
         {

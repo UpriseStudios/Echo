@@ -21,5 +21,8 @@ namespace Echo.Game.Cosmetics
             ("Monsters", ProductIds.PackMonsters),
             ("Oddballs", ProductIds.PackOddballs),
         };
+
+        /// <summary>Seasons doc: the Christmas Pack, on sale during Christmas and New Year, and never in the bundle.</summary>
+        public static readonly (string Name, string ProductId) Christmas = ("Christmas", ProductIds.PackChristmas);
     }
 }

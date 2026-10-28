@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using static Echo.Editor.Art.PixelCanvas;
 
@@ -36,6 +37,102 @@ namespace Echo.Editor.Art
             float v = Mathf.Lerp(p.r / 255f, 1f, lift * (1f - below / (float)depth));
             return Grey(v);
         });
+
+        /// <summary><see cref="Capped"/> for art in its own colours: the top pixels of each column turn to snow.</summary>
+        public static PixelCanvas Snowed(PixelCanvas source, int depth) => Repaint(source, (x, y, p) =>
+        {
+            int below = 0;
+            while (below < depth && source.Opaque(x, y + below + 1)) below++;
+            if (below >= depth) return p;
+            return below == 0 || (x * 7 + below * 3) % 5 != 0 ? Hex(below == depth - 1 ? 0xD6E6F2u : 0xF4FAFFu) : p;
+        });
+
+        // ---- Christmas (placeholders) ----
+
+        /// <summary>The spike with snow on its tip: the top 5 rows of its point turn white (still greyscale).</summary>
+        public static PixelCanvas ChristmasSpike() => Repaint(PixelWorld.Spike(), (x, y, p) => y >= 11 ? Grey(1f) : y == 10 && x % 2 == 0 ? Grey(0.97f) : p);
+
+        public static PixelCanvas ChristmasBlock() => Capped(PixelWorld.Block(), 3, 0.95f);
+        public static PixelCanvas ChristmasGroundTop() => Capped(PixelWorld.GroundTop(), 3, 0.9f);
+        public static PixelCanvas ChristmasFar() => Capped(PixelWorld.Mountains(), 7, 0.8f);
+        public static PixelCanvas ChristmasNear() => Capped(PixelWorld.GraveyardHills(), 3, 0.75f);
+        public static PixelCanvas ChristmasHeadstone() => Snowed(PixelWorld.Headstone(), 4);
+
+        /// <summary>A snowman for a gravestone, 12 x 16 like the stone, in its own colours; the mound is a snowdrift.</summary>
+        public static PixelCanvas Snowman()
+        {
+            var c = new PixelCanvas(12, 16);
+            c.Blit(new[]
+            {
+                "....kkkk....",
+                "....kkkk....",
+                "...rrrrrr...",
+                "....wwww....",
+                "...wkwwkw...",
+                "...wwwwoo...",
+                "....wwww....",
+                "..RRRRRRRR..",
+                "..wwwwwRww..",
+                ".wwwwkwRwww.",
+                ".wwwwwwwwww.",
+                ".wwwwkwwwww.",
+                "..wwwwwwww..",
+                "...wwwwww...",
+                "dddddddddddd",
+                "dddddddddddd",
+            }, new Dictionary<char, Color32>
+            {
+                ['k'] = Hex(0x1A1C22), ['r'] = Hex(0xD8323C), ['R'] = Hex(0xC02030), ['w'] = Hex(0xF4F8FC),
+                ['o'] = Hex(0xF08A24), ['d'] = Hex(0xDCE8F2),
+            }, 0, 0);
+            c.Outline(Hex(0x3A4A5A));
+            return c;
+        }
+
+        /// <summary>A Santa hat for every ghost, drooping back to a bobble; pivot just above its trim so it sits on the head.</summary>
+        public static PixelCanvas SantaHat()
+        {
+            var c = new PixelCanvas(13, 9);
+            c.Blit(new[]
+            {
+                "w...........",
+                "wwrr........",
+                "..rrrrr.....",
+                "..rrrrrRR...",
+                "..rrrrrrRR..",
+                ".wwwwwwwwww.",
+                ".wwwwwwwwww.",
+            }, new Dictionary<char, Color32> { ['r'] = Hex(0xE02838), ['R'] = Hex(0xB01828), ['w'] = Hex(0xF8F8F8) }, 0, 1);
+            c.Outline(Hex(0x2A0A10));
+            return c;
+        }
+
+        /// <summary>The Nemesis's glowing red nose (Rudolph), a 3 x 3 bulb with a shine, in place of its horns.</summary>
+        public static PixelCanvas RedNose()
+        {
+            var c = new PixelCanvas(5, 5);
+            c.Blit(new[] { ".R.", "RwR", "RRR" }, new Dictionary<char, Color32> { ['R'] = Hex(0xFF2A24), ['w'] = Hex(0xFFD0C8) }, 1, 1);
+            c[1, 2] = Hex(0xFF2A24);
+            c.Outline(Hex(0x5A0A08, 200));
+            return c;
+        }
+
+        /// <summary>A snowflake: a 2 x 2 flake or a single soft point.</summary>
+        public static PixelCanvas Snowflake(int kind)
+        {
+            var c = kind == 0 ? new PixelCanvas(2, 2) : new PixelCanvas(1, 1);
+            c.Rect(0, 0, c.Width - 1, c.Height - 1, Hex(0xFFFFFF, kind == 0 ? (byte)230 : (byte)180));
+            return c;
+        }
+
+        /// <summary>A firework spark, white for the theme's colours: a bright point with a soft cross.</summary>
+        public static PixelCanvas Spark()
+        {
+            var c = new PixelCanvas(3, 3);
+            c[1, 1] = Grey(1f);
+            c[0, 1] = c[2, 1] = c[1, 0] = c[1, 2] = Grey(1f, 120);
+            return c;
+        }
 
         // ---- the test theme (placeholders) ----
 

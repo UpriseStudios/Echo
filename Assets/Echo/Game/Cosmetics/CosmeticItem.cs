@@ -21,6 +21,11 @@ namespace Echo.Game.Cosmetics
         [Tooltip("Unused since characters carry their own frames; kept so older catalogs still load.")]
         public Sprite Sprite;
 
+        [Tooltip("Trail only (seasons doc): colours along the trail, e.g. candy-cane stripes; empty uses Color.")]
+        public Color[] TrailStops = new Color[0];
+        [Tooltip("Hard stripes between the stops rather than a blend.")]
+        public bool TrailStriped;
+
         [Tooltip("Palette only: background colour at 0 m, 500 m and 1000 m.")]
         public Color[] PaletteStops = new Color[0];
 
@@ -49,12 +54,16 @@ namespace Echo.Game.Cosmetics
         public CosmeticUnlockStat UnlockStat;
         public int UnlockTarget;
 
+        [Tooltip("Seasons doc: earned with this achievement (a seasonal one) and kept for good. Never bought.")]
+        public string UnlockAchievement = "";
+
         [Tooltip("How to unlock it, shown while locked, e.g. \"Die 250 times\".")]
         public string UnlockText = "";
 
         /// <summary>Unlocked by best score (tech spec 16), as opposed to a purchase or ads.</summary>
         /// <summary>Colour packs keep their score milestone and add ads as a second way in (a user revision).</summary>
-        public bool EarnedByScore => !PurchaseOnly && !AllAchievements && UnlockStat == CosmeticUnlockStat.None && (AdsToUnlock == 0 || UnlockScore > 0);
+        public bool EarnedByScore => !PurchaseOnly && !AllAchievements && UnlockStat == CosmeticUnlockStat.None && string.IsNullOrEmpty(UnlockAchievement)
+            && (AdsToUnlock == 0 || UnlockScore > 0);
 
         [Header("Character")]
         public Sprite[] RunFrames = new Sprite[0];

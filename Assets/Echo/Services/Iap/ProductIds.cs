@@ -17,6 +17,9 @@ namespace Echo.Services.Iap
         public const string PackOddballs = "echo.pack.oddballs";
         public const string SeasonOfEcho = "echo.pack.season1";
 
+        /// <summary>Seasons doc (version 2.1): four Christmas characters at £1.99, sold each December, not in the bundle.</summary>
+        public const string PackChristmas = "echo.pack.christmas";
+
         public static readonly string[] Packs =
         {
             PackUndead, PackDungeon, PackCritters, PackSpace, PackRetro, PackRoyal, PackMonsters, PackOddballs,
@@ -25,7 +28,7 @@ namespace Echo.Services.Iap
         public static readonly string[] All =
         {
             PackUndead, PackDungeon, PackCritters, PackSpace, PackRetro, PackRoyal, PackMonsters, PackOddballs,
-            SeasonOfEcho,
+            SeasonOfEcho, PackChristmas,
         };
     }
 }

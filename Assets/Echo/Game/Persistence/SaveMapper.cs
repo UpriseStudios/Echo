@@ -62,6 +62,14 @@ namespace Echo.Game.Persistence
                 p.Daily.LastDay = s.Daily.LastDay;
                 p.Daily.Streak = Math.Max(0, s.Daily.Streak);
             }
+            // Schema 4 and older have no seasonal progress: it starts empty.
+            if (s.Seasonal != null)
+            {
+                if (s.Seasonal.Event != null)
+                    foreach (var kv in s.Seasonal.Event) if (!string.IsNullOrEmpty(kv.Value)) p.Seasonal.Event[kv.Key] = kv.Value;
+                if (s.Seasonal.LastDay != null)
+                    foreach (var kv in s.Seasonal.LastDay) p.Seasonal.LastDay[kv.Key] = kv.Value;
+            }
             p.BanishTenUsed = s.BanishTenUsed;
             p.RunsSinceBest = Math.Max(0, s.RunsSinceBest);
             if (!string.IsNullOrEmpty(s.BestRun) && ChallengeCode.TryDecode(s.BestRun, out Challenge bestRun)) p.BestRun = bestRun;
@@ -147,6 +155,11 @@ namespace Echo.Game.Persistence
             s.Daily.DaysPlayed = p.Daily.DaysPlayed;
             s.Daily.LastDay = p.Daily.LastDay;
             s.Daily.Streak = p.Daily.Streak;
+            s.Seasonal = new SeasonalSaveData
+            {
+                Event = new System.Collections.Generic.Dictionary<string, string>(p.Seasonal.Event),
+                LastDay = new System.Collections.Generic.Dictionary<string, int>(p.Seasonal.LastDay),
+            };
             s.BanishTenUsed = p.BanishTenUsed;
             s.RunsSinceBest = p.RunsSinceBest;
             if (p.BestRun != null && string.IsNullOrEmpty(p.BestRun.ContentVersion)) p.BestRun.ContentVersion = contentVersion;

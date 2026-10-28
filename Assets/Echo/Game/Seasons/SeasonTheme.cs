@@ -36,6 +36,17 @@ namespace Echo.Game.Seasons
         [Tooltip("How far the layer drifts back as the camera moves (0 fixed to the screen, 1 fixed to the world).")]
         [Range(0f, 1f)] public float EffectParallax = 0.3f;
 
+        [Header("Fireworks (also behind the floor): bursts high in the sky")]
+        public bool Fireworks;
+        public Sprite FireworkSpark;
+        public Color[] FireworkColours = new Color[0];
+        [Tooltip("Bursts a minute normally.")]
+        public float FireworksPerMinute = 6f;
+        [Tooltip("Seasons doc (New Year): when the Daily Haunt board resets at 00:00 UTC, a show this long, ten times as busy.")]
+        public float ResetShowSeconds;
+        [Tooltip("The toast as the show starts, e.g. HAPPY NEW YEAR!")]
+        public string ResetShowToast = "";
+
         [Header("Obstacles: same size and outline as the originals, greyscale, tinted as hazards")]
         public Sprite Spike;
         public Sprite Block;

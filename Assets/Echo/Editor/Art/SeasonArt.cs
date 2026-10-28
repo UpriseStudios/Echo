@@ -18,6 +18,9 @@ namespace Echo.Editor.Art
 
         public static string EffectPath(string season, int i) => PathFor(season, "fx_" + i);
 
+        /// <summary>A firework spark, shared by every season with fireworks.</summary>
+        public static string SparkPath => $"{Dir}/fx_spark.png";
+
         public static void Generate()
         {
             EchoArt.EnsureFolder(Dir);
@@ -33,7 +36,28 @@ namespace Echo.Editor.Art
             EchoArt.Write(PathFor(t, NemesisAccessory), PixelSeasons.TestNemesisAccessory());
             EchoArt.Write(EffectPath(t, 0), PixelSeasons.Confetti(0));
             EchoArt.Write(EffectPath(t, 1), PixelSeasons.Confetti(1));
+            // Christmas; New Year wears the same snow and adds fireworks.
+            const string x = Game.Seasons.SeasonIds.Christmas;
+            EchoArt.Write(PathFor(x, Spike), PixelSeasons.ChristmasSpike());
+            EchoArt.Write(PathFor(x, Block), PixelSeasons.ChristmasBlock());
+            EchoArt.Write(PathFor(x, GroundTop), PixelSeasons.ChristmasGroundTop());
+            EchoArt.Write(PathFor(x, Far), PixelSeasons.ChristmasFar());
+            EchoArt.Write(PathFor(x, Near), PixelSeasons.ChristmasNear());
+            EchoArt.Write(PathFor(x, Grave), PixelSeasons.Snowman());
+            EchoArt.Write(PathFor(x, Headstone), PixelSeasons.ChristmasHeadstone());
+            EchoArt.Write(PathFor(x, GhostAccessory), PixelSeasons.SantaHat());
+            EchoArt.Write(PathFor(x, NemesisAccessory), PixelSeasons.RedNose());
+            EchoArt.Write(EffectPath(x, 0), PixelSeasons.Snowflake(0));
+            EchoArt.Write(EffectPath(x, 1), PixelSeasons.Snowflake(1));
+            EchoArt.Write(SparkPath, PixelSeasons.Spark());
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+
+            ImportAs(x);
+            // The hat's trim sits on the head; the nose lands on the face, 5 px forward and 6 down from the head's top.
+            EchoArt.ImportSprite(PathFor(x, GhostAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 2f / 9f));
+            EchoArt.ImportSprite(PathFor(x, NemesisAccessory), EchoArt.WorldPpu, new Vector2((2.5f - 5f) / 5f, (2.5f + 6f) / 5f));
+            foreach (string fx in new[] { EffectPath(x, 0), EffectPath(x, 1), SparkPath })
+                EchoArt.ImportSprite(fx, EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
 
             ImportAs(t);
             EchoArt.ImportSprite(PathFor(t, GhostAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 1f / 10f));

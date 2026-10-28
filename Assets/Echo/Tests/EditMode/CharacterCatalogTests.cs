@@ -50,7 +50,7 @@ namespace Echo.Tests.EditMode
         public void PumpkinTakesFiveAds_TheRestAreEarnedFromStats()
         {
             CosmeticItem[] characters = Characters();
-            Assert.AreEqual(15 + 32 + 4, characters.Length, "the base cast, 8 packs of 4 and the Elementals");
+            Assert.AreEqual(15 + 32 + 4 + 2 + 4, characters.Length, "the base cast, 8 packs of 4, the Elementals, Santa and Rudolph, and the Christmas Pack");
             Assert.AreEqual(5, characters.Single(c => c.Id == "char_pumpkin").AdsToUnlock);
 
             var earned = characters.Where(c => c.UnlockStat != CosmeticUnlockStat.None)
@@ -65,14 +65,17 @@ namespace Echo.Tests.EditMode
         }
 
         [Test]
-        public void PackCharacters_AreSoldFourToAPack_AndAllInTheSeasonBundle()
+        public void PackCharacters_AreSoldFourToAPack_AndAllButChristmasInTheSeasonBundle()
         {
             CosmeticItem[] sold = Characters().Where(c => c.PurchaseOnly).ToArray();
-            Assert.AreEqual(32, sold.Length);
+            Assert.AreEqual(36, sold.Length);
             var byPack = sold.GroupBy(c => c.ProductId).ToDictionary(g => g.Key, g => g.Count());
-            CollectionAssert.AreEquivalent(ProductIds.Packs, byPack.Keys);
+            CollectionAssert.AreEquivalent(ProductIds.Packs.Append(ProductIds.PackChristmas), byPack.Keys);
             Assert.IsTrue(byPack.Values.All(n => n == 4));
-            Assert.IsTrue(sold.All(c => c.BundleProductId == ProductIds.SeasonOfEcho));
+            Assert.IsTrue(sold.Where(c => c.ProductId != ProductIds.PackChristmas).All(c => c.BundleProductId == ProductIds.SeasonOfEcho));
+            // Seasons doc: the Christmas Pack is its own product, never part of the bundle.
+            Assert.IsTrue(sold.Where(c => c.ProductId == ProductIds.PackChristmas).All(c => c.BundleProductId == ""));
+            CollectionAssert.Contains(ProductIds.All, ProductIds.PackChristmas);
             Assert.IsTrue(Characters().Where(c => !c.PurchaseOnly).All(c => c.ProductId == "" && c.BundleProductId == ""),
                 "the base cast is never sold");
             CollectionAssert.IsSubsetOf(ProductIds.Packs.Append(ProductIds.SeasonOfEcho), ProductIds.All);
@@ -101,7 +104,7 @@ namespace Echo.Tests.EditMode
             Assert.AreEqual(CharacterReaction.Rain, items["char_frog"].Reaction);
             Assert.AreEqual(CharacterReaction.RoyalBanners, items["char_queen"].Reaction);
             Assert.AreEqual(CharacterReaction.None, items["char_hooded"].Reaction);
-            Assert.AreEqual(28, Characters().Count(c => c.Reaction != CharacterReaction.None), "24 and the 4 Elementals");
+            Assert.AreEqual(29, Characters().Count(c => c.Reaction != CharacterReaction.None), "24, the 4 Elementals and Rudolph");
         }
 
         [Test]

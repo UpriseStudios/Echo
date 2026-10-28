@@ -34,7 +34,7 @@ namespace Echo.Services.Mocks
         public string LocalizedPrice(string productId) =>
             !MockPolicy.Grants ? null
             : productId == ProductIds.SeasonOfEcho ? "£4.99"
-            : System.Array.IndexOf(ProductIds.Packs, productId) >= 0 ? "£1.99"
+            : System.Array.IndexOf(ProductIds.Packs, productId) >= 0 || productId == ProductIds.PackChristmas ? "£1.99"
             : null;
     }
 }

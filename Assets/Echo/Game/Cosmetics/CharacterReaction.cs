@@ -41,5 +41,7 @@ namespace Echo.Game.Cosmetics
         DistantStorm,
         /// <summary>Tide: drips from you; puddle shimmer at the headstones, a moat glint by the Castle, ripples of light at night.</summary>
         TideShimmer,
+        /// <summary>Rudolph (seasons doc): a soft red glow on the ground just ahead, under the obstacles, never lighting them.</summary>
+        NoseGlow,
     }
 }

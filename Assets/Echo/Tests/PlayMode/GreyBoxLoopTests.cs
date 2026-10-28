@@ -114,9 +114,10 @@ namespace Echo.Tests.PlayMode
                     var content = GameObject.Find("Canvas/SafeArea/Skins/Scroll/Viewport/Content").transform;
                     var buttons = content.GetComponentsInChildren<UnityEngine.UI.Button>();
                     int characters = buttons.Count(b => b.transform.Find("Preview") != null);
-                    Assert.AreEqual(15 + 32 + 4, characters, "hooded + 8 base, Pumpkin, 5 earned, 8 packs of 4, the Elementals");
-                    Assert.AreEqual(51 + 1 + 8 + 1 + 1 + 17 + 3, buttons.Length,
-                        "characters, the Season bundle, 8 skin packs, the Elementals trial, power-ups, 6 colours + 7 trails + 4 palettes, 3 colour packs");
+                    // Seasons doc: Santa and Rudolph always show (to earn); the Christmas Pack only while on sale (December), so not here.
+                    Assert.AreEqual(15 + 32 + 4 + 2, characters, "hooded + 8 base, Pumpkin, 5 earned, 8 packs of 4, the Elementals, Santa and Rudolph");
+                    Assert.AreEqual(53 + 1 + 8 + 1 + 1 + 19 + 3, buttons.Length,
+                        "characters, the Season bundle, 8 skin packs, the Elementals trial, power-ups, 6 colours + 9 trails + 4 palettes, 3 colour packs");
                 }
 
                 Click($"Canvas/SafeArea/{screen}/Close");

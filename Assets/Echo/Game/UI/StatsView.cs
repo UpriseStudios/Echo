@@ -31,6 +31,7 @@ namespace Echo.Game.UI
         [SerializeField] Button _paste;
 
         readonly List<GameObject> _rows = new List<GameObject>();
+        SeasonalContext _seasonal = SeasonalContext.None;
 
         public event Action Closed;
         public event Action ChallengeClicked;
@@ -44,19 +45,29 @@ namespace Echo.Game.UI
             if (_paste != null) _paste.onClick.AddListener(() => PasteClicked?.Invoke());
         }
 
-        public void Show(Progress p, bool showGallery = true)
+        public void Show(Progress p, bool showGallery = true, SeasonalContext seasonal = null)
         {
+            _seasonal = seasonal ?? SeasonalContext.None;
             if (_challenge != null) _challenge.interactable = p.BestRun != null;
             _root.SetActive(true);
             _summary.text = Summary(p);
 
             int earned = 0;
-            foreach (AchievementDef def in AchievementCatalog.All) if (p.Achievements.Contains(def.Id)) earned++;
-            _header.text = $"ACHIEVEMENTS <color={Accent}>{earned}/{AchievementCatalog.All.Length}</color>";
+            int total = 0;
+            foreach (AchievementDef def in AchievementCatalog.All)
+            {
+                if (def.Seasonal) continue;
+                total++;
+                if (p.Achievements.Contains(def.Id)) earned++;
+            }
+            _header.text = $"ACHIEVEMENTS <color={Accent}>{earned}/{total}</color>";
 
             foreach (GameObject row in _rows) Destroy(row);
             _rows.Clear();
-            foreach (AchievementDef def in AchievementCatalog.All) _rows.Add(Row(def, p));
+            foreach (AchievementDef def in AchievementCatalog.All) if (!def.Seasonal) _rows.Add(Row(def, p));
+            // Seasons doc: their own group, outside the count; each counts only during its event and is kept once earned.
+            _rows.Add(TextRow("SEASONAL", "Only during their event, back every year until earned", "", Done));
+            foreach (AchievementDef def in AchievementCatalog.All) if (def.Seasonal) _rows.Add(Row(def, p));
             if (showGallery) AddGallery(p);
             _scroll.verticalNormalizedPosition = 1f;
         }
@@ -66,7 +77,8 @@ namespace Echo.Game.UI
             RectTransform row = Instantiate(_rowTemplate, _content);
             row.gameObject.SetActive(true);
             bool unlocked = p.Achievements.Contains(def.Id);
-            int progress = unlocked ? def.Target : AchievementRules.ProgressOf(p, def.Id);
+            int progress = unlocked ? def.Target
+                : def.Seasonal ? AchievementRules.SeasonalProgressNow(p, def.Id, _seasonal) : AchievementRules.ProgressOf(p, def.Id);
             bool secret = def.Hidden && !unlocked && progress == 0;
 
             var title = row.Find("Title").GetComponent<TMP_Text>();

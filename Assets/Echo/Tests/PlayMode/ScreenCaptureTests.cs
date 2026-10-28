@@ -212,15 +212,24 @@ namespace Echo.Tests.PlayMode
                 for (int f = 0; f < 20; f++) { game.TickFrame(dt, false); yield return null; }
                 yield return Capture(shot);
             }
-            // Seasons phase 1: the test theme (every override on) by day in the Graveyard and at night.
-            game.PreviewCharacter("char_hooded");
-            game.ForceSeason(Echo.Game.Seasons.SeasonIds.Test);
-            foreach (var (metres, shot) in new[] { (150f, "22_season_test_graveyard"), (600f, "23_season_test_night") })
+            // Seasons: the test theme (every override on), Christmas with Rudolph, and the New Year show.
+            game.PreviewResetShow = true;
+            foreach (var (season, character, metres, shot) in new[]
+                     {
+                         (Echo.Game.Seasons.SeasonIds.Test, "char_hooded", 150f, "22_season_test_graveyard"),
+                         (Echo.Game.Seasons.SeasonIds.Test, "char_hooded", 600f, "23_season_test_night"),
+                         (Echo.Game.Seasons.SeasonIds.Christmas, "char_rudolph", 150f, "24_season_christmas_rudolph"),
+                         (Echo.Game.Seasons.SeasonIds.Christmas, "char_santa", 600f, "25_season_christmas_night_santa"),
+                         (Echo.Game.Seasons.SeasonIds.NewYear, "char_snowman", 640f, "26_season_newyear_show"),
+                     })
             {
+                game.ForceSeason(season);
+                game.PreviewCharacter(character);
                 game.PreviewMetres = metres;
-                for (int f = 0; f < 20; f++) { game.TickFrame(dt, false); yield return null; }
+                for (int f = 0; f < 40; f++) { game.TickFrame(dt, false); yield return null; }
                 yield return Capture(shot);
             }
+            game.PreviewResetShow = false;
             game.ForceSeason(null);
             game.PreviewMetres = null;
             ui.enabled = true;

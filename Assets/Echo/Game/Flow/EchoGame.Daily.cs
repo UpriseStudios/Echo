@@ -408,6 +408,7 @@ namespace Echo.Game.Flow
             if (this == null || _run != run) return;
             int passed = r != null && r.Ok ? r.LeadersPassed : DailyRules.Passed(LeaderDistances(), run.Distance);
             foreach (string id in AchievementRules.OnDailyRunEnded(_progress, _daily.Day, passed)) ToastAchievement(id);
+            CountSeasonalDailyRun(_daily.Date, _daily.Day, passed);
             Save();
             if (r == null || !r.Ok)
             {

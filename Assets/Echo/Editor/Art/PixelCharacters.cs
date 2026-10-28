@@ -38,9 +38,10 @@ namespace Echo.Editor.Art
             Pumpkin(), ShadowSelf(), RgbGlitch(), Negative(), GoldenEcho(), Reaper(),
         };
 
-        /// <summary>Everyone: the base cast, then the pack characters in pack order.</summary>
+        /// <summary>Everyone: the base cast, the pack characters in pack order, the Elementals, then the seasonal cast.</summary>
         public static readonly PixelCharacter[] All =
-            Base.Concat(PixelPacks.All.SelectMany(p => p.Characters)).Concat(PixelElementals.All).ToArray();
+            Base.Concat(PixelPacks.All.SelectMany(p => p.Characters)).Concat(PixelElementals.All)
+                .Concat(PixelSeasonalCast.Earned).Concat(PixelSeasonalCast.ChristmasPack.Characters).ToArray();
 
         static Dictionary<char, Color32> Pal(params (char ch, Color32 c)[] entries)
         {

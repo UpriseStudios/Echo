@@ -26,6 +26,7 @@ namespace Echo.Editor.Art
             "char_frost" => CharacterReaction.FrostBreath,
             "char_storm" => CharacterReaction.DistantStorm,
             "char_tide" => CharacterReaction.TideShimmer,
+            "char_rudolph" => CharacterReaction.NoseGlow,
             _ => CharacterReaction.None,
         };
     }

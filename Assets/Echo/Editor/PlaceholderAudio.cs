@@ -23,6 +23,7 @@ namespace Echo.Editor
 
         /// <summary>Seasons doc: the test theme's music stinger (placeholder).</summary>
         public const string TestSeasonStinger = "season_test_stinger";
+        public const string ChristmasStinger = "season_christmas_stinger";
 
         // A minor: A2, C3, E3, G3 roots for each bar.
         static readonly double[] BarRoots = { 110.0, 87.31, 130.81, 98.0 };
@@ -48,6 +49,9 @@ namespace Echo.Editor
                 + Math.Sin(2 * Math.PI * 5.5 * t) * 0.6) * 0.5 * Env(t, d, 0.15)));
             Write(Chisel, Sfx(0.045, (t, d) => (Noise(t) * 0.5 + Square(2400, t) * 0.25) * Math.Exp(-t * 90)));
             Write(TestSeasonStinger, Sfx(1.0, (t, d) => Arpeggio(t, new[] { 659.25, 783.99, 987.77, 1318.51 }, 0.11) * Env(t, d, 0.01)));
+            // Sleigh bells: bright jingles over a little rising tune.
+            Write(ChristmasStinger, Sfx(1.4, (t, d) => (Arpeggio(t, new[] { 783.99, 880.0, 987.77, 1174.66, 1567.98 }, 0.14) * 0.6
+                + Noise(t) * 0.35 * Math.Exp(-((t * 8) % 1) * 18)) * Env(t, d, 0.01)));
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
         }
 

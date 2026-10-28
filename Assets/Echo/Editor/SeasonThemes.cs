@@ -20,9 +20,60 @@ namespace Echo.Editor
         public static SeasonTheme[] Build()
         {
             if (!AssetDatabase.IsValidFolder(Dir)) AssetDatabase.CreateFolder("Assets/Echo/Content/Seasons", "Themes");
-            var themes = new List<SeasonTheme> { Test() };
+            var themes = new List<SeasonTheme> { Christmas(), NewYear(), Test() };
             foreach (SeasonTheme t in themes) EditorUtility.SetDirty(t);
             return themes.ToArray();
+        }
+
+        // Seasons doc: falling snow, snow-capped obstacles, ghosts in Santa hats, snowman graves, a red-nosed Nemesis.
+        static SeasonTheme Christmas() => Snowy(Load(SeasonIds.Christmas), "Christmas");
+
+        // New Year inside Christmas: the same snow, plus fireworks, and a show when the Daily Haunt board resets.
+        static SeasonTheme NewYear()
+        {
+            SeasonTheme t = Snowy(Load(SeasonIds.NewYear), "New Year");
+            t.Fireworks = true;
+            t.FireworkSpark = Load<Sprite>(SeasonArt.SparkPath);
+            t.FireworkColours = new[] { Hex(0xFFD24A), Hex(0xFF5A8A), Hex(0x8A6AFF), Hex(0x4AD8FF), Hex(0x8AFF6A) };
+            t.FireworksPerMinute = 5f;
+            t.ResetShowSeconds = 120f;
+            t.ResetShowToast = "HAPPY NEW YEAR!";
+            t.Stinger = null;
+            return t;
+        }
+
+        static SeasonTheme Snowy(SeasonTheme t, string title)
+        {
+            const string art = SeasonIds.Christmas;
+            t.Title = title;
+            t.PaletteStops = new[] { Hex(0x5A86B0), Hex(0x3E5A8E), Hex(0x2A3A66) };
+            t.PaletteBlend = 0.7f;
+            t.FarLayer = Sprite(art, SeasonArt.Far);
+            t.NearLayer = Sprite(art, SeasonArt.Near);
+            t.Effect = SeasonEffect.Falling;
+            t.EffectSprites = new[] { Load<Sprite>(SeasonArt.EffectPath(art, 0)), Load<Sprite>(SeasonArt.EffectPath(art, 1)) };
+            t.EffectColours = new Color[0];
+            t.EffectCount = 56;
+            t.EffectFall = 0.7f;
+            t.EffectSway = 0.35f;
+            t.EffectParallax = 0.25f;
+            t.Fireworks = false;
+            t.FireworkSpark = null;
+            t.FireworkColours = new Color[0];
+            t.ResetShowSeconds = 0f;
+            t.ResetShowToast = "";
+            t.Spike = Sprite(art, SeasonArt.Spike);
+            t.Block = Sprite(art, SeasonArt.Block);
+            t.GroundTop = Sprite(art, SeasonArt.GroundTop);
+            t.Grave = Sprite(art, SeasonArt.Grave);
+            t.GraveInColour = true;
+            t.Headstone = Sprite(art, SeasonArt.Headstone);
+            t.GhostAccessory = Sprite(art, SeasonArt.GhostAccessory);
+            t.NemesisAccessory = Sprite(art, SeasonArt.NemesisAccessory);
+            t.DeathLine = "";
+            t.DeathLineNemesisOnly = false;
+            t.Stinger = Load<AudioClip>(PlaceholderAudio.PathFor(PlaceholderAudio.ChristmasStinger));
+            return t;
         }
 
         static SeasonTheme Test()

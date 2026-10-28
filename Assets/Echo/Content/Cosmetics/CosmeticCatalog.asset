@@ -18,6 +18,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.92156863, g: 0.92156863, b: 0.92156863, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -28,6 +30,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: 56d129a890a28c64baedd3e3d7a837b0, type: 3}
@@ -52,6 +55,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.16862746, g: 0.1882353, b: 0.3137255, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -62,6 +67,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: 718cb62db66a3294f9d9b54320eb90ab, type: 3}
@@ -86,6 +92,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.7176471, g: 0.7529412, b: 0.8117647, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -96,6 +104,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: 44d72f8de1076074f91c7dec6d3be2a8, type: 3}
@@ -120,6 +129,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.41568628, g: 0.24705882, b: 0.627451, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -130,6 +141,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: f85f76cc94362214fa726460a63efdae, type: 3}
@@ -154,6 +166,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.9411765, g: 0.47843137, b: 0.6901961, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -164,6 +178,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: d30dccb9c751aaf4686f9ca7a6959f62, type: 3}
@@ -188,6 +203,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.9411765, g: 0.627451, b: 0.2509804, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -198,6 +215,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: 88591383521720c4494f971215a1a8e1, type: 3}
@@ -222,6 +240,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.18039216, g: 0.18039216, b: 0.21960784, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -232,6 +252,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: 55e334e707ccc3f489a3d3e5434aa3ea, type: 3}
@@ -256,6 +277,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.9490196, g: 0.9490196, b: 0.9490196, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -266,6 +289,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: 9232a8ea7c257f844984e13528630475, type: 3}
@@ -290,6 +314,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.56078434, g: 0.6392157, b: 0.72156864, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -300,6 +326,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: fcf28950187b15746a5553085a10e2b2, type: 3}
@@ -324,6 +351,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.22745098, g: 0.18039216, b: 0.3529412, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -334,6 +363,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Watch 5 ads
     RunFrames:
     - {fileID: 21300000, guid: db3478d3c0e7f054ab156a352489dabe, type: 3}
@@ -358,6 +388,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.14117648, g: 0.14117648, b: 0.18039216, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -368,6 +400,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 3
     UnlockTarget: 15
+    UnlockAchievement: 
     UnlockText: Have 15 ghosts active
     RunFrames:
     - {fileID: 21300000, guid: d9f7b540ef9a4fa489be82762fb531fb, type: 3}
@@ -392,6 +425,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.9490196, g: 0.9490196, b: 0.9490196, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -402,6 +437,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 2
     UnlockTarget: 1000
+    UnlockAchievement: 
     UnlockText: Reach 1,000 m
     RunFrames:
     - {fileID: 21300000, guid: e62bd7295c35b254da5c40e8412beacf, type: 3}
@@ -426,6 +462,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.9490196, g: 0.9490196, b: 0.9490196, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -436,6 +474,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 4
     UnlockTarget: 15
+    UnlockAchievement: 
     UnlockText: Clear 15+ ghosts with a new best
     RunFrames:
     - {fileID: 21300000, guid: af9366b112979f747baed7ac07b8fc5e, type: 3}
@@ -460,6 +499,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 1, g: 0.8352941, b: 0.2901961, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -470,6 +511,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 4
     UnlockTarget: 20
+    UnlockAchievement: 
     UnlockText: Clear 20+ ghosts at once
     RunFrames:
     - {fileID: 21300000, guid: 3efed7e430f93c448a0e0cbe5bf845dd, type: 3}
@@ -494,6 +536,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.16470589, g: 0.13333334, b: 0.21960784, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -504,6 +548,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 1
     UnlockTarget: 250
+    UnlockAchievement: 
     UnlockText: Die 250 times
     RunFrames:
     - {fileID: 21300000, guid: f46b195ea99f11d4f8a5c9e04e99b06c, type: 3}
@@ -528,6 +573,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.23137255, g: 0.16470589, b: 0.3529412, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.undead
@@ -538,6 +585,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Undead Pack
     RunFrames:
     - {fileID: 21300000, guid: b5ac5b2339ef41b4091e409eacb5af0f, type: 3}
@@ -562,6 +610,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.11764706, g: 0.101960786, b: 0.14901961, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.undead
@@ -572,6 +622,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Undead Pack
     RunFrames:
     - {fileID: 21300000, guid: e26a4b892cab40845b3c65a47d9405e2, type: 3}
@@ -596,6 +647,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.9019608, g: 0.8627451, b: 0.7529412, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.undead
@@ -606,6 +659,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Undead Pack
     RunFrames:
     - {fileID: 21300000, guid: 4cc58596614d9e44a87553a22a4b77ff, type: 3}
@@ -630,6 +684,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.2901961, g: 0.41568628, b: 0.6039216, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.undead
@@ -640,6 +696,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Undead Pack
     RunFrames:
     - {fileID: 21300000, guid: ece67dae4ba9a734ea88fb63bbf12084, type: 3}
@@ -664,6 +721,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.8784314, g: 0.65882355, b: 0.5019608, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.dungeon
@@ -674,6 +733,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Dungeon Pack
     RunFrames:
     - {fileID: 21300000, guid: b85013075159c6f4eb663cdfe9a0a1bf, type: 3}
@@ -698,6 +758,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.24313726, g: 0.3529412, b: 0.20392157, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.dungeon
@@ -708,6 +770,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Dungeon Pack
     RunFrames:
     - {fileID: 21300000, guid: 94834e16c36b9e74b9e5b6b473bbf3fc, type: 3}
@@ -732,6 +795,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.18039216, g: 0.3529412, b: 0.65882355, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.dungeon
@@ -742,6 +807,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Dungeon Pack
     RunFrames:
     - {fileID: 21300000, guid: 4650b13872aa09e4c9c6a39c06b2b341, type: 3}
@@ -766,6 +832,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.47843137, g: 0.3529412, b: 0.20392157, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.dungeon
@@ -776,6 +844,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Dungeon Pack
     RunFrames:
     - {fileID: 21300000, guid: 1750d841d56aae74cb8632765acbcfc9, type: 3}
@@ -800,6 +869,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.9098039, g: 0.45490196, b: 0.16470589, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.critters
@@ -810,6 +881,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Critters Pack
     RunFrames:
     - {fileID: 21300000, guid: df985dd567aa84f45ba4f34cb12079e2, type: 3}
@@ -834,6 +906,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.3529412, g: 0.72156864, b: 0.2901961, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.critters
@@ -844,6 +918,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Critters Pack
     RunFrames:
     - {fileID: 21300000, guid: 9c315307273581d4ab8e5fa302d24b22, type: 3}
@@ -868,6 +943,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.5411765, g: 0.5411765, b: 0.57254905, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.critters
@@ -878,6 +955,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Critters Pack
     RunFrames:
     - {fileID: 21300000, guid: 4baca91ff8a1ff948aeb057be6682649, type: 3}
@@ -902,6 +980,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.95686275, g: 0.9490196, b: 0.9647059, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.critters
@@ -912,6 +992,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Critters Pack
     RunFrames:
     - {fileID: 21300000, guid: ff3a6bda0b8031449bd6866cd93d49c1, type: 3}
@@ -936,6 +1017,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.5411765, g: 0.8784314, b: 0.4392157, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.space
@@ -946,6 +1029,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Space Pack
     RunFrames:
     - {fileID: 21300000, guid: d8d61810a77cce344b70ee9eb7277ff5, type: 3}
@@ -970,6 +1054,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.3529412, g: 0.43137255, b: 0.22745098, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.space
@@ -980,6 +1066,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Space Pack
     RunFrames:
     - {fileID: 21300000, guid: d5ff5f4890183df4a9a9b608c0b8340b, type: 3}
@@ -1004,6 +1091,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.78431374, g: 0.80784315, b: 0.8392157, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.space
@@ -1014,6 +1103,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Space Pack
     RunFrames:
     - {fileID: 21300000, guid: 3b9fabb5a7123ba408963da2ad8c01e7, type: 3}
@@ -1038,6 +1128,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.41568628, g: 0.24705882, b: 0.7529412, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.space
@@ -1048,6 +1140,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Space Pack
     RunFrames:
     - {fileID: 21300000, guid: 5bf9ea5fbadfffd4586b5e6b1a412bf7, type: 3}
@@ -1072,6 +1165,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.16470589, g: 0.41568628, b: 0.84705883, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.retro
@@ -1082,6 +1177,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Retro Pack
     RunFrames:
     - {fileID: 21300000, guid: 4588cb555b575804f81d5e334718f4bc, type: 3}
@@ -1106,6 +1202,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.22745098, g: 0.22745098, b: 0.26666668, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.retro
@@ -1116,6 +1214,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Retro Pack
     RunFrames:
     - {fileID: 21300000, guid: 6f0a95fa48fc80049a6275cba8406fa1, type: 3}
@@ -1140,6 +1239,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.9098039, g: 0.2901961, b: 0.41568628, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.retro
@@ -1150,6 +1251,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Retro Pack
     RunFrames:
     - {fileID: 21300000, guid: 1ca6c63da6892004e82ffe4683045a8f, type: 3}
@@ -1174,6 +1276,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.22745098, g: 0.78431374, b: 0.9098039, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.retro
@@ -1184,6 +1288,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Retro Pack
     RunFrames:
     - {fileID: 21300000, guid: 63299a67bd64e804aa5013b8fe9ad61b, type: 3}
@@ -1208,6 +1313,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.72156864, g: 0.15686275, b: 0.21960784, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.royal
@@ -1218,6 +1325,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Royal Pack
     RunFrames:
     - {fileID: 21300000, guid: 2a5d50153a3e4284aa5d01336b3df134, type: 3}
@@ -1242,6 +1350,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.47843137, g: 0.22745098, b: 0.72156864, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.royal
@@ -1252,6 +1362,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Royal Pack
     RunFrames:
     - {fileID: 21300000, guid: 4a9905c4ac506d144903d474d62d2be0, type: 3}
@@ -1276,6 +1387,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.84705883, g: 0.22745098, b: 0.22745098, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.royal
@@ -1286,6 +1399,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Royal Pack
     RunFrames:
     - {fileID: 21300000, guid: c3da504169100a847a24d0b3432b5f2c, type: 3}
@@ -1310,6 +1424,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.84705883, g: 0.16470589, b: 0.16470589, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.royal
@@ -1320,6 +1436,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Royal Pack
     RunFrames:
     - {fileID: 21300000, guid: dd0e9a82d07324a49ac92172a667602e, type: 3}
@@ -1344,6 +1461,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.3529412, g: 0.41568628, b: 0.5411765, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.monsters
@@ -1354,6 +1473,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Monsters Pack
     RunFrames:
     - {fileID: 21300000, guid: 4377e57c5dfb74a4cb4519b06c604897, type: 3}
@@ -1378,6 +1498,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.22745098, g: 0.22745098, b: 0.26666668, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.monsters
@@ -1388,6 +1510,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Monsters Pack
     RunFrames:
     - {fileID: 21300000, guid: c26bbbb45c5559c4c924be09627173d0, type: 3}
@@ -1412,6 +1535,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.78431374, g: 0.84705883, b: 0.9098039, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.monsters
@@ -1422,6 +1547,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Monsters Pack
     RunFrames:
     - {fileID: 21300000, guid: d09492417ce8d234393199e237ef295a, type: 3}
@@ -1446,6 +1572,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.22745098, g: 0.41568628, b: 0.22745098, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.monsters
@@ -1456,6 +1584,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Monsters Pack
     RunFrames:
     - {fileID: 21300000, guid: a581994fe518b2246a1f2a76030771b8, type: 3}
@@ -1480,6 +1609,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 1, g: 0.47843137, b: 0.101960786, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.oddballs
@@ -1490,6 +1621,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Oddballs Pack
     RunFrames:
     - {fileID: 21300000, guid: a806b8314eccb4946a12733f87931a9a, type: 3}
@@ -1514,6 +1646,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 1, g: 0.8784314, b: 0.2901961, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.oddballs
@@ -1524,6 +1658,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Oddballs Pack
     RunFrames:
     - {fileID: 21300000, guid: 8eab1af787edc424c912b0e7f078ce67, type: 3}
@@ -1548,6 +1683,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.9098039, g: 0.72156864, b: 0.41568628, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.oddballs
@@ -1558,6 +1695,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Oddballs Pack
     RunFrames:
     - {fileID: 21300000, guid: e9b4e82221704864fbc676591bc23b1e, type: 3}
@@ -1582,6 +1720,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.22745098, g: 0.41568628, b: 0.78431374, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.oddballs
@@ -1592,6 +1732,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Oddballs Pack
     RunFrames:
     - {fileID: 21300000, guid: 54bfa757d755eca4b93b2aa32095a8ab, type: 3}
@@ -1616,6 +1757,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.22745098, g: 0.16470589, b: 0.16470589, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -1626,6 +1769,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Earn all 30 achievements
     RunFrames:
     - {fileID: 21300000, guid: 80c512d539248df468364c6066d67c6a, type: 3}
@@ -1650,6 +1794,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.9098039, g: 0.9647059, b: 1, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -1660,6 +1806,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Earn all 30 achievements
     RunFrames:
     - {fileID: 21300000, guid: bbb7a44d3a83bc74890942339787514f, type: 3}
@@ -1684,6 +1831,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.16470589, g: 0.22745098, b: 0.41568628, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -1694,6 +1843,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Earn all 30 achievements
     RunFrames:
     - {fileID: 21300000, guid: cfef60058736d334dac5b1f6da885424, type: 3}
@@ -1718,6 +1868,8 @@ MonoBehaviour:
     Type: 3
     Color: {r: 0.22745098, g: 0.78431374, b: 0.84705883, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -1728,6 +1880,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: Earn all 30 achievements
     RunFrames:
     - {fileID: 21300000, guid: 7826268c5a2a60f49a2a9e39fa9f7d06, type: 3}
@@ -1747,11 +1900,13 @@ MonoBehaviour:
     ScarfAnchor: {x: -0.09375, y: 0.5}
     Reaction: 17
     HeadTop: 0.84375
-  - Id: runner_default
-    DisplayName: White
-    Type: 0
-    Color: {r: 1, g: 1, b: 1, a: 1}
+  - Id: char_santa
+    DisplayName: Santa
+    Type: 3
+    Color: {r: 0.84705883, g: 0.19607843, b: 0.23529412, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -1762,6 +1917,229 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: twelve_days
+    UnlockText: 'Christmas: Twelve Days'
+    RunFrames:
+    - {fileID: 21300000, guid: f43f0d34e43958d40a7e2136fafc754f, type: 3}
+    - {fileID: 21300000, guid: 9c16b91bd11a1c8428e878e5e1230d2d, type: 3}
+    - {fileID: 21300000, guid: 119b7de43050b714dbba488497095cbb, type: 3}
+    - {fileID: 21300000, guid: c58c4d71bb37a3546aced11a0ac8c767, type: 3}
+    JumpFrame: {fileID: 21300000, guid: c13b3e46f1ef1824f991e076d8cb5051, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 0408cc001c7d214419e129fea6dbf98d, type: 3}
+    - {fileID: 21300000, guid: 1c0d90eea18b95244ace884a93d138e5, type: 3}
+    - {fileID: 21300000, guid: 9965b6bbdf24b1048824172fb5695073, type: 3}
+    - {fileID: 21300000, guid: b0f7ade326c1d284e9cbdb95c69e1d03, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 07a9e7783060daa428bf025562e57baa, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_rudolph
+    DisplayName: Rudolph
+    Type: 3
+    Color: {r: 0.5411765, g: 0.3529412, b: 0.20392157, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: lead_the_way
+    UnlockText: 'Christmas: Lead the Way'
+    RunFrames:
+    - {fileID: 21300000, guid: 8902a0372ffa2344c86f596df3c0487f, type: 3}
+    - {fileID: 21300000, guid: 957003a88070b41488143538dccfd160, type: 3}
+    - {fileID: 21300000, guid: 9ba8d34282615ba4bb52c005a0f64bad, type: 3}
+    - {fileID: 21300000, guid: 99808c303e2ec8549b58f3ac1f011862, type: 3}
+    JumpFrame: {fileID: 21300000, guid: e71c44a106e05de4485891fb9885d7c6, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 1818f32273d731746bb118b583ae63c7, type: 3}
+    - {fileID: 21300000, guid: b29a554aba16c81449be58c25733c5c3, type: 3}
+    - {fileID: 21300000, guid: 669c7ffaac610c34d963f81d915253ed, type: 3}
+    - {fileID: 21300000, guid: eef8001ab122e534f937fd1d4f1fe6f5, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: fbbdb9bba733ecb47a31f0673f064822, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 18
+    HeadTop: 0.875
+  - Id: char_elf
+    DisplayName: Elf
+    Type: 3
+    Color: {r: 0.18431373, g: 0.61960787, b: 0.2901961, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.christmas
+    BundleProductId: 
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    UnlockText: Christmas Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 2227ff90893a2d74e8d92cc7d88f9c12, type: 3}
+    - {fileID: 21300000, guid: b60562d7072929140a50f88d394c3a30, type: 3}
+    - {fileID: 21300000, guid: 437b9a50889dada4c8d317e124b19a94, type: 3}
+    - {fileID: 21300000, guid: a35ce017c98be6e46be10922ef15f812, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 756f6e2c5858da34c94b1810a50d3f44, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 1bc9d00eb93cd3743ac2930efd12ed1d, type: 3}
+    - {fileID: 21300000, guid: 284ac02942629734a91223d283fe324f, type: 3}
+    - {fileID: 21300000, guid: 5bbcfd7b72eee384d9ef5756c3dab0ba, type: 3}
+    - {fileID: 21300000, guid: b7137041703bdc04ea44188e13c9e107, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 5675dee845ca42c4a9d9b47fecc0a864, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_snowman
+    DisplayName: Snowman
+    Type: 3
+    Color: {r: 0.9490196, g: 0.9647059, b: 0.98039216, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.christmas
+    BundleProductId: 
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    UnlockText: Christmas Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 17b0d6d89d168324ca1c67e264465329, type: 3}
+    - {fileID: 21300000, guid: eefa2d21d85863c48980162c7b60f73d, type: 3}
+    - {fileID: 21300000, guid: fe77162a3c63bb243ab67e80ae76d3d6, type: 3}
+    - {fileID: 21300000, guid: c0b42e8448ed70a40ac3d5e4d9562c61, type: 3}
+    JumpFrame: {fileID: 21300000, guid: dd2542da3abd1114a99731a49274d86e, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: ac88e774b19e4d94eb23e37d02775379, type: 3}
+    - {fileID: 21300000, guid: abaf749d39507b748876f999c7b37b3f, type: 3}
+    - {fileID: 21300000, guid: 6d2138960d2b8f448b3dfc46b5fa066a, type: 3}
+    - {fileID: 21300000, guid: d8c4f880044c8df4e9a7bf5e502a741a, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 1c4f6943ab6dc88439b54c44e8143204, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.84705883, g: 0.19607843, b: 0.23529412, a: 1}
+    ScarfWidth: 0.06
+    ScarfAnchor: {x: -0.09375, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_gingerbread
+    DisplayName: Gingerbread Runner
+    Type: 3
+    Color: {r: 0.6901961, g: 0.41568628, b: 0.20392157, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.christmas
+    BundleProductId: 
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    UnlockText: Christmas Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 7393527e4ecd7fa4eb83991cf4a5995e, type: 3}
+    - {fileID: 21300000, guid: 84abf4a926d788e498a86b73919ce62d, type: 3}
+    - {fileID: 21300000, guid: 8ff6ce37bffd7ea4bb49ef8f05ed6fda, type: 3}
+    - {fileID: 21300000, guid: 27868e8aaad2a7c4c85d10cb254607ba, type: 3}
+    JumpFrame: {fileID: 21300000, guid: f04b01ec09f0fc546872b3b3ce585859, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 5a4f8d1f889fd1740bea556743069998, type: 3}
+    - {fileID: 21300000, guid: d730b94522eb0ed45b6153b48b0910d0, type: 3}
+    - {fileID: 21300000, guid: d28e07fec406a71478dffb1b45251eea, type: 3}
+    - {fileID: 21300000, guid: e8aefc996c8a9eb48b92a67fb8198aee, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 30d4f79969635a645a269d65fd8e3943, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_nutcracker
+    DisplayName: Nutcracker
+    Type: 3
+    Color: {r: 0.78431374, g: 0.15686275, b: 0.22745098, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.pack.christmas
+    BundleProductId: 
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    UnlockText: Christmas Pack
+    RunFrames:
+    - {fileID: 21300000, guid: 03cfc7e6a61fccc42a16dbbe48caad56, type: 3}
+    - {fileID: 21300000, guid: f9b48fc832e9cb847b75f04c669b9011, type: 3}
+    - {fileID: 21300000, guid: a5dadbb660d6a8c4f8912ca46334df8d, type: 3}
+    - {fileID: 21300000, guid: 798e7a95d036ea94088a2c846b7df27d, type: 3}
+    JumpFrame: {fileID: 21300000, guid: d09526a6274a26e4ea051a751582e306, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 8221aad9434b268488872b4e9a08e449, type: 3}
+    - {fileID: 21300000, guid: 6ff8d58d461b2ca4091c2f43cd26aa4c, type: 3}
+    - {fileID: 21300000, guid: 223ce7d0db11a2740bfd50aab9757e4f, type: 3}
+    - {fileID: 21300000, guid: f605ebef83e932044ac60c8c63c7ec8e, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 84c21bf6c4f260b408387f89e598d963, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: runner_default
+    DisplayName: White
+    Type: 0
+    Color: {r: 1, g: 1, b: 1, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -1778,6 +2156,8 @@ MonoBehaviour:
     Type: 0
     Color: {r: 0.62, g: 1, b: 0.82, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 100
     ProductId: 
@@ -1788,6 +2168,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -1804,6 +2185,8 @@ MonoBehaviour:
     Type: 0
     Color: {r: 1, g: 0.86, b: 0.32, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 250
     ProductId: 
@@ -1814,6 +2197,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -1830,6 +2214,8 @@ MonoBehaviour:
     Type: 0
     Color: {r: 1, g: 0.52, b: 0.46, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 500
     ProductId: 
@@ -1840,6 +2226,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -1856,6 +2243,8 @@ MonoBehaviour:
     Type: 0
     Color: {r: 0.35, g: 1, b: 0.35, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 1000
     ProductId: 
@@ -1866,6 +2255,7 @@ MonoBehaviour:
     AdPack: Neon
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -1882,6 +2272,8 @@ MonoBehaviour:
     Type: 0
     Color: {r: 1, g: 0.78, b: 0.18, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 3000
     ProductId: 
@@ -1892,6 +2284,7 @@ MonoBehaviour:
     AdPack: Gold
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -1908,6 +2301,8 @@ MonoBehaviour:
     Type: 1
     Color: {r: 0.45, g: 0.95, b: 1, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -1918,6 +2313,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -1934,6 +2330,8 @@ MonoBehaviour:
     Type: 1
     Color: {r: 0.91, g: 0.96, b: 1, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -1944,6 +2342,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 3
     UnlockTarget: 1
+    UnlockAchievement: 
     UnlockText: Meet your first ghost
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -1960,6 +2359,8 @@ MonoBehaviour:
     Type: 1
     Color: {r: 0.93, g: 0.91, b: 0.85, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -1970,6 +2371,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 1
     UnlockTarget: 50
+    UnlockAchievement: 
     UnlockText: Die 50 times
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -1986,6 +2388,8 @@ MonoBehaviour:
     Type: 1
     Color: {r: 0.73, g: 0.55, b: 1, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -1996,6 +2400,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 2
     UnlockTarget: 500
+    UnlockAchievement: 
     UnlockText: Reach 500 m
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2012,6 +2417,8 @@ MonoBehaviour:
     Type: 1
     Color: {r: 1, g: 0.45, b: 0.95, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 150
     ProductId: 
@@ -2022,6 +2429,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2038,6 +2446,8 @@ MonoBehaviour:
     Type: 1
     Color: {r: 0.7, g: 1, b: 0.3, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 400
     ProductId: 
@@ -2048,6 +2458,7 @@ MonoBehaviour:
     AdPack: Neon
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2064,6 +2475,8 @@ MonoBehaviour:
     Type: 1
     Color: {r: 1, g: 0.82, b: 0.3, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops: []
     UnlockScore: 3000
     ProductId: 
@@ -2074,7 +2487,77 @@ MonoBehaviour:
     AdPack: Gold
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: trail_candy_cane
+    DisplayName: Candy Cane
+    Type: 1
+    Color: {r: 1, g: 0.94, b: 0.94, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops:
+    - {r: 0.9098039, g: 0.15686275, b: 0.22745098, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 0.9098039, g: 0.15686275, b: 0.22745098, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 0.9098039, g: 0.15686275, b: 0.22745098, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    TrailStriped: 1
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: snowed_under
+    UnlockText: 'Christmas: Snowed Under'
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: trail_fireworks
+    DisplayName: Fireworks
+    Type: 1
+    Color: {r: 1, g: 0.86, b: 0.45, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops:
+    - {r: 1, g: 0.8235294, b: 0.2901961, a: 1}
+    - {r: 1, g: 0.3529412, b: 0.5411765, a: 1}
+    - {r: 0.5411765, g: 0.41568628, b: 1, a: 1}
+    - {r: 0.2901961, g: 0.84705883, b: 1, a: 1}
+    - {r: 0.5411765, g: 1, b: 0.41568628, a: 1}
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: first_footer
+    UnlockText: 'New Year: First Footer'
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2090,6 +2573,8 @@ MonoBehaviour:
     Type: 2
     Color: {r: 0.16078432, g: 0.4509804, b: 0.5019608, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops:
     - {r: 0.16078432, g: 0.4509804, b: 0.5019608, a: 1}
     - {r: 0.35686275, g: 0.23529412, b: 0.54901963, a: 1}
@@ -2103,6 +2588,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2119,6 +2605,8 @@ MonoBehaviour:
     Type: 2
     Color: {r: 0.3529412, g: 0.3529412, b: 0.3529412, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops:
     - {r: 0.3529412, g: 0.3529412, b: 0.3529412, a: 1}
     - {r: 0.23921569, g: 0.23921569, b: 0.23921569, a: 1}
@@ -2132,6 +2620,7 @@ MonoBehaviour:
     AdPack: Mono
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2148,6 +2637,8 @@ MonoBehaviour:
     Type: 2
     Color: {r: 0.18431373, g: 0.41960785, b: 0.22745098, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops:
     - {r: 0.18431373, g: 0.41960785, b: 0.22745098, a: 1}
     - {r: 0.41960785, g: 0.41568628, b: 0.18431373, a: 1}
@@ -2161,6 +2652,7 @@ MonoBehaviour:
     AdPack: 
     UnlockStat: 2
     UnlockTarget: 100
+    UnlockAchievement: 
     UnlockText: Reach 100 m
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2177,6 +2669,8 @@ MonoBehaviour:
     Type: 2
     Color: {r: 0.11764706, g: 0.16470589, b: 0.3529412, a: 1}
     Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
     PaletteStops:
     - {r: 0.11764706, g: 0.16470589, b: 0.3529412, a: 1}
     - {r: 0.22745098, g: 0.11764706, b: 0.3529412, a: 1}
@@ -2190,6 +2684,7 @@ MonoBehaviour:
     AdPack: Gold
     UnlockStat: 0
     UnlockTarget: 0
+    UnlockAchievement: 
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using Echo.Core.Achievements;
 using Echo.Editor.Art;
 using Echo.Game.Cosmetics;
 using UnityEditor;
@@ -51,6 +52,11 @@ namespace Echo.Editor
                 Trail("trail_magenta", "Magenta", 150, "", 1f, 0.45f, 0.95f),
                 Ads(Trail("trail_lime", "Lime", 400, "", 0.7f, 1f, 0.3f), "Neon", NeonAds),
                 Ads(Trail("trail_gold", "Gold", 3000, "", 1f, 0.82f, 0.3f), "Gold", GoldAds),
+                // Seasons doc: earned with seasonal achievements, kept for good.
+                Seasonal(Trail("trail_candy_cane", "Candy Cane", 0, "", 1f, 0.94f, 0.94f), AchievementIds.SnowedUnder, "Christmas: Snowed Under",
+                    true, Hex(0xE8283A), Hex(0xFFFFFF), Hex(0xE8283A), Hex(0xFFFFFF), Hex(0xE8283A), Hex(0xFFFFFF)),
+                Seasonal(Trail("trail_fireworks", "Fireworks", 0, "", 1f, 0.86f, 0.45f), AchievementIds.FirstFooter, "New Year: First Footer",
+                    false, Hex(0xFFD24A), Hex(0xFF5A8A), Hex(0x8A6AFF), Hex(0x4AD8FF), Hex(0x8AFF6A)),
 
                 Palette("palette_default", "Teal to Red", 0, "", Hex(0x297380), Hex(0x5B3C8C), Hex(0x8C2E3A)),
                 Ads(Palette("palette_mono", "Monochrome", 300, "", Hex(0x5A5A5A), Hex(0x3D3D3D), Hex(0x222222)), "Mono", MonoAds),
@@ -80,7 +86,9 @@ namespace Echo.Editor
                 // Skins addendum: the base cast is free, Pumpkin takes ads, five are earned. Pack characters are sold.
                 PurchaseOnly = sold,
                 ProductId = c.ProductId,
-                BundleProductId = sold ? PixelPacks.Season : "",
+                // Seasons doc: the Christmas Pack is sold on its own, never in the Season of Echo bundle.
+                BundleProductId = sold && InSeasonBundle(c.ProductId) ? PixelPacks.Season : "",
+                UnlockAchievement = c.UnlockAchievement ?? "",
                 AdsToUnlock = c.AdsToUnlock,
                 UnlockStat = c.UnlockStat,
                 UnlockTarget = c.UnlockTarget,
@@ -102,10 +110,18 @@ namespace Echo.Editor
             };
         }
 
+        static bool InSeasonBundle(string productId)
+        {
+            foreach (PixelPack p in PixelPacks.All)
+                if (p.ProductId == productId) return true;
+            return false;
+        }
+
         static string PackName(string productId)
         {
             foreach (PixelPack p in PixelPacks.All)
                 if (p.ProductId == productId) return p.Name;
+            if (PixelSeasonalCast.ChristmasPack.ProductId == productId) return PixelSeasonalCast.ChristmasPack.Name;
             throw new System.InvalidOperationException($"no pack sells {productId}");
         }
 
@@ -142,6 +158,15 @@ namespace Echo.Editor
 
         static CosmeticItem Trail(string id, string name, int score, string product, float r, float g, float b) =>
             new CosmeticItem { Id = id, DisplayName = name, Type = CosmeticType.Trail, UnlockScore = score, ProductId = product, Color = new Color(r, g, b) };
+
+        static CosmeticItem Seasonal(CosmeticItem trail, string achievement, string text, bool striped, params Color[] stops)
+        {
+            trail.UnlockAchievement = achievement;
+            trail.UnlockText = text;
+            trail.TrailStriped = striped;
+            trail.TrailStops = stops;
+            return trail;
+        }
 
         static CosmeticItem Palette(string id, string name, int score, string product, params Color[] stops) =>
             new CosmeticItem { Id = id, DisplayName = name, Type = CosmeticType.Palette, UnlockScore = score, ProductId = product, PaletteStops = stops, Color = stops[0] };

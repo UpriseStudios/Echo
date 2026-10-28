@@ -136,6 +136,7 @@ namespace Echo.Tests.PlayMode
 
             var seasons = new[] { EchoGame.NoSeason }.Concat(game.SeasonThemes.Select(t => t.Id)).ToArray();
             CollectionAssert.Contains(seasons, SeasonIds.Test);
+            game.PreviewResetShow = true;   // the New Year show too, so the fireworks run under the replays
             foreach (string id in seasons)
             {
                 game.ForceSeason(id);

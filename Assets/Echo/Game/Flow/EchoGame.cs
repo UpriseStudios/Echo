@@ -14,6 +14,7 @@ using Echo.Game.Bootstrap;
 using Echo.Game.Cosmetics;
 using Echo.Game.Input;
 using Echo.Game.Persistence;
+using Echo.Game.Seasons;
 using Echo.Game.UI;
 using Echo.Game.Views;
 using Echo.Game.World;
@@ -191,6 +192,7 @@ namespace Echo.Game.Flow
                 CosmeticUnlocks.Earn(_catalog, _progress.Best, _save.Cosmetics.Owned);
                 CosmeticUnlocks.EarnByAds(_catalog, _save.Cosmetics.AdsWatched, _save.Cosmetics.Owned);
                 CosmeticUnlocks.EarnByStats(_catalog, _progress.Stats, _save.Cosmetics.Owned);
+                CosmeticUnlocks.EarnByAchievements(_catalog, _progress.Achievements, _save.Cosmetics.Owned);
                 _awakenPending = ElementalTrial.EarnIfComplete(_catalog, AchievementCatalog.SinglePlayerEarned(_progress.Achievements), _save.Cosmetics.Owned).Count > 0;
             }
             foreach (string id in AchievementRules.OnSessionStarted(_progress)) ToastAchievement(id);
@@ -213,7 +215,7 @@ namespace Echo.Game.Flow
             _title.StatsClicked += () => OpenMenu(() =>
             {
                 bool gallery = _features == null || _features.RoguesGallery;
-                _stats.Show(_progress, gallery);
+                _stats.Show(_progress, gallery, SeasonalOn(UkCalendar.Date(SeasonNowUtc())));
                 if (gallery) Log(AnalyticsEvents.GalleryViewed, ("entries", _progress.Gallery.Count));
             });
             _title.TwistClicked += OnTwistClicked;
@@ -1088,6 +1090,7 @@ namespace Echo.Game.Flow
                 Log(AnalyticsEvents.NewBest, ("score", result.Score), ("ghostsCleared", result.GhostsCleared), ("nemesisDefeated", result.NemesisDefeated));
 
             foreach (string id in AchievementRules.OnRunEnded(_run, result, _progress, _sessionRuns)) ToastAchievement(id);
+            CountSeasonalRun();
             if (_catalog != null)
             {
                 foreach (CosmeticItem item in CosmeticUnlocks.Earn(_catalog, _progress.Best, _save.Cosmetics.Owned))
@@ -1149,7 +1152,11 @@ namespace Echo.Game.Flow
                 if (_background != null) _background.SetBanners(character.Reaction == CharacterReaction.RoyalBanners);
                 if (characterId == null && _dailyLobby != null) _dailyLobby.SetRunner(character.RunFrames, character.JumpFrame, tint);
             }
-            if (trail != null) _ghostViews.SetTrailColor(trail.Color);
+            if (trail != null)
+            {
+                _ghostViews.SetTrailColor(trail.Color);
+                _ghostViews.SetTrailStops(trail.TrailStops, trail.TrailStriped);
+            }
             if (palette != null) _paletteStops = palette.PaletteStops;
         }
 
@@ -1426,7 +1433,8 @@ namespace Echo.Game.Flow
 
         void ShowSkins() => _skins.Show(_catalog, _save.Cosmetics, _progress.Best,
             id => _services.Iap.LocalizedPrice(id), id => _services.Iap.Owns(id),
-            () => _services.Ads.IsRewardedReady(AdPlacements.UnlockCharacter), _progress.Stats, AchievementCatalog.SinglePlayerEarned(_progress.Achievements));
+            () => _services.Ads.IsRewardedReady(AdPlacements.UnlockCharacter), _progress.Stats, AchievementCatalog.SinglePlayerEarned(_progress.Achievements),
+            ChristmasPackOnSale());
 
         // Ad-unlocked characters (user revision): a rewarded ad from the Skins screen, never during a run.
         void WatchUnlockAd()

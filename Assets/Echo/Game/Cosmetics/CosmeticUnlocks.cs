@@ -57,6 +57,19 @@ namespace Echo.Game.Cosmetics
             return earned;
         }
 
+        /// <summary>Adds every item whose achievement has been earned (seasons doc: seasonal rewards); returns the new ones.</summary>
+        public static List<CosmeticItem> EarnByAchievements(CosmeticCatalog catalog, ICollection<string> achievements, IList<string> owned)
+        {
+            var earned = new List<CosmeticItem>();
+            foreach (var item in catalog.Items)
+            {
+                if (string.IsNullOrEmpty(item.UnlockAchievement) || owned.Contains(item.Id) || !achievements.Contains(item.UnlockAchievement)) continue;
+                owned.Add(item.Id);
+                earned.Add(item);
+            }
+            return earned;
+        }
+
         public static int StatValue(CosmeticUnlockStat stat, LifetimeStats stats) => stat switch
         {
             CosmeticUnlockStat.Deaths => stats.Deaths,

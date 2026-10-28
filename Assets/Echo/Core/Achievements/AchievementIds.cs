@@ -52,5 +52,11 @@ namespace Echo.Core.Achievements
         public const string PassingThrough = "passing_through";
         public const string TopTen = "top_ten";
         public const string DailyGrind = "daily_grind";
+
+        // Seasonal (seasons doc, version 2.1): only during their event, never towards the 30
+        public const string TwelveDays = "twelve_days";
+        public const string LeadTheWay = "lead_the_way";
+        public const string SnowedUnder = "snowed_under";
+        public const string FirstFooter = "first_footer";
     }
 }

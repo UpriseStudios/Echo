@@ -161,6 +161,26 @@ namespace Echo.Game.Views
 
         public void SetTrailColor(Color color) => _color = color;
 
+        // Seasons doc: a trail can run through several colours (candy-cane stripes, fireworks). The keys and one gradient
+        // are made here, outside the run, and only their alpha changes per ghost, so drawing allocates nothing.
+        GradientColorKey[] _trailKeys;
+        readonly GradientAlphaKey[] _trailAlpha = new GradientAlphaKey[2];
+        readonly Gradient _trailGradient = new Gradient();
+
+        public void SetTrailStops(Color[] stops, bool striped)
+        {
+            if (stops == null || stops.Length < 2)
+            {
+                _trailKeys = null;
+                return;
+            }
+            // Gradients hold at most 8 colour keys.
+            int n = Mathf.Min(stops.Length, 8);
+            _trailKeys = new GradientColorKey[n];
+            for (int k = 0; k < n; k++) _trailKeys[k] = new GradientColorKey(stops[k], striped ? (k + 1f) / n : k / (n - 1f));
+            _trailGradient.mode = striped ? GradientMode.Fixed : GradientMode.Blend;
+        }
+
         /// <summary>Ghosts are echoes of the player, so they wear the equipped character's outline.</summary>
         public void SetFrames(Sprite[] runFrames, Sprite jumpFrame)
         {
@@ -360,8 +380,18 @@ namespace Echo.Game.Views
             for (int p = 0; p < n; p++)
                 trail.SetPosition(p, new Vector3(SimUnits.ToWorld(_previewX[p]), SimUnits.ToWorld(_previewY[p]) + h / 2f, 0f));
             var c = new Color(color.r, color.g, color.b, a * (_lantern ? LanternTrailAlpha : TrailAlpha));
-            trail.startColor = c;
-            trail.endColor = new Color(c.r, c.g, c.b, 0f);
+            if (_trailKeys != null)
+            {
+                _trailAlpha[0] = new GradientAlphaKey(c.a, 0f);
+                _trailAlpha[1] = new GradientAlphaKey(_trailGradient.mode == GradientMode.Fixed ? c.a : 0f, 1f);
+                _trailGradient.SetKeys(_trailKeys, _trailAlpha);
+                trail.colorGradient = _trailGradient;
+            }
+            else
+            {
+                trail.startColor = c;
+                trail.endColor = new Color(c.r, c.g, c.b, 0f);
+            }
             trail.enabled = true;
         }
 

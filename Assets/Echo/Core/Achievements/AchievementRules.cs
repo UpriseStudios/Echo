@@ -99,6 +99,63 @@ namespace Echo.Core.Achievements
             return earned;
         }
 
+        /// <summary>Seasons doc: Snowed Under's ghosts, the graveyard's cap.</summary>
+        public const int SnowedUnderGhosts = 30;
+
+        /// <summary>A main-game run ended during a seasonal event (seasons doc).</summary>
+        public static List<string> OnSeasonalRunEnded(Progress p, RunSimulation run, SeasonalContext s)
+        {
+            var earned = new List<string>();
+            if (s.Christmas != null)
+                ReportSeasonal(p, AchievementIds.SnowedUnder, s.Christmas, run.GhostsAtStart >= SnowedUnderGhosts ? 1 : 0, earned);
+            return earned;
+        }
+
+        /// <summary>
+        /// A Daily Haunt run the server accepted during a seasonal event, on <paramref name="day"/> (whole UTC days from
+        /// the server), going further than <paramref name="leadersPassed"/> of that day's leaders.
+        /// </summary>
+        public static List<string> OnSeasonalDailyRun(Progress p, int day, int leadersPassed, SeasonalContext s)
+        {
+            var earned = new List<string>();
+            if (s.Christmas != null)
+            {
+                string twelve = AchievementIds.TwelveDays;
+                bool newDay = !SameEvent(p, twelve, s.Christmas) || !p.Seasonal.LastDay.TryGetValue(twelve, out int last) || day > last;
+                ReportSeasonal(p, twelve, s.Christmas, Fresh(p, twelve, s.Christmas) + (newDay ? 1 : 0), earned);
+                p.Seasonal.LastDay[twelve] = day;
+                ReportSeasonal(p, AchievementIds.LeadTheWay, s.Christmas, Fresh(p, AchievementIds.LeadTheWay, s.Christmas) + Math.Max(0, leadersPassed), earned);
+            }
+            if (s.NewYearsDay != null) ReportSeasonal(p, AchievementIds.FirstFooter, s.NewYearsDay, 1, earned);
+            return earned;
+        }
+
+        /// <summary>A seasonal achievement's progress in the event counting now: none between events or from an earlier one.</summary>
+        public static int SeasonalProgressNow(Progress p, string id, SeasonalContext s)
+        {
+            AchievementDef def = AchievementCatalog.Find(id);
+            string key = def != null && def.Seasonal ? s.KeyFor(def.Season) : null;
+            return key == null ? 0 : Fresh(p, id, key);
+        }
+
+        static bool SameEvent(Progress p, string id, string eventKey) => p.Seasonal.Event.TryGetValue(id, out string had) && had == eventKey;
+
+        // The progress made in this event so far: none if what's saved belongs to an earlier one.
+        static int Fresh(Progress p, string id, string eventKey) => SameEvent(p, id, eventKey) ? ProgressOf(p, id) : 0;
+
+        // Seasons doc: progress belongs to one event and starts again at the next if unfinished; once earned, kept.
+        static void ReportSeasonal(Progress p, string id, string eventKey, int value, List<string> earned)
+        {
+            if (p.Achievements.Contains(id)) return;
+            if (!SameEvent(p, id, eventKey))
+            {
+                p.AchievementProgress.Remove(id);
+                p.Seasonal.LastDay.Remove(id);
+                p.Seasonal.Event[id] = eventKey;
+            }
+            Report(p, id, value, earned);
+        }
+
         /// <summary>The player restarted within a second of dying (the game measures the time).</summary>
         public static List<string> OnQuickRestart(Progress p)
         {

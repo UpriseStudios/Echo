@@ -11,7 +11,8 @@ namespace Echo.Game.Persistence
         //   Haunt's history and unsent runs (daily); ghosts in reels can be daily leaders with names.
         // 4 (version 2.0): tutorial.seenHowToPlay. Older saves migrate with it false, so everyone sees the how-to-play
         //   clips once (skippable); the old file is kept as save.json.schema3.bak like every schema change.
-        public const int CurrentSchema = 4;
+        // 5 (version 2.1): seasonal achievements' events (seasonal). Older saves migrate with none.
+        public const int CurrentSchema = 5;
 
         [JsonProperty("schema")] public int Schema = CurrentSchema;
         [JsonProperty("contentVersion")] public string ContentVersion = "";
@@ -44,6 +45,7 @@ namespace Echo.Game.Persistence
         [JsonProperty("bestReel")] public ReelSaveData BestReel;
 
         [JsonProperty("daily")] public DailySaveData Daily = new DailySaveData();
+        [JsonProperty("seasonal")] public SeasonalSaveData Seasonal = new SeasonalSaveData();
 
         /// <summary>Power-ups held, up to PowerUpRules.MaxHeld of each (a user revision).</summary>
         [JsonProperty("powerUps")] public PowerUpsSaveData PowerUps = new PowerUpsSaveData();

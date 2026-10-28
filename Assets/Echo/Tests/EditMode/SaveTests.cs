@@ -147,6 +147,31 @@ namespace Echo.Tests.EditMode
         }
 
         [Test]
+        public void Schema4Saves_MigrateToSchema5_WithNoSeasonalProgress_AndSeasonalProgressRoundTrips()
+        {
+            // Version 2.1: a 2.0 save (schema 4) loads intact, kept as it was, with no seasonal progress yet.
+            string json = "{\"schema\":4,\"contentVersion\":\"" + Version + "\",\"best\":512,\"achievements\":[\"close_one\"]}";
+            File.WriteAllText(_saves.FilePath, json);
+            SaveData loaded = _saves.Load();
+            Assert.AreEqual(json, File.ReadAllText(_saves.SchemaBackupPath(4)), "the old file, byte for byte");
+            Progress p = SaveMapper.ToProgress(loaded, Version, out _);
+            Assert.AreEqual(512, p.Best);
+            CollectionAssert.Contains(p.Achievements, "close_one");
+            Assert.IsEmpty(p.Seasonal.Event);
+
+            Echo.Core.Achievements.AchievementRules.OnSeasonalDailyRun(p, 340, 4, new Echo.Core.Achievements.SeasonalContext(christmas: "christmas-2026"));
+            var again = new SaveData();
+            SaveMapper.Write(p, again, Version);
+            _saves.Save(again);
+            SaveData five = _saves.Load();
+            Assert.AreEqual(5, five.Schema);
+            Progress back = SaveMapper.ToProgress(five, Version, out _);
+            Assert.AreEqual("christmas-2026", back.Seasonal.Event["twelve_days"]);
+            Assert.AreEqual(340, back.Seasonal.LastDay["twelve_days"]);
+            Assert.AreEqual(4, Echo.Core.Achievements.AchievementRules.ProgressOf(back, "lead_the_way"));
+        }
+
+        [Test]
         public void TheBestReel_RoundTrips()
         {
             var p = SampleProgress();

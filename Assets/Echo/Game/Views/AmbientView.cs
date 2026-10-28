@@ -134,6 +134,7 @@ namespace Echo.Game.Views
                     case CharacterReaction.Embers: Ember(env, t, player, left, right, w, graveyardLeft, tileWidth); break;
                     case CharacterReaction.FrostBreath: Frost(env, t, player, left, right, w, bottom, height, graveyardLeft, tileWidth); break;
                     case CharacterReaction.DistantStorm: Storm(env, t, left, right, w, bottom, height, top, graveyardLeft, tileWidth); break;
+                    case CharacterReaction.NoseGlow: NoseGlow(env, t, player); break;
                     case CharacterReaction.TideShimmer: Tide(env, t, player, left, right, w, bottom, height, graveyardLeft, tileWidth); break;
                 }
             }
@@ -209,6 +210,14 @@ namespace Echo.Game.Views
             if (env.Night <= 0f) return;
             float flicker = 0.9f + 0.1f * Mathf.Sin(t * 13f) * Mathf.Sin(t * 7.3f);
             Put(_glow, player + new Vector2(0f, 0.45f), new Color(1f, 0.62f, 0.25f, 0.55f * env.Night * flicker), 9, 2.6f);
+        }
+
+        // Seasons doc: Rudolph's nose lights the ground just ahead. Sorted with the floor's edge and graves (1), under
+        // the obstacles (2), ghosts and player, so it never makes a hazard easier to see; a touch stronger at night.
+        void NoseGlow(in EnvironmentState env, float t, Vector2 player)
+        {
+            float pulse = 0.85f + 0.15f * Mathf.Sin(t * 4f);
+            Put(_glow, player + new Vector2(0.9f, 0.05f), new Color(1f, 0.28f, 0.22f, (0.16f + 0.2f * env.Night) * pulse), 1, new Vector2(2.4f, 0.7f));
         }
 
         void Fireflies(in EnvironmentState env, float t, Vector2 player)

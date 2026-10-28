@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
+using Echo.Core.Achievements;
 using Echo.Core.Ghosts;
 using Echo.Core.Rules;
+using Echo.Game.Cosmetics;
 using Echo.Game.Seasons;
 using Echo.Game.Views;
 using Echo.Services.Backend;
@@ -140,7 +142,33 @@ namespace Echo.Game.Flow
 
         void RenderSeasonEffects()
         {
-            if (_seasonEffects != null) _seasonEffects.Render(_cameraRig.Left, _cameraRig.Right, _cameraRig.Bottom, _cameraRig.Height, Time.time);
+            if (_seasonEffects != null)
+                _seasonEffects.Render(_cameraRig.Left, _cameraRig.Right, _cameraRig.Bottom, _cameraRig.Height, Time.time, ResetShow());
+        }
+
+        /// <summary>Test and screenshot hook: the New Year show as if the board had just reset.</summary>
+        public bool PreviewResetShow { get; set; }
+
+        float _showCheckAt = -1f, _show;
+        string _showToastedFor;
+
+        // Seasons doc (New Year): fireworks when the Daily Haunt board resets at 00:00 UTC, by the server's clock when
+        // known. Checked once a second, so the date sums never run every frame.
+        float ResetShow()
+        {
+            if (_season == null || _season.ResetShowSeconds <= 0f) return 0f;
+            if (PreviewResetShow) return 1f;
+            if (Time.realtimeSinceStartup < _showCheckAt) return _show;
+            _showCheckAt = Time.realtimeSinceStartup + 1f;
+            DateTime now = SeasonNowUtc();
+            _show = (now - now.Date).TotalSeconds < _season.ResetShowSeconds ? 1f : 0f;
+            string day = now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            if (_show > 0f && _showToastedFor != day && !string.IsNullOrEmpty(_season.ResetShowToast))
+            {
+                _showToastedFor = day;
+                _hud.QueueToast(_season.ResetShowToast);
+            }
+            return _show;
         }
 
         /// <summary>The season's death-screen line under the message, when it applies to how this run ended.</summary>
@@ -149,6 +177,45 @@ namespace Echo.Game.Flow
             if (_season == null || string.IsNullOrEmpty(_season.DeathLine)) return message;
             if (_season.DeathLineNemesisOnly && (run.Cause != DeathCause.Ghost || run.Killer == null || run.Killer != nemesis)) return message;
             return string.IsNullOrEmpty(message) ? _season.DeathLine : message + "\n" + _season.DeathLine;
+        }
+
+        // ---- seasonal achievements (seasons doc) ----
+
+        /// <summary>The events counting towards seasonal achievements on this UK date.</summary>
+        public SeasonalContext SeasonalOn(DateTime ukDate) => SeasonalEvents.On(_schedule, ukDate);
+
+        // A main-game run, on today's date (seasons doc rule 6: the server's when it has told us, the device's otherwise).
+        void CountSeasonalRun()
+        {
+            SeasonalContext s = SeasonalOn(UkCalendar.Date(SeasonNowUtc()));
+            if (!s.Any) return;
+            foreach (string id in AchievementRules.OnSeasonalRunEnded(_progress, _run, s)) ToastAchievement(id);
+            GrantAchievementRewards();
+        }
+
+        // A Daily Haunt run, on its course's date (the server's).
+        void CountSeasonalDailyRun(string date, int day, int leadersPassed)
+        {
+            if (!DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime ukDate)) return;
+            SeasonalContext s = SeasonalOn(ukDate);
+            if (!s.Any) return;
+            foreach (string id in AchievementRules.OnSeasonalDailyRun(_progress, day, leadersPassed, s)) ToastAchievement(id);
+            GrantAchievementRewards();
+        }
+
+        // Seasons doc: a seasonal reward is kept for good once its achievement is earned.
+        void GrantAchievementRewards()
+        {
+            if (_catalog == null) return;
+            foreach (CosmeticItem item in CosmeticUnlocks.EarnByAchievements(_catalog, _progress.Achievements, _save.Cosmetics.Owned))
+                _hud.QueueToast("Unlocked: " + item.DisplayName);
+        }
+
+        /// <summary>Seasons doc: the Christmas Pack is on sale during Christmas and New Year (by the schedule, or forced).</summary>
+        bool ChristmasPackOnSale()
+        {
+            string id = ForcedSeason ?? ScheduledSeason(SeasonNowUtc());
+            return id == SeasonIds.Christmas || id == SeasonIds.NewYear;
         }
 
         /// <summary>The Settings button: the schedule, no season, then each theme in turn.</summary>

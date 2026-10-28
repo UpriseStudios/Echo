@@ -46,5 +46,8 @@ namespace Echo.Core.Rules
 
         /// <summary>Daily Haunt history for its achievements (version 2.0). Daily runs never touch anything else here.</summary>
         public readonly Echo.Core.Daily.DailyProgress Daily = new Echo.Core.Daily.DailyProgress();
+
+        /// <summary>Seasons doc (version 2.1): which event each seasonal achievement's progress belongs to.</summary>
+        public readonly Echo.Core.Achievements.SeasonalProgress Seasonal = new Echo.Core.Achievements.SeasonalProgress();
     }
 }

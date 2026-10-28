@@ -29,6 +29,9 @@ namespace Echo.Editor.Art
         public int UnlockTarget;
         public string UnlockText = "";
 
+        /// <summary>Seasons doc: earned with this (seasonal) achievement, kept for good.</summary>
+        public string UnlockAchievement = "";
+
         /// <summary>Applied to every frame after drawing: inverted colours or an RGB glitch.</summary>
         public PixelEffect Effect;
 

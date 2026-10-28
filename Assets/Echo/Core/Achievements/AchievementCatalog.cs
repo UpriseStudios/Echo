@@ -49,7 +49,17 @@ namespace Echo.Core.Achievements
             new AchievementDef(PassingThrough, "Passing Through", "Pass a leader ghost in the Daily Haunt", online: true),
             new AchievementDef(TopTen, "Top Ten", "Finish a day in the Daily Haunt's top 10", online: true),
             new AchievementDef(DailyGrind, "Daily Grind", "Play the Daily Haunt 3 days in a row", 3, online: true),
+
+            // Version 2.1, seasonal events: each only during its event, and kept once earned.
+            new AchievementDef(TwelveDays, "Twelve Days", "Play the Daily Haunt on 12 different days in December", 12, online: true, season: Christmas),
+            new AchievementDef(LeadTheWay, "Lead the Way", "Pass 25 leader ghosts in the Daily Haunt during December", 25, online: true, season: Christmas),
+            new AchievementDef(SnowedUnder, "Snowed Under", "Have 30 ghosts active during December", season: Christmas),
+            new AchievementDef(FirstFooter, "First Footer", "Finish a Daily Haunt run on 1 January", online: true, season: NewYear),
         };
+
+        // Season ids (the game's schedule names them the same).
+        public const string Christmas = "christmas";
+        public const string NewYear = "newyear";
 
         /// <summary>The single-player set (all but the online extras): the Elementals need every one of these.</summary>
         public static int SinglePlayerCount
@@ -57,7 +67,7 @@ namespace Echo.Core.Achievements
             get
             {
                 int n = 0;
-                foreach (AchievementDef def in All) if (!def.Online) n++;
+                foreach (AchievementDef def in All) if (!def.Online && !def.Seasonal) n++;
                 return n;
             }
         }
@@ -69,7 +79,7 @@ namespace Echo.Core.Achievements
             foreach (string id in earned)
             {
                 AchievementDef def = Find(id);
-                if (def != null && !def.Online) n++;
+                if (def != null && !def.Online && !def.Seasonal) n++;
             }
             return n;
         }

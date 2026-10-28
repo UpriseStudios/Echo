@@ -40,6 +40,7 @@ namespace Echo.Game.UI
         Func<bool> _adReady;
         LifetimeStats _stats = new LifetimeStats();
         int _achievements;
+        bool _christmasOnSale;
         // Whether a rewarded ad was ready at the last redraw: the next ad loads a few seconds after one is
         // watched, so the ad buttons are redrawn when that changes (device testing: they stayed grey).
         bool _adWasReady;
@@ -63,9 +64,10 @@ namespace Echo.Game.UI
 
         public void Show(CosmeticCatalog catalog, CosmeticsSaveData cosmetics, int best,
                          Func<string, string> price, Func<string, bool> ownsProduct, Func<bool> adReady, LifetimeStats stats,
-                         int achievementsEarned = 0)
+                         int achievementsEarned = 0, bool christmasOnSale = false)
         {
             _achievements = achievementsEarned;
+            _christmasOnSale = christmasOnSale;
             _catalog = catalog;
             _cosmetics = cosmetics;
             _best = best;
@@ -101,9 +103,10 @@ namespace Echo.Game.UI
             Header("Characters", null);
             RectTransform characters = Grid(_characterGridTemplate);
             foreach (CosmeticItem item in _catalog.Items)
-                if (item.Type == CosmeticType.Character && !item.PurchaseOnly && !item.AllAchievements) CharacterCard(characters, item);
+                if (item.Type == CosmeticType.Character && !item.PurchaseOnly && !item.AllAchievements && !Seasonal(item)) CharacterCard(characters, item);
 
             ElementalsSection();
+            SeasonalSection();
 
             Header(SkinPacks.SeasonName, "all 8 packs, 32 characters");
             ProductButton("Every skin pack", ProductIds.SeasonOfEcho, PackOwned(null));
@@ -137,6 +140,29 @@ namespace Echo.Game.UI
             foreach (string pack in packs) AdPackButton(pack);
         }
 
+        // Seasons doc: the skins earned in their event (kept for good once earned), and the Christmas Pack, on sale during
+        // Christmas and New Year (and always shown to anyone who owns part of it).
+        void SeasonalSection()
+        {
+            Header("Seasonal", "earned during their event");
+            RectTransform grid = Grid(_characterGridTemplate);
+            foreach (CosmeticItem item in _catalog.Items)
+                if (item.Type == CosmeticType.Character && Seasonal(item)) CharacterCard(grid, item);
+
+            var (name, productId) = SkinPacks.Christmas;
+            bool anyOwned = false;
+            foreach (CosmeticItem item in _catalog.Items)
+                if (item.ProductId == productId && CosmeticUnlocks.IsOwned(item, _best, _cosmetics.Owned)) anyOwned = true;
+            if (!_christmasOnSale && !anyOwned) return;
+            Header($"{name} Pack", "back every December");
+            RectTransform pack = Grid(_characterGridTemplate);
+            foreach (CosmeticItem item in _catalog.Items)
+                if (item.Type == CosmeticType.Character && item.ProductId == productId) CharacterCard(pack, item);
+            ProductButton($"{name} Pack", productId, PackOwned(productId));
+        }
+
+        static bool Seasonal(CosmeticItem item) => !string.IsNullOrEmpty(item.UnlockAchievement);
+
         void AdPackButton(string pack)
         {
             int ads = 0;
@@ -158,11 +184,13 @@ namespace Echo.Game.UI
             button.onClick.AddListener(() => WatchAdClicked?.Invoke());
         }
 
-        // A skin pack is owned once all its characters are, however they were bought; null asks about every pack.
+        // A skin pack is owned once all its characters are, however they were bought; null asks about every pack in the
+        // Season of Echo bundle (the Christmas Pack isn't one).
         bool PackOwned(string productId)
         {
             foreach (CosmeticItem item in _catalog.Items)
-                if (item.Type == CosmeticType.Character && item.PurchaseOnly && (productId == null || item.ProductId == productId)
+                if (item.Type == CosmeticType.Character && item.PurchaseOnly
+                    && (productId == null ? item.BundleProductId == ProductIds.SeasonOfEcho : item.ProductId == productId)
                     && !CosmeticUnlocks.IsOwned(item, _best, _cosmetics.Owned))
                     return false;
             return true;
@@ -239,17 +267,19 @@ namespace Echo.Game.UI
             bool byAds = item.AdsToUnlock > 0;
             bool earned = item.UnlockStat != CosmeticUnlockStat.None;
             bool prestige = item.AllAchievements;
+            bool seasonal = Seasonal(item);
             string status = equipped ? "<color=#FFC94A>Equipped</color>"
                 : borrowed ? $"Trial: {_cosmetics.TrialRunsLeft} runs left"
                 : owned ? "Tap to wear"
+                : seasonal ? item.UnlockText
                 : prestige ? $"Achievements {Mathf.Min(_achievements, ElementalTrial.AchievementsNeeded)}/{ElementalTrial.AchievementsNeeded}"
                 : byAds ? $"Watch ad {Mathf.Min(_cosmetics.AdsWatched, item.AdsToUnlock)}/{item.AdsToUnlock}"
                 : earned ? Requirement(item)
                 : _price(item.ProductId) ?? "Unavailable";
             card.GetComponentInChildren<TMP_Text>().text = $"{item.DisplayName}\n<size=70%>{status}</size>";
-            card.interactable = !equipped && (owned || (!prestige && (byAds ? _adReady() : !earned && _price(item.ProductId) != null)));
-            // Locked earned skins, and Elementals not yet earned or on trial, show as a dark silhouette.
-            if (!owned && (earned || prestige)) preview.color = new Color(0.12f, 0.12f, 0.16f, 1f);
+            card.interactable = !equipped && (owned || (!prestige && !seasonal && (byAds ? _adReady() : !earned && _price(item.ProductId) != null)));
+            // Locked earned and seasonal skins, and Elementals not yet earned or on trial, show as a dark silhouette.
+            if (!owned && (earned || prestige || seasonal)) preview.color = new Color(0.12f, 0.12f, 0.16f, 1f);
 
             CosmeticItem captured = item;
             card.onClick.AddListener(() =>
@@ -271,7 +301,8 @@ namespace Echo.Game.UI
             image.color = Swatch(item, owned);
             var label = button.GetComponentInChildren<TMP_Text>();
             label.text = $"{item.DisplayName}\n<size=72%>" +
-                         (equipped ? "Equipped" : owned ? "Tap to equip" : item.UnlockStat != CosmeticUnlockStat.None ? Requirement(item)
+                         (equipped ? "Equipped" : owned ? "Tap to equip" : Seasonal(item) ? item.UnlockText
+                             : item.UnlockStat != CosmeticUnlockStat.None ? Requirement(item)
                              : item.AdsToUnlock > 0 ? $"Score {item.UnlockScore} or {item.AdsToUnlock} ads" : $"Score {item.UnlockScore}") + "</size>";
             label.color = Luminance(image.color) > 0.55f ? new Color(0.08f, 0.1f, 0.12f) : Color.white;
 

@@ -37,14 +37,17 @@ namespace Echo.Tests.EditMode
             TestCourses.FlatTier1), 1);
 
         [Test]
-        public void Catalog_HasThirtySinglePlayerAchievements_ThreeHidden_PlusFourOnlineExtras()
+        public void Catalog_HasThirtySinglePlayerAchievements_ThreeHidden_PlusFourOnlineExtras_AndFourSeasonal()
         {
-            Assert.AreEqual(34, AchievementCatalog.All.Length);
-            Assert.AreEqual(34, AchievementCatalog.All.Select(d => d.Id).Distinct().Count());
+            Assert.AreEqual(38, AchievementCatalog.All.Length);
+            Assert.AreEqual(38, AchievementCatalog.All.Select(d => d.Id).Distinct().Count());
             Assert.AreEqual(30, AchievementCatalog.SinglePlayerCount, "the Elementals need these 30");
             CollectionAssert.AreEquivalent(
                 new[] { AchievementIds.HauntedByStrangers, AchievementIds.PassingThrough, AchievementIds.TopTen, AchievementIds.DailyGrind },
-                AchievementCatalog.All.Where(d => d.Online).Select(d => d.Id));
+                AchievementCatalog.All.Where(d => d.Online && !d.Seasonal).Select(d => d.Id));
+            CollectionAssert.AreEquivalent(
+                new[] { AchievementIds.TwelveDays, AchievementIds.LeadTheWay, AchievementIds.SnowedUnder, AchievementIds.FirstFooter },
+                AchievementCatalog.All.Where(d => d.Seasonal).Select(d => d.Id));
             CollectionAssert.AreEquivalent(
                 new[] { AchievementIds.ThatWasMe, AchievementIds.SwornEnemy, AchievementIds.UnfinishedBusiness },
                 AchievementCatalog.All.Where(d => d.Hidden).Select(d => d.Id));
