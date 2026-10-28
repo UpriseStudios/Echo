@@ -31,6 +31,7 @@ namespace Echo.Services.Analytics
         public const string ChallengeSent = "challenge_sent";
         public const string ChallengeOpened = "challenge_opened";
         public const string ChallengeResult = "challenge_result";
+        public const string ChallengeRun = "challenge_run";           // a user revision: each attempt at a challenge starts
         public const string PowerUpEarned = "power_up_earned";
         public const string PowerUpUsed = "power_up_used";
         public const string SessionStart = "session_start";

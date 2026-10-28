@@ -104,7 +104,18 @@ namespace Echo.Services.Mocks
         (List<GhostRecord> own, int best, int next) Day(string date) =>
             _days.TryGetValue(date, out var d) ? d : (new List<GhostRecord>(), 0, 1);
 
-        public Task<DailyInfo> GetDailyAsync(string dateOverride)
+        /// <summary>While set and not finished, today's course is still "loading" (the lobby's loading runner).</summary>
+        public Task DailyHold;
+
+        public Task<DailyInfo> GetDailyAsync(string dateOverride) => DailyHold == null ? Daily(dateOverride) : HeldDaily(dateOverride);
+
+        async Task<DailyInfo> HeldDaily(string dateOverride)
+        {
+            await DailyHold;
+            return await Daily(dateOverride);
+        }
+
+        Task<DailyInfo> Daily(string dateOverride)
         {
             if (Offline) return Task.FromResult(DailyInfo.Failed("offline"));
             if (ServerDailyOff) return Task.FromResult(DailyInfo.Failed(BackendFlags.Disabled));

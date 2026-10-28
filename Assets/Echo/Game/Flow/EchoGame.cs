@@ -1140,6 +1140,7 @@ namespace Echo.Game.Flow
                 if (_copycatView != null) _copycatView.SetCharacter(character.RunFrames, character.JumpFrame);
                 if (_ambient != null) _ambient.SetReaction(character.Reaction);
                 if (_background != null) _background.SetBanners(character.Reaction == CharacterReaction.RoyalBanners);
+                if (characterId == null && _dailyLobby != null) _dailyLobby.SetRunner(character.RunFrames, character.JumpFrame, tint);
             }
             if (trail != null) _ghostViews.SetTrailColor(trail.Color);
             if (palette != null) _paletteStops = palette.PaletteStops;

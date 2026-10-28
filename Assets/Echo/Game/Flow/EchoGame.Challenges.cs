@@ -143,6 +143,8 @@ namespace Echo.Game.Flow
             _hud.QueueToast(c.Lite ? $"BEAT {WhoUpper(c)}: {c.Distance} M" : $"BEAT {WhoUpper(c)}: {c.Score:N0}");
             if (_run.Options.Twist != Twist.None) _hud.QueueToast($"AS RECORDED: {WeeklyTwists.Name(_run.Options.Twist).ToUpperInvariant()}");
             if (_challengeNemesis != null) _hud.QueueToast($"{WhoUpper(c)}'S NEMESIS: {NemesisNames.For(_challengeNemesis.RunIndex).ToUpperInvariant()}");
+            Log(AnalyticsEvents.ChallengeRun, ("attempt", _challengeAttempts), ("ghostCount", _run.GhostsAtStart), ("lite", c.Lite),
+                ("twist", WeeklyTwists.Name(_run.Options.Twist)), ("theirDistance", c.Distance));
             StartRunning();
         }
 
@@ -272,11 +274,17 @@ namespace Echo.Game.Flow
             if (ChallengeRuns.CanSendFull(reel) && _servicesSettled && (await _services.Backend.GetFlagsAsync()).ServerChallengesEnabled)
             {
                 CreateChallengeResult r = await _services.Backend.CreateChallengeAsync(ReelPacket.Encode(reel), name);
-                if (r.Ok) return r.Link;
+                if (r.Ok)
+                {
+                    Log(AnalyticsEvents.ChallengeSent, ("ghostCount", reel.Ghosts.Count), ("hasNemesis", NemesisRules.Select(reel.Ghosts) != null),
+                        ("twist", WeeklyTwists.Name(reel.Options.Twist)), ("lite", false));
+                    return r.Link;
+                }
             }
             Challenge lite = ChallengeRuns.FromReel(reel);
             lite.Snapshot = null;
             lite.Name = name;
+            Log(AnalyticsEvents.ChallengeSent, ("ghostCount", 0), ("hasNemesis", false), ("twist", "None"), ("lite", true));
             return ChallengeCode.Link(lite);
         }
 

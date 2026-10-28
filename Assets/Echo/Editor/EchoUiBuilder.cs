@@ -540,6 +540,20 @@ namespace Echo.Editor
                 tap.targetGraphic = rows[i];
                 tap.transition = Selectable.Transition.ColorTint;
             }
+            // The loading runner (a user revision): the player's character runs and hops on the board until it loads.
+            RectTransform loader = NewRect("Loader", root);
+            loader.anchorMin = loader.anchorMax = new Vector2(0.5f, 0.5f);
+            loader.anchoredPosition = new Vector2(0, 120);
+            loader.sizeDelta = new Vector2(24 * 6, 34 * 6 + 140);
+            Image loaderShadow = Pill(loader, "Shadow", new Vector2(0, -(34 * 6 + 140) / 2f + 10), new Vector2(110, 18), new Color(0f, 0f, 0f, 0.35f));
+            loaderShadow.raycastTarget = false;
+            RectTransform figure = NewRect("Figure", loader);
+            figure.anchorMin = figure.anchorMax = new Vector2(0.5f, 0.5f);
+            figure.anchoredPosition = new Vector2(0, -70);
+            figure.sizeDelta = new Vector2(24 * 6, 34 * 6);
+            var loaderFigure = figure.gameObject.AddComponent<Image>();
+            loaderFigure.preserveAspect = true;
+            loaderFigure.raycastTarget = false;
             var yesterday = MakeText(root, "Yesterday", "", 32, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -320), new Vector2(980, 56));
             yesterday.color = Soft;
             var status = MakeText(root, "Status", "", 36, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -420), new Vector2(980, 110));
@@ -556,6 +570,9 @@ namespace Echo.Editor
             Wire(view, "_status", status);
             Wire(view, "_play", play);
             Wire(view, "_back", back);
+            Wire(view, "_loader", loader);
+            Wire(view, "_loaderFigure", loaderFigure);
+            Wire(view, "_loaderShadow", loaderShadow.rectTransform);
             {
                 var so = new UnityEditor.SerializedObject(view);
                 so.FindProperty("_youColor").colorValue = Accent;

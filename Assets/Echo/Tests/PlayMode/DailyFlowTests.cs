@@ -96,9 +96,21 @@ namespace Echo.Tests.PlayMode
             backend.Leaders.Add((DailyRules.AsLeader(new GhostRecord { RunIndex = 1, DeathTick = 900, TapTicks = new int[0] }, 1, "SwiftGhost#4821"), 812));
             StringAssert.StartsWith("Daily Haunt", Find("Title/Daily").GetComponentInChildren<TMP_Text>().text);
 
-            // The lobby: the top of today's board.
+            // While the board loads, the player's character runs and hops on it; the board replaces it.
+            var loading = new System.Threading.Tasks.TaskCompletionSource<bool>();
+            backend.DailyHold = loading.Task;
             Click("Title/Daily");
             yield return null;
+            Assert.IsTrue(Showing("DailyLobby/Loader"), "the loading runner shows while the board loads");
+            var figure = Find("DailyLobby/Loader/Figure").GetComponent<UnityEngine.UI.Image>();
+            Assert.IsNotNull(figure.sprite, "it wears the player's character");
+            Assert.IsFalse(Showing("DailyLobby/Play"));
+            loading.SetResult(true);
+            backend.DailyHold = null;
+            for (int i = 0; i < 10 && Showing("DailyLobby/Loader"); i++) yield return null;
+            Assert.IsFalse(Showing("DailyLobby/Loader"), "the board replaces it");
+
+            // The lobby: the top of today's board.
             Assert.AreEqual(GameState.Menu, game.State);
             StringAssert.Contains("SwiftGhost#4821", Text("DailyLobby/Row0"));
             StringAssert.Contains("812 m", Text("DailyLobby/Row0"));

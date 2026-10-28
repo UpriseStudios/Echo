@@ -69,6 +69,7 @@ All of this is in the **production** environment. Development stays as it is for
       | `daily_run_watched` | `rank` integer, `own` boolean |
       | `clip_exported` | `preset` string (gif, video, vertical), `length` integer (seconds), `has_hook` boolean |
       | `clip_shared` | `preset` string |
+      | `challenge_run` | `attempt` integer, `ghostCount` integer, `lite` boolean, `twist` string, `theirDistance` integer (each attempt at a friend's challenge, as it starts) |
 
       Changed in 2.0 (add the new parameters to the existing events):
 
