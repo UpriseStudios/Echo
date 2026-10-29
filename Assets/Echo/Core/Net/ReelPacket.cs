@@ -29,9 +29,9 @@ namespace Echo.Core.Net
             w.Var((uint)reel.SpeedPct);
             w.Var((uint)reel.RunIndex);
             RunOptions o = reel.Options;
-            // Bits 16 and 32 (One Life, abandoned) are new in 2.1; older packets never set them, so the format stays 2.
+            // Bits 16, 32 and 64 (One Life, abandoned, Community Graveyard) are new in 2.1 and 2.2; older packets never set them, so the format stays 2.
             w.Byte((byte)((o.Bounties ? 1 : 0) | (o.Challenge ? 2 : 0) | (o.Duel ? 4 : 0) | (o.Daily ? 8 : 0) | (o.OneLife ? 16 : 0)
-                | (reel.Abandoned ? 32 : 0)));
+                | (reel.Abandoned ? 32 : 0) | (o.Graveyard ? 64 : 0)));
             w.Var((uint)o.Twist);
             w.Int(o.TwistWeek);
             w.Int(reel.ShieldTick);
@@ -58,7 +58,7 @@ namespace Echo.Core.Net
             var x = new Reel();
             if (!r.Text(out x.ContentVersion) || !r.UInt32(out x.Seed)) return false;
             if (!r.Count(1000, out x.SpeedPct) || x.SpeedPct == 0 || !r.Count(int.MaxValue, out x.RunIndex)) return false;
-            if (!r.Byte(out byte flags) || flags > 63 || !r.Count(16, out int twist) || !r.Int(out int twistWeek)) return false;
+            if (!r.Byte(out byte flags) || flags > 127 || !r.Count(16, out int twist) || !r.Int(out int twistWeek)) return false;
             x.Options = new RunOptions
             {
                 Bounties = (flags & 1) != 0,
@@ -66,6 +66,7 @@ namespace Echo.Core.Net
                 Duel = (flags & 4) != 0,
                 Daily = (flags & 8) != 0,
                 OneLife = (flags & 16) != 0,
+                Graveyard = (flags & 64) != 0,
                 Twist = (Twist)twist,
                 TwistWeek = twistWeek,
             };

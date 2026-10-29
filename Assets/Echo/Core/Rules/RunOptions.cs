@@ -27,5 +27,8 @@ namespace Echo.Core.Rules
         /// one life.
         /// </summary>
         public bool OneLife;
+
+        /// <summary>Modes doc, the Community Graveyard: the week's course against the community's ghosts (Daily is set too).</summary>
+        public bool Graveyard;
     }
 }

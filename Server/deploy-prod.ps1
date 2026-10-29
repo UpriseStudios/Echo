@@ -11,7 +11,7 @@
 #   powershell -ExecutionPolicy Bypass -File Server/deploy-prod.ps1 -DryRun
 #   powershell -ExecutionPolicy Bypass -File Server/deploy-prod.ps1 -Confirm production [-SwitchesOff]
 
-param([switch]$DryRun, [switch]$SwitchesOff, [string]$Confirm = '')
+param([switch]$DryRun, [switch]$SwitchesOff, [switch]$SkipSchedules, [string]$Confirm = '')
 $ErrorActionPreference = 'Stop'
 $Environment = 'production'
 
@@ -44,7 +44,11 @@ try {
     $boards = @()
     foreach ($board in Get-ChildItem (Join-Path $server 'Config') -Filter '*.lb') {
         $lb = Get-Content $board.FullName -Raw | ConvertFrom-Json
-        $lb.ResetConfig.Start = [DateTime]::UtcNow.Date.AddDays(1).ToString("yyyy-MM-ddT00:00:00Z")
+        # The first reset after now that the board's schedule allows: the next midnight, or the next Monday's for a
+        # weekly board ("0 0 * * 1").
+        $first = [DateTime]::UtcNow.Date.AddDays(1)
+        if ($lb.ResetConfig.Schedule -eq '0 0 * * 1') { while ($first.DayOfWeek -ne [DayOfWeek]::Monday) { $first = $first.AddDays(1) } }
+        $lb.ResetConfig.Start = $first.ToString("yyyy-MM-ddT00:00:00Z")
         [System.IO.File]::WriteAllText((Join-Path $staging $board.Name), ($lb | ConvertTo-Json -Depth 5), $utf8)
         $boards += (Join-Path $staging $board.Name)
     }
@@ -54,10 +58,14 @@ try {
         $rc.entries.daily_enabled = $false
         $rc.entries.server_challenges_enabled = $false
     }
-    [System.IO.File]::WriteAllText((Join-Path $staging 'echo.rc'), ($rc | ConvertTo-Json -Depth 10)   # deep enough for the seasons schedule, $utf8)
+    # Depth 10: deep enough for the seasons schedule.
+    [System.IO.File]::WriteAllText((Join-Path $staging 'echo.rc'), ($rc | ConvertTo-Json -Depth 10), $utf8)
 
     Write-Host "Deploying to Echo project $project, $Environment (first daily reset $($lb.ResetConfig.Start); switches daily=$($rc.entries.daily_enabled), challenges=$($rc.entries.server_challenges_enabled))"
-    $targets = @($ccm, (Join-Path $staging 'echo.rc')) + $boards + @((Join-Path $server 'Config/echo-project-policy.ac'))
+    # Scheduler and Triggers (the Community Graveyard's midnight build); -SkipSchedules while the service account lacks
+    # their roles (the first lobby of the day builds the set anyway).
+    $schedules = if ($SkipSchedules) { @() } else { Get-ChildItem (Join-Path $server 'Config') -Include '*.sched', '*.tr' -Recurse | ForEach-Object { $_.FullName } }
+    $targets = @($ccm, (Join-Path $staging 'echo.rc')) + $boards + @((Join-Path $server 'Config/echo-project-policy.ac')) + $schedules
     $extra = @('-p', $project, '-e', $Environment)
     if ($DryRun) { $extra += '--dry-run' }
     ugs deploy @targets @extra

@@ -56,6 +56,7 @@ namespace Echo.Server.Tools
             if (args.Length > 0 && args[0] == "tamper") return await TamperProbe.Run(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "team") return await ProbeTeam(http, projectId, token);
             if (args.Length > 0 && args[0] == "onelife") return await ProbeOneLife(http, projectId, token, content);
+            if (args.Length > 0 && args[0] == "graveyard") return await ProbeGraveyard(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "modes") return await ProbeModes(http, projectId, token, args.Length > 1 ? args[1] : null);
             if (args.Length > 0 && args[0] == "switches") return await ProbeSwitches(http, projectId, token, args.Length > 1 && args[1] == "off");
             Console.WriteLine("  #   course   ghosts  device m  server m  device score  server score  match");
@@ -310,6 +311,38 @@ namespace Echo.Server.Tools
                 && again.GetProperty("error").GetString() == "token" && second.GetProperty("error").GetString() == "used"
                 && closed.GetProperty("error").GetString() == "closed";
             Console.WriteLine(good ? "\nOne Life works on the deployed server." : "\nONE LIFE FAILED.");
+            return good ? 0 : 1;
+        }
+
+        // The Community Graveyard against development, forced on today: the lobby (the day's set, built once), a run
+        // replayed against that set and ranked on both boards, the same run sent twice refused, and closed when not forced.
+        static async Task<int> ProbeGraveyard(HttpClient http, string projectId, string token, GameContent content)
+        {
+            var forced = new { forceModes = true };
+            JsonElement lobby = await Call(http, projectId, token, "GetGraveyard", forced);
+            Console.WriteLine($"Lobby: ok {lobby.GetProperty("ok").GetBoolean()} {lobby.GetProperty("error").GetString()}, day {lobby.GetProperty("day").GetInt32()}, size {lobby.GetProperty("size").GetInt32()}, set {lobby.GetProperty("setVersion").GetString()}");
+            if (!lobby.GetProperty("ok").GetBoolean()) return 1;
+            ReelPacket.TryDecode(lobby.GetProperty("ghostsPacket").GetString(), out Echo.Core.Reels.Reel given);
+            Console.WriteLine($"Today's ghosts: {given.Ghosts.Count}");
+            Course course = content.CourseFor((uint)lobby.GetProperty("seed").GetInt64());
+            int runIndex = lobby.GetProperty("nextRunIndex").GetInt32();
+            Echo.Core.Reels.Reel reel = null;
+            for (uint s = 1300; reel == null; s++)
+                reel = ParityRuns.Drive(GraveyardRules.Start(course, given.Ghosts, runIndex, content.Config), course, s, content.Config, content.ContentVersion).Reel;
+            string date = lobby.GetProperty("date").GetString(), setVersion = lobby.GetProperty("setVersion").GetString(), packet = ReelPacket.Encode(reel);
+            JsonElement sent = await Call(http, projectId, token, "SubmitGraveyardRun", new { date, setVersion, packet, forceModes = true });
+            Console.WriteLine($"Submit: ok {sent.GetProperty("ok").GetBoolean()} {sent.GetProperty("error").GetString()}, {sent.GetProperty("distance").GetInt32()} m (device {reel.Distance} m), day rank {sent.GetProperty("dailyRank").GetInt32()}, week rank {sent.GetProperty("weeklyRank").GetInt32()}, week {sent.GetProperty("weekTotal").GetInt32()} m");
+            JsonElement again = await Call(http, projectId, token, "SubmitGraveyardRun", new { date, setVersion, packet, forceModes = true });
+            JsonElement wrongSet = await Call(http, projectId, token, "SubmitGraveyardRun", new { date, setVersion = "0000", packet, forceModes = true });
+            JsonElement after = await Call(http, projectId, token, "GetGraveyard", forced);
+            JsonElement closed = await Call(http, projectId, token, "GetGraveyard", new { });
+            Console.WriteLine($"Sent again: {again.GetProperty("error").GetString()}; wrong set: {wrongSet.GetProperty("error").GetString()}; set unchanged: {after.GetProperty("setVersion").GetString() == setVersion}; size now {after.GetProperty("size").GetInt32()}; not forced (switched off): {closed.GetProperty("error").GetString()}");
+            bool good = sent.GetProperty("ok").GetBoolean() && sent.GetProperty("distance").GetInt32() == reel.Distance
+                && sent.GetProperty("dailyRank").GetInt32() > 0 && sent.GetProperty("weeklyRank").GetInt32() > 0
+                && again.GetProperty("error").GetString() == "run-index" && wrongSet.GetProperty("error").GetString() == "ghosts"
+                && after.GetProperty("setVersion").GetString() == setVersion && after.GetProperty("size").GetInt32() > lobby.GetProperty("size").GetInt32()
+                && closed.GetProperty("error").GetString() == "closed";
+            Console.WriteLine(good ? "\nThe Community Graveyard works on the deployed server." : "\nTHE GRAVEYARD FAILED.");
             return good ? 0 : 1;
         }
 

@@ -20,6 +20,7 @@ namespace EchoCloud
 
         /// <summary>Modes doc: One Life's own board, reset at 00:00 UTC with an archive like the Daily Haunt's.</summary>
         public const string OneLifeBoard = "onelife";
+        public const string GraveyardDailyBoard = "graveyard_daily", GraveyardWeeklyBoard = "graveyard_weekly";
 
         readonly string _board;
 

@@ -18,7 +18,8 @@
       "modes": [
         { "id": "naughty_nice", "enabled": false, "start": "2026-12-01T00:00:00Z", "end": "2026-12-25T00:00:00Z", "show_until": "2027-01-01T00:00:00Z" },
         { "id": "one_life", "enabled": false, "start": "2026-12-25T00:00:00Z", "end": "2026-12-26T00:00:00Z" },
-        { "id": "one_life", "enabled": false, "start": "2027-01-01T00:00:00Z", "end": "2028-01-01T00:00:00Z", "weekdays": ["sun"] }
+        { "id": "one_life", "enabled": false, "start": "2027-01-01T00:00:00Z", "end": "2028-01-01T00:00:00Z", "weekdays": ["sun"] },
+        { "id": "graveyard", "enabled": false, "start": "2027-01-18T00:00:00Z", "end": "2028-01-17T00:00:00Z" }
       ]
     }
   },

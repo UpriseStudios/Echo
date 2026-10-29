@@ -5,8 +5,9 @@
 #   powershell -ExecutionPolicy Bypass -File Server/deploy-dev.ps1            # module + config
 #   powershell -ExecutionPolicy Bypass -File Server/deploy-dev.ps1 -DryRun    # show what would change
 #   add -SkipAccessControl while the service account cannot manage project policies
+#   add -SkipSchedules while it lacks the Scheduler and Triggers roles (the first lobby of the day builds the set anyway)
 
-param([switch]$DryRun, [switch]$SkipAccessControl)
+param([switch]$DryRun, [switch]$SkipAccessControl, [switch]$SkipSchedules)
 $ErrorActionPreference = 'Stop'
 $Environment = 'development'
 
@@ -34,11 +35,17 @@ try {
     $targets = @($ccm, (Join-Path $server 'Config/echo.rc'))
     foreach ($board in Get-ChildItem (Join-Path $server 'Config') -Filter '*.lb') {
         $lb = Get-Content $board.FullName -Raw | ConvertFrom-Json
-        $lb.ResetConfig.Start = [DateTime]::UtcNow.Date.AddDays(1).ToString("yyyy-MM-ddT00:00:00Z")
+        # The first reset after now that the board's schedule allows: the next midnight, or the next Monday's for a
+        # weekly board ("0 0 * * 1").
+        $first = [DateTime]::UtcNow.Date.AddDays(1)
+        if ($lb.ResetConfig.Schedule -eq '0 0 * * 1') { while ($first.DayOfWeek -ne [DayOfWeek]::Monday) { $first = $first.AddDays(1) } }
+        $lb.ResetConfig.Start = $first.ToString("yyyy-MM-ddT00:00:00Z")
         [System.IO.File]::WriteAllText((Join-Path $staging $board.Name), ($lb | ConvertTo-Json -Depth 5), (New-Object System.Text.UTF8Encoding $false))
         $targets += (Join-Path $staging $board.Name)
     }
     if (-not $SkipAccessControl) { $targets += (Join-Path $server 'Config/echo-project-policy.ac') }
+    # Scheduler and Triggers (modes doc: the Community Graveyard's ghosts are chosen at 00:00 UTC).
+    if (-not $SkipSchedules) { $targets += (Get-ChildItem (Join-Path $server 'Config') -Include '*.sched', '*.tr' -Recurse | ForEach-Object { $_.FullName }) }
     $extra = @('-p', $project, '-e', $Environment)
     if ($DryRun) { $extra += '--dry-run' }
     ugs deploy @targets @extra

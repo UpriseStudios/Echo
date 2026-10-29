@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ugs-config-schemas.unity3d.com/v1/schedules.schema.json",
+  "Configs": {
+    "echo-graveyard-midnight": {
+      "EventName": "echo-graveyard-midnight",
+      "Type": "recurring",
+      "Schedule": "0 0 * * *",
+      "PayloadVersion": 1,
+      "Payload": "{}",
+      "StartAt": null,
+      "EndAt": null
+    }
+  }
+}

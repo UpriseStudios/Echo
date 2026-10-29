@@ -122,6 +122,36 @@ namespace EchoCloud
                 ModeSchedule.Now(DevelopmentOnly(context, dateOverride)), forceModes && context.EnvironmentName == Development, salt.Value);
         }
 
+        [CloudCodeFunction("GetGraveyard")]
+        public async Task<GraveyardResponse> GetGraveyard(IExecutionContext context, IGameApiClient api, string dateOverride = null, bool forceModes = false) =>
+            await (await Graveyard(context, api, dateOverride, forceModes)).GetAsync(context.PlayerId);
+
+        [CloudCodeFunction("SubmitGraveyardRun")]
+        public async Task<GraveyardSubmitResponse> SubmitGraveyardRun(IExecutionContext context, IGameApiClient api, string date, string setVersion,
+            string packet, string dateOverride = null, bool forceModes = false) =>
+            await (await Graveyard(context, api, dateOverride, forceModes)).SubmitAsync(context.PlayerId, date, setVersion, packet);
+
+        // Modes doc: the Scheduler's trigger at 00:00 UTC builds the day's ghosts (graveyard.sched, graveyard.tr); the
+        // first lobby after midnight would build the same set if it hasn't run.
+        [CloudCodeFunction("BuildGraveyardSet")]
+        public async Task BuildGraveyardSet(IExecutionContext context, IGameApiClient api)
+        {
+            GraveyardService graveyard = await Graveyard(context, api, null, false);
+            if (graveyard.Open) await graveyard.SetForAsync(DateTime.UtcNow.Date);
+        }
+
+        static async Task<GraveyardService> Graveyard(IExecutionContext context, IGameApiClient api, string dateOverride, bool forceModes)
+        {
+            FeatureSwitches switches = await FeatureSwitches.ReadAsync(context, api);
+            var salt = await api.SecretManager.GetSecret(context, SecretNames.For(context.EnvironmentName, SecretNames.DailySeedSalt));
+            return new GraveyardService(GameContent.Shared, GraveyardBoard(context, api, CloudDailyStore.GraveyardDailyBoard),
+                GraveyardBoard(context, api, CloudDailyStore.GraveyardWeeklyBoard), new CloudDayStore(api, context), switches.Modes,
+                ModeSchedule.Now(DevelopmentOnly(context, dateOverride)), forceModes && context.EnvironmentName == Development, salt.Value);
+        }
+
+        static CloudDailyStore GraveyardBoard(IExecutionContext context, IGameApiClient api, string board) =>
+            new CloudDailyStore(api, context, () => AdminKey(context, api), board);
+
         static CloudDailyStore OneLifeBoard(IExecutionContext context, IGameApiClient api) =>
             new CloudDailyStore(api, context, () => AdminKey(context, api), CloudDailyStore.OneLifeBoard);
 
@@ -135,6 +165,8 @@ namespace EchoCloud
         {
             await TeamService.ForgetPlayerAsync(new CloudDayStore(api, context), (await FeatureSwitches.ReadAsync(context, api)).Modes, context.PlayerId);
             await OneLifeService.ForgetPlayerAsync(new CloudDayStore(api, context), OneLifeBoard(context, api), context.PlayerId, DateTime.UtcNow.Date);
+            await GraveyardService.ForgetPlayerAsync(new CloudDayStore(api, context), GraveyardBoard(context, api, CloudDailyStore.GraveyardDailyBoard),
+                GraveyardBoard(context, api, CloudDailyStore.GraveyardWeeklyBoard), context.PlayerId, DateTime.UtcNow.Date);
             await Challenges(context, api).ForgetPlayerAsync(context.PlayerId);   // first: it needs their index
             return await (await Daily(context, api)).ForgetPlayerAsync(context.PlayerId);
         }
