@@ -31,11 +31,13 @@ $ccm = Join-Path $server 'EchoCloud/bin/Release/net8.0/Module/EchoCloud.ccm'
 $staging = Join-Path ([System.IO.Path]::GetTempPath()) ('echo-dev-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $staging | Out-Null
 try {
-    $lb = Get-Content (Join-Path $server 'Config/daily.lb') -Raw | ConvertFrom-Json
-    $lb.ResetConfig.Start = [DateTime]::UtcNow.Date.AddDays(1).ToString("yyyy-MM-ddT00:00:00Z")
-    [System.IO.File]::WriteAllText((Join-Path $staging 'daily.lb'), ($lb | ConvertTo-Json -Depth 5), (New-Object System.Text.UTF8Encoding $false))
-
-    $targets = @($ccm, (Join-Path $server 'Config/echo.rc'), (Join-Path $staging 'daily.lb'))
+    $targets = @($ccm, (Join-Path $server 'Config/echo.rc'))
+    foreach ($board in Get-ChildItem (Join-Path $server 'Config') -Filter '*.lb') {
+        $lb = Get-Content $board.FullName -Raw | ConvertFrom-Json
+        $lb.ResetConfig.Start = [DateTime]::UtcNow.Date.AddDays(1).ToString("yyyy-MM-ddT00:00:00Z")
+        [System.IO.File]::WriteAllText((Join-Path $staging $board.Name), ($lb | ConvertTo-Json -Depth 5), (New-Object System.Text.UTF8Encoding $false))
+        $targets += (Join-Path $staging $board.Name)
+    }
     if (-not $SkipAccessControl) { $targets += (Join-Path $server 'Config/echo-project-policy.ac') }
     $extra = @('-p', $project, '-e', $Environment)
     if ($DryRun) { $extra += '--dry-run' }

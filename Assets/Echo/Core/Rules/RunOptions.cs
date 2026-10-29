@@ -21,5 +21,11 @@ namespace Echo.Core.Rules
         /// player's own daily ghosts. No Continue, banish, duel, bounty, twist or power-ups. Touches no progress.
         /// </summary>
         public bool Daily;
+
+        /// <summary>
+        /// Modes doc, One Life: one run a day, played under the daily rules (Daily is set too) with no 1-UPs, since it's
+        /// one life.
+        /// </summary>
+        public bool OneLife;
     }
 }

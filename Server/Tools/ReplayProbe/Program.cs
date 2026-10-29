@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Echo.Core.Courses;
 using Echo.Core.Ghosts;
+using Echo.Core.Modes;
 using Echo.Core.Net;
 using Echo.Server;
 using Echo.Tests.EditMode;
@@ -54,6 +55,7 @@ namespace Echo.Server.Tools
             if (args.Length > 0 && args[0] == "delete") return await ProbeDelete(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "tamper") return await TamperProbe.Run(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "team") return await ProbeTeam(http, projectId, token);
+            if (args.Length > 0 && args[0] == "onelife") return await ProbeOneLife(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "modes") return await ProbeModes(http, projectId, token, args.Length > 1 ? args[1] : null);
             if (args.Length > 0 && args[0] == "switches") return await ProbeSwitches(http, projectId, token, args.Length > 1 && args[1] == "off");
             Console.WriteLine("  #   course   ghosts  device m  server m  device score  server score  match");
@@ -281,6 +283,33 @@ namespace Echo.Server.Tools
                 good &= (error == "disabled") == expectOff;
             }
             Console.WriteLine(good ? $"\nEvery endpoint {(expectOff ? "is closed" : "is open")}, as its switch says." : "\nAN ENDPOINT IGNORED ITS SWITCH.");
+            return good ? 0 : 1;
+        }
+
+        // One Life against development, forced on for Christmas Day: the one attempt, the run replayed and ranked, the token
+        // spent, and a second attempt refused. (Each probe signs in a fresh player, so it can be run again.)
+        static async Task<int> ProbeOneLife(HttpClient http, string projectId, string token, GameContent content)
+        {
+            var day = new { dateOverride = "2026-12-25", forceModes = true };
+            JsonElement start = await Call(http, projectId, token, "StartOneLife", day);
+            Console.WriteLine($"Start: ok {start.GetProperty("ok").GetBoolean()} {start.GetProperty("error").GetString()}");
+            if (!start.GetProperty("ok").GetBoolean()) return 1;
+            ReelPacket.TryDecode(start.GetProperty("ghostsPacket").GetString(), out Echo.Core.Reels.Reel given);
+            Course course = content.CourseFor((uint)start.GetProperty("seed").GetInt64());
+            Echo.Core.Reels.Reel reel = null;
+            for (uint s = 900; reel == null; s++)
+                reel = ParityRuns.Drive(OneLifeRules.Start(course, given.Ghosts, content.Config), course, s, content.Config, content.ContentVersion).Reel;
+            string date = start.GetProperty("date").GetString(), runToken = start.GetProperty("token").GetString(), packet = ReelPacket.Encode(reel);
+            JsonElement sent = await Call(http, projectId, token, "SubmitOneLife", new { date, token = runToken, packet, dateOverride = "2026-12-25", forceModes = true });
+            Console.WriteLine($"Submit: ok {sent.GetProperty("ok").GetBoolean()} {sent.GetProperty("error").GetString()}, {sent.GetProperty("distance").GetInt32()} m (device {reel.Distance} m), rank {sent.GetProperty("rank").GetInt32()}");
+            JsonElement again = await Call(http, projectId, token, "SubmitOneLife", new { date, token = runToken, packet, dateOverride = "2026-12-25", forceModes = true });
+            JsonElement second = await Call(http, projectId, token, "StartOneLife", day);
+            JsonElement closed = await Call(http, projectId, token, "StartOneLife", new { dateOverride = "2026-12-25" });
+            Console.WriteLine($"Token again: {again.GetProperty("error").GetString()}; second attempt: {second.GetProperty("error").GetString()}; not forced (switched off): {closed.GetProperty("error").GetString()}");
+            bool good = sent.GetProperty("ok").GetBoolean() && sent.GetProperty("distance").GetInt32() == reel.Distance
+                && again.GetProperty("error").GetString() == "token" && second.GetProperty("error").GetString() == "used"
+                && closed.GetProperty("error").GetString() == "closed";
+            Console.WriteLine(good ? "\nOne Life works on the deployed server." : "\nONE LIFE FAILED.");
             return good ? 0 : 1;
         }
 

@@ -49,6 +49,7 @@ namespace Echo.Game.Persistence
 
         /// <summary>Schema 5: competitive modes (team, revealed results, profile).</summary>
         [JsonProperty("modes")] public ModesSaveData Modes = new ModesSaveData();
+        [JsonProperty("oneLife")] public OneLifeSaveData OneLife = new OneLifeSaveData();
 
         /// <summary>Power-ups held, up to PowerUpRules.MaxHeld of each (a user revision).</summary>
         [JsonProperty("powerUps")] public PowerUpsSaveData PowerUps = new PowerUpsSaveData();

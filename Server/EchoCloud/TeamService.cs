@@ -37,7 +37,6 @@ namespace EchoCloud
         public const long RetentionSeconds = 31 * ModeRules.Day;
 
         const string TallyKey = "tally";
-        const string RewardsKey = "rewards";
         const int Retries = 8;
 
         readonly IDayStore _days;
@@ -100,15 +99,6 @@ namespace EchoCloud
             public int Days { get; set; }
             public string LastDay { get; set; } = "";
             public string Name { get; set; } = "";
-        }
-
-        public sealed class PlayerRewards
-        {
-            public List<string> Cosmetics { get; set; } = new List<string>();
-            public List<BadgeEntry> Badges { get; set; } = new List<BadgeEntry>();
-
-            /// <summary>Events whose rewards have been worked out, so they're granted once.</summary>
-            public List<string> Settled { get; set; } = new List<string>();
         }
 
         public async Task<TeamEventResponse> GetAsync(string playerId)
@@ -246,23 +236,16 @@ namespace EchoCloud
             string badge = $"team_{me.Team}_{DateTimeOffset.FromUnixTimeSeconds(_event.Start).UtcDateTime.Year}";
             if (me.Days >= BadgeDays) earned.Add(badge);
 
-            PlayerRewards rewards = Read<PlayerRewards>(await _players.GetPlayerAsync(playerId, RewardsKey)) ?? new PlayerRewards();
-            if (rewards.Settled.Contains(Event)) return earned;
-            rewards.Settled.Add(Event);
-            foreach (string id in earned)
-            {
-                if (id == badge) rewards.Badges.Add(new BadgeEntry { Id = badge, Until = Math.Max(_event.End, _event.ShowUntil) + RetentionSeconds });
-                else if (!rewards.Cosmetics.Contains(id)) rewards.Cosmetics.Add(id);
-            }
-            await _players.SetPlayerAsync(playerId, RewardsKey, JsonSerializer.Serialize(rewards));
-            if (earned.Contains(badge)) await _days.SetAsync(BadgesBucket, playerId, JsonSerializer.Serialize(rewards.Badges));
+            var badges = new List<BadgeEntry>();
+            if (earned.Contains(badge)) badges.Add(new BadgeEntry { Id = badge, Until = Math.Max(_event.End, _event.ShowUntil) + RetentionSeconds });
+            await RewardStore.GrantAsync(_days, _players, playerId, Event, earned.Where(id => id != badge), badges);
             return earned;
         }
 
         /// <summary>The player's rewards and current side.</summary>
         public async Task<ProfileResponse> ProfileAsync(string playerId)
         {
-            PlayerRewards rewards = Read<PlayerRewards>(await _players.GetPlayerAsync(playerId, RewardsKey)) ?? new PlayerRewards();
+            RewardStore.PlayerRewards rewards = await RewardStore.ReadAsync(_players, playerId);
             var r = new ProfileResponse { Ok = true, Cosmetics = rewards.Cosmetics, Badges = rewards.Badges.Where(b => b.Until > _now).ToList() };
             if (_event != null) r.Team = Read<Member>(await _days.GetAsync(Bucket(Event), playerId))?.Team ?? "";
             return r;

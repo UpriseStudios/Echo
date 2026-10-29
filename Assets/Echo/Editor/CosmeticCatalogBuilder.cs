@@ -66,6 +66,14 @@ namespace Echo.Editor
                     UnlockText = "Naughty vs Nice: win as Naughty", TrailStriped = false,
                     TrailStops = new[] { Hex(0x141414), Hex(0x3A2A22), Hex(0xFF6A2A), Hex(0x1C1C1C), Hex(0x3A2A22), Hex(0xFFA040) } },
 
+                // Modes doc, One Life: Christmas Day 2026's gravestones, granted by the server.
+                new CosmeticItem { Id = "grave_xmasday_2026", DisplayName = "Christmas Day 2026", Type = CosmeticType.Grave, Color = Hex(0xC8D2DA),
+                    ServerReward = true, UnlockText = "One Life: finish your run on Christmas Day 2026",
+                    Sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SeasonArt.ChristmasDayGravePath(false)) },
+                new CosmeticItem { Id = "grave_xmasday_2026_gold", DisplayName = "Christmas Day 2026 Gold", Type = CosmeticType.Grave, Color = Hex(0xF2C230),
+                    ServerReward = true, UnlockText = "One Life: top 3 on Christmas Day 2026",
+                    Sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SeasonArt.ChristmasDayGravePath(true)) },
+
                 // Seasons doc: gravestones. The stone is everyone's; the Heart is It's Complicated's reward.
                 new CosmeticItem { Id = "grave_stone", DisplayName = "Stone", Type = CosmeticType.Grave, Color = Hex(0x8A9AA4), Tintable = true,
                     Sprite = AssetDatabase.LoadAssetAtPath<Sprite>(EchoArt.GravePath) },

@@ -29,11 +29,12 @@ namespace Echo.Editor
         public const string DevServerDefine = "ECHO_DEV_SERVER";
 
         /// <summary>
-        /// A release APK to sideload for recording footage (marketing content plan): the store game (production backend,
-        /// release performance) but signed with Android's debug key, so it builds without the keystore passwords, batch
-        /// included. It can't install over a Play-installed Echo (different signature) and challenge links won't open
-        /// it. Never upload it. The project's own settings are restored afterwards. Every skin and pack is unlocked in it
-        /// (<see cref="RecordingDefine"/>), so footage can show any character.
+        /// A release APK to sideload for recording footage and testing on a phone (marketing content plan; a user
+        /// decision): release performance, signed with Android's debug key so it builds without the keystore passwords,
+        /// batch included. It plays on the development server (<see cref="DevServerDefine"/>) with the dev settings
+        /// (seasons, modes forced, the Daily Haunt's date) and every skin and pack unlocked (<see cref="RecordingDefine"/>).
+        /// Recording mode hides its DEV SERVER tag. It can't install over a Play-installed Echo (different signature) and
+        /// challenge links won't open it. Never upload it. The project's own settings are restored afterwards.
         /// </summary>
         [MenuItem("Echo/Build/Android APK (recording, debug-signed)")]
         public static void AndroidRecordingApk()
@@ -46,12 +47,14 @@ namespace Echo.Editor
                 {
                     PlayerSettings.Android.useCustomKeystore = false;
                     EditorUserBuildSettings.buildAppBundle = false;
-                }, RecordingDefine);
+                }, RecordingDefine, DevServerDefine);
             }
             finally
             {
                 PlayerSettings.Android.useCustomKeystore = customKeystore;
                 EditorUserBuildSettings.buildAppBundle = true;
+                // Written back to ProjectSettings now, or the build's own choice is what stays on disk.
+                AssetDatabase.SaveAssets();
             }
         }
 

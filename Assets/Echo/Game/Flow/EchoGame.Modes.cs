@@ -32,6 +32,17 @@ namespace Echo.Game.Flow
 
         bool ModesOpen => _modesView != null && _modesView.IsOpen;
 
+        /// <summary>
+        /// Development builds, and the recording APK (a user decision: the build for testing on a phone, on the
+        /// development server): the dev settings and overrides (seasons, modes, the Daily Haunt's date).
+        /// </summary>
+        static bool DevTools =>
+#if ECHO_RECORDING
+            true;
+#else
+            Debug.isDebugBuild;
+#endif
+
         void OpenModes()
         {
             if (_modesView == null) return;
@@ -52,7 +63,7 @@ namespace Echo.Game.Flow
                 return;
             }
             _modesView.SetStatus("Checking for events...");
-            ModesResult result = await _services.Backend.GetModesAsync(DailyDateOverride, ForceModes && Debug.isDebugBuild);
+            ModesResult result = await _services.Backend.GetModesAsync(DailyDateOverride, ForceModes && DevTools);
             if (this == null || !ModesOpen) return;
             _modes = result;
             _modesFetchedAt = Time.realtimeSinceStartup;
@@ -121,6 +132,12 @@ namespace Echo.Game.Flow
             {
                 CloseMenu();
                 OpenDailyLobby();
+                return;
+            }
+            if (mode.Id == Echo.Core.Modes.ModeIds.OneLife)
+            {
+                CloseMenu();
+                OpenOneLifeLobby();
                 return;
             }
             // Modes doc phase 1 is the framework: each mode's own screen comes with its phase.

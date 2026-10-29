@@ -83,6 +83,7 @@
           <tr><td>Gameplay analytics</td><td>Unity Analytics</td><td><span class="tag on">Only if you accept</span></td></tr>
           <tr><td>Purchases</td><td>Google Play or the App Store</td><td><span class="tag">Only when you buy</span></td></tr>
           <tr><td>Daily Haunt runs and your daily board entry</td><td>Our game server (Unity Gaming Services); your best distance and an auto-generated name are public</td><td><span class="tag">Only when you play the Daily Haunt</span></td></tr>
+          <tr><td>One Life runs and your One Life board entry</td><td>Our game server; your distance and an auto-generated name are public</td><td><span class="tag">Only when you play One Life</span></td></tr>
           <tr><td>Event teams (Naughty vs Nice) and the rewards you earn</td><td>Our game server; each side's total and the top contributor's auto-generated name are public</td><td><span class="tag">Only when you join an event</span></td></tr>
           <tr><td>Challenges you send</td><td>Our game server, and whoever you send the link to</td><td><span class="tag">Only when you share</span></td></tr>
           <tr><td>Clips</td><td>Whoever you send them to</td><td><span class="tag">Only when you share</span></td></tr>
@@ -130,6 +131,10 @@
         day's board is kept as an archive of IDs, generated names and distances.</li>
       <li><strong>Challenges.</strong> A challenge you send is kept on our server with your chosen name (names on a
         blocklist become "Runner") and opens for anyone with its link for 30 days, after which it is deleted.</li>
+      <li><strong>One Life.</strong> Your one run of the day is kept for 14 days (so any reward for that day can be worked
+        out when you come back) and its distance goes on that day's One Life board with your generated name; the day's
+        top 10 runs appear to other players as ghosts with that name. If you close the game mid-run, the run so far is
+        sent the next time you open it.</li>
       <li><strong>Events.</strong> When you join an event such as Naughty vs Nice, we keep your side, the metres your
         daily bests added and the days you played, with your generated name, until a month after the event's result
         stops showing. Each side's total, and the top contributor on each side (by generated name), are shown to
@@ -140,7 +145,8 @@
     </ul>
     <h3>Deleting your online data</h3>
     <p><strong>Settings › Delete online data</strong> deletes your Daily Haunt runs, your entry on today's board, the
-      challenges you've sent, your event teams, rewards and badges, and your online ID. Metres you added to a team
+      challenges you've sent, your One Life runs and today's One Life entry, your event teams, rewards and badges, and your
+      online ID. Metres you added to a team
       stay in its total, as an anonymous sum. Past days' archived boards can't be edited by anyone; they hold only
       the random ID, the generated name and a distance, which nothing links to you once your online ID is deleted.
       Uninstalling Echo does not delete online data, and afterwards nothing tells us which data was yours, so use the
@@ -200,7 +206,7 @@
   <section aria-labelledby="keep">
     <h2 id="keep">How long it is kept, and security</h2>
     <p>Your save stays on your phone until you uninstall Echo. Daily Haunt runs are deleted 7 days after their day,
-      challenges after 30 days and event teams a month after the event's result stops showing; everything online goes sooner if you use Delete online data. Data held by Unity, its ad
+      One Life runs after 14, challenges after 30 days and event teams a month after the event's result stops showing; everything online goes sooner if you use Delete online data. Data held by Unity, its ad
       partners and the app stores is kept under their own policies. Everything Echo sends over the internet is encrypted in transit (HTTPS). We do
       not sell your data.</p>
   </section>

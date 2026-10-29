@@ -100,6 +100,31 @@ namespace EchoCloud
         public async Task<ProfileResponse> GetProfile(IExecutionContext context, IGameApiClient api, string dateOverride = null, bool forceModes = false) =>
             await Teams(context, api, await FeatureSwitches.ReadAsync(context, api), dateOverride, forceModes).ProfileAsync(context.PlayerId);
 
+        // One Life (modes doc): one attempt a day on scheduled days. Start uses the attempt and hands out a single-use token.
+        [CloudCodeFunction("GetOneLife")]
+        public async Task<OneLifeResponse> GetOneLife(IExecutionContext context, IGameApiClient api, string dateOverride = null, bool forceModes = false) =>
+            await (await OneLife(context, api, dateOverride, forceModes)).GetAsync(context.PlayerId);
+
+        [CloudCodeFunction("StartOneLife")]
+        public async Task<OneLifeStartResponse> StartOneLife(IExecutionContext context, IGameApiClient api, string dateOverride = null, bool forceModes = false) =>
+            await (await OneLife(context, api, dateOverride, forceModes)).StartAsync(context.PlayerId);
+
+        [CloudCodeFunction("SubmitOneLife")]
+        public async Task<OneLifeSubmitResponse> SubmitOneLife(IExecutionContext context, IGameApiClient api, string date, string token, string packet,
+            string dateOverride = null, bool forceModes = false) =>
+            await (await OneLife(context, api, dateOverride, forceModes)).SubmitAsync(context.PlayerId, date, token, packet);
+
+        static async Task<OneLifeService> OneLife(IExecutionContext context, IGameApiClient api, string dateOverride, bool forceModes)
+        {
+            FeatureSwitches switches = await FeatureSwitches.ReadAsync(context, api);
+            var salt = await api.SecretManager.GetSecret(context, SecretNames.For(context.EnvironmentName, SecretNames.DailySeedSalt));
+            return new OneLifeService(GameContent.Shared, OneLifeBoard(context, api), new CloudDayStore(api, context), switches.Modes,
+                ModeSchedule.Now(DevelopmentOnly(context, dateOverride)), forceModes && context.EnvironmentName == Development, salt.Value);
+        }
+
+        static CloudDailyStore OneLifeBoard(IExecutionContext context, IGameApiClient api) =>
+            new CloudDailyStore(api, context, () => AdminKey(context, api), CloudDailyStore.OneLifeBoard);
+
         static TeamService Teams(IExecutionContext context, IGameApiClient api, FeatureSwitches switches, string dateOverride, bool forceModes) =>
             new TeamService(new CloudDayStore(api, context), new CloudDailyStore(api, context, () => AdminKey(context, api)), switches.Modes,
                 ModeSchedule.Now(DevelopmentOnly(context, dateOverride)), forceModes && context.EnvironmentName == Development);
@@ -109,6 +134,7 @@ namespace EchoCloud
         public async Task<DeleteMyDataResponse> DeleteMyData(IExecutionContext context, IGameApiClient api)
         {
             await TeamService.ForgetPlayerAsync(new CloudDayStore(api, context), (await FeatureSwitches.ReadAsync(context, api)).Modes, context.PlayerId);
+            await OneLifeService.ForgetPlayerAsync(new CloudDayStore(api, context), OneLifeBoard(context, api), context.PlayerId, DateTime.UtcNow.Date);
             await Challenges(context, api).ForgetPlayerAsync(context.PlayerId);   // first: it needs their index
             return await (await Daily(context, api)).ForgetPlayerAsync(context.PlayerId);
         }

@@ -57,6 +57,14 @@ namespace Echo.Services.Backend
         /// <summary>Server-granted rewards (cosmetics and badges) and the current side, for Stats' profile.</summary>
         Task<ProfileResult> GetProfileAsync(string dateOverride, bool forceModes);
 
+        /// <summary>One Life (modes doc): today's board and your run, plus rewards from days since closed.</summary>
+        Task<OneLifeInfo> GetOneLifeAsync(string dateOverride, bool forceModes);
+
+        /// <summary>Uses today's one attempt and returns its course, leader ghosts and single-use token.</summary>
+        Task<OneLifeStart> StartOneLifeAsync(string dateOverride, bool forceModes);
+
+        Task<OneLifeSubmitResult> SubmitOneLifeAsync(string date, string token, string packet, string dateOverride, bool forceModes);
+
         /// <summary>The player's generated online name (as on the boards), or null when not signed in.</summary>
         Task<string> GetPlayerNameAsync();
 

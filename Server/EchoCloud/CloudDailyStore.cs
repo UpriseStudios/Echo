@@ -18,6 +18,11 @@ namespace EchoCloud
     {
         public const string LeaderboardId = "daily";
 
+        /// <summary>Modes doc: One Life's own board, reset at 00:00 UTC with an archive like the Daily Haunt's.</summary>
+        public const string OneLifeBoard = "onelife";
+
+        readonly string _board;
+
         readonly IGameApiClient _api;
         readonly IExecutionContext _context;
         readonly Guid _project;
@@ -28,8 +33,9 @@ namespace EchoCloud
         /// "keyId:secret" of a service account with the Leaderboards admin role, read from Secret Manager only when a
         /// score is deleted (Cloud Code's own token can't delete scores).
         /// </param>
-        public CloudDailyStore(IGameApiClient api, IExecutionContext context, Func<Task<string>> adminKey = null)
+        public CloudDailyStore(IGameApiClient api, IExecutionContext context, Func<Task<string>> adminKey = null, string board = LeaderboardId)
         {
+            _board = board;
             _api = api;
             _context = context;
             _project = Guid.Parse(context.ProjectId);
@@ -48,12 +54,12 @@ namespace EchoCloud
             _api.CloudSaveData.SetPrivateItemAsync(_context, _context.ServiceToken, _context.ProjectId, playerId, new SetItemBody(key, json));
 
         public Task SubmitAsync(string playerId, int distance) =>
-            _api.Leaderboards.AddLeaderboardPlayerScoreAsync(_context, _context.ServiceToken, _project, LeaderboardId, playerId,
+            _api.Leaderboards.AddLeaderboardPlayerScoreAsync(_context, _context.ServiceToken, _project, _board, playerId,
                 new AddLeaderboardScore(distance));
 
         public async Task<List<LeaderboardRow>> TopAsync(int count)
         {
-            var page = await _api.Leaderboards.GetLeaderboardScoresAsync(_context, _context.ServiceToken, _project, LeaderboardId, false, 0, count);
+            var page = await _api.Leaderboards.GetLeaderboardScoresAsync(_context, _context.ServiceToken, _project, _board, false, 0, count);
             var rows = new List<LeaderboardRow>();
             foreach (LeaderboardEntry e in page.Data.Results) rows.Add(Row(e.Rank, e.PlayerId, e.PlayerName, e.Score));
             return rows;
@@ -63,7 +69,7 @@ namespace EchoCloud
         {
             try
             {
-                var entry = await _api.Leaderboards.GetLeaderboardPlayerScoreAsync(_context, _context.ServiceToken, _project, LeaderboardId, playerId, false);
+                var entry = await _api.Leaderboards.GetLeaderboardPlayerScoreAsync(_context, _context.ServiceToken, _project, _board, playerId, false);
                 return Row(entry.Data.Rank, entry.Data.PlayerId, entry.Data.PlayerName, entry.Data.Score);
             }
             catch (ApiException e) when (e.Response?.StatusCode == HttpStatusCode.NotFound)
@@ -76,7 +82,7 @@ namespace EchoCloud
         {
             string version = await LastArchivedVersion();
             if (version == null) return null;
-            var page = await _api.Leaderboards.GetLeaderboardVersionScoresAsync(_context, _context.ServiceToken, _project, LeaderboardId, version, false, 0, 1);
+            var page = await _api.Leaderboards.GetLeaderboardVersionScoresAsync(_context, _context.ServiceToken, _project, _board, version, false, 0, 1);
             if (page.Data.Results.Count == 0) return null;
             LeaderboardEntry e = page.Data.Results[0];
             return Row(e.Rank, e.PlayerId, e.PlayerName, e.Score);
@@ -88,7 +94,7 @@ namespace EchoCloud
             if (version == null) return null;
             try
             {
-                var entry = await _api.Leaderboards.GetLeaderboardVersionPlayerScoreAsync(_context, _context.ServiceToken, _project, LeaderboardId, version, playerId, false);
+                var entry = await _api.Leaderboards.GetLeaderboardVersionPlayerScoreAsync(_context, _context.ServiceToken, _project, _board, version, playerId, false);
                 return Row(entry.Data.Rank, entry.Data.PlayerId, entry.Data.PlayerName, entry.Data.Score);
             }
             catch (ApiException e) when (e.Response?.StatusCode == HttpStatusCode.NotFound)
@@ -126,7 +132,7 @@ namespace EchoCloud
             if (string.IsNullOrEmpty(key)) return "no-admin-key (empty)";
             if (key.IndexOf(':') <= 0) return "admin-key-format (expected keyId:secret)";
             var request = new HttpRequestMessage(HttpMethod.Delete,
-                $"https://services.api.unity.com/leaderboards/v1/projects/{_context.ProjectId}/environments/{_context.EnvironmentId}/leaderboards/{LeaderboardId}/scores/players/{playerId}");
+                $"https://services.api.unity.com/leaderboards/v1/projects/{_context.ProjectId}/environments/{_context.EnvironmentId}/leaderboards/{_board}/scores/players/{playerId}");
             request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(key)));
             HttpResponseMessage response = await Http.SendAsync(request);
             if (response.IsSuccessStatusCode || response.StatusCode == HttpStatusCode.NotFound) return null;   // 404: no score today
@@ -135,7 +141,7 @@ namespace EchoCloud
 
         async Task<string> LastArchivedVersion()
         {
-            var versions = await _api.Leaderboards.GetLeaderboardVersionsAsync(_context, _context.ServiceToken, _project, LeaderboardId, 1);
+            var versions = await _api.Leaderboards.GetLeaderboardVersionsAsync(_context, _context.ServiceToken, _project, _board, 1);
             return versions.Data.Results.Count > 0 ? versions.Data.Results[0].Id : null;
         }
 

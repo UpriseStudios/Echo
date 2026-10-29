@@ -13,13 +13,15 @@ namespace Echo.Core.Reels
         public static ReplayResult Replay(Reel reel, Course course, in SimConfig cfg)
         {
             var player = new ReelPlayer(reel, course, cfg);
-            while (!player.Finished && player.Run.Tick < ReelPacket.MaxTicks)
+            int end = reel.Abandoned ? System.Math.Min(reel.Run.DeathTick, ReelPacket.MaxTicks) : ReelPacket.MaxTicks;
+            while (!player.Finished && player.Run.Tick < end)
             {
                 if (player.ContinueDue) player.Continue();
                 player.Step();
             }
             var run = player.Run;
-            return new ReplayResult(run.Distance, run.Score, run.DeathTick, run.NearMisses, run.Cause, player.Finished);
+            // An abandoned run is over where the player closed the game: it counts as finished there.
+            return new ReplayResult(run.Distance, run.Score, run.DeathTick, run.NearMisses, run.Cause, player.Finished || reel.Abandoned && run.Tick >= end);
         }
     }
 }

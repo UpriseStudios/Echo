@@ -660,6 +660,11 @@ namespace Echo.Game.Flow
                 EndChallenge();
                 return;
             }
+            if (_run.Options.OneLife)
+            {
+                EndOneLife();
+                return;
+            }
             if (_run.Options.Daily)
             {
                 EndDaily();
@@ -913,6 +918,11 @@ namespace Echo.Game.Flow
             {
                 // Tap to retry races the same challenge again.
                 StartChallenge(_activeChallenge);
+                return;
+            }
+            if (_run.Options.OneLife)
+            {
+                LeaveOneLife();
                 return;
             }
             if (_run.Options.Daily)
@@ -1364,6 +1374,7 @@ namespace Echo.Game.Flow
             if (AdOnScreen) return; // the ad's own pause and resume, not the player leaving
             if (paused)
             {
+                KeepOneLifeRun();   // modes doc: closing the game ends a One Life run where it is
                 LogSessionEnd();
                 if (State == GameState.Running)
                 {
@@ -1390,6 +1401,7 @@ namespace Echo.Game.Flow
 
         void OnApplicationQuit()
         {
+            KeepOneLifeRun();
             // A run cut off mid-run is discarded (tech spec 7); a pending one is committed.
             if ((State == GameState.Dying || State == GameState.DeathScreen) && _run != null && !_run.Committed)
                 CommitAndSave();
@@ -1441,6 +1453,7 @@ namespace Echo.Game.Flow
             _servicesSettled = true;
             WireBackend();
             ProcessPendingLink();
+            _ = FlushOneLife();   // a One Life run cut off when the game was last closed
         }
 
         void OnConsentChosen(bool personalisedAds, bool analytics)
@@ -1523,7 +1536,7 @@ namespace Echo.Game.Flow
 
         void ShowSettings()
         {
-            _settings.Show(_save.Settings, Debug.isDebugBuild && _services.UsingMockAds, Debug.isDebugBuild);
+            _settings.Show(_save.Settings, Debug.isDebugBuild && _services.UsingMockAds, DevTools);
             _settings.SetSeason(SeasonDevSetting, SeasonLabel());
             // Development builds only: what the ad and store SDKs are doing, readable on the phone itself.
             _settings.SetStatus(Debug.isDebugBuild ? _services.StatusReport : null);

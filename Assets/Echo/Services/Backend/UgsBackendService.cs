@@ -165,6 +165,21 @@ namespace Echo.Services.Backend
         public Task<ProfileResult> GetProfileAsync(string dateOverride, bool forceModes) =>
             Call("GetProfile", ModeArgs(dateOverride, forceModes), ProfileResult.Failed);
 
+        public Task<OneLifeInfo> GetOneLifeAsync(string dateOverride, bool forceModes) =>
+            Call("GetOneLife", ModeArgs(dateOverride, forceModes), OneLifeInfo.Failed);
+
+        public Task<OneLifeStart> StartOneLifeAsync(string dateOverride, bool forceModes) =>
+            Call("StartOneLife", ModeArgs(dateOverride, forceModes), OneLifeStart.Failed);
+
+        public Task<OneLifeSubmitResult> SubmitOneLifeAsync(string date, string token, string packet, string dateOverride, bool forceModes)
+        {
+            var args = ModeArgs(dateOverride, forceModes);
+            args["date"] = date;
+            args["token"] = token;
+            args["packet"] = packet;
+            return Call("SubmitOneLife", args, OneLifeSubmitResult.Failed);
+        }
+
         public async Task<string> GetPlayerNameAsync()
         {
             if (!SignedIn) return null;

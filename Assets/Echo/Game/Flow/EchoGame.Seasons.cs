@@ -294,11 +294,6 @@ namespace Echo.Game.Flow
             : $"Dev: season {ForcedSeason}";
 
         /// <summary>The forced-season button shows in development builds and in the recording APK.</summary>
-        static bool SeasonDevSetting =>
-#if ECHO_RECORDING
-            true;
-#else
-            Debug.isDebugBuild;
-#endif
+        static bool SeasonDevSetting => DevTools;
     }
 }

@@ -29,7 +29,9 @@ namespace Echo.Core.Net
             w.Var((uint)reel.SpeedPct);
             w.Var((uint)reel.RunIndex);
             RunOptions o = reel.Options;
-            w.Byte((byte)((o.Bounties ? 1 : 0) | (o.Challenge ? 2 : 0) | (o.Duel ? 4 : 0) | (o.Daily ? 8 : 0)));
+            // Bits 16 and 32 (One Life, abandoned) are new in 2.1; older packets never set them, so the format stays 2.
+            w.Byte((byte)((o.Bounties ? 1 : 0) | (o.Challenge ? 2 : 0) | (o.Duel ? 4 : 0) | (o.Daily ? 8 : 0) | (o.OneLife ? 16 : 0)
+                | (reel.Abandoned ? 32 : 0)));
             w.Var((uint)o.Twist);
             w.Int(o.TwistWeek);
             w.Int(reel.ShieldTick);
@@ -56,17 +58,19 @@ namespace Echo.Core.Net
             var x = new Reel();
             if (!r.Text(out x.ContentVersion) || !r.UInt32(out x.Seed)) return false;
             if (!r.Count(1000, out x.SpeedPct) || x.SpeedPct == 0 || !r.Count(int.MaxValue, out x.RunIndex)) return false;
-            if (!r.Byte(out byte flags) || flags > 15 || !r.Count(16, out int twist) || !r.Int(out int twistWeek)) return false;
+            if (!r.Byte(out byte flags) || flags > 63 || !r.Count(16, out int twist) || !r.Int(out int twistWeek)) return false;
             x.Options = new RunOptions
             {
                 Bounties = (flags & 1) != 0,
                 Challenge = (flags & 2) != 0,
                 Duel = (flags & 4) != 0,
                 Daily = (flags & 8) != 0,
+                OneLife = (flags & 16) != 0,
                 Twist = (Twist)twist,
                 TwistWeek = twistWeek,
             };
             if (!System.Enum.IsDefined(typeof(Twist), x.Options.Twist)) return false;
+            x.Abandoned = (flags & 32) != 0;
             if (!r.Int(out x.ShieldTick) || !r.Int(out x.PhaseTick) || !r.Int(out x.ContinueTick) || !r.Bool(out x.ExtraLife)) return false;
             if (!InTicks(x.ShieldTick) || !InTicks(x.PhaseTick) || !InTicks(x.ContinueTick)) return false;
             if (!r.Count(int.MaxValue, out x.Score) || !r.Count(int.MaxValue, out x.Distance)) return false;

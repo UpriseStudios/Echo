@@ -273,6 +273,62 @@ namespace Echo.Services.Mocks
             return Task.FromResult(TeamResult());
         }
 
+        // ---- One Life (modes doc): the server's rules in miniature ----
+
+        public bool OneLifeOpen;
+        public string OneLifeToken = "";
+        public bool OneLifeUsed, OneLifeFinished;
+        public int OneLifeDistance;
+        public int OneLifeSubmissions;
+        public readonly List<string> OneLifeRewards = new List<string>();
+        public readonly List<(GhostRecord ghost, int distance)> OneLifeLeaders = new List<(GhostRecord, int)>();
+
+        public Task<OneLifeInfo> GetOneLifeAsync(string dateOverride, bool forceModes)
+        {
+            if (Offline) return Task.FromResult(OneLifeInfo.Failed("offline"));
+            SignedIn = true;
+            var r = new OneLifeInfo { Ok = true, Open = OneLifeOpen || forceModes, Date = Today, SecondsLeft = SecondsLeft, Played = OneLifeUsed,
+                Finished = OneLifeFinished, Distance = OneLifeDistance, Rank = OneLifeFinished ? 1 : 0 };
+            int rank = 1;
+            foreach (var l in OneLifeLeaders) r.Board.Add(new DailyBoardRow { Rank = rank++, Name = l.ghost.Name, Distance = l.distance });
+            r.Rewards.AddRange(OneLifeRewards);
+            OneLifeRewards.Clear();
+            if (!r.Open) r.Error = "closed";
+            return Task.FromResult(r);
+        }
+
+        public Task<OneLifeStart> StartOneLifeAsync(string dateOverride, bool forceModes)
+        {
+            if (Offline) return Task.FromResult(OneLifeStart.Failed("offline"));
+            if (!OneLifeOpen && !forceModes) return Task.FromResult(OneLifeStart.Failed("closed"));
+            if (OneLifeUsed) return Task.FromResult(OneLifeStart.Failed("used"));
+            OneLifeUsed = true;
+            OneLifeToken = "token-" + Today;
+            var ghosts = new List<GhostRecord>();
+            foreach (var l in OneLifeLeaders) ghosts.Add(l.ghost);
+            ghosts.Sort((a, b) => a.RunIndex.CompareTo(b.RunIndex));
+            uint seed = (uint)SeedFor("onelife-" + Today);
+            return Task.FromResult(new OneLifeStart
+            {
+                Ok = true, Date = Today, Token = OneLifeToken, Seed = seed, ContentVersion = ContentVersion,
+                GhostsPacket = ReelPacket.Encode(new Reel { ContentVersion = ContentVersion, Seed = seed, SpeedPct = DailyRules.SpeedPct, RunIndex = 1, Run = new GhostRecord(), Ghosts = ghosts }),
+            });
+        }
+
+        public Task<OneLifeSubmitResult> SubmitOneLifeAsync(string date, string token, string packet, string dateOverride, bool forceModes)
+        {
+            if (Offline) return Task.FromResult(OneLifeSubmitResult.Failed("offline"));
+            OneLifeSubmissions++;
+            if (OneLifeFinished || token != OneLifeToken) return Task.FromResult(OneLifeSubmitResult.Failed("token"));
+            if (!ReelPacket.TryDecode(packet, out Reel reel)) return Task.FromResult(OneLifeSubmitResult.Failed("malformed"));
+            string broken = Echo.Core.Modes.OneLifeRules.Check(reel);
+            if (broken != null) return Task.FromResult(OneLifeSubmitResult.Failed(broken));
+            ReplayCheckResult replay = LocalReplay?.Invoke(packet);
+            OneLifeFinished = true;
+            OneLifeDistance = replay != null && replay.Accepted ? replay.Distance : reel.Distance;
+            return Task.FromResult(new OneLifeSubmitResult { Ok = true, Distance = OneLifeDistance, Rank = 1, Abandoned = reel.Abandoned, BoardClosed = date != Today });
+        }
+
         public Task<string> GetPlayerNameAsync() => Task.FromResult(SignedIn ? "MockRunner#1234" : null);
 
         public Task<ProfileResult> GetProfileAsync(string dateOverride, bool forceModes)

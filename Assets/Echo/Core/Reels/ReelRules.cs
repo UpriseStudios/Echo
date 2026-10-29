@@ -19,6 +19,23 @@ namespace Echo.Core.Reels
         public static Reel From(RunSimulation run, string contentVersion, string savedOn, bool newBest)
         {
             if (!CanSave(run)) throw new InvalidOperationException("only a finished run can be saved");
+            return Build(run, contentVersion, savedOn, newBest);
+        }
+
+        /// <summary>
+        /// Modes doc, One Life: a run the player closed the game on, still going. It ends where it is (the replay stops at
+        /// this tick and counts it as over).
+        /// </summary>
+        public static Reel Abandoned(RunSimulation run, string contentVersion)
+        {
+            Reel reel = Build(run, contentVersion, "", false);
+            reel.Abandoned = true;
+            reel.Run.DeathTick = run.Tick;
+            return reel;
+        }
+
+        static Reel Build(RunSimulation run, string contentVersion, string savedOn, bool newBest)
+        {
             var reel = new Reel
             {
                 ContentVersion = contentVersion ?? "",

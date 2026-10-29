@@ -51,6 +51,9 @@ Events or parameters that aren't defined are dropped. Integer = whole number, Bo
 | `team_joined` | `team` string, `assigned` boolean |
 | `team_contribution` | `metres` integer |
 | `mode_reward_earned` | `mode` string, `reward` string |
+| `onelife_started` | `date` string, `leaders` integer |
+| `onelife_finished` | `distance` integer, `rank` integer |
+| `onelife_abandoned` | `distance` integer, `rank` integer |
 
 `challenge_run` and `clip_saved` came after 2.0.4, so they ship in 2.1 too; skip any you've already made.
 `challenge_sent` keeps its parameters, but is now also sent when a clip is shared. `egg_collected` (Easter) comes
@@ -67,7 +70,8 @@ with 2.2.
       on, and update the Play Data safety and App Store App Privacy answers if they list gameplay data shared publicly.
 - [ ] **Competitive modes** ship switched off. To run Naughty vs Nice: in production Remote Config `modes`, set its
       `"enabled": true` (dates 1 to 24 December, result showing until New Year). Its rewards (Halo, Coal trail, team
-      badges) come from the server.
+      badges) come from the server. One Life: set its two windows' `"enabled": true` (Christmas Day, then Sundays
+      through 2027). The production deploy creates the `onelife` leaderboard.
 - [ ] **What's new** (suggested):
       *Seasons are here! Snow, Santa hats and a red-nosed Nemesis all December, fireworks at New Year, and a
       heartbreaking Valentine's. Earn Santa, Rudolph and more with seasonal achievements, or get the Christmas Pack.

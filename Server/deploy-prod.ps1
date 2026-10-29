@@ -39,10 +39,15 @@ $ccm = Join-Path $server 'EchoCloud/bin/Release/net8.0/Module/EchoCloud.ccm'
 $staging = Join-Path ([System.IO.Path]::GetTempPath()) ('echo-prod-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $staging | Out-Null
 try {
-    $lb = Get-Content (Join-Path $server 'Config/daily.lb') -Raw | ConvertFrom-Json
-    $lb.ResetConfig.Start = [DateTime]::UtcNow.Date.AddDays(1).ToString("yyyy-MM-ddT00:00:00Z")
     $utf8 = New-Object System.Text.UTF8Encoding $false   # no byte-order mark
-    [System.IO.File]::WriteAllText((Join-Path $staging 'daily.lb'), ($lb | ConvertTo-Json -Depth 5), $utf8)
+    # Every leaderboard (daily, onelife), each with its first reset at the next midnight.
+    $boards = @()
+    foreach ($board in Get-ChildItem (Join-Path $server 'Config') -Filter '*.lb') {
+        $lb = Get-Content $board.FullName -Raw | ConvertFrom-Json
+        $lb.ResetConfig.Start = [DateTime]::UtcNow.Date.AddDays(1).ToString("yyyy-MM-ddT00:00:00Z")
+        [System.IO.File]::WriteAllText((Join-Path $staging $board.Name), ($lb | ConvertTo-Json -Depth 5), $utf8)
+        $boards += (Join-Path $staging $board.Name)
+    }
 
     $rc = Get-Content (Join-Path $server 'Config/echo.rc') -Raw | ConvertFrom-Json
     if ($SwitchesOff) {
@@ -52,7 +57,7 @@ try {
     [System.IO.File]::WriteAllText((Join-Path $staging 'echo.rc'), ($rc | ConvertTo-Json -Depth 10)   # deep enough for the seasons schedule, $utf8)
 
     Write-Host "Deploying to Echo project $project, $Environment (first daily reset $($lb.ResetConfig.Start); switches daily=$($rc.entries.daily_enabled), challenges=$($rc.entries.server_challenges_enabled))"
-    $targets = @($ccm, (Join-Path $staging 'echo.rc'), (Join-Path $staging 'daily.lb'), (Join-Path $server 'Config/echo-project-policy.ac'))
+    $targets = @($ccm, (Join-Path $staging 'echo.rc')) + $boards + @((Join-Path $server 'Config/echo-project-policy.ac'))
     $extra = @('-p', $project, '-e', $Environment)
     if ($DryRun) { $extra += '--dry-run' }
     ugs deploy @targets @extra

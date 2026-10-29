@@ -26,6 +26,9 @@ namespace Echo.Services.Analytics
         public const string ModeRewardEarned = "mode_reward_earned";
         public const string TeamJoined = "team_joined";               // Naughty vs Nice
         public const string TeamContribution = "team_contribution";
+        public const string OneLifeStarted = "onelife_started";       // One Life
+        public const string OneLifeFinished = "onelife_finished";
+        public const string OneLifeAbandoned = "onelife_abandoned";
         public const string SeasonalAchievement = "seasonal_achievement";
         public const string SeasonalSkinEquipped = "seasonal_skin_equipped";
         public const string IapPurchase = "iap_purchase";

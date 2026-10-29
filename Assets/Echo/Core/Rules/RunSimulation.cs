@@ -314,6 +314,7 @@ namespace Echo.Core.Rules
         // Every LifeEveryScore points earns a life; at the cap the milestone passes without one.
         void AwardLives()
         {
+            if (Options.OneLife) return;   // modes doc: one life, so no 1-UPs
             while (Score >= NextLifeScore)
             {
                 if (Lives < _cfg.MaxLives)

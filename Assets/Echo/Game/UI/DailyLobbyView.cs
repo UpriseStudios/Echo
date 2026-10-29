@@ -37,6 +37,27 @@ namespace Echo.Game.UI
         [SerializeField] Color _youColor = Color.yellow;
         [SerializeField] Color _rowColor = Color.white;
         // Modes doc, Naughty vs Nice: the tally bar and its line.
+        // Modes doc: the lobby also serves One Life, with its own title and Play.
+        [SerializeField] TMP_Text _heading;
+
+        public void SetHeading(string text)
+        {
+            if (_heading != null) _heading.text = text;
+        }
+
+        /// <summary>Play's label, or hide it (One Life: today's run is had).</summary>
+        public void SetPlay(bool show, string label)
+        {
+            _play.gameObject.SetActive(show);
+            if (show) _play.GetComponentInChildren<TMP_Text>().text = label;
+        }
+
+        /// <summary>The "tap a run to watch it" hint (not in One Life, whose runs can't be watched).</summary>
+        public void SetWatchable(bool on)
+        {
+            if (_watchHint != null && !on) _watchHint.gameObject.SetActive(false);
+        }
+
         [SerializeField] GameObject _tally;
         [SerializeField] RectTransform _tallyNice;
         [SerializeField] TMP_Text _tallyText;

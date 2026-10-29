@@ -70,6 +70,28 @@ namespace EchoCloud
             return values;
         }
 
+        public async Task<Dictionary<string, string>> GetAllAsync(string bucket)
+        {
+            var values = new Dictionary<string, string>();
+            string after = null;
+            try
+            {
+                while (true)
+                {
+                    var response = await _api.CloudSaveData.GetPrivateCustomItemsAsync(_context, _context.ServiceToken, _context.ProjectId, bucket,
+                        null, after);
+                    var page = response.Data.Results;
+                    foreach (Item item in page) values[item.Key] = item.Value?.ToString();
+                    if (page.Count == 0 || page.Count < 20) break;
+                    after = page[page.Count - 1].Key;
+                }
+            }
+            catch (ApiException e) when (e.Response?.StatusCode == HttpStatusCode.NotFound)
+            {
+            }
+            return values;
+        }
+
         public async Task<(string Json, string WriteLock)> GetLockedAsync(string bucket, string key)
         {
             try

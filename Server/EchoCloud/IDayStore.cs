@@ -23,6 +23,9 @@ namespace EchoCloud
         /// <summary>The values under several keys (missing ones left out).</summary>
         Task<Dictionary<string, string>> GetManyAsync(string bucket, IReadOnlyCollection<string> keys);
 
+        /// <summary>Every key and value in a bucket (a closed day's records, to rank them once).</summary>
+        Task<Dictionary<string, string>> GetAllAsync(string bucket);
+
         /// <summary>A value with its write lock (null for a new key), for <see cref="TrySetAsync"/>.</summary>
         Task<(string Json, string WriteLock)> GetLockedAsync(string bucket, string key);
 

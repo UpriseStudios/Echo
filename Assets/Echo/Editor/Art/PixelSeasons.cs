@@ -151,6 +151,24 @@ namespace Echo.Editor.Art
             return c;
         }
 
+        // ---- One Life ----
+
+        /// <summary>The Christmas Day 2026 gravestone (every One Life finisher that day), 12 x 16, holly on the stone.</summary>
+        public static PixelCanvas ChristmasDayGrave(bool gold)
+        {
+            Color32 face = gold ? Hex(0xF2C230) : Hex(0xC8D2DA), shade = gold ? Hex(0xB8861A) : Hex(0x8A98A4), mound = Hex(0x5A4636);
+            var c = new PixelCanvas(12, 16);
+            c.Rect(0, 0, 11, 1, mound);
+            c.Rect(2, 2, 9, 11, face);
+            c.Rect(3, 12, 8, 12, face);
+            c.Rect(4, 13, 7, 13, face);
+            c.Rect(9, 2, 9, 11, shade);
+            c.Blit(new[] { ".gg.gg.", "ggrgrgg", "..grg.." }, new Dictionary<char, Color32> { ['g'] = Hex(0x2F8A3E), ['r'] = Hex(0xE0283A) }, 2, 9);
+            c.Blit(new[] { "w.w", ".w.", "w.w" }, new Dictionary<char, Color32> { ['w'] = gold ? Hex(0xFFF6C0) : Hex(0x5E6A76) }, 5, 4);
+            c.Outline(Hex(0x22282E));
+            return c;
+        }
+
         // ---- Valentine's ----
 
         /// <summary>The Heart gravestone (It's Complicated's reward), 12 x 16 like the stone, in its own colours.</summary>

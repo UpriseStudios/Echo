@@ -29,6 +29,12 @@ namespace Echo.Core.Reels
         public int ContinueTick = -1;
         public bool ExtraLife;
 
+        /// <summary>
+        /// Modes doc, One Life: the player closed the game mid-run, so the run ends at Run.DeathTick whether or not it
+        /// died there (its distance is how far it got).
+        /// </summary>
+        public bool Abandoned;
+
         // What the reel card shows, from the run as it ended.
         public int Score;
         public int Distance;

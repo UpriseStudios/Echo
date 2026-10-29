@@ -47,6 +47,9 @@ namespace Echo.Server.Tests
             return Task.FromResult(values);
         }
 
+        public Task<Dictionary<string, string>> GetAllAsync(string bucket) =>
+            Task.FromResult(Buckets.TryGetValue(bucket, out var b) ? new Dictionary<string, string>(b) : new Dictionary<string, string>());
+
         public Task<(string Json, string WriteLock)> GetLockedAsync(string bucket, string key)
         {
             string json = Buckets.TryGetValue(bucket, out var b) && b.TryGetValue(key, out string v) ? v : null;

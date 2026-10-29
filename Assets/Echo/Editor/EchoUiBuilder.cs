@@ -632,6 +632,7 @@ namespace Echo.Editor
             Wire(view, "_play", play);
             Wire(view, "_back", back);
             Wire(view, "_loader", loader);
+            Wire(view, "_heading", root.Find("Heading").GetComponent<TMP_Text>());
             Wire(view, "_loaderFigure", loaderFigure);
             Wire(view, "_loaderShadow", loaderShadow.rectTransform);
             {

@@ -56,7 +56,7 @@ namespace Echo.Game.Flow
         {
             _title.DailyClicked += OpenDailyLobby;
             if (_dailyLobby == null) return;
-            _dailyLobby.PlayClicked += PlayDaily;
+            _dailyLobby.PlayClicked += OnLobbyPlay;   // the Daily Haunt's, or One Life's
             _dailyLobby.BackClicked += CloseMenu;
             _dailyLobby.RowClicked += OnDailyRowClicked;
         }
@@ -82,7 +82,8 @@ namespace Echo.Game.Flow
             if ((_dailyLabelIn -= dt) > 0f) return;
             _dailyLabelIn = 1f;
             if (State == GameState.Title) RefreshDailyButton();
-            if (_dailyLobby != null && _dailyLobby.IsOpen && _daily != null && _daily.Ok)
+            if (_lobbyOneLife) TickOneLifeLabels();
+            else if (_dailyLobby != null && _dailyLobby.IsOpen && _daily != null && _daily.Ok)
             {
                 int left = Math.Max(0, _daily.SecondsLeft - (int)(Time.realtimeSinceStartup - _dailyFetchedAt));
                 int closing = DailyClock.Closing(left);
@@ -90,7 +91,7 @@ namespace Echo.Game.Flow
                     ? $"{_daily.Date} · <color=#FF5A5A>{DailyClock.Line(closing)}</color>"
                     : $"{_daily.Date} · new course in {left / 3600}h {left / 60 % 60:00}m {left % 60:00}s");
             }
-            bool dailyRun = State == GameState.Running && _run != null && _run.Options.Daily;
+            bool dailyRun = State == GameState.Running && _run != null && _run.Options.Daily && !_run.Options.OneLife;
             _hud.SetBoardCloses(dailyRun ? DailyClock.Closing(BoardSecondsLeft()) : 0);
         }
 
@@ -180,6 +181,7 @@ namespace Echo.Game.Flow
 
         void OnDailyRowClicked(int index)
         {
+            if (_lobbyOneLife) return;   // One Life's runs aren't for watching
             if (_daily == null || !_daily.Ok || index < 0 || index >= _daily.Board.Count || _dailyWatchBusy || !_dailyLobby.IsOpen) return;
             DailyBoardRow row = _daily.Board[index];
             if (row.IsYou || _dailyWatchCredit == row.Rank)
@@ -236,7 +238,10 @@ namespace Echo.Game.Flow
             if (_dailyLobby == null) return;
             OpenMenu(() =>
             {
+                _lobbyOneLife = false;
+                _dailyLobby.SetPlay(false, "Play today's course");
                 _dailyLobby.Show();
+                _dailyLobby.SetHeading("Daily Haunt");
                 _ = LoadDaily();
             });
         }

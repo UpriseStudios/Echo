@@ -2736,6 +2736,66 @@ MonoBehaviour:
     ScarfAnchor: {x: 0, y: 0}
     Reaction: 0
     HeadTop: 0.85
+  - Id: grave_xmasday_2026
+    DisplayName: Christmas Day 2026
+    Type: 4
+    Color: {r: 0.78431374, g: 0.8235294, b: 0.85490197, a: 1}
+    Sprite: {fileID: 21300000, guid: 85fd04961887c474d812486e76e33b16, type: 3}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 1
+    UnlockText: 'One Life: finish your run on Christmas Day 2026'
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: grave_xmasday_2026_gold
+    DisplayName: Christmas Day 2026 Gold
+    Type: 4
+    Color: {r: 0.9490196, g: 0.7607843, b: 0.1882353, a: 1}
+    Sprite: {fileID: 21300000, guid: cbf78188491e7e847a7e3377187fb012, type: 3}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 1
+    UnlockText: 'One Life: top 3 on Christmas Day 2026'
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
   - Id: grave_stone
     DisplayName: Stone
     Type: 4
