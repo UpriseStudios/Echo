@@ -181,6 +181,9 @@ namespace Echo.Core.Rules
         /// <summary>The skin the player wore this run, stored on its ghost (skins addendum). Cosmetic only.</summary>
         public string SkinId { get; set; } = "";
 
+        /// <summary>The accessory worn (cosmetic only), kept on the ghost like the skin.</summary>
+        public string AccessoryId { get; set; } = "";
+
         public ref readonly RunnerState Player => ref _player;
         public GhostManager Ghosts => _ghosts;
         public bool IsDead => !_player.Alive;
@@ -393,6 +396,7 @@ namespace Echo.Core.Rules
         {
             GhostRecord record = _recorder.ToRecord(RunIndex, SpeedPct);
             record.SkinId = SkinId ?? "";
+            record.AccessoryId = AccessoryId ?? "";
             record.DeathX = IsDead ? _player.X : -1;
             record.Cause = Cause;
             record.KillerRunIndex = Killer?.RunIndex ?? 0;

@@ -34,7 +34,7 @@ namespace Echo.Services.Backend
         Task<DailyInfo> GetDailyAsync(string dateOverride);
 
         /// <summary>Sends a finished daily run (its inputs, as a ReelPacket) for the server to replay and rank.</summary>
-        Task<DailySubmitResult> SubmitDailyRunAsync(string date, string leaderVersion, string packet, string dateOverride);
+        Task<DailySubmitResult> SubmitDailyRunAsync(string date, string leaderVersion, string packet, string dateOverride, bool forceModes = false);
 
         /// <summary>Banishes one of the player's own daily ghosts (after a rewarded ad), at most 3 a day.</summary>
         Task<DailyBanishResult> BanishDailyGhostAsync(string date, int runIndex, string dateOverride);
@@ -47,6 +47,18 @@ namespace Echo.Services.Backend
         /// and set the date (the server honours both in development only).
         /// </summary>
         Task<ModesResult> GetModesAsync(string dateOverride, bool forceAll);
+
+        /// <summary>Naughty vs Nice: the tally, your side, and once it's over the result and your rewards.</summary>
+        Task<TeamEventResult> GetTeamEventAsync(string dateOverride, bool forceModes);
+
+        /// <summary>Naughty vs Nice: pick a side ("naughty" or "nice"); permanent for the event, balanced past 55%.</summary>
+        Task<TeamEventResult> JoinTeamAsync(string team, string dateOverride, bool forceModes);
+
+        /// <summary>Server-granted rewards (cosmetics and badges) and the current side, for Stats' profile.</summary>
+        Task<ProfileResult> GetProfileAsync(string dateOverride, bool forceModes);
+
+        /// <summary>The player's generated online name (as on the boards), or null when not signed in.</summary>
+        Task<string> GetPlayerNameAsync();
 
         /// <summary>
         /// Privacy policy: deletes the player's Daily Haunt runs, leaderboard entry and sent challenges on the server,

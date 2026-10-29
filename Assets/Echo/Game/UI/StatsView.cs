@@ -26,6 +26,32 @@ namespace Echo.Game.UI
         [SerializeField] RectTransform _content;
         [SerializeField] RectTransform _rowTemplate;
         [SerializeField] Button _close;
+        // Modes doc (a user decision): the online profile at the top, above the summary.
+        [SerializeField] TMP_Text _profile;
+
+        /// <summary>The online name, the event side and badges still showing.</summary>
+        public sealed class Profile
+        {
+            public string Name = "";
+            public string Team = "";
+            public System.Collections.Generic.List<string> Badges = new System.Collections.Generic.List<string>();
+        }
+
+        public bool IsOpen => _root.activeSelf;
+
+        public void SetProfile(Profile p)
+        {
+            if (_profile == null) return;
+            if (p == null || string.IsNullOrEmpty(p.Name) && string.IsNullOrEmpty(p.Team) && p.Badges.Count == 0)
+            {
+                _profile.text = "<color=#9FB8C0>Play the Daily Haunt to go online</color>";
+                return;
+            }
+            string line = string.IsNullOrEmpty(p.Name) ? "You" : p.Name;
+            if (!string.IsNullOrEmpty(p.Team)) line += $" · <color=#FFE9A0>{p.Team}</color>";
+            if (p.Badges.Count > 0) line += $"\n<size=75%><color=#73F2FF>{string.Join(" · ", p.Badges)}</color></size>";
+            _profile.text = line;
+        }
         [Tooltip("Ghost Challenges: send the run behind the best, and open a code from the clipboard.")]
         [SerializeField] Button _challenge;
         [SerializeField] Button _paste;

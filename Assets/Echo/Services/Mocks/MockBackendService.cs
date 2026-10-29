@@ -104,6 +104,9 @@ namespace Echo.Services.Mocks
         (List<GhostRecord> own, int best, int next) Day(string date) =>
             _days.TryGetValue(date, out var d) ? d : (new List<GhostRecord>(), 0, 1);
 
+        /// <summary>Badges beside leaders' names on the board, by name (tests).</summary>
+        public readonly Dictionary<string, List<string>> BoardBadges = new Dictionary<string, List<string>>();
+
         /// <summary>While set and not finished, today's course is still "loading" (the lobby's loading runner).</summary>
         public Task DailyHold;
 
@@ -132,7 +135,12 @@ namespace Echo.Services.Mocks
                 GhostsPacket = ReelPacket.Encode(new Reel { ContentVersion = ContentVersion, Seed = (uint)SeedFor(date), SpeedPct = DailyRules.SpeedPct, RunIndex = 1, Run = new GhostRecord(), Ghosts = ghosts }),
             };
             int rank = 1;
-            foreach (var l in Leaders) info.Board.Add(new DailyBoardRow { Rank = rank++, Name = l.ghost.Name, Distance = l.distance });
+            foreach (var l in Leaders)
+                info.Board.Add(new DailyBoardRow
+                {
+                    Rank = rank++, Name = l.ghost.Name, Distance = l.distance,
+                    Badges = BoardBadges.TryGetValue(l.ghost.Name, out List<string> badges) ? badges : new List<string>(),
+                });
             if (day.best > 0) info.Board.Add(new DailyBoardRow { Rank = rank, Name = "You", Distance = day.best, IsYou = true });
             info.Rank = day.best > 0 ? rank : 0;
             return Task.FromResult(info);
@@ -207,7 +215,76 @@ namespace Echo.Services.Mocks
             return Task.FromResult(new DeleteOnlineDataResult { Ok = true, LiveScoreDeleted = true });
         }
 
-        public Task<DailySubmitResult> SubmitDailyRunAsync(string date, string leaderVersion, string packet, string dateOverride)
+        // ---- Naughty vs Nice (modes doc): the server's rules in miniature ----
+
+        /// <summary>The team event: open for joining and contributions, or ended and showing its result.</summary>
+        public bool TeamOpen, TeamEnded;
+        public string Team = "";
+        public bool TeamAssigned;
+        /// <summary>Joining Nice puts you on Naughty instead (the balance rule).</summary>
+        public bool AssignNaughty;
+        public long Naughty, Nice, YourMetres;
+        public int YourDays;
+        public readonly List<string> ProfileCosmetics = new List<string>();
+        public readonly List<BadgeInfo> ProfileBadges = new List<BadgeInfo>();
+
+        TeamEventResult TeamResult()
+        {
+            var r = new TeamEventResult
+            {
+                Ok = true, Event = "naughty_nice_2026", Open = TeamOpen, Ended = TeamEnded, SecondsLeft = 86400, Team = Team, Assigned = TeamAssigned,
+                Naughty = Naughty, Nice = Nice, NaughtyToday = Naughty, NiceToday = Nice, NaughtyMembers = 1, NiceMembers = 1,
+                YourMetres = YourMetres, YourDays = YourDays,
+            };
+            if (!TeamEnded) return r;
+            r.Winner = Nice > Naughty ? "nice" : Naughty > Nice ? "naughty" : "draw";
+            r.TopNice = "NICE#1";
+            r.TopNiceMetres = Nice;
+            r.TopNaughty = "NAUGHTY#1";
+            r.TopNaughtyMetres = Naughty;
+            if (Team != "" && YourDays >= 1 && (r.Winner == Team || r.Winner == "draw"))
+            {
+                string reward = Team == "nice" ? "acc_halo" : "trail_coal";
+                r.Rewards.Add(reward);
+                if (!ProfileCosmetics.Contains(reward)) ProfileCosmetics.Add(reward);
+            }
+            return r;
+        }
+
+        public Task<TeamEventResult> GetTeamEventAsync(string dateOverride, bool forceModes)
+        {
+            if (Offline) return Task.FromResult(TeamEventResult.Failed("offline"));
+            SignedIn = true;   // like the real service, a call signs in
+            if (!TeamOpen && !TeamEnded && !forceModes) return Task.FromResult(TeamEventResult.Failed("closed"));
+            if (forceModes && !TeamEnded) TeamOpen = true;
+            return Task.FromResult(TeamResult());
+        }
+
+        public Task<TeamEventResult> JoinTeamAsync(string team, string dateOverride, bool forceModes)
+        {
+            if (Offline) return Task.FromResult(TeamEventResult.Failed("offline"));
+            SignedIn = true;
+            if (!TeamOpen && !forceModes) return Task.FromResult(TeamEventResult.Failed("closed"));
+            if (Team == "")
+            {
+                Team = AssignNaughty && team == "nice" ? "naughty" : team;
+                TeamAssigned = Team != team;
+            }
+            return Task.FromResult(TeamResult());
+        }
+
+        public Task<string> GetPlayerNameAsync() => Task.FromResult(SignedIn ? "MockRunner#1234" : null);
+
+        public Task<ProfileResult> GetProfileAsync(string dateOverride, bool forceModes)
+        {
+            if (Offline) return Task.FromResult(ProfileResult.Failed("offline"));
+            var r = new ProfileResult { Ok = true, Team = Team };
+            r.Cosmetics.AddRange(ProfileCosmetics);
+            r.Badges.AddRange(ProfileBadges);
+            return Task.FromResult(r);
+        }
+
+        public Task<DailySubmitResult> SubmitDailyRunAsync(string date, string leaderVersion, string packet, string dateOverride, bool forceModes = false)
         {
             if (Offline) return Task.FromResult(DailySubmitResult.Failed("offline"));
             if (ServerDailyOff) return Task.FromResult(DailySubmitResult.Failed(BackendFlags.Disabled));
@@ -221,6 +298,7 @@ namespace Echo.Services.Mocks
             GhostRecord run = reel.Run.Clone();
             run.RunIndex = reel.RunIndex;
             bool newBest = distance > day.best;
+            int improvement = newBest ? distance - day.best : 0;
             if (newBest)
             {
                 day.best = distance;
@@ -241,6 +319,15 @@ namespace Echo.Services.Mocks
                 NextLeaderDistance = next < 0 ? 0 : next, Corrected = distance != reel.Distance,
             };
             if (next >= 0) result.NextLeaderName = Leaders.Find(l => l.distance == next).ghost.Name;
+            if (improvement > 0 && TeamOpen && Team != "")
+            {
+                if (Team == "nice") Nice += improvement;
+                else Naughty += improvement;
+                YourMetres += improvement;
+                YourDays = Math.Max(YourDays, 1);
+                result.Team = Team;
+                result.TeamContribution = improvement;
+            }
             return Task.FromResult(result);
         }
     }

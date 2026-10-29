@@ -596,9 +596,28 @@ namespace Echo.Editor
             var loaderFigure = figure.gameObject.AddComponent<Image>();
             loaderFigure.preserveAspect = true;
             loaderFigure.raycastTarget = false;
-            var yesterday = MakeText(root, "Yesterday", "", 32, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -320), new Vector2(980, 56));
+            var yesterday = MakeText(root, "Yesterday", "", 32, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -300), new Vector2(980, 56));
+            // Modes doc, Naughty vs Nice: the tally bar (Nice from the left), the totals and your side.
+            RectTransform tally = NewRect("Tally", root);
+            tally.anchorMin = tally.anchorMax = new Vector2(0.5f, 0.5f);
+            tally.anchoredPosition = new Vector2(0, -375);
+            tally.sizeDelta = new Vector2(940, 110);
+            var track = Pill(tally, "Track", new Vector2(0, 38), new Vector2(900, 18), NemesisRed);
+            track.raycastTarget = false;
+            RectTransform niceFill = NewRect("Nice", (RectTransform)track.transform);
+            niceFill.anchorMin = Vector2.zero;
+            niceFill.anchorMax = new Vector2(0.5f, 1f);
+            niceFill.offsetMin = niceFill.offsetMax = Vector2.zero;
+            var niceImage = niceFill.gameObject.AddComponent<Image>();
+            niceImage.color = new Color(1f, 0.91f, 0.63f);
+            niceImage.raycastTarget = false;
+            var tallyText = MakeText(tally, "Text", "", 24, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -16), new Vector2(940, 70));
+            tally.gameObject.SetActive(false);
+            Wire(view, "_tally", tally.gameObject);
+            Wire(view, "_tallyNice", niceFill);
+            Wire(view, "_tallyText", tallyText);
             yesterday.color = Soft;
-            var status = MakeText(root, "Status", "", 36, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -420), new Vector2(980, 110));
+            var status = MakeText(root, "Status", "", 32, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -478), new Vector2(980, 90));
             status.color = Soft;
             var play = MakeButton(root, "Play", "Play today's course", new Vector2(0, -600), new Vector2(760, 132), ButtonStyle.Primary);
             var back = MakeButton(root, "Back", "Back", new Vector2(0, -830), new Vector2(500, 120), ButtonStyle.Secondary);
@@ -812,6 +831,9 @@ namespace Echo.Editor
             summary.alignment = TextAlignmentOptions.TopLeft;
             summary.lineSpacing = 8;
             var header = MakeText(root, "AchievementsHeader", "ACHIEVEMENTS", 30, _black, new Vector2(0.5f, 1f), new Vector2(0, -660), new Vector2(980, 60));
+            // Modes doc (a user decision): the online profile at the top, between the heading and the summary.
+            var profile = MakeText(root, "Profile", "", 30, _medium, new Vector2(0.5f, 1f), new Vector2(0, -185), new Vector2(980, 80));
+            Wire(view, "_profile", profile);
             header.alignment = TextAlignmentOptions.Left;
 
             // Skins addendum: 30 achievements in a scrolling list, one row with a progress bar each.

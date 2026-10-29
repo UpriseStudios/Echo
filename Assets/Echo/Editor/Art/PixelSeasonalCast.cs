@@ -9,8 +9,8 @@ namespace Echo.Editor.Art
     /// <summary>
     /// Seasonal characters (seasons doc, version 2.1). Santa and Rudolph are free, each earned with a Christmas
     /// achievement and kept for good; the Christmas Pack (Elf, Snowman, Gingerbread Runner, Nutcracker) is its own £1.99
-    /// product, sold during Christmas and New Year and never part of the Season of Echo bundle. Placeholder art on the
-    /// shared rig, drawn facing right like the rest of the cast.
+    /// product, sold during Christmas and New Year and never part of the Season of Echo bundle. Drawn on the
+    /// shared rig, facing right like the rest of the cast.
     /// </summary>
     public static class PixelSeasonalCast
     {

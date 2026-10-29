@@ -15,6 +15,7 @@ namespace Echo.Game.Persistence
 
         // Schema 2 (skins addendum).
         [JsonProperty("skinId")] public string SkinId = "";
+        [JsonProperty("accessoryId")] public string AccessoryId = "";
         [JsonProperty("deathX")] public int DeathX = -1;
         [JsonProperty("cause")] public int Cause;
         [JsonProperty("killerRunIndex")] public int KillerRunIndex;

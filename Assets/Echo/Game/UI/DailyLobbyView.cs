@@ -20,6 +20,9 @@ namespace Echo.Game.UI
             public string Name;
             public int Distance;
             public bool IsYou;
+
+            /// <summary>Badge tags before the name (BadgeNames.Tags), or "".</summary>
+            public string Badges;
         }
 
         [SerializeField] GameObject _root;
@@ -33,6 +36,20 @@ namespace Echo.Game.UI
         [SerializeField] Button _back;
         [SerializeField] Color _youColor = Color.yellow;
         [SerializeField] Color _rowColor = Color.white;
+        // Modes doc, Naughty vs Nice: the tally bar and its line.
+        [SerializeField] GameObject _tally;
+        [SerializeField] RectTransform _tallyNice;
+        [SerializeField] TMP_Text _tallyText;
+
+        /// <summary>The team tally, or null to hide it; <paramref name="niceShare"/> fills the bar from the left.</summary>
+        public void SetTally(string text, float niceShare)
+        {
+            if (_tally == null) return;
+            _tally.SetActive(text != null);
+            if (text == null) return;
+            _tallyText.text = text;
+            _tallyNice.anchorMax = new Vector2(Mathf.Clamp01(niceShare), 1f);
+        }
         // A user revision: while the board loads, the player's own character runs and jumps on the empty board.
         [SerializeField] RectTransform _loader;
         [SerializeField] Image _loaderFigure;
@@ -134,7 +151,7 @@ namespace Echo.Game.UI
             for (int i = 0; i < _rows.Length; i++)
             {
                 bool filled = i < board.Count;
-                _rows[i].text = filled ? $"{board[i].Rank,2}  {board[i].Name}" + $"<pos=78%>{board[i].Distance} m" : (i == 0 ? "No runs yet today. Be the first ghost." : "");
+                _rows[i].text = filled ? $"{board[i].Rank,2}  {board[i].Badges}{board[i].Name}" + $"<pos=78%>{board[i].Distance} m" : (i == 0 ? "No runs yet today. Be the first ghost." : "");
                 _rows[i].color = filled && board[i].IsYou ? _youColor : _rowColor;
             }
             _lines = board.Count;

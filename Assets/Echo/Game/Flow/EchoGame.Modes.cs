@@ -79,10 +79,11 @@ namespace Echo.Game.Flow
                 {
                     if (_modeCards.Count == _modesView.Capacity) break;
                     long seconds = m.SecondsLeft < 0 ? -1 : Math.Max(0, m.SecondsLeft - elapsed);
+                    string side = m.Id == Echo.Core.Modes.ModeIds.NaughtyNice && !string.IsNullOrEmpty(_save.Modes.Team) ? $" · Team {Side(_save.Modes.Team)}" : "";
                     _modeCards.Add(new ModesView.Card
                     {
                         Title = ModeNames.Name(m.Id),
-                        Detail = $"{ModeNames.Pitch(m.Id)}\n{ModeNames.Countdown(m.Open, seconds)}",
+                        Detail = $"{ModeNames.Pitch(m.Id)}\n{ModeNames.Countdown(m.Open, seconds)}{side}",
                     });
                 }
             }
@@ -115,6 +116,13 @@ namespace Echo.Game.Flow
             if (_modes == null || m < 0 || m >= _modes.Modes.Count) return;
             ModeState mode = _modes.Modes[m];
             Log(AnalyticsEvents.ModeOpened, ("mode", mode.Id));
+            // Naughty vs Nice is the Daily Haunt with a team: its lobby holds the tally and the side picker.
+            if (mode.Id == Echo.Core.Modes.ModeIds.NaughtyNice)
+            {
+                CloseMenu();
+                OpenDailyLobby();
+                return;
+            }
             // Modes doc phase 1 is the framework: each mode's own screen comes with its phase.
             _modesView.SetStatus(mode.Open ? $"{ModeNames.Name(mode.Id)} is coming in this update." : $"{ModeNames.Name(mode.Id)}: {ModeNames.Countdown(false, mode.SecondsLeft)}");
         }

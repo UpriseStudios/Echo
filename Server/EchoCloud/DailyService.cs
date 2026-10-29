@@ -148,8 +148,16 @@ namespace EchoCloud
                 NextRunIndex = day.NextRunIndex,
                 BanishesLeft = Math.Max(0, DailyRules.BanishesPerDay - day.BanishesUsed),
             };
-            foreach (LeaderboardRow row in await _store.TopAsync(100))
-                response.Board.Add(new DailyBoardEntry { Rank = row.Rank, Name = row.Name, Distance = row.Distance, IsYou = row.PlayerId == playerId });
+            List<LeaderboardRow> rows = await _store.TopAsync(100);
+            // Badges beside the names the lobby shows (the top 10) and yours: one read.
+            var badged = rows.Take(DailyRules.Leaders).Select(r => r.PlayerId).Append(playerId).Distinct().ToList();
+            Dictionary<string, List<string>> badges = await TeamService.BadgesAsync(_days, badged, new DateTimeOffset(DateTime.SpecifyKind(now, DateTimeKind.Utc)).ToUnixTimeSeconds());
+            foreach (LeaderboardRow row in rows)
+                response.Board.Add(new DailyBoardEntry
+                {
+                    Rank = row.Rank, Name = row.Name, Distance = row.Distance, IsYou = row.PlayerId == playerId,
+                    Badges = badges.TryGetValue(row.PlayerId, out List<string> b) ? b : new List<string>(),
+                });
             response.Rank = (await _store.PlayerAsync(playerId))?.Rank ?? 0;
             try
             {
@@ -212,6 +220,7 @@ namespace EchoCloud
             if (distance > day.BestDistance)
             {
                 // A new daily best clears the player's daily ghosts (Daily Haunt doc).
+                if (!lateFromYesterday) response.Improvement = distance - day.BestDistance;
                 day.BestDistance = distance;
                 own.Clear();
                 day.Packet = Container(reel.Seed, own, run);
@@ -233,7 +242,12 @@ namespace EchoCloud
             response.Distance = distance;
             response.BestDistance = day.BestDistance;
             response.NextRunIndex = day.NextRunIndex;
-            if (!lateFromYesterday) response.Rank = (await _store.PlayerAsync(playerId))?.Rank ?? 0;
+            if (!lateFromYesterday)
+            {
+                LeaderboardRow mine = await _store.PlayerAsync(playerId);
+                response.Rank = mine?.Rank ?? 0;
+                response.PlayerName = mine?.Name ?? "";
+            }
             if (response.NewBest && !lateFromYesterday && response.Rank >= 1 && response.Rank <= DailyRules.Leaders)
                 await CurrentLeaders(date, now, force: true);   // you're now one of the ghosts others meet
             response.LeadersPassed = DailyRules.Passed(leaders.Select(e => e.Distance), distance);

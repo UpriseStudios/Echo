@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace EchoCloud
@@ -18,5 +19,14 @@ namespace EchoCloud
 
         /// <summary>Deletes a whole day: every key in the item. Nothing there is fine.</summary>
         Task DeleteBucketAsync(string bucket);
+
+        /// <summary>The values under several keys (missing ones left out).</summary>
+        Task<Dictionary<string, string>> GetManyAsync(string bucket, IReadOnlyCollection<string> keys);
+
+        /// <summary>A value with its write lock (null for a new key), for <see cref="TrySetAsync"/>.</summary>
+        Task<(string Json, string WriteLock)> GetLockedAsync(string bucket, string key);
+
+        /// <summary>Writes only if nobody else has since the lock was read; false on a conflict (read again and retry).</summary>
+        Task<bool> TrySetAsync(string bucket, string key, string json, string writeLock);
     }
 }

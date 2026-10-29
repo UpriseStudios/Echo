@@ -184,6 +184,7 @@ namespace Echo.Game.Flow
             _save.Settings ??= new SettingsSaveData();
             _save.Cosmetics ??= new CosmeticsSaveData();
             _save.Consent ??= new ConsentSaveData();
+            _save.Modes ??= new ModesSaveData();
             _progress = SaveMapper.ToProgress(_save, _contentVersion, out bool discarded);
             if (discarded) Debug.Log("[Echo] content changed since the last save; old ghosts were discarded");
             if (_progress.Seed == 0) _progress.Seed = NewSeed();
@@ -215,9 +216,9 @@ namespace Echo.Game.Flow
             _title.SkinsClicked += () => OpenMenu(ShowSkins);
             _title.StatsClicked += () => OpenMenu(() =>
             {
-                bool gallery = _features == null || _features.RoguesGallery;
-                _stats.Show(_progress, gallery, SeasonalOn(UkCalendar.Date(SeasonNowUtc())));
-                if (gallery) Log(AnalyticsEvents.GalleryViewed, ("entries", _progress.Gallery.Count));
+                ShowStats();
+                if (_features == null || _features.RoguesGallery) Log(AnalyticsEvents.GalleryViewed, ("entries", _progress.Gallery.Count));
+                _ = SyncProfile();
             });
             _title.TwistClicked += OnTwistClicked;
             _title.ExitClicked += AskToQuit;
@@ -316,6 +317,7 @@ namespace Echo.Game.Flow
             _stateTime += dt;
             TickDailyLabels(dt);
             TickModeLabels(dt);
+            TickTeam();
 
             if (_awakenPending && (State == GameState.Title || State == GameState.DeathScreen) && !ModalOpen) PlayAwakened();
 
@@ -583,6 +585,7 @@ namespace Echo.Game.Flow
         {
             // Recorded at the start, not when the run is prepared: the title screen's Skins can still change it.
             if (freshRun) _run.SkinId = EquippedCharacterId();
+            if (freshRun) _run.AccessoryId = EquippedAccessoryId();
             // An Elementals trial counts down by run; this run keeps the character even if it was the last one.
             if (freshRun) ElementalTrial.UseRun(_save.Cosmetics);
             if (freshRun)
@@ -985,9 +988,16 @@ namespace Echo.Game.Flow
             if (_twistOverlay != null) _twistOverlay.SetTwist(twist);
         }
 
+        void ShowStats()
+        {
+            _stats.Show(_progress, _features == null || _features.RoguesGallery, SeasonalOn(UkCalendar.Date(SeasonNowUtc())));
+            _stats.SetProfile(ProfileNow());
+        }
+
         void ShowTitle()
         {
             RefreshSeason();
+            CheckTeamReveal();
             _title.Show(_progress.Best);
             _title.SetExitVisible(CanQuit);
             _title.SetDevServer(!_recordingMode && _serviceConfig != null && _serviceConfig.ShowsDevServerTag);
@@ -1128,6 +1138,14 @@ namespace Echo.Game.Flow
         }
 
         // The character the next run wears, recorded on its ghost (skins addendum).
+        // The accessory worn on the next run, if it's owned: "" for none.
+        string EquippedAccessoryId()
+        {
+            if (_catalog == null) return "";
+            CosmeticItem item = _catalog.Resolve(_save.Cosmetics.Equipped.Accessory, CosmeticType.Accessory);
+            return item != null && item.Sprite != null && CosmeticUnlocks.IsOwned(item, _progress.Best, _save.Cosmetics.Owned) ? item.Id : "";
+        }
+
         string EquippedCharacterId()
         {
             if (_catalog == null) return CosmeticsSaveData.DefaultCharacter;
@@ -1138,7 +1156,7 @@ namespace Echo.Game.Flow
         }
 
         /// <param name="characterId">A reel playing back wears the skin its run wore, owned or not.</param>
-        void ApplyCosmetics(string characterId = null)
+        void ApplyCosmetics(string characterId = null, string accessoryId = null)
         {
             if (_catalog == null) return;
             _ghostViews.SetSkinLibrary(_catalog);
@@ -1152,6 +1170,9 @@ namespace Echo.Game.Flow
             CosmeticItem trail = _catalog.Resolve(e.Trail, CosmeticType.Trail);
             CosmeticItem palette = _catalog.Resolve(e.Palette, CosmeticType.Palette);
             _equippedGrave = characterId == null ? _catalog.Resolve(e.Grave, CosmeticType.Grave) : null;
+            // A reel plays back wearing its run's accessory; otherwise the equipped one.
+            CosmeticItem accessory = _catalog.Find(characterId == null ? EquippedAccessoryId() : accessoryId ?? "");
+            if (character != null) _runnerView.SetAccessory(accessory != null && accessory.Type == CosmeticType.Accessory ? accessory.Sprite : null, character.HeadTop);
             ApplyGrave();
             if (character != null)
             {

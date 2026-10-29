@@ -267,6 +267,7 @@ namespace Echo.Game.Flow
             }
             Log(AnalyticsEvents.DailyOpened, ("date", _daily.Date), ("rank", _daily.Rank), ("best", _daily.BestDistance));
             ShowDailyDay();
+            _ = LoadTeamEvent();   // Naughty vs Nice rides on the Daily Haunt
         }
 
         // Fetches today: the seed, the leader set and your own daily ghosts. Unsent runs go first, so the ghosts match.
@@ -311,7 +312,7 @@ namespace Echo.Game.Flow
             foreach (DailyBoardRow row in _daily.Board)
             {
                 if (board.Count == DailyRules.Leaders) break;
-                board.Add(new DailyLobbyView.Line { Rank = row.Rank, Name = row.Name, Distance = row.Distance, IsYou = row.IsYou });
+                board.Add(new DailyLobbyView.Line { Rank = row.Rank, Name = row.Name, Distance = row.Distance, IsYou = row.IsYou, Badges = BadgeNames.Tags(row.Badges) });
             }
             string you = _daily.BestDistance > 0
                 ? $"Your best today: {_daily.BestDistance} m · #{_daily.Rank}"
@@ -429,7 +430,8 @@ namespace Echo.Game.Flow
             if (r.NewBest) Log(AnalyticsEvents.DailyNewBest, ("distance", r.Distance), ("rank", r.Rank));
 
             _deathScreen.Show(r.Distance, r.BestDistance, r.NewBest, "",
-                r.BoardClosed ? "Midnight passed while you ran, so yesterday's board had closed. Today's course is ready." : NextLeaderLine(r),
+                r.BoardClosed ? "Midnight passed while you ran, so yesterday's board had closed. Today's course is ready."
+                    : TeamLine(r) is string team ? NextLeaderLine(r) + "\n" + team : NextLeaderLine(r),
                 "Best today");
             _deathScreen.SetScoreLabel("DISTANCE");
             _deathScreen.SetOffers(false, false);

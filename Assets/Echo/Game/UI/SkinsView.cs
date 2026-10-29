@@ -132,6 +132,7 @@ namespace Echo.Game.UI
             Section("Trails", null, CosmeticType.Trail);
             Section("Palettes", null, CosmeticType.Palette);
             Section("Gravestones", null, CosmeticType.Grave);
+            Section("Accessories", null, CosmeticType.Accessory);
 
             // Colour packs (a user revision: no longer sold): each unlocks at a score, or after enough rewarded ads.
             Header("Colour packs", "score or ads");
@@ -303,7 +304,7 @@ namespace Echo.Game.UI
             image.color = Swatch(item, owned);
             var label = button.GetComponentInChildren<TMP_Text>();
             label.text = $"{item.DisplayName}\n<size=72%>" +
-                         (equipped ? "Equipped" : owned ? "Tap to equip" : Seasonal(item) ? item.UnlockText
+                         (equipped ? "Equipped" : owned ? "Tap to equip" : Seasonal(item) || item.ServerReward ? item.UnlockText
                              : item.UnlockStat != CosmeticUnlockStat.None ? Requirement(item)
                              : item.AdsToUnlock > 0 ? $"Score {item.UnlockScore} or {item.AdsToUnlock} ads" : $"Score {item.UnlockScore}") + "</size>";
             label.color = Luminance(image.color) > 0.55f ? new Color(0.08f, 0.1f, 0.12f) : Color.white;
@@ -342,6 +343,7 @@ namespace Echo.Game.UI
                 case CosmeticType.Runner: e.Runner = item.Id; break;
                 case CosmeticType.Trail: e.Trail = item.Id; break;
                 case CosmeticType.Grave: e.Grave = item.Id; break;
+                case CosmeticType.Accessory: e.Accessory = item.Id; break;
                 default: e.Palette = item.Id; break;
             }
             Refresh();
@@ -354,6 +356,7 @@ namespace Echo.Game.UI
             CosmeticType.Runner => _cosmetics.Equipped.Runner,
             CosmeticType.Trail => _cosmetics.Equipped.Trail,
             CosmeticType.Grave => _cosmetics.Equipped.Grave,
+            CosmeticType.Accessory => _cosmetics.Equipped.Accessory,
             _ => _cosmetics.Equipped.Palette,
         };
 

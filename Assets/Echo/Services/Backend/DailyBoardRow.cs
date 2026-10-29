@@ -7,5 +7,8 @@ namespace Echo.Services.Backend
         public string Name = "";
         public int Distance;
         public bool IsYou;
+
+        /// <summary>Badges beside the name (modes doc; a user decision).</summary>
+        public System.Collections.Generic.List<string> Badges = new System.Collections.Generic.List<string>();
     }
 }

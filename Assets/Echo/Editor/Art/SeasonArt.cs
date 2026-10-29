@@ -21,6 +21,9 @@ namespace Echo.Editor.Art
         /// <summary>The Heart gravestone, a cosmetic (It's Complicated's reward).</summary>
         public static string HeartGravePath => $"{Dir}/grave_heart.png";
 
+        /// <summary>The Halo, Naughty vs Nice's reward for the winning Nice side (a runner accessory).</summary>
+        public static string HaloPath => $"{Dir}/acc_halo.png";
+
         /// <summary>A firework spark, shared by every season with fireworks.</summary>
         public static string SparkPath => $"{Dir}/fx_spark.png";
 
@@ -57,6 +60,7 @@ namespace Echo.Editor.Art
             const string v = Game.Seasons.SeasonIds.Valentines;
             EchoArt.Write(PathFor(v, NemesisAccessory), PixelSeasons.NemesisHeart());
             EchoArt.Write(HeartGravePath, PixelSeasons.HeartGrave());
+            EchoArt.Write(HaloPath, PixelSeasons.Halo());
             // Halloween (switched off until next year).
             const string h = Game.Seasons.SeasonIds.Halloween;
             EchoArt.Write(PathFor(h, Grave), PixelSeasons.PumpkinGrave());
@@ -72,6 +76,8 @@ namespace Echo.Editor.Art
 
             EchoArt.ImportSprite(PathFor(v, NemesisAccessory), EchoArt.WorldPpu, new Vector2(0.5f, -1f / 9f));
             EchoArt.ImportSprite(HeartGravePath, EchoArt.WorldPpu, new Vector2(0.5f, 2f / 16f));
+            // Floats 2 px over the top of the head.
+            EchoArt.ImportSprite(HaloPath, EchoArt.WorldPpu, new Vector2(0.5f, -2f / 6f));
             EchoArt.ImportSprite(PathFor(h, Grave), EchoArt.WorldPpu, new Vector2(0.5f, 2f / 16f));
             // The web's top row sits 3 px above the head's top, so it drapes down over the back of the head.
             EchoArt.ImportSprite(PathFor(h, GhostAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 5f / 9f));

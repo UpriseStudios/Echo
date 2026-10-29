@@ -57,13 +57,16 @@ namespace Echo.Game.Cosmetics
         [Tooltip("Seasons doc: earned with this achievement (a seasonal one) and kept for good. Never bought.")]
         public string UnlockAchievement = "";
 
+        [Tooltip("Modes doc: granted by the server (a competitive mode's reward), never earned on the device.")]
+        public bool ServerReward;
+
         [Tooltip("How to unlock it, shown while locked, e.g. \"Die 250 times\".")]
         public string UnlockText = "";
 
         /// <summary>Unlocked by best score (tech spec 16), as opposed to a purchase or ads.</summary>
         /// <summary>Colour packs keep their score milestone and add ads as a second way in (a user revision).</summary>
         public bool EarnedByScore => !PurchaseOnly && !AllAchievements && UnlockStat == CosmeticUnlockStat.None && string.IsNullOrEmpty(UnlockAchievement)
-            && (AdsToUnlock == 0 || UnlockScore > 0);
+            && !ServerReward && (AdsToUnlock == 0 || UnlockScore > 0);
 
         [Header("Character")]
         public Sprite[] RunFrames = new Sprite[0];

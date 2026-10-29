@@ -46,10 +46,20 @@ namespace EchoCloud
 
         [CloudCodeFunction("SubmitDailyRun")]
         public async Task<SubmitDailyResponse> SubmitDailyRun(IExecutionContext context, IGameApiClient api, string date, string leaderVersion,
-            string packet, string dateOverride = null) =>
-            !(await FeatureSwitches.ReadAsync(context, api)).Daily
-                ? new SubmitDailyResponse { Error = FeatureSwitches.Disabled }
-                : await (await Daily(context, api)).SubmitAsync(context.PlayerId, date, leaderVersion, packet, DevelopmentOnly(context, dateOverride));
+            string packet, string dateOverride = null, bool forceModes = false)
+        {
+            FeatureSwitches switches = await FeatureSwitches.ReadAsync(context, api);
+            if (!switches.Daily) return new SubmitDailyResponse { Error = FeatureSwitches.Disabled };
+            SubmitDailyResponse response = await (await Daily(context, api)).SubmitAsync(context.PlayerId, date, leaderVersion, packet,
+                DevelopmentOnly(context, dateOverride));
+            // Naughty vs Nice: a new best on today's board (never a grace run) adds its improvement to the player's team.
+            if (response.Ok && response.Improvement > 0 && !response.BoardClosed)
+            {
+                response.Team = await Teams(context, api, switches, dateOverride, forceModes).ContributeAsync(context.PlayerId, response.PlayerName, response.Improvement);
+                if (response.Team != "") response.TeamContribution = response.Improvement;
+            }
+            return response;
+        }
 
         [CloudCodeFunction("BanishDailyGhost")]
         public async Task<BanishDailyGhostResponse> BanishDailyGhost(IExecutionContext context, IGameApiClient api, string date, int runIndex,
@@ -69,14 +79,36 @@ namespace EchoCloud
         public async Task<GetModesResponse> GetModes(IExecutionContext context, IGameApiClient api, string dateOverride = null, bool forceAll = false)
         {
             FeatureSwitches switches = await FeatureSwitches.ReadAsync(context, api);
-            return ModeService.Describe(switches.Modes, ModeSchedule.Now(DevelopmentOnly(context, dateOverride)),
-                forceAll && context.EnvironmentName == Development);
+            long now = ModeSchedule.Now(DevelopmentOnly(context, dateOverride));
+            // Privacy policy retention: past events' team data goes on ordinary traffic.
+            await TeamService.SweepAsync(new CloudDayStore(api, context), switches.Modes, ModeSchedule.Now(null));
+            return ModeService.Describe(switches.Modes, now, forceAll && context.EnvironmentName == Development);
         }
+
+        // Naughty vs Nice (modes doc): the tally, your side and, once it's over, the result and your rewards.
+        [CloudCodeFunction("GetTeamEvent")]
+        public async Task<TeamEventResponse> GetTeamEvent(IExecutionContext context, IGameApiClient api, string dateOverride = null, bool forceModes = false) =>
+            await Teams(context, api, await FeatureSwitches.ReadAsync(context, api), dateOverride, forceModes).GetAsync(context.PlayerId);
+
+        [CloudCodeFunction("JoinTeam")]
+        public async Task<TeamEventResponse> JoinTeam(IExecutionContext context, IGameApiClient api, string team, string dateOverride = null,
+            bool forceModes = false) =>
+            await Teams(context, api, await FeatureSwitches.ReadAsync(context, api), dateOverride, forceModes).JoinAsync(context.PlayerId, team);
+
+        // The player's rewards and badges (a user decision: a profile at the top of Stats).
+        [CloudCodeFunction("GetProfile")]
+        public async Task<ProfileResponse> GetProfile(IExecutionContext context, IGameApiClient api, string dateOverride = null, bool forceModes = false) =>
+            await Teams(context, api, await FeatureSwitches.ReadAsync(context, api), dateOverride, forceModes).ProfileAsync(context.PlayerId);
+
+        static TeamService Teams(IExecutionContext context, IGameApiClient api, FeatureSwitches switches, string dateOverride, bool forceModes) =>
+            new TeamService(new CloudDayStore(api, context), new CloudDailyStore(api, context, () => AdminKey(context, api)), switches.Modes,
+                ModeSchedule.Now(DevelopmentOnly(context, dateOverride)), forceModes && context.EnvironmentName == Development);
 
         // Privacy policy: Settings › Delete online data. Never behind a switch: deleting must always work.
         [CloudCodeFunction("DeleteMyData")]
         public async Task<DeleteMyDataResponse> DeleteMyData(IExecutionContext context, IGameApiClient api)
         {
+            await TeamService.ForgetPlayerAsync(new CloudDayStore(api, context), (await FeatureSwitches.ReadAsync(context, api)).Modes, context.PlayerId);
             await Challenges(context, api).ForgetPlayerAsync(context.PlayerId);   // first: it needs their index
             return await (await Daily(context, api)).ForgetPlayerAsync(context.PlayerId);
         }

@@ -11,5 +11,8 @@ namespace Echo.Game.Persistence
 
         /// <summary>Schema 5 (version 2.1): the equipped gravestone; older saves have the stone.</summary>
         [JsonProperty("grave")] public string Grave = "grave_stone";
+
+        /// <summary>Schema 5 (version 2.1): the runner's accessory (the Halo); none by default.</summary>
+        [JsonProperty("accessory")] public string Accessory = "acc_none";
     }
 }

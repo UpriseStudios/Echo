@@ -60,14 +60,25 @@ namespace Echo.Game.Persistence
                 File.Move(TempPath, FilePath);
                 return;
             }
-            try
+            // A virus scanner or backup can hold the old file for a moment after it was written (Windows editor runs
+            // saw it with several saves in a row): try again briefly before giving up.
+            for (int attempt = 0; ; attempt++)
             {
-                File.Replace(TempPath, FilePath, null);
-            }
-            catch (PlatformNotSupportedException)
-            {
-                File.Delete(FilePath);
-                File.Move(TempPath, FilePath);
+                try
+                {
+                    File.Replace(TempPath, FilePath, null);
+                    return;
+                }
+                catch (PlatformNotSupportedException)
+                {
+                    File.Delete(FilePath);
+                    File.Move(TempPath, FilePath);
+                    return;
+                }
+                catch (IOException) when (attempt < 4)
+                {
+                    System.Threading.Thread.Sleep(25);
+                }
             }
         }
     }

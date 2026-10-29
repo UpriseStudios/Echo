@@ -23,6 +23,9 @@ namespace Echo.Services.Analytics
         public const string ClipSaved = "clip_saved";                 // a user revision: a clip kept in the gallery
         public const string SeasonActive = "season_active";           // seasons doc (version 2.1)
         public const string ModeOpened = "mode_opened";               // modes doc (version 2.1)
+        public const string ModeRewardEarned = "mode_reward_earned";
+        public const string TeamJoined = "team_joined";               // Naughty vs Nice
+        public const string TeamContribution = "team_contribution";
         public const string SeasonalAchievement = "seasonal_achievement";
         public const string SeasonalSkinEquipped = "seasonal_skin_equipped";
         public const string IapPurchase = "iap_purchase";

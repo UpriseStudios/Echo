@@ -96,6 +96,7 @@ namespace Echo.Game.Flow
             }
             // Nothing of the old online ID is sent again: unsent daily runs and today's fetched day go too.
             _save.Daily.Pending.Clear();
+            ForgetModes();
             ForgetDailyDay();
             Save();
             Ask("ONLINE DATA DELETED", "Your Daily Haunt runs, board entry and sent challenges are gone, and links to your challenges no longer open.",

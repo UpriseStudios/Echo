@@ -116,8 +116,8 @@ namespace Echo.Tests.PlayMode
                     int characters = buttons.Count(b => b.transform.Find("Preview") != null);
                     // Seasons doc: Santa and Rudolph always show (to earn); the Christmas Pack only while on sale (December), so not here.
                     Assert.AreEqual(15 + 32 + 4 + 2, characters, "hooded + 8 base, Pumpkin, 5 earned, 8 packs of 4, the Elementals, Santa and Rudolph");
-                    Assert.AreEqual(53 + 1 + 8 + 1 + 1 + 21 + 3, buttons.Length,
-                        "characters, the Season bundle, 8 skin packs, the Elementals trial, power-ups, 6 colours + 9 trails + 4 palettes + 2 gravestones, 3 colour packs");
+                    Assert.AreEqual(53 + 1 + 8 + 1 + 1 + 24 + 3, buttons.Length,
+                        "characters, the Season bundle, 8 skin packs, the Elementals trial, power-ups, 6 colours + 10 trails + 4 palettes + 2 gravestones + 2 accessories, 3 colour packs");
                 }
 
                 Click($"Canvas/SafeArea/{screen}/Close");

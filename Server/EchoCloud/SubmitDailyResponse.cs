@@ -30,5 +30,13 @@ namespace EchoCloud
         /// ghosts, but yesterday's board had closed (UGS archives are read-only), so it isn't ranked.
         /// </summary>
         public bool BoardClosed { get; set; }
+
+        /// <summary>A new daily best on today's board: how much it improved the day (metres), and the player's board name.</summary>
+        public int Improvement { get; set; }
+        public string PlayerName { get; set; } = "";
+
+        /// <summary>Naughty vs Nice (modes doc): the side the improvement counted for, or "".</summary>
+        public string Team { get; set; } = "";
+        public int TeamContribution { get; set; }
     }
 }

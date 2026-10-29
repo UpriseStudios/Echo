@@ -31,6 +31,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: 56d129a890a28c64baedd3e3d7a837b0, type: 3}
@@ -68,6 +69,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: 718cb62db66a3294f9d9b54320eb90ab, type: 3}
@@ -105,6 +107,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: 44d72f8de1076074f91c7dec6d3be2a8, type: 3}
@@ -142,6 +145,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: f85f76cc94362214fa726460a63efdae, type: 3}
@@ -179,6 +183,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: d30dccb9c751aaf4686f9ca7a6959f62, type: 3}
@@ -216,6 +221,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: 88591383521720c4494f971215a1a8e1, type: 3}
@@ -253,6 +259,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: 55e334e707ccc3f489a3d3e5434aa3ea, type: 3}
@@ -290,6 +297,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: 9232a8ea7c257f844984e13528630475, type: 3}
@@ -327,6 +335,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames:
     - {fileID: 21300000, guid: fcf28950187b15746a5553085a10e2b2, type: 3}
@@ -364,6 +373,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: trick_or_treat
+    ServerReward: 0
     UnlockText: Watch 5 ads
     RunFrames:
     - {fileID: 21300000, guid: db3478d3c0e7f054ab156a352489dabe, type: 3}
@@ -401,6 +411,7 @@ MonoBehaviour:
     UnlockStat: 3
     UnlockTarget: 15
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Have 15 ghosts active
     RunFrames:
     - {fileID: 21300000, guid: d9f7b540ef9a4fa489be82762fb531fb, type: 3}
@@ -438,6 +449,7 @@ MonoBehaviour:
     UnlockStat: 2
     UnlockTarget: 1000
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Reach 1,000 m
     RunFrames:
     - {fileID: 21300000, guid: e62bd7295c35b254da5c40e8412beacf, type: 3}
@@ -475,6 +487,7 @@ MonoBehaviour:
     UnlockStat: 4
     UnlockTarget: 15
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Clear 15+ ghosts with a new best
     RunFrames:
     - {fileID: 21300000, guid: af9366b112979f747baed7ac07b8fc5e, type: 3}
@@ -512,6 +525,7 @@ MonoBehaviour:
     UnlockStat: 4
     UnlockTarget: 20
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Clear 20+ ghosts at once
     RunFrames:
     - {fileID: 21300000, guid: 3efed7e430f93c448a0e0cbe5bf845dd, type: 3}
@@ -549,6 +563,7 @@ MonoBehaviour:
     UnlockStat: 1
     UnlockTarget: 250
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Die 250 times
     RunFrames:
     - {fileID: 21300000, guid: f46b195ea99f11d4f8a5c9e04e99b06c, type: 3}
@@ -586,6 +601,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Undead Pack
     RunFrames:
     - {fileID: 21300000, guid: b5ac5b2339ef41b4091e409eacb5af0f, type: 3}
@@ -623,6 +639,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Undead Pack
     RunFrames:
     - {fileID: 21300000, guid: e26a4b892cab40845b3c65a47d9405e2, type: 3}
@@ -660,6 +677,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Undead Pack
     RunFrames:
     - {fileID: 21300000, guid: 4cc58596614d9e44a87553a22a4b77ff, type: 3}
@@ -697,6 +715,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Undead Pack
     RunFrames:
     - {fileID: 21300000, guid: ece67dae4ba9a734ea88fb63bbf12084, type: 3}
@@ -734,6 +753,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Dungeon Pack
     RunFrames:
     - {fileID: 21300000, guid: b85013075159c6f4eb663cdfe9a0a1bf, type: 3}
@@ -771,6 +791,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Dungeon Pack
     RunFrames:
     - {fileID: 21300000, guid: 94834e16c36b9e74b9e5b6b473bbf3fc, type: 3}
@@ -808,6 +829,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Dungeon Pack
     RunFrames:
     - {fileID: 21300000, guid: 4650b13872aa09e4c9c6a39c06b2b341, type: 3}
@@ -845,6 +867,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Dungeon Pack
     RunFrames:
     - {fileID: 21300000, guid: 1750d841d56aae74cb8632765acbcfc9, type: 3}
@@ -882,6 +905,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Critters Pack
     RunFrames:
     - {fileID: 21300000, guid: df985dd567aa84f45ba4f34cb12079e2, type: 3}
@@ -919,6 +943,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Critters Pack
     RunFrames:
     - {fileID: 21300000, guid: 9c315307273581d4ab8e5fa302d24b22, type: 3}
@@ -956,6 +981,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Critters Pack
     RunFrames:
     - {fileID: 21300000, guid: 4baca91ff8a1ff948aeb057be6682649, type: 3}
@@ -993,6 +1019,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Critters Pack
     RunFrames:
     - {fileID: 21300000, guid: ff3a6bda0b8031449bd6866cd93d49c1, type: 3}
@@ -1030,6 +1057,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Space Pack
     RunFrames:
     - {fileID: 21300000, guid: d8d61810a77cce344b70ee9eb7277ff5, type: 3}
@@ -1067,6 +1095,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Space Pack
     RunFrames:
     - {fileID: 21300000, guid: d5ff5f4890183df4a9a9b608c0b8340b, type: 3}
@@ -1104,6 +1133,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Space Pack
     RunFrames:
     - {fileID: 21300000, guid: 3b9fabb5a7123ba408963da2ad8c01e7, type: 3}
@@ -1141,6 +1171,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Space Pack
     RunFrames:
     - {fileID: 21300000, guid: 5bf9ea5fbadfffd4586b5e6b1a412bf7, type: 3}
@@ -1178,6 +1209,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Retro Pack
     RunFrames:
     - {fileID: 21300000, guid: 4588cb555b575804f81d5e334718f4bc, type: 3}
@@ -1215,6 +1247,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Retro Pack
     RunFrames:
     - {fileID: 21300000, guid: 6f0a95fa48fc80049a6275cba8406fa1, type: 3}
@@ -1252,6 +1285,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Retro Pack
     RunFrames:
     - {fileID: 21300000, guid: 1ca6c63da6892004e82ffe4683045a8f, type: 3}
@@ -1289,6 +1323,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Retro Pack
     RunFrames:
     - {fileID: 21300000, guid: 63299a67bd64e804aa5013b8fe9ad61b, type: 3}
@@ -1326,6 +1361,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Royal Pack
     RunFrames:
     - {fileID: 21300000, guid: 2a5d50153a3e4284aa5d01336b3df134, type: 3}
@@ -1363,6 +1399,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Royal Pack
     RunFrames:
     - {fileID: 21300000, guid: 4a9905c4ac506d144903d474d62d2be0, type: 3}
@@ -1400,6 +1437,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Royal Pack
     RunFrames:
     - {fileID: 21300000, guid: c3da504169100a847a24d0b3432b5f2c, type: 3}
@@ -1437,6 +1475,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Royal Pack
     RunFrames:
     - {fileID: 21300000, guid: dd0e9a82d07324a49ac92172a667602e, type: 3}
@@ -1474,6 +1513,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Monsters Pack
     RunFrames:
     - {fileID: 21300000, guid: 4377e57c5dfb74a4cb4519b06c604897, type: 3}
@@ -1511,6 +1551,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Monsters Pack
     RunFrames:
     - {fileID: 21300000, guid: c26bbbb45c5559c4c924be09627173d0, type: 3}
@@ -1548,6 +1589,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Monsters Pack
     RunFrames:
     - {fileID: 21300000, guid: d09492417ce8d234393199e237ef295a, type: 3}
@@ -1585,6 +1627,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Monsters Pack
     RunFrames:
     - {fileID: 21300000, guid: a581994fe518b2246a1f2a76030771b8, type: 3}
@@ -1622,6 +1665,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Oddballs Pack
     RunFrames:
     - {fileID: 21300000, guid: a806b8314eccb4946a12733f87931a9a, type: 3}
@@ -1659,6 +1703,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Oddballs Pack
     RunFrames:
     - {fileID: 21300000, guid: 8eab1af787edc424c912b0e7f078ce67, type: 3}
@@ -1696,6 +1741,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Oddballs Pack
     RunFrames:
     - {fileID: 21300000, guid: e9b4e82221704864fbc676591bc23b1e, type: 3}
@@ -1733,6 +1779,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Oddballs Pack
     RunFrames:
     - {fileID: 21300000, guid: 54bfa757d755eca4b93b2aa32095a8ab, type: 3}
@@ -1770,6 +1817,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Earn all 30 achievements
     RunFrames:
     - {fileID: 21300000, guid: 80c512d539248df468364c6066d67c6a, type: 3}
@@ -1807,6 +1855,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Earn all 30 achievements
     RunFrames:
     - {fileID: 21300000, guid: bbb7a44d3a83bc74890942339787514f, type: 3}
@@ -1844,6 +1893,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Earn all 30 achievements
     RunFrames:
     - {fileID: 21300000, guid: cfef60058736d334dac5b1f6da885424, type: 3}
@@ -1881,6 +1931,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Earn all 30 achievements
     RunFrames:
     - {fileID: 21300000, guid: 7826268c5a2a60f49a2a9e39fa9f7d06, type: 3}
@@ -1918,6 +1969,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: twelve_days
+    ServerReward: 0
     UnlockText: 'Christmas: Twelve Days'
     RunFrames:
     - {fileID: 21300000, guid: f43f0d34e43958d40a7e2136fafc754f, type: 3}
@@ -1955,6 +2007,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: lead_the_way
+    ServerReward: 0
     UnlockText: 'Christmas: Lead the Way'
     RunFrames:
     - {fileID: 21300000, guid: 8902a0372ffa2344c86f596df3c0487f, type: 3}
@@ -1992,6 +2045,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Christmas Pack
     RunFrames:
     - {fileID: 21300000, guid: 2227ff90893a2d74e8d92cc7d88f9c12, type: 3}
@@ -2029,6 +2083,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Christmas Pack
     RunFrames:
     - {fileID: 21300000, guid: 17b0d6d89d168324ca1c67e264465329, type: 3}
@@ -2066,6 +2121,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Christmas Pack
     RunFrames:
     - {fileID: 21300000, guid: 7393527e4ecd7fa4eb83991cf4a5995e, type: 3}
@@ -2103,6 +2159,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Christmas Pack
     RunFrames:
     - {fileID: 21300000, guid: 03cfc7e6a61fccc42a16dbbe48caad56, type: 3}
@@ -2140,6 +2197,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2169,6 +2227,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2198,6 +2257,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2227,6 +2287,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2256,6 +2317,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2285,6 +2347,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2314,6 +2377,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2343,6 +2407,7 @@ MonoBehaviour:
     UnlockStat: 3
     UnlockTarget: 1
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Meet your first ghost
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2372,6 +2437,7 @@ MonoBehaviour:
     UnlockStat: 1
     UnlockTarget: 50
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Die 50 times
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2401,6 +2467,7 @@ MonoBehaviour:
     UnlockStat: 2
     UnlockTarget: 500
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Reach 500 m
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2430,6 +2497,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2459,6 +2527,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2488,6 +2557,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2523,6 +2593,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: snowed_under
+    ServerReward: 0
     UnlockText: 'Christmas: Snowed Under'
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2557,7 +2628,104 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: first_footer
+    ServerReward: 0
     UnlockText: 'New Year: First Footer'
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: acc_none
+    DisplayName: None
+    Type: 5
+    Color: {r: 0.22745098, g: 0.2901961, b: 0.32941177, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 0
+    UnlockText: 
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: acc_halo
+    DisplayName: Halo
+    Type: 5
+    Color: {r: 1, g: 0.8901961, b: 0.41568628, a: 1}
+    Sprite: {fileID: 21300000, guid: 46c96fcefcd740b4aa5cceb7f249be12, type: 3}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 1
+    UnlockText: 'Naughty vs Nice: win as Nice'
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: trail_coal
+    DisplayName: Coal
+    Type: 1
+    Color: {r: 0.16470589, g: 0.16470589, b: 0.16470589, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops:
+    - {r: 0.078431375, g: 0.078431375, b: 0.078431375, a: 1}
+    - {r: 0.22745098, g: 0.16470589, b: 0.13333334, a: 1}
+    - {r: 1, g: 0.41568628, b: 0.16470589, a: 1}
+    - {r: 0.10980392, g: 0.10980392, b: 0.10980392, a: 1}
+    - {r: 0.22745098, g: 0.16470589, b: 0.13333334, a: 1}
+    - {r: 1, g: 0.627451, b: 0.2509804, a: 1}
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 1
+    UnlockText: 'Naughty vs Nice: win as Naughty'
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2586,6 +2754,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2615,6 +2784,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: its_complicated
+    ServerReward: 0
     UnlockText: 'Valentine''s: It''s Complicated'
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2647,6 +2817,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2679,6 +2850,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2711,6 +2883,7 @@ MonoBehaviour:
     UnlockStat: 2
     UnlockTarget: 100
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: Reach 100 m
     RunFrames: []
     JumpFrame: {fileID: 0}
@@ -2743,6 +2916,7 @@ MonoBehaviour:
     UnlockStat: 0
     UnlockTarget: 0
     UnlockAchievement: 
+    ServerReward: 0
     UnlockText: 
     RunFrames: []
     JumpFrame: {fileID: 0}

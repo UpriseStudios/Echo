@@ -22,6 +22,9 @@ namespace Echo.Core.Ghosts
         // reads them.
         public string SkinId = "";
 
+        /// <summary>Modes doc: the accessory the run wore (the Halo), or "". Cosmetic only, like SkinId.</summary>
+        public string AccessoryId = "";
+
         /// <summary>Where the run ended, in sub-units, from the sim at death: its gravestone. -1 when unknown (v1 saves).</summary>
         public int DeathX = -1;
         public Rules.DeathCause Cause;

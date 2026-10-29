@@ -53,6 +53,7 @@ namespace Echo.Server.Tools
             if (args.Length > 0 && args[0] == "smoke") return await SmokeProbe.Run(http, projectId, token, content.ContentVersion, Environment);
             if (args.Length > 0 && args[0] == "delete") return await ProbeDelete(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "tamper") return await TamperProbe.Run(http, projectId, token, content);
+            if (args.Length > 0 && args[0] == "team") return await ProbeTeam(http, projectId, token);
             if (args.Length > 0 && args[0] == "modes") return await ProbeModes(http, projectId, token, args.Length > 1 ? args[1] : null);
             if (args.Length > 0 && args[0] == "switches") return await ProbeSwitches(http, projectId, token, args.Length > 1 && args[1] == "off");
             Console.WriteLine("  #   course   ghosts  device m  server m  device score  server score  match");
@@ -280,6 +281,25 @@ namespace Echo.Server.Tools
                 good &= (error == "disabled") == expectOff;
             }
             Console.WriteLine(good ? $"\nEvery endpoint {(expectOff ? "is closed" : "is open")}, as its switch says." : "\nAN ENDPOINT IGNORED ITS SWITCH.");
+            return good ? 0 : 1;
+        }
+
+        // Naughty vs Nice against development, forced on for a December test date: a new player joins (the tally is
+        // written with Cloud Save's write lock), joining again keeps the side, and the tally reads back.
+        static async Task<int> ProbeTeam(HttpClient http, string projectId, string token)
+        {
+            JsonElement join = await Call(http, projectId, token, "JoinTeam", new { team = "nice", dateOverride = "2026-12-10", forceModes = true });
+            Console.WriteLine($"Join: ok {join.GetProperty("ok").GetBoolean()}, team {join.GetProperty("team").GetString()}, assigned {join.GetProperty("assigned").GetBoolean()}, members nice {join.GetProperty("niceMembers").GetInt32()} naughty {join.GetProperty("naughtyMembers").GetInt32()}");
+            JsonElement again = await Call(http, projectId, token, "JoinTeam", new { team = "naughty", dateOverride = "2026-12-10", forceModes = true });
+            JsonElement get = await Call(http, projectId, token, "GetTeamEvent", new { dateOverride = "2026-12-10", forceModes = true });
+            Console.WriteLine($"Get: open {get.GetProperty("open").GetBoolean()}, team {get.GetProperty("team").GetString()}, event {get.GetProperty("event").GetString()}");
+            JsonElement closed = await Call(http, projectId, token, "GetTeamEvent", new { dateOverride = "2026-12-10" });
+            Console.WriteLine($"Not forced (switched off): {closed.GetProperty("error").GetString()}");
+            JsonElement profile = await Call(http, projectId, token, "GetProfile", new { dateOverride = "2026-12-10", forceModes = true });
+            bool good = join.GetProperty("ok").GetBoolean() && again.GetProperty("team").GetString() == join.GetProperty("team").GetString()
+                && get.GetProperty("team").GetString() == join.GetProperty("team").GetString() && closed.GetProperty("error").GetString() == "closed"
+                && profile.GetProperty("ok").GetBoolean();
+            Console.WriteLine(good ? "\nThe team event works on the deployed server." : "\nTHE TEAM EVENT FAILED.");
             return good ? 0 : 1;
         }
 

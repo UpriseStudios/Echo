@@ -9,7 +9,7 @@ namespace Echo.Editor.Art
     /// Seasonal art (seasons doc). Reskins of world art are repaints of the original's opaque pixels only
     /// (<see cref="Repaint"/>), so a hazard keeps its exact outline and size (seasons doc ground rule: reskinned hazards
     /// keep their outline; SeasonArtTests checks every one). Hazards and layers stay greyscale so the views tint them.
-    /// Seasons phase 1 has only the test theme, whose art is all placeholder.
+    /// This is the finished art (a user decision), in the game's own pixel style.
     /// </summary>
     public static class PixelSeasons
     {
@@ -47,7 +47,7 @@ namespace Echo.Editor.Art
             return below == 0 || (x * 7 + below * 3) % 5 != 0 ? Hex(below == depth - 1 ? 0xD6E6F2u : 0xF4FAFFu) : p;
         });
 
-        // ---- Christmas (placeholders) ----
+        // ---- Christmas ----
 
         /// <summary>The spike with snow on its tip: the top 5 rows of its point turn white (still greyscale).</summary>
         public static PixelCanvas ChristmasSpike() => Repaint(PixelWorld.Spike(), (x, y, p) => y >= 11 ? Grey(1f) : y == 10 && x % 2 == 0 ? Grey(0.97f) : p);
@@ -134,7 +134,24 @@ namespace Echo.Editor.Art
             return c;
         }
 
-        // ---- Valentine's (placeholders) ----
+        // ---- Naughty vs Nice ----
+
+        /// <summary>The Halo (Nice's reward), a gold ring floating over the head, 14 x 6 with a soft glow.</summary>
+        public static PixelCanvas Halo()
+        {
+            var c = new PixelCanvas(14, 6);
+            c.Blit(new[]
+            {
+                "...gggggg...",
+                ".gG......Gg.",
+                "g..........g",
+                ".gG......Gg.",
+                "...gggggg...",
+            }, new Dictionary<char, Color32> { ['g'] = Hex(0xFFE36A), ['G'] = Hex(0xFFF6C0) }, 1, 0);
+            return c;
+        }
+
+        // ---- Valentine's ----
 
         /// <summary>The Heart gravestone (It's Complicated's reward), 12 x 16 like the stone, in its own colours.</summary>
         public static PixelCanvas HeartGrave()
@@ -183,7 +200,7 @@ namespace Echo.Editor.Art
             return c;
         }
 
-        // ---- Halloween (placeholders; switched off until next year) ----
+        // ---- Halloween (switched off until next year) ----
 
         /// <summary>A jack-o'-lantern for a gravestone, 12 x 16 in its own colours.</summary>
         public static PixelCanvas PumpkinGrave()
@@ -233,7 +250,7 @@ namespace Echo.Editor.Art
             return c;
         }
 
-        // ---- the test theme (placeholders) ----
+        // ---- the test theme (development only) ----
 
         /// <summary>The spike painted in diagonal bands: same silhouette, still greyscale.</summary>
         public static PixelCanvas TestSpike() => Repaint(PixelWorld.Spike(), (x, y, p) => (x + y) / 3 % 2 == 0 ? p : Shade(p, 0.8f));

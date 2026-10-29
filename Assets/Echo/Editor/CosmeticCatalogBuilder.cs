@@ -58,6 +58,14 @@ namespace Echo.Editor
                 Seasonal(Trail("trail_fireworks", "Fireworks", 0, "", 1f, 0.86f, 0.45f), AchievementIds.FirstFooter, "New Year: First Footer",
                     false, Hex(0xFFD24A), Hex(0xFF5A8A), Hex(0x8A6AFF), Hex(0x4AD8FF), Hex(0x8AFF6A)),
 
+                // Modes doc, Naughty vs Nice: rewards granted by the server to the winning side.
+                new CosmeticItem { Id = "acc_none", DisplayName = "None", Type = CosmeticType.Accessory, Color = Hex(0x3A4A54) },
+                new CosmeticItem { Id = "acc_halo", DisplayName = "Halo", Type = CosmeticType.Accessory, Color = Hex(0xFFE36A), ServerReward = true,
+                    UnlockText = "Naughty vs Nice: win as Nice", Sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SeasonArt.HaloPath) },
+                new CosmeticItem { Id = "trail_coal", DisplayName = "Coal", Type = CosmeticType.Trail, Color = Hex(0x2A2A2A), ServerReward = true,
+                    UnlockText = "Naughty vs Nice: win as Naughty", TrailStriped = false,
+                    TrailStops = new[] { Hex(0x141414), Hex(0x3A2A22), Hex(0xFF6A2A), Hex(0x1C1C1C), Hex(0x3A2A22), Hex(0xFFA040) } },
+
                 // Seasons doc: gravestones. The stone is everyone's; the Heart is It's Complicated's reward.
                 new CosmeticItem { Id = "grave_stone", DisplayName = "Stone", Type = CosmeticType.Grave, Color = Hex(0x8A9AA4), Tintable = true,
                     Sprite = AssetDatabase.LoadAssetAtPath<Sprite>(EchoArt.GravePath) },

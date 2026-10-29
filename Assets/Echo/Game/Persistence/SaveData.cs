@@ -47,6 +47,9 @@ namespace Echo.Game.Persistence
         [JsonProperty("daily")] public DailySaveData Daily = new DailySaveData();
         [JsonProperty("seasonal")] public SeasonalSaveData Seasonal = new SeasonalSaveData();
 
+        /// <summary>Schema 5: competitive modes (team, revealed results, profile).</summary>
+        [JsonProperty("modes")] public ModesSaveData Modes = new ModesSaveData();
+
         /// <summary>Power-ups held, up to PowerUpRules.MaxHeld of each (a user revision).</summary>
         [JsonProperty("powerUps")] public PowerUpsSaveData PowerUps = new PowerUpsSaveData();
         [JsonProperty("settings")] public SettingsSaveData Settings = new SettingsSaveData();

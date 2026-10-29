@@ -172,6 +172,28 @@ namespace Echo.Tests.EditMode
         }
 
         [Test]
+        public void AccessoriesAndModes_RoundTrip()
+        {
+            // Modes doc (schema 5): a ghost keeps the accessory its run wore; the equipped one, the team and badges are kept.
+            Progress p = SampleProgress();
+            p.Ghosts[0].AccessoryId = "acc_halo";
+            var data = new SaveData();
+            data.Cosmetics.Equipped.Accessory = "acc_halo";
+            data.Modes.Team = "nice";
+            data.Modes.TeamEvent = "naughty_nice_2026";
+            data.Modes.Revealed.Add("naughty_nice_2026");
+            data.Modes.Badges.Add(new BadgeSaveData { Id = "team_nice_2026", Until = 1800000000 });
+            SaveMapper.Write(p, data, Version);
+            _saves.Save(data);
+            SaveData loaded = _saves.Load();
+            Assert.AreEqual("acc_halo", SaveMapper.ToProgress(loaded, Version, out _).Ghosts[0].AccessoryId);
+            Assert.AreEqual("acc_halo", loaded.Cosmetics.Equipped.Accessory);
+            Assert.AreEqual(("nice", "naughty_nice_2026"), (loaded.Modes.Team, loaded.Modes.TeamEvent));
+            CollectionAssert.AreEqual(new[] { "naughty_nice_2026" }, loaded.Modes.Revealed);
+            Assert.AreEqual("team_nice_2026", loaded.Modes.Badges[0].Id);
+        }
+
+        [Test]
         public void TheBestReel_RoundTrips()
         {
             var p = SampleProgress();

@@ -152,6 +152,54 @@ namespace Echo.Services.Backend
             }
         }
 
+        public Task<TeamEventResult> GetTeamEventAsync(string dateOverride, bool forceModes) =>
+            Call("GetTeamEvent", ModeArgs(dateOverride, forceModes), TeamEventResult.Failed);
+
+        public Task<TeamEventResult> JoinTeamAsync(string team, string dateOverride, bool forceModes)
+        {
+            var args = ModeArgs(dateOverride, forceModes);
+            args["team"] = team;
+            return Call("JoinTeam", args, TeamEventResult.Failed);
+        }
+
+        public Task<ProfileResult> GetProfileAsync(string dateOverride, bool forceModes) =>
+            Call("GetProfile", ModeArgs(dateOverride, forceModes), ProfileResult.Failed);
+
+        public async Task<string> GetPlayerNameAsync()
+        {
+            if (!SignedIn) return null;
+            try
+            {
+                return await AuthenticationService.Instance.GetPlayerNameAsync();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[Backend] player name: " + e.Message);
+                return null;
+            }
+        }
+
+        static Dictionary<string, object> ModeArgs(string dateOverride, bool forceModes)
+        {
+            var args = new Dictionary<string, object> { { "forceModes", forceModes } };
+            if (!string.IsNullOrEmpty(dateOverride)) args["dateOverride"] = dateOverride;
+            return args;
+        }
+
+        async Task<T> Call<T>(string function, Dictionary<string, object> args, Func<string, T> failed)
+        {
+            if (!await SignInAsync()) return failed("offline");
+            try
+            {
+                return await CloudCodeService.Instance.CallModuleEndpointAsync<T>(Module, function, args);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[Backend] {function}: {e.Message}");
+                return failed("offline");
+            }
+        }
+
         public async Task<ModesResult> GetModesAsync(string dateOverride, bool forceAll)
         {
             if (!await SignInAsync()) return ModesResult.Failed("offline");
@@ -191,12 +239,12 @@ namespace Echo.Services.Backend
             }
         }
 
-        public async Task<DailySubmitResult> SubmitDailyRunAsync(string date, string leaderVersion, string packet, string dateOverride)
+        public async Task<DailySubmitResult> SubmitDailyRunAsync(string date, string leaderVersion, string packet, string dateOverride, bool forceModes = false)
         {
             if (!await SignInAsync()) return DailySubmitResult.Failed("offline");
             try
             {
-                var args = new Dictionary<string, object> { { "date", date }, { "leaderVersion", leaderVersion }, { "packet", packet } };
+                var args = new Dictionary<string, object> { { "date", date }, { "leaderVersion", leaderVersion }, { "packet", packet }, { "forceModes", forceModes } };
                 if (!string.IsNullOrEmpty(dateOverride)) args["dateOverride"] = dateOverride;
                 return await CloudCodeService.Instance.CallModuleEndpointAsync<DailySubmitResult>(Module, "SubmitDailyRun", args);
             }

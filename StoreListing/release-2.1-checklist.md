@@ -47,6 +47,10 @@ Events or parameters that aren't defined are dropped. Integer = whole number, Bo
 | `season_active` | `season` string, `forced` boolean |
 | `seasonal_achievement` | `id` string |
 | `seasonal_skin_equipped` | `skin` string |
+| `mode_opened` | `mode` string |
+| `team_joined` | `team` string, `assigned` boolean |
+| `team_contribution` | `metres` integer |
+| `mode_reward_earned` | `mode` string, `reward` string |
 
 `challenge_run` and `clip_saved` came after 2.0.4, so they ship in 2.1 too; skip any you've already made.
 `challenge_sent` keeps its parameters, but is now also sent when a clip is shared. `egg_collected` (Easter) comes
@@ -57,7 +61,13 @@ with 2.2.
 - [ ] **Play Data safety**: no change. Saving a clip writes to the player's own gallery; nothing is collected.
 - [ ] **App Store App Privacy**: no change. iOS asks once before the first clip is saved to Photos. The text is
       *"Echo saves your clips to Photos so you can post them."* (`Editor/IosPhotoLibrary.cs`).
-- [ ] The privacy policy needs no change.
+- [ ] **Privacy policy**: it now covers event teams (Naughty vs Nice: your side, metres and days with your
+      generated name, public totals and top contributor, rewards and badges; kept until a month after the result,
+      removed by Delete online data). Publish the updated `web/privacy/` (Cloudflare Pages) before switching a mode
+      on, and update the Play Data safety and App Store App Privacy answers if they list gameplay data shared publicly.
+- [ ] **Competitive modes** ship switched off. To run Naughty vs Nice: in production Remote Config `modes`, set its
+      `"enabled": true` (dates 1 to 24 December, result showing until New Year). Its rewards (Halo, Coal trail, team
+      badges) come from the server.
 - [ ] **What's new** (suggested):
       *Seasons are here! Snow, Santa hats and a red-nosed Nemesis all December, fireworks at New Year, and a
       heartbreaking Valentine's. Earn Santa, Rudolph and more with seasonal achievements, or get the Christmas Pack.

@@ -153,8 +153,10 @@ namespace Echo.Game.Views
             _skins.Clear();
             if (catalog == null) return;
             foreach (CosmeticItem item in catalog.Items)
-                if (item.Type == CosmeticType.Character) _skins[item.Id] = item;
+                if (item.Type == CosmeticType.Character || item.Type == CosmeticType.Accessory) _skins[item.Id] = item;
         }
+
+        Sprite AccessoryFor(string id) => SkinFor(id) is CosmeticItem item && item.Type == CosmeticType.Accessory ? item.Sprite : null;
 
         CosmeticItem SkinFor(string id) =>
             !string.IsNullOrEmpty(id) && _skins.TryGetValue(id, out CosmeticItem item) ? item : null;
@@ -313,11 +315,13 @@ namespace Echo.Game.Views
                 box.sortingOrder = isNemesis ? 6 : 5;
                 box.enabled = true;
 
+                // The accessory its run wore (the Halo), else the season's; the Nemesis keeps its horns.
                 SpriteRenderer accessory = _accessories[i];
-                accessory.enabled = _ghostAccessory != null && !isNemesis;
+                Sprite worn = isNemesis ? null : AccessoryFor(record.AccessoryId) ?? _ghostAccessory;
+                accessory.enabled = worn != null;
                 if (accessory.enabled)
                 {
-                    accessory.sprite = _ghostAccessory;
+                    accessory.sprite = worn;
                     accessory.transform.localPosition = new Vector3(SimUnits.Pixel(pos.x), SimUnits.Pixel(pos.y + lift + headTop * scale), 0f);
                     accessory.transform.localScale = new Vector3(scale, scale, 1f);
                     accessory.color = new Color(1f, 1f, 1f, a);

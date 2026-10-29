@@ -21,6 +21,10 @@ namespace Echo.Services.Backend
         /// <summary>Yesterday's run sent just after midnight: kept as that day's best and ghosts, but not ranked.</summary>
         public bool BoardClosed;
 
+        /// <summary>Naughty vs Nice: the side this run counted for ("" if none) and the metres it added.</summary>
+        public string Team = "";
+        public int TeamContribution;
+
         public static DailySubmitResult Failed(string error) => new DailySubmitResult { Error = error };
     }
 }

@@ -33,6 +33,40 @@ namespace Echo.Server.Tests
             return Task.CompletedTask;
         }
 
+        readonly Dictionary<string, int> _versions = new Dictionary<string, int>();
+
+        /// <summary>A write slipped in by "someone else" just before the next locked write (tests the retry).</summary>
+        public int ConflictsToInject;
+
+        public Task<Dictionary<string, string>> GetManyAsync(string bucket, IReadOnlyCollection<string> keys)
+        {
+            var values = new Dictionary<string, string>();
+            if (Buckets.TryGetValue(bucket, out var b))
+                foreach (string k in keys)
+                    if (b.TryGetValue(k, out string v)) values[k] = v;
+            return Task.FromResult(values);
+        }
+
+        public Task<(string Json, string WriteLock)> GetLockedAsync(string bucket, string key)
+        {
+            string json = Buckets.TryGetValue(bucket, out var b) && b.TryGetValue(key, out string v) ? v : null;
+            return Task.FromResult((json, json == null ? null : Version(bucket, key).ToString()));
+        }
+
+        public Task<bool> TrySetAsync(string bucket, string key, string json, string writeLock)
+        {
+            if (ConflictsToInject > 0)
+            {
+                ConflictsToInject--;
+                _versions[bucket + "/" + key] = Version(bucket, key) + 1;
+            }
+            if (writeLock != null && writeLock != Version(bucket, key).ToString()) return Task.FromResult(false);
+            _versions[bucket + "/" + key] = Version(bucket, key) + 1;
+            return SetAsync(bucket, key, json).ContinueWith(_ => true);
+        }
+
+        int Version(string bucket, string key) => _versions.TryGetValue(bucket + "/" + key, out int v) ? v : 0;
+
         public bool Has(string bucket, string key) => Buckets.TryGetValue(bucket, out var b) && b.ContainsKey(key);
 
         public IEnumerable<string> KeysIn(string prefix) =>

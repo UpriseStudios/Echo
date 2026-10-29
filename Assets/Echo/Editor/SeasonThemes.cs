@@ -10,7 +10,7 @@ namespace Echo.Editor
     /// <summary>
     /// Writes the <see cref="SeasonTheme"/> assets (seasons doc) from the art in Editor/Art/PixelSeasons. Rebuilt on
     /// every scene build, like the cosmetic catalog. Seasons phase 1 has one theme, "test", which turns every override on
-    /// with placeholder art; it is never in the schedule, only forced from Settings.
+    /// for testing; it is never in the schedule, only forced from Settings.
     /// </summary>
     public static class SeasonThemes
     {

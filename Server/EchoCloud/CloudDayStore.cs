@@ -50,6 +50,55 @@ namespace EchoCloud
             }
         }
 
+        public async Task<Dictionary<string, string>> GetManyAsync(string bucket, IReadOnlyCollection<string> keys)
+        {
+            var values = new Dictionary<string, string>();
+            var all = new List<string>(keys);
+            // Cloud Save reads at most 20 keys a call.
+            for (int i = 0; i < all.Count; i += 20)
+            {
+                try
+                {
+                    var response = await _api.CloudSaveData.GetPrivateCustomItemsAsync(_context, _context.ServiceToken, _context.ProjectId, bucket,
+                        all.GetRange(i, System.Math.Min(20, all.Count - i)));
+                    foreach (Item item in response.Data.Results) values[item.Key] = item.Value?.ToString();
+                }
+                catch (ApiException e) when (e.Response?.StatusCode == HttpStatusCode.NotFound)
+                {
+                }
+            }
+            return values;
+        }
+
+        public async Task<(string Json, string WriteLock)> GetLockedAsync(string bucket, string key)
+        {
+            try
+            {
+                var response = await _api.CloudSaveData.GetPrivateCustomItemsAsync(_context, _context.ServiceToken, _context.ProjectId, bucket,
+                    new List<string> { key });
+                foreach (Item item in response.Data.Results)
+                    if (item.Key == key) return (item.Value?.ToString(), item.WriteLock);
+            }
+            catch (ApiException e) when (e.Response?.StatusCode == HttpStatusCode.NotFound)
+            {
+            }
+            return (null, null);
+        }
+
+        public async Task<bool> TrySetAsync(string bucket, string key, string json, string writeLock)
+        {
+            try
+            {
+                await _api.CloudSaveData.SetPrivateCustomItemAsync(_context, _context.ServiceToken, _context.ProjectId, bucket,
+                    new SetItemBody(key, json, writeLock));
+                return true;
+            }
+            catch (ApiException e) when (e.Response?.StatusCode == HttpStatusCode.Conflict)
+            {
+                return false;
+            }
+        }
+
         public async Task DeleteBucketAsync(string bucket)
         {
             try

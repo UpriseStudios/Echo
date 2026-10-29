@@ -7,5 +7,8 @@ namespace EchoCloud
         public string Name { get; set; } = "";
         public int Distance { get; set; }
         public bool IsYou { get; set; }
+
+        /// <summary>Badges beside the name (modes doc; a user decision), for the top rows and you.</summary>
+        public System.Collections.Generic.List<string> Badges { get; set; } = new System.Collections.Generic.List<string>();
     }
 }

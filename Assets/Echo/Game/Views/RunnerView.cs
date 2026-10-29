@@ -32,6 +32,25 @@ namespace Echo.Game.Views
 
         public Vector2 Position { get; private set; }
 
+        // Modes doc (a user decision): an accessory worn on the head, e.g. the Halo, moving and blinking with the body.
+        SpriteRenderer _accessory;
+        float _headTop;
+
+        public void SetAccessory(Sprite sprite, float headTop)
+        {
+            if (_accessory == null)
+            {
+                var go = new GameObject("Accessory");
+                go.transform.SetParent(transform, false);
+                _accessory = go.AddComponent<SpriteRenderer>();
+                _accessory.sharedMaterial = _material;
+                _accessory.sortingOrder = 11;
+            }
+            _accessory.sprite = sprite;
+            _accessory.enabled = sprite != null;
+            _headTop = headTop;
+        }
+
         // Created on first use: Awake order across objects is not guaranteed.
         SpriteRenderer Body
         {
@@ -98,6 +117,11 @@ namespace Echo.Game.Views
             body.transform.localScale = new Vector3(_deform.x, _deform.y, 1f);
             // Blinks while invulnerable after a revive (Continue or 1-UP), as old platformers did.
             body.enabled = current.Alive && (current.Invuln == 0 || current.Invuln / 4 % 2 == 0);
+            if (_accessory != null && _accessory.sprite != null)
+            {
+                _accessory.enabled = body.enabled;
+                _accessory.transform.localPosition = new Vector3(SimUnits.Pixel(Position.x), SimUnits.Pixel(Position.y + _headTop * _deform.y), 0f);
+            }
 
             UpdateScarf(Position + new Vector2(_scarfAnchor.x * _deform.x, _scarfAnchor.y * _deform.y), current.Alive, dt);
         }

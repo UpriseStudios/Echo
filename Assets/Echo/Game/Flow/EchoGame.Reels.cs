@@ -221,7 +221,7 @@ namespace Echo.Game.Flow
             _replayNemesis = NemesisRules.Select(reel.Ghosts);
             RestartReelPlayer(reel);
 
-            ApplyCosmetics(reel.Run.SkinId);
+            ApplyCosmetics(reel.Run.SkinId, reel.Run.AccessoryId);
             ApplyTwist(reel.Options.Twist);
             _ghostViews.SetLantern(false);
             _ghostViews.SetNameTag(null);
