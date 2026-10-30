@@ -17,6 +17,15 @@ namespace Echo.Game.Seasons
         /// </summary>
         public const string Graveyard = "mode_graveyard";
 
+        /// <summary>A user revision: the store's worlds, looks that are never scheduled (Halloween Night is the Halloween season's).</summary>
+        public const string NeonNight = "world_neon";
+        public const string SunkenRuins = "world_sunken";
+        public const string AutumnWoods = "world_autumn";
+        public const string Beach = "world_beach";
+        public const string DesertDunes = "world_desert";
+        public const string VolcanicWaste = "world_volcano";
+        public const string ToyTown = "world_toytown";
+
         /// <summary>Seasons phase 1: a theme that exercises every override. Never scheduled; only forced.</summary>
         public const string Test = "test";
     }

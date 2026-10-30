@@ -102,6 +102,17 @@ namespace Echo.Tests.PlayMode
 
             // Every menu screen, opened the way a player would.
             yield return OpenAndCapture("Title/Skins", "05_skins", "Skins/Close");
+            // A user revision: the store's tabs, the bundle-led Packs and the Worlds' picture cards.
+            Click("Title/Skins");
+            foreach (string tab in new[] { "Packs", "Worlds" })
+            {
+                Click("Skins/Tabs/" + tab);
+                yield return new WaitForSecondsRealtime(0.3f);
+                yield return Capture("05_skins_" + tab.ToLowerInvariant());
+            }
+            Click("Skins/Tabs/Runners");
+            Click("Skins/Close");
+            yield return new WaitForSecondsRealtime(0.3f);
             yield return OpenAndCapture("Title/Stats", "06_stats", "Stats/Close");
             Click("Title/Settings");
             yield return new WaitForSecondsRealtime(0.3f);
@@ -233,6 +244,21 @@ namespace Echo.Tests.PlayMode
                 yield return Capture(shot);
             }
             game.PreviewResetShow = false;
+            // A user revision: each world worn, mid-run, to check its spikes and gaps read (worlds have their own colours).
+            game.ForceSeason(EchoGame.NoSeason);
+            foreach (string world in new[] { "world_christmas", "world_halloween", "world_neon", "world_sunken", "world_autumn", "world_graveyard",
+                         "world_beach", "world_desert", "world_volcano", "world_toytown" })
+            {
+                game.CurrentSave.Cosmetics.Owned.Add(world);
+                game.CurrentSave.Cosmetics.Equipped.World = world;
+                game.ForceSeason(null);
+                game.ForceSeason(EchoGame.NoSeason);   // a refresh, with no season over the world
+                game.PreviewCharacter("char_hooded");
+                game.PreviewMetres = 150f;
+                for (int f = 0; f < 40; f++) { game.TickFrame(dt, false); yield return null; }
+                yield return Capture("30_" + world);
+            }
+            game.CurrentSave.Cosmetics.Equipped.World = "world_echo";
             game.ForceSeason(null);
             game.PreviewMetres = null;
             ui.enabled = true;

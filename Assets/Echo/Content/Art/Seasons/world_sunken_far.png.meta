@@ -1,0 +1,1588 @@
+fileFormatVersion: 2
+guid: dcd119ca0fdfce34c94ddb489f82dcb9
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4636817730786548106
+    second: world_sunken_far_0
+  - first:
+      213: 5800884995645058386
+    second: world_sunken_far_1
+  - first:
+      213: 9203847057754400060
+    second: world_sunken_far_2
+  - first:
+      213: 3529242951969406281
+    second: world_sunken_far_3
+  - first:
+      213: -536499556735365165
+    second: world_sunken_far_4
+  - first:
+      213: 6978419674198799811
+    second: world_sunken_far_5
+  - first:
+      213: -4874223541520132960
+    second: world_sunken_far_6
+  - first:
+      213: -1253659704386515699
+    second: world_sunken_far_7
+  - first:
+      213: -8689325989958459849
+    second: world_sunken_far_8
+  - first:
+      213: -3464163605889219087
+    second: world_sunken_far_9
+  - first:
+      213: -3124628807936235096
+    second: world_sunken_far_10
+  - first:
+      213: 9065300516913295221
+    second: world_sunken_far_11
+  - first:
+      213: -5387057974125612738
+    second: world_sunken_far_12
+  - first:
+      213: -8764634287156797801
+    second: world_sunken_far_13
+  - first:
+      213: -2944618182291094311
+    second: world_sunken_far_14
+  - first:
+      213: 2373629390498855915
+    second: world_sunken_far_15
+  - first:
+      213: 5380880313708102533
+    second: world_sunken_far_16
+  - first:
+      213: 8658924018332441393
+    second: world_sunken_far_17
+  - first:
+      213: -1252605238175178275
+    second: world_sunken_far_18
+  - first:
+      213: 3227158897826606318
+    second: world_sunken_far_19
+  - first:
+      213: 6880232665364400283
+    second: world_sunken_far_20
+  - first:
+      213: 2053293012281000913
+    second: world_sunken_far_21
+  - first:
+      213: -2534487319788916999
+    second: world_sunken_far_22
+  - first:
+      213: 7629281685851942381
+    second: world_sunken_far_23
+  - first:
+      213: 4640916843006551362
+    second: world_sunken_far_24
+  - first:
+      213: -2638291032831209796
+    second: world_sunken_far_25
+  - first:
+      213: -2949261141195420578
+    second: world_sunken_far_26
+  - first:
+      213: -777588616528919524
+    second: world_sunken_far_27
+  - first:
+      213: 1959560743598191978
+    second: world_sunken_far_28
+  - first:
+      213: -7497053145287781521
+    second: world_sunken_far_29
+  - first:
+      213: 7216605748257896502
+    second: world_sunken_far_30
+  - first:
+      213: 6419629036298829676
+    second: world_sunken_far_31
+  - first:
+      213: -4061307825110148886
+    second: world_sunken_far_32
+  - first:
+      213: -2670430819080782264
+    second: world_sunken_far_33
+  - first:
+      213: -4334753759161787067
+    second: world_sunken_far_34
+  - first:
+      213: 6540239296773475585
+    second: world_sunken_far_35
+  - first:
+      213: -8068034352944975255
+    second: world_sunken_far_36
+  - first:
+      213: -6508612711093962097
+    second: world_sunken_far_37
+  - first:
+      213: -8330391377516468400
+    second: world_sunken_far_38
+  - first:
+      213: 775272404410961336
+    second: world_sunken_far_39
+  - first:
+      213: -3805078149832819505
+    second: world_sunken_far_40
+  - first:
+      213: -5521671896556306977
+    second: world_sunken_far_41
+  - first:
+      213: -7893270570129628201
+    second: world_sunken_far_42
+  - first:
+      213: 1639735175629806235
+    second: world_sunken_far_43
+  - first:
+      213: 2272825183311761794
+    second: world_sunken_far_44
+  - first:
+      213: -635958728577547361
+    second: world_sunken_far_45
+  - first:
+      213: -5414742086249565747
+    second: world_sunken_far_46
+  - first:
+      213: -6649327610661805382
+    second: world_sunken_far_47
+  - first:
+      213: -2617125245127887932
+    second: world_sunken_far_48
+  - first:
+      213: -6780885015746302488
+    second: world_sunken_far_49
+  - first:
+      213: 8005427870399639975
+    second: world_sunken_far_50
+  - first:
+      213: 286160960049760107
+    second: world_sunken_far_51
+  - first:
+      213: 3663974892275386547
+    second: world_sunken_far_52
+  - first:
+      213: -5498738275081884511
+    second: world_sunken_far_53
+  - first:
+      213: -9196836262382397802
+    second: world_sunken_far_54
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 9
+  spritePivot: {x: 0, y: 0}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: world_sunken_far_0
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 201
+        width: 19
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a89d3c3c829495040800000000000000
+      internalID: 4636817730786548106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_1
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 210
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25d215c4b22e08050800000000000000
+      internalID: 5800884995645058386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_2
+      rect:
+        serializedVersion: 2
+        x: 299
+        y: 219
+        width: 9
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c35a97c8222aabf70800000000000000
+      internalID: 9203847057754400060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_3
+      rect:
+        serializedVersion: 2
+        x: 301
+        y: 215
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94dff2e14c36af030800000000000000
+      internalID: 3529242951969406281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_4
+      rect:
+        serializedVersion: 2
+        x: 302
+        y: 212
+        width: 12
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3df42a2ee78fd88f0800000000000000
+      internalID: -536499556735365165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_5
+      rect:
+        serializedVersion: 2
+        x: 419
+        y: 216
+        width: 13
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c5773e68b358d060800000000000000
+      internalID: 6978419674198799811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_6
+      rect:
+        serializedVersion: 2
+        x: 421
+        y: 211
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a498d383874b5cb0800000000000000
+      internalID: -4874223541520132960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_7
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 184
+        width: 17
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0d02da142b1a9ee0800000000000000
+      internalID: -1253659704386515699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_8
+      rect:
+        serializedVersion: 2
+        x: 173
+        y: 194
+        width: 16
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73ed4f6dc00596780800000000000000
+      internalID: -8689325989958459849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_9
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 203
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f5032bed81dcefc0800000000000000
+      internalID: -3464163605889219087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_10
+      rect:
+        serializedVersion: 2
+        x: 306
+        y: 186
+        width: 12
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a9220877a613a4d0800000000000000
+      internalID: -3124628807936235096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_11
+      rect:
+        serializedVersion: 2
+        x: 423
+        y: 198
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57f28c44aca6ecd70800000000000000
+      internalID: 9065300516913295221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_12
+      rect:
+        serializedVersion: 2
+        x: 433
+        y: 191
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e31becb70535d35b0800000000000000
+      internalID: -5387057974125612738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_13
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 180
+        width: 14
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79e5fc78d83cd5680800000000000000
+      internalID: -8764634287156797801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_14
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 177
+        width: 13
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d4026d4d5d9227d0800000000000000
+      internalID: -2944618182291094311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_15
+      rect:
+        serializedVersion: 2
+        x: 428
+        y: 190
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: beb7c19ca53d0f020800000000000000
+      internalID: 2373629390498855915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_16
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 182
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 583c67dd22abcaa40800000000000000
+      internalID: 5380880313708102533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_17
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 171
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13b9dc9848daa2870800000000000000
+      internalID: 8658924018332441393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_18
+      rect:
+        serializedVersion: 2
+        x: 181
+        y: 182
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd166c62c2add9ee0800000000000000
+      internalID: -1252605238175178275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_19
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 164
+        width: 16
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eec22ba5beb29cc20800000000000000
+      internalID: 3227158897826606318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_20
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 174
+        width: 13
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b988517f72f7b7f50800000000000000
+      internalID: 6880232665364400283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_21
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 165
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d30dc8ad13ce7c10800000000000000
+      internalID: 2053293012281000913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_22
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 159
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9feef300631b3dcd0800000000000000
+      internalID: -2534487319788916999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_23
+      rect:
+        serializedVersion: 2
+        x: 316
+        y: 162
+        width: 13
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ded29988547a0e960800000000000000
+      internalID: 7629281685851942381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_24
+      rect:
+        serializedVersion: 2
+        x: 436
+        y: 169
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2456883b749d76040800000000000000
+      internalID: 4640916843006551362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_25
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 152
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbe4ffda848e26bd0800000000000000
+      internalID: -2638291032831209796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_26
+      rect:
+        serializedVersion: 2
+        x: 442
+        y: 164
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5c0f213e9e1217d0800000000000000
+      internalID: -2949261141195420578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_27
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 156
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c14086ae5437535f0800000000000000
+      internalID: -777588616528919524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_28
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 147
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6578f53d12c13b10800000000000000
+      internalID: 1959560743598191978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_29
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 156
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6395eca2ed15f790800000000000000
+      internalID: -7497053145287781521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_30
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 141
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63834fc51b8862460800000000000000
+      internalID: 7216605748257896502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_31
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 157
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6fff5a889a171950800000000000000
+      internalID: 6419629036298829676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_32
+      rect:
+        serializedVersion: 2
+        x: 321
+        y: 156
+        width: 12
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae89bc00d0653a7c0800000000000000
+      internalID: -4061307825110148886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_33
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 145
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84e3f6f8159b0fad0800000000000000
+      internalID: -2670430819080782264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_34
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 137
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54d5f5c2c6cd7d3c0800000000000000
+      internalID: -4334753759161787067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_35
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 140
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10dcb3e1df893ca50800000000000000
+      internalID: 6540239296773475585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_36
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 129
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 962f0159085980090800000000000000
+      internalID: -8068034352944975255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_37
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 129
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8af6ae2933cca5a0800000000000000
+      internalID: -6508612711093962097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_38
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 137
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 057672fad21846c80800000000000000
+      internalID: -8330391377516468400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_39
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 119
+        width: 15
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bd041de42252ca00800000000000000
+      internalID: 775272404410961336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_40
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 135
+        width: 16
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fcc3d983595a13bc0800000000000000
+      internalID: -3805078149832819505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_41
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 127
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fddf0874aa41f53b0800000000000000
+      internalID: -5521671896556306977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_42
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 127
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d3e06f9c38757290800000000000000
+      internalID: -7893270570129628201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_43
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 113
+        width: 13
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9a902d547281c610800000000000000
+      internalID: 1639735175629806235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_44
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 122
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2811cd75672ba8f10800000000000000
+      internalID: 2272825183311761794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_45
+      rect:
+        serializedVersion: 2
+        x: 202
+        y: 117
+        width: 14
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f938353e7ee9c27f0800000000000000
+      internalID: -635958728577547361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_46
+      rect:
+        serializedVersion: 2
+        x: 451
+        y: 119
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc1bcb6d2c8fad4b0800000000000000
+      internalID: -5414742086249565747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_47
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 107
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab26e4b84c7d8b3a0800000000000000
+      internalID: -6649327610661805382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_48
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 106
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c3f177a47a1eabd0800000000000000
+      internalID: -2617125245127887932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_49
+      rect:
+        serializedVersion: 2
+        x: 205
+        y: 104
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ed2cad310575e1a0800000000000000
+      internalID: -6780885015746302488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_50
+      rect:
+        serializedVersion: 2
+        x: 334
+        y: 114
+        width: 13
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a1be2acb3ef81f60800000000000000
+      internalID: 8005427870399639975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_51
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 107
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b67c95480e5a8f300800000000000000
+      internalID: 286160960049760107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_52
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 113
+        width: 12
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b8460080cd09d230800000000000000
+      internalID: 3663974892275386547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_53
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 104
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ac66e02cae80b3b0800000000000000
+      internalID: -5498738275081884511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: world_sunken_far_54
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 512
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 696144375264e5080800000000000000
+      internalID: -9196836262382397802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      world_sunken_far_0: 4636817730786548106
+      world_sunken_far_1: 5800884995645058386
+      world_sunken_far_10: -3124628807936235096
+      world_sunken_far_11: 9065300516913295221
+      world_sunken_far_12: -5387057974125612738
+      world_sunken_far_13: -8764634287156797801
+      world_sunken_far_14: -2944618182291094311
+      world_sunken_far_15: 2373629390498855915
+      world_sunken_far_16: 5380880313708102533
+      world_sunken_far_17: 8658924018332441393
+      world_sunken_far_18: -1252605238175178275
+      world_sunken_far_19: 3227158897826606318
+      world_sunken_far_2: 9203847057754400060
+      world_sunken_far_20: 6880232665364400283
+      world_sunken_far_21: 2053293012281000913
+      world_sunken_far_22: -2534487319788916999
+      world_sunken_far_23: 7629281685851942381
+      world_sunken_far_24: 4640916843006551362
+      world_sunken_far_25: -2638291032831209796
+      world_sunken_far_26: -2949261141195420578
+      world_sunken_far_27: -777588616528919524
+      world_sunken_far_28: 1959560743598191978
+      world_sunken_far_29: -7497053145287781521
+      world_sunken_far_3: 3529242951969406281
+      world_sunken_far_30: 7216605748257896502
+      world_sunken_far_31: 6419629036298829676
+      world_sunken_far_32: -4061307825110148886
+      world_sunken_far_33: -2670430819080782264
+      world_sunken_far_34: -4334753759161787067
+      world_sunken_far_35: 6540239296773475585
+      world_sunken_far_36: -8068034352944975255
+      world_sunken_far_37: -6508612711093962097
+      world_sunken_far_38: -8330391377516468400
+      world_sunken_far_39: 775272404410961336
+      world_sunken_far_4: -536499556735365165
+      world_sunken_far_40: -3805078149832819505
+      world_sunken_far_41: -5521671896556306977
+      world_sunken_far_42: -7893270570129628201
+      world_sunken_far_43: 1639735175629806235
+      world_sunken_far_44: 2272825183311761794
+      world_sunken_far_45: -635958728577547361
+      world_sunken_far_46: -5414742086249565747
+      world_sunken_far_47: -6649327610661805382
+      world_sunken_far_48: -2617125245127887932
+      world_sunken_far_49: -6780885015746302488
+      world_sunken_far_5: 6978419674198799811
+      world_sunken_far_50: 8005427870399639975
+      world_sunken_far_51: 286160960049760107
+      world_sunken_far_52: 3663974892275386547
+      world_sunken_far_53: -5498738275081884511
+      world_sunken_far_54: -9196836262382397802
+      world_sunken_far_6: -4874223541520132960
+      world_sunken_far_7: -1253659704386515699
+      world_sunken_far_8: -8689325989958459849
+      world_sunken_far_9: -3464163605889219087
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -78,6 +78,9 @@ namespace Echo.Game.Views
             }
         }
 
+        /// <summary>The gravestone graves wear now (tests).</summary>
+        public Sprite Current => _grave;
+
         /// <summary>A season's gravestone (seasons doc); null keeps the stone. In colour, it isn't tinted like stone.</summary>
         public void SetSeason(Sprite grave, bool inColour)
         {

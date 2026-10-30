@@ -11,11 +11,11 @@ using UnityEngine.UI;
 namespace Echo.Game.UI
 {
     /// <summary>
-    /// The store and wardrobe (tech spec 14 Store, cosmetics part) as one scrolling list: the base characters,
-    /// the Season of Echo bundle and the eight skin packs (a user revision: sold at launch), runner colours,
-    /// trails, palettes, then the older packs and Restore Purchases. Skins addendum: the base characters are free,
-    /// Pumpkin unlocks after rewarded ads (any rewarded ad counts) and earned skins show their requirement and
-    /// progress until won. A locked pack character shows its pack's price; tapping it buys the pack.
+    /// The store and wardrobe (tech spec 14 Store, cosmetics part), in tabs (a user revision: it had grown into one very
+    /// long list, and this is where players spend money, so it is laid out like a shop): Runners, Packs, Worlds, Style,
+    /// Extras and Free (<see cref="SkinsTab"/>). Each paid tab leads with its bundle as a featured card. Skins addendum:
+    /// the base characters are free, Pumpkin unlocks after rewarded ads (any rewarded ad counts) and earned skins show
+    /// their requirement and progress until won. A locked pack character shows its pack's price; tapping it buys the pack.
     /// </summary>
     public sealed class SkinsView : MonoBehaviour
     {
@@ -30,6 +30,28 @@ namespace Echo.Game.UI
         [SerializeField] Button _productTemplate;
         [SerializeField] Button _close;
         [SerializeField] Button _restore;
+
+        // The tab bar, in SkinsTab order, and the worlds' picture cards.
+        [SerializeField] Button[] _tabs = new Button[0];
+        [SerializeField] RectTransform _worldGridTemplate;
+        [SerializeField] RectTransform _packGridTemplate;
+        [SerializeField] Button _worldTemplate;
+        [SerializeField] Sprite _normalFar;
+        [SerializeField] Sprite _normalNear;
+        [SerializeField] Color _tabOn = new Color(1f, 0.79f, 0.29f);
+        [SerializeField] Color _tabOff = new Color(0.16f, 0.2f, 0.27f);
+
+        SkinsTab _tab = SkinsTab.Runners;
+
+        /// <summary>The section showing.</summary>
+        public SkinsTab Tab => _tab;
+
+        public void SelectTab(SkinsTab tab)
+        {
+            _tab = tab;
+            Refresh();
+            _scroll.verticalNormalizedPosition = 1f;
+        }
 
         readonly List<GameObject> _built = new List<GameObject>();
         CosmeticCatalog _catalog;
@@ -58,6 +80,14 @@ namespace Echo.Game.UI
         {
             foreach (Component t in new Component[] { _headerTemplate, _characterGridTemplate, _itemGridTemplate, _characterTemplate, _itemTemplate, _productTemplate })
                 t.gameObject.SetActive(false);
+            if (_worldGridTemplate != null) _worldGridTemplate.gameObject.SetActive(false);
+            if (_packGridTemplate != null) _packGridTemplate.gameObject.SetActive(false);
+            if (_worldTemplate != null) _worldTemplate.gameObject.SetActive(false);
+            for (int i = 0; i < _tabs.Length; i++)
+            {
+                SkinsTab tab = (SkinsTab)i;
+                _tabs[i].onClick.AddListener(() => SelectTab(tab));
+            }
             _close.onClick.AddListener(() => Closed?.Invoke());
             _restore.onClick.AddListener(() => RestoreClicked?.Invoke());
         }
@@ -99,48 +129,82 @@ namespace Echo.Game.UI
             _adWasReady = _adReady != null && _adReady();
             foreach (GameObject go in _built) Destroy(go);
             _built.Clear();
-
-            Header("Characters", null);
-            RectTransform characters = Grid(_characterGridTemplate);
-            foreach (CosmeticItem item in _catalog.Items)
-                if (item.Type == CosmeticType.Character && !item.PurchaseOnly && !item.AllAchievements && !Seasonal(item)) CharacterCard(characters, item);
-
-            ElementalsSection();
-            SeasonalSection();
-
-            Header(SkinPacks.SeasonName, "all 8 packs, 32 characters");
-            ProductButton("Every skin pack", ProductIds.SeasonOfEcho, PackOwned(null));
-            foreach (var (name, productId) in SkinPacks.All)
+            for (int i = 0; i < _tabs.Length; i++)
             {
-                Header($"{name} Pack", null);
-                RectTransform grid = Grid(_characterGridTemplate);
-                foreach (CosmeticItem item in _catalog.Items)
-                    if (item.Type == CosmeticType.Character && item.ProductId == productId) CharacterCard(grid, item);
-                ProductButton($"{name} Pack", productId, PackOwned(productId));
+                bool on = (int)_tab == i;
+                _tabs[i].GetComponent<Image>().color = on ? _tabOn : _tabOff;
+                _tabs[i].GetComponentInChildren<TMP_Text>().color = on ? new Color(0.08f, 0.1f, 0.12f) : Color.white;
             }
 
-            // Power-ups (a user revision): earned with rewarded ads, opened as their own card.
-            Header("Power-ups", "free with ads");
-            Button powerUps = Instantiate(_productTemplate, _content);
-            powerUps.gameObject.SetActive(true);
-            _built.Add(powerUps.gameObject);
-            powerUps.interactable = true;
-            powerUps.GetComponentInChildren<TMP_Text>().text = "Shield, Phase, Lantern, 1-UP <size=75%>Get</size>";
-            powerUps.onClick.AddListener(() => PowerUpsClicked?.Invoke());
+            switch (_tab)
+            {
+                case SkinsTab.Runners:
+                    Header("Runners", "tap one to wear it");
+                    RectTransform characters = Grid(_characterGridTemplate);
+                    foreach (CosmeticItem item in _catalog.Items)
+                        if (item.Type == CosmeticType.Character && !item.PurchaseOnly && !item.AllAchievements && !Seasonal(item)) CharacterCard(characters, item);
+                    ElementalsSection();
+                    SeasonalSection();
+                    break;
 
-            Section("Colours", "for the Hooded runner", CosmeticType.Runner);
-            Section("Trails", null, CosmeticType.Trail);
-            Section("Palettes", null, CosmeticType.Palette);
-            Section("Gravestones", null, CosmeticType.Grave);
-            Section("Accessories", null, CosmeticType.Accessory);
-            WorldsSection();
+                case SkinsTab.Packs:
+                    Featured(SkinPacks.SeasonName, "All 8 packs · 32 characters · best value", ProductIds.SeasonOfEcho, PackOwned(null));
+                    foreach (var (name, productId) in SkinPacks.All)
+                    {
+                        Header($"{name} Pack", "4 characters");
+                        RectTransform grid = Grid(_packGridTemplate != null ? _packGridTemplate : _characterGridTemplate);
+                        foreach (CosmeticItem item in _catalog.Items)
+                            if (item.Type == CosmeticType.Character && item.ProductId == productId) CharacterCard(grid, item);
+                        ProductButton($"{name} Pack", productId, PackOwned(productId));
+                    }
+                    break;
 
-            // Colour packs (a user revision: no longer sold): each unlocks at a score, or after enough rewarded ads.
-            Header("Colour packs", "score or ads");
-            var packs = new List<string>();
-            foreach (CosmeticItem item in _catalog.Items)
-                if (!string.IsNullOrEmpty(item.AdPack) && !packs.Contains(item.AdPack)) packs.Add(item.AdPack);
-            foreach (string pack in packs) AdPackButton(pack);
+                case SkinsTab.Worlds:
+                    WorldsSection();
+                    break;
+
+                case SkinsTab.Style:
+                    Section("Colours", "for the Hooded runner", CosmeticType.Runner);
+                    Section("Trails", "behind you and your ghosts", CosmeticType.Trail);
+                    Section("Palettes", "the sky's colours", CosmeticType.Palette);
+                    break;
+
+                case SkinsTab.Extras:
+                    Section("Gravestones", "left where your runs end", CosmeticType.Grave);
+                    Section("Accessories", "worn by you and your ghosts", CosmeticType.Accessory);
+                    break;
+
+                default:
+                    // Power-ups (a user revision): earned with rewarded ads, opened as their own card.
+                    Header("Power-ups", "free with ads");
+                    Button powerUps = Instantiate(_productTemplate, _content);
+                    powerUps.gameObject.SetActive(true);
+                    _built.Add(powerUps.gameObject);
+                    powerUps.interactable = true;
+                    powerUps.GetComponentInChildren<TMP_Text>().text = "Shield, Phase, Lantern, 1-UP <size=75%>Get</size>";
+                    powerUps.onClick.AddListener(() => PowerUpsClicked?.Invoke());
+                    // Colour packs (a user revision: no longer sold): each unlocks at a score, or after enough rewarded ads.
+                    Header("Colour packs", "score or ads");
+                    var packs = new List<string>();
+                    foreach (CosmeticItem item in _catalog.Items)
+                        if (!string.IsNullOrEmpty(item.AdPack) && !packs.Contains(item.AdPack)) packs.Add(item.AdPack);
+                    foreach (string pack in packs) AdPackButton(pack);
+                    break;
+            }
+        }
+
+        // A bundle, first in its tab: its name and price on one line, what's in it on the next.
+        void Featured(string name, string blurb, string productId, bool owned)
+        {
+            Header("Best value", null);
+            Button button = Instantiate(_productTemplate, _content);
+            button.gameObject.SetActive(true);
+            _built.Add(button.gameObject);
+            string price = _price(productId);
+            button.interactable = !owned && price != null;
+            button.GetComponentInChildren<TMP_Text>().text =
+                $"{name}  <size=80%>{(owned ? "Owned" : price ?? "Unavailable")}</size>\n<size=60%>{blurb}</size>";
+            button.onClick.AddListener(() => BuyClicked?.Invoke(productId));
         }
 
         // Seasons doc: the skins earned in their event (kept for good once earned), and the Christmas Pack, on sale during
@@ -158,7 +222,7 @@ namespace Echo.Game.UI
                 if (item.ProductId == productId && CosmeticUnlocks.IsOwned(item, _best, _cosmetics.Owned)) anyOwned = true;
             if (!_christmasOnSale && !anyOwned) return;
             Header($"{name} Pack", "back every December");
-            RectTransform pack = Grid(_characterGridTemplate);
+            RectTransform pack = Grid(_packGridTemplate != null ? _packGridTemplate : _characterGridTemplate);
             foreach (CosmeticItem item in _catalog.Items)
                 if (item.Type == CosmeticType.Character && item.ProductId == productId) CharacterCard(pack, item);
             ProductButton($"{name} Pack", productId, PackOwned(productId));
@@ -168,34 +232,54 @@ namespace Echo.Game.UI
         // mode rewards (never sold) share one grid; a season's own look still shows in its dates unless Settings says not.
         void WorldsSection()
         {
-            Header("Worlds", "the backdrop of every run");
-            RectTransform grid = Grid(_itemGridTemplate);
-            foreach (CosmeticItem item in _catalog.Items)
-                if (item.Type == CosmeticType.World) WorldButton(grid, item);
-            bool anySold = false, allOwned = true;
+            int sold = 0;
+            bool allOwned = true;
             foreach (CosmeticItem item in _catalog.Items)
                 if (item.Type == CosmeticType.World && item.BundleProductId == ProductIds.WorldsBundle)
                 {
-                    anySold = true;
+                    sold++;
                     allOwned &= CosmeticUnlocks.IsOwned(item, _best, _cosmetics.Owned);
                 }
-            if (anySold) ProductButton("Worlds Bundle", ProductIds.WorldsBundle, allOwned);
+            if (sold > 0) Featured("Worlds Bundle", $"All {sold} store worlds · best value", ProductIds.WorldsBundle, allOwned);
+            Header("Worlds", "the backdrop of every run");
+            RectTransform grid = Grid(_worldGridTemplate != null ? _worldGridTemplate : _itemGridTemplate);
+            foreach (CosmeticItem item in _catalog.Items)
+                if (item.Type == CosmeticType.World && !item.ServerReward) WorldButton(grid, item);
+            Header("Earned in modes", "never sold");
+            RectTransform earned = Grid(_worldGridTemplate != null ? _worldGridTemplate : _itemGridTemplate);
+            foreach (CosmeticItem item in _catalog.Items)
+                if (item.Type == CosmeticType.World && item.ServerReward) WorldButton(earned, item);
         }
 
         void WorldButton(RectTransform grid, CosmeticItem item)
         {
-            Button button = Instantiate(_itemTemplate, grid);
+            Button button = Instantiate(_worldTemplate != null ? _worldTemplate : _itemTemplate, grid);
             button.gameObject.SetActive(true);
             bool owned = CosmeticUnlocks.IsOwned(item, _best, _cosmetics.Owned);
             bool equipped = Equipped(item.Type) == item.Id;
             string price = item.PurchaseOnly ? _price(item.ProductId) : null;
 
-            var image = button.GetComponent<Image>();
-            image.color = Swatch(item, owned);
+            // A little picture of the world: its sky, far layer and near layer, tinted from its own palette.
+            Transform preview = button.transform.Find("Preview");
+            if (preview != null)
+            {
+                Color sky = item.World != null && item.World.PaletteStops.Length > 0 ? item.World.PaletteStops[0] : item.Color;
+                preview.GetComponent<Image>().color = sky;
+                var far = preview.Find("Far").GetComponent<Image>();
+                var near = preview.Find("Near").GetComponent<Image>();
+                far.sprite = item.World != null && item.World.FarLayer != null ? item.World.FarLayer : _normalFar;
+                near.sprite = item.World != null && item.World.NearLayer != null ? item.World.NearLayer : _normalNear;
+                far.color = Color.Lerp(sky, Color.white, 0.45f);
+                near.color = Color.Lerp(sky, Color.black, 0.35f);
+                if (!owned)
+                {
+                    far.color = Color.Lerp(far.color, Color.grey, 0.25f);
+                    near.color = Color.Lerp(near.color, Color.grey, 0.25f);
+                }
+            }
             var label = button.GetComponentInChildren<TMP_Text>();
             label.text = $"{item.DisplayName}\n<size=72%>" +
-                         (equipped ? "Equipped" : owned ? "Tap to wear" : item.ServerReward ? item.UnlockText : price ?? "Unavailable") + "</size>";
-            label.color = Luminance(image.color) > 0.55f ? new Color(0.08f, 0.1f, 0.12f) : Color.white;
+                         (equipped ? "<color=#FFC94A>Equipped</color>" : owned ? "Tap to wear" : item.ServerReward ? item.UnlockText : price ?? "Unavailable") + "</size>";
 
             button.interactable = !equipped && (owned || price != null);
             CosmeticItem captured = item;

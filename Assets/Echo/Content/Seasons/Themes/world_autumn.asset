@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 514eecd290c77574994cd74a5e68239f, type: 3}
+  m_Name: world_autumn
+  m_EditorClassIdentifier: Echo.Game::Echo.Game.Seasons.SeasonTheme
+  Id: world_autumn
+  Title: Autumn Woods
+  PaletteStops:
+  - {r: 0.8784314, g: 0.6039216, b: 0.3529412, a: 1}
+  - {r: 0.7529412, g: 0.4392157, b: 0.22745098, a: 1}
+  - {r: 0.47843137, g: 0.2901961, b: 0.3529412, a: 1}
+  PaletteBlend: 0.7
+  FarLayer: {fileID: 21300000, guid: 35639acc89769b6468d40e5e25f88588, type: 3}
+  NearLayer: {fileID: 21300000, guid: 8235682892ac3cd4fb24854ed2148d39, type: 3}
+  FarTint: {r: 0.84705883, g: 0.627451, b: 0.4392157, a: 1}
+  NearTint: {r: 0.3529412, g: 0.22745098, b: 0.14117648, a: 1}
+  FloorColour: {r: 0.3529412, g: 0.41568628, b: 0.1882353, a: 1}
+  HazardColour: {r: 0.41568628, g: 0.9098039, b: 0.9411765, a: 1}
+  Effect: 1
+  EffectSprites:
+  - {fileID: 21300000, guid: 72e12c39713a73b449f9acde78b93e7b, type: 3}
+  - {fileID: 21300000, guid: d0d8c2ceb82e43142b24aff07ec7c25b, type: 3}
+  EffectColours:
+  - {r: 0.9098039, g: 0.45490196, b: 0.16470589, a: 1}
+  - {r: 0.78431374, g: 0.19607843, b: 0.11764706, a: 1}
+  - {r: 0.9490196, g: 0.7137255, b: 0.1882353, a: 1}
+  - {r: 0.5411765, g: 0.2901961, b: 0.13333334, a: 1}
+  EffectCount: 36
+  EffectFall: 0.7
+  EffectSway: 0.5
+  EffectBand: 1
+  EffectParallax: 0.3
+  Fireworks: 0
+  FireworkSpark: {fileID: 0}
+  FireworkColours: []
+  FireworksPerMinute: 6
+  ResetShowSeconds: 0
+  ResetShowToast: 
+  Flyer: {fileID: 21300000, guid: 616a417f610cd2e4888eb75126bf92f2, type: 3}
+  FlyerColour: {r: 0.15, g: 0.1, b: 0.12, a: 0.85}
+  FlyerEvery: 35
+  FlyerSpeed: 2.2
+  Spike: {fileID: 0}
+  Block: {fileID: 0}
+  GroundTop: {fileID: 0}
+  Grave: {fileID: 0}
+  GraveInColour: 0
+  Headstone: {fileID: 0}
+  GhostAccessory: {fileID: 0}
+  NemesisAccessory: {fileID: 0}
+  DeathLine: 
+  DeathLineNemesisOnly: 0
+  Stinger: {fileID: 0}
+  MusicStems: []

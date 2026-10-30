@@ -21,6 +21,10 @@ MonoBehaviour:
   PaletteBlend: 0.85
   FarLayer: {fileID: 21300000, guid: 5d943944c38477c478076e721e791a78, type: 3}
   NearLayer: {fileID: 21300000, guid: 890d90982b2791149bcef5a9bd40f7a2, type: 3}
+  FarTint: {r: 0.5411765, g: 0.627451, b: 0.5411765, a: 1}
+  NearTint: {r: 0.11764706, g: 0.16470589, b: 0.13333334, a: 1}
+  FloorColour: {r: 0.2901961, g: 0.24313726, b: 0.19607843, a: 1}
+  HazardColour: {r: 0.9098039, g: 0.8784314, b: 0.78431374, a: 1}
   Effect: 2
   EffectSprites:
   - {fileID: 21300000, guid: 6839981418120a54cb956a328a95d961, type: 3}

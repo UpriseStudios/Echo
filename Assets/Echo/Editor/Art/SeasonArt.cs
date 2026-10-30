@@ -30,6 +30,9 @@ namespace Echo.Editor.Art
         /// <summary>Santa's sleigh crossing the Christmas sky (a user revision).</summary>
         public static string SleighPath => $"{Dir}/fx_sleigh.png";
 
+        /// <summary>A world's or season's silhouette crossing the sky (a user revision).</summary>
+        public static string FlyerPath(string id) => PathFor(id, "flyer");
+
         /// <summary>A firework spark, shared by every season with fireworks.</summary>
         public static string SparkPath => $"{Dir}/fx_spark.png";
 
@@ -77,6 +80,20 @@ namespace Echo.Editor.Art
             EchoArt.Write(EffectPath(g, 0), PixelModeArt.Fog(0));
             EchoArt.Write(EffectPath(g, 1), PixelModeArt.Fog(1));
             EchoArt.Write(EffectPath(g, 2), PixelModeArt.Wisp());
+            // A user revision: the store's worlds, and Halloween Night (the Halloween season's look, and a world).
+            const string n = Game.Seasons.SeasonIds.NeonNight, s = Game.Seasons.SeasonIds.SunkenRuins, au = Game.Seasons.SeasonIds.AutumnWoods,
+                hw = Game.Seasons.SeasonIds.Halloween;
+            WriteWorld(n, PixelWorldsArt.NeonFar(), PixelWorldsArt.NeonNear(), PixelWorldsArt.HoverCar(), PixelWorldsArt.RainStreak());
+            WriteWorld(s, PixelWorldsArt.SunkenFar(), PixelWorldsArt.SunkenNear(), PixelWorldsArt.Whale(), PixelWorldsArt.Bubble(0), PixelWorldsArt.Bubble(1));
+            WriteWorld(au, PixelWorldsArt.AutumnFar(), PixelWorldsArt.AutumnNear(), PixelWorldsArt.Geese(), PixelWorldsArt.Leaf(0), PixelWorldsArt.Leaf(1));
+            WriteWorld(hw, PixelWorldsArt.HalloweenFar(), PixelWorldsArt.HalloweenNear(), PixelWorldsArt.Witch(), PixelWorldsArt.Bat());
+            // A user revision: four more, painted in their own colours.
+            const string be = Game.Seasons.SeasonIds.Beach, de = Game.Seasons.SeasonIds.DesertDunes, vo = Game.Seasons.SeasonIds.VolcanicWaste,
+                to = Game.Seasons.SeasonIds.ToyTown;
+            WriteWorld(be, PixelColourWorlds.BeachFar(), PixelColourWorlds.BeachNear(), PixelColourWorlds.PlaneWithBanner(), PixelColourWorlds.Gull());
+            WriteWorld(de, PixelColourWorlds.DesertFar(), PixelColourWorlds.DesertNear(), PixelColourWorlds.Vulture(), PixelColourWorlds.SandWisp());
+            WriteWorld(vo, PixelColourWorlds.VolcanoFar(), PixelColourWorlds.VolcanoNear(), PixelColourWorlds.LavaBomb(), PixelColourWorlds.Ash(0), PixelColourWorlds.Ash(1));
+            WriteWorld(to, PixelColourWorlds.ToyFar(), PixelColourWorlds.ToyNear(), PixelColourWorlds.Balloon(), PixelColourWorlds.Star(), PixelColourWorlds.Heart());
             // Halloween (switched off until next year).
             const string h = Game.Seasons.SeasonIds.Halloween;
             EchoArt.Write(PathFor(h, Grave), PixelSeasons.PumpkinGrave());
@@ -104,11 +121,27 @@ namespace Echo.Editor.Art
             EchoArt.ImportSprite(PathFor(g, Near), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
             for (int i = 0; i < 3; i++) EchoArt.ImportSprite(EffectPath(g, i), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
 
+            foreach (var (id, effects) in new[] { (n, 1), (s, 2), (au, 2), (hw, 1), (be, 1), (de, 1), (vo, 2), (to, 2) })
+            {
+                EchoArt.ImportSprite(PathFor(id, Far), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
+                EchoArt.ImportSprite(PathFor(id, Near), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
+                EchoArt.ImportSprite(FlyerPath(id), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
+                for (int i = 0; i < effects; i++) EchoArt.ImportSprite(EffectPath(id, i), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
+            }
+
             ImportAs(t);
             EchoArt.ImportSprite(PathFor(t, GhostAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 1f / 10f));
             EchoArt.ImportSprite(PathFor(t, NemesisAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 1f / 9f));
             EchoArt.ImportSprite(EffectPath(t, 0), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
             EchoArt.ImportSprite(EffectPath(t, 1), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
+        }
+
+        static void WriteWorld(string id, PixelCanvas far, PixelCanvas near, PixelCanvas flyer, params PixelCanvas[] effects)
+        {
+            EchoArt.Write(PathFor(id, Far), far);
+            EchoArt.Write(PathFor(id, Near), near);
+            EchoArt.Write(FlyerPath(id), flyer);
+            for (int i = 0; i < effects.Length; i++) EchoArt.Write(EffectPath(id, i), effects[i]);
         }
 
         // The reskins, with the originals' import settings (EchoArt.Generate).

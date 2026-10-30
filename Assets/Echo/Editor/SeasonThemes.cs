@@ -20,7 +20,11 @@ namespace Echo.Editor
         public static SeasonTheme[] Build()
         {
             if (!AssetDatabase.IsValidFolder(Dir)) AssetDatabase.CreateFolder("Assets/Echo/Content/Seasons", "Themes");
-            var themes = new List<SeasonTheme> { Halloween(), BonfireNight(), Christmas(), NewYear(), Valentines(), Graveyard(), Test() };
+            var themes = new List<SeasonTheme>
+            {
+                Halloween(), BonfireNight(), Christmas(), NewYear(), Valentines(), Graveyard(), NeonNight(), SunkenRuins(), AutumnWoods(),
+                Beach(), DesertDunes(), VolcanicWaste(), ToyTown(), Test(),
+            };
             foreach (SeasonTheme t in themes) EditorUtility.SetDirty(t);
             return themes.ToArray();
         }
@@ -71,7 +75,130 @@ namespace Echo.Editor
             t.Grave = Sprite(SeasonIds.Halloween, SeasonArt.Grave);
             t.GraveInColour = true;
             t.GhostAccessory = Sprite(SeasonIds.Halloween, SeasonArt.GhostAccessory);
+            // A user revision: Halloween Night, also a world in the store (free to see in its season, buyable to keep):
+            // a lilac moonlit manor, black-purple pumpkin patch, cold slate ground and toxic slime-green spikes (orange ones
+            // vanished where the sky turns orange further on).
+            Colours(t, Hex(0xA884C0), Hex(0x24122C), Hex(0x5A5E74), Hex(0x8AFF3A));
+            Backdrop(t, SeasonIds.Halloween, SeasonEffect.Drifting, 1, new[] { new Color(0.1f, 0.05f, 0.12f, 0.9f) }, 8, 1.1f, 0.3f, 1f, 0.6f,
+                new Color(0.07f, 0.03f, 0.09f, 0.9f), 45f, 2.8f);
             return t;
+        }
+
+        // ---- the store's worlds (a user revision): looks that are never scheduled ----
+
+        static SeasonTheme NeonNight()
+        {
+            SeasonTheme t = Plain(Load(SeasonIds.NeonNight), "Neon Night");
+            t.PaletteStops = new[] { Hex(0x3A1A5A), Hex(0x5A2A6A), Hex(0x1A2A5A) };
+            t.PaletteBlend = 0.85f;
+            // Blue-violet towers, near-black rooftops, a steel-grey street and neon-yellow spikes.
+            Colours(t, Hex(0x6A5AB8), Hex(0x1A1830), Hex(0x6A7494), Hex(0xFFE04A));
+            Backdrop(t, SeasonIds.NeonNight, SeasonEffect.Falling, 1, new[] { new Color(0.6f, 0.95f, 1f, 0.55f), new Color(1f, 0.6f, 0.95f, 0.45f) },
+                60, 9f, 0f, 1f, 0.2f, new Color(0.08f, 0.04f, 0.16f, 0.85f), 30f, 4f);
+            return t;
+        }
+
+        static SeasonTheme SunkenRuins()
+        {
+            SeasonTheme t = Plain(Load(SeasonIds.SunkenRuins), "Sunken Ruins");
+            t.PaletteStops = new[] { Hex(0x1E5A6A), Hex(0x0E3A5A), Hex(0x082A44) };
+            t.PaletteBlend = 0.9f;
+            // Sea-green ruins, dark kelp, a sandy floor and coral-red spikes.
+            Colours(t, Hex(0x4A9A94), Hex(0x14403A), Hex(0xC8B48A), Hex(0xFF5A4A));
+            // Bubbles rise: a negative fall.
+            Backdrop(t, SeasonIds.SunkenRuins, SeasonEffect.Falling, 2, new[] { new Color(0.75f, 1f, 1f, 0.6f), new Color(0.75f, 1f, 1f, 0.45f) },
+                30, -0.6f, 0.25f, 1f, 0.3f, new Color(0.03f, 0.08f, 0.14f, 0.7f), 55f, 1.2f);
+            return t;
+        }
+
+        static SeasonTheme AutumnWoods()
+        {
+            SeasonTheme t = Plain(Load(SeasonIds.AutumnWoods), "Autumn Woods");
+            t.PaletteStops = new[] { Hex(0xE09A5A), Hex(0xC0703A), Hex(0x7A4A5A) };
+            t.PaletteBlend = 0.7f;
+            // Hazy amber hills, deep brown woods, a mossy floor and frost-cyan spikes: the opposite of autumn's colours, so
+            // they read against the dark woods they sit in front of and the bright sky alike.
+            Colours(t, Hex(0xD8A070), Hex(0x5A3A24), Hex(0x5A6A30), Hex(0x6AE8F0));
+            Backdrop(t, SeasonIds.AutumnWoods, SeasonEffect.Falling, 2, new[] { Hex(0xE8742A), Hex(0xC8321E), Hex(0xF2B630), Hex(0x8A4A22) },
+                36, 0.7f, 0.5f, 1f, 0.3f, new Color(0.15f, 0.1f, 0.12f, 0.85f), 35f, 2.2f);
+            return t;
+        }
+
+        // A user revision: a world's own colours, distinct hues rather than shades of its sky: the far and near layers,
+        // the floor (so gaps stand out) and the hazards (so spikes read). The game still keeps them apart from the sky.
+        static void Colours(SeasonTheme t, Color far, Color near, Color floor, Color hazard)
+        {
+            t.FarTint = far;
+            t.NearTint = near;
+            t.FloorColour = floor;
+            t.HazardColour = hazard;
+        }
+
+        // ---- four more (a user revision), painted in their own colours: white tints show them as drawn ----
+
+        static SeasonTheme Beach()
+        {
+            SeasonTheme t = Plain(Load(SeasonIds.Beach), "Beach");
+            t.PaletteStops = new[] { Hex(0x7AC8F0), Hex(0x5AB0E8), Hex(0x3A90D8) };
+            t.PaletteBlend = 0.9f;
+            Colours(t, Color.white, Color.white, Hex(0xD8B878), Hex(0xB0102A));
+            Backdrop(t, SeasonIds.Beach, SeasonEffect.Drifting, 1, new[] { Color.white }, 6, 0.9f, 0.3f, 1f, 0.4f, Color.white, 35f, 2.6f);
+            return t;
+        }
+
+        static SeasonTheme DesertDunes()
+        {
+            SeasonTheme t = Plain(Load(SeasonIds.DesertDunes), "Desert Dunes");
+            t.PaletteStops = new[] { Hex(0xF8D898), Hex(0xF0B868), Hex(0xE0905A) };
+            t.PaletteBlend = 0.85f;
+            Colours(t, Color.white, Color.white, Hex(0xC08A4A), Hex(0x2A2A6A));
+            Backdrop(t, SeasonIds.DesertDunes, SeasonEffect.Drifting, 1, new[] { new Color(0.95f, 0.82f, 0.6f, 0.55f) }, 14, 1.4f, 0.1f, 0.35f, 0.5f,
+                new Color(0.2f, 0.12f, 0.1f, 0.9f), 30f, 1.6f);
+            return t;
+        }
+
+        static SeasonTheme VolcanicWaste()
+        {
+            SeasonTheme t = Plain(Load(SeasonIds.VolcanicWaste), "Volcanic Waste");
+            t.PaletteStops = new[] { Hex(0x5A2A22), Hex(0x3A1E1E), Hex(0x2A1414) };
+            t.PaletteBlend = 0.9f;
+            Colours(t, Color.white, Color.white, Hex(0x7A7070), Hex(0xFFE070));
+            Backdrop(t, SeasonIds.VolcanicWaste, SeasonEffect.Falling, 2, new[] { new Color(0.62f, 0.6f, 0.6f, 0.8f), Hex(0xFF8A2A) },
+                50, 0.5f, 0.3f, 1f, 0.3f, Hex(0xFF8A2A), 20f, 4f);
+            return t;
+        }
+
+        // The wild cartoon world: the brightest of all, with floating stars and hearts and a striped balloon.
+        static SeasonTheme ToyTown()
+        {
+            SeasonTheme t = Plain(Load(SeasonIds.ToyTown), "Toy Town");
+            t.PaletteStops = new[] { Hex(0x6AD8FF), Hex(0x9AB0FF), Hex(0xFFA0E0) };
+            t.PaletteBlend = 0.9f;
+            Colours(t, Color.white, Color.white, Hex(0x6A3A2A), Hex(0x2A0A3A));
+            Backdrop(t, SeasonIds.ToyTown, SeasonEffect.Falling, 2,
+                new[] { Hex(0xFF4A8A), Hex(0xFFE03A), Hex(0x3AC8FF), Hex(0x5ADA4A), Hex(0x9A5AFF) }, 30, -0.5f, 0.4f, 1f, 0.3f, Color.white, 30f, 1.5f);
+            return t;
+        }
+
+        // A backdrop from its art: the far and near layers, the effect and the flyer.
+        static void Backdrop(SeasonTheme t, string id, SeasonEffect effect, int sprites, Color[] colours, int count, float fall, float sway,
+            float band, float parallax, Color flyerColour, float flyerEvery, float flyerSpeed)
+        {
+            t.FarLayer = Sprite(id, SeasonArt.Far);
+            t.NearLayer = Sprite(id, SeasonArt.Near);
+            t.Effect = effect;
+            t.EffectSprites = new Sprite[sprites];
+            for (int i = 0; i < sprites; i++) t.EffectSprites[i] = Load<Sprite>(SeasonArt.EffectPath(id, i));
+            t.EffectColours = colours;
+            t.EffectCount = count;
+            t.EffectFall = fall;
+            t.EffectSway = sway;
+            t.EffectBand = band;
+            t.EffectParallax = parallax;
+            t.Flyer = Load<Sprite>(SeasonArt.FlyerPath(id));
+            t.FlyerColour = flyerColour;
+            t.FlyerEvery = flyerEvery;
+            t.FlyerSpeed = flyerSpeed;
         }
 
         // Seasons doc: fireworks bursting in the background. Ships switched off until next year.
@@ -103,6 +230,8 @@ namespace Echo.Editor
             t.EffectSway = 0.12f;
             t.EffectBand = 0.4f;
             t.EffectParallax = 0.5f;
+            // Pale grey-green ruins, a near-black graveyard, dark earth and bone-white spikes.
+            Colours(t, Hex(0x8AA08A), Hex(0x1E2A22), Hex(0x4A3E32), Hex(0xE8E0C8));
             return t;
         }
 
@@ -113,6 +242,7 @@ namespace Echo.Editor
             t.PaletteStops = new Color[0];
             t.PaletteBlend = 1f;
             t.FarLayer = t.NearLayer = null;
+            Colours(t, Color.clear, Color.clear, Color.clear, Color.clear);
             t.Effect = SeasonEffect.None;
             t.EffectSprites = new Sprite[0];
             t.EffectColours = new Color[0];
@@ -142,6 +272,7 @@ namespace Echo.Editor
             t.PaletteBlend = 0.7f;
             t.FarLayer = Sprite(art, SeasonArt.Far);
             t.NearLayer = Sprite(art, SeasonArt.Near);
+            Colours(t, Hex(0xDCE8F4), Hex(0x4A6688), Hex(0xEEF4FA), Hex(0xC8202E));
             t.Effect = SeasonEffect.Falling;
             t.EffectSprites = new[] { Load<Sprite>(SeasonArt.EffectPath(art, 0)), Load<Sprite>(SeasonArt.EffectPath(art, 1)) };
             t.EffectColours = new Color[0];
@@ -180,6 +311,7 @@ namespace Echo.Editor
             t.PaletteBlend = 0.6f;
             t.FarLayer = Sprite(id, SeasonArt.Far);
             t.NearLayer = Sprite(id, SeasonArt.Near);
+            Colours(t, Hex(0xC8A0E0), Hex(0x1E3A3A), Hex(0x8A8AAA), Hex(0xFFE04A));
             t.Effect = SeasonEffect.Falling;
             t.EffectSprites = new[] { Load<Sprite>(SeasonArt.EffectPath(id, 0)), Load<Sprite>(SeasonArt.EffectPath(id, 1)) };
             t.EffectColours = new[] { Hex(0xFF7AC8), Hex(0xFFE36A), Hex(0x6AE0FF), Hex(0x9CFF6A) };

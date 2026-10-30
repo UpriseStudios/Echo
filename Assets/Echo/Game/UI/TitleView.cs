@@ -10,6 +10,9 @@ namespace Echo.Game.UI
     {
         [SerializeField] GameObject _root;
         [SerializeField] TMP_Text _best;
+        // Tech spec: each new best adds 5% to the main game's speed (up to 150%); a user revision shows it, as the Daily
+        // Haunt always runs at 100% and the difference surprised players.
+        [SerializeField] TMP_Text _speed;
         [SerializeField] GameObject _bestPill;
         [SerializeField] Button _skins;
         [SerializeField] Button _stats;
@@ -65,12 +68,15 @@ namespace Echo.Game.UI
             if (_devServer != null && _devServer.activeSelf != on) _devServer.SetActive(on);
         }
 
-        public void Show(int best)
+        public void Show(int best, int speedPct = 100)
         {
             _root.SetActive(true);
             _best.gameObject.SetActive(best > 0);
             if (_bestPill != null) _bestPill.SetActive(best > 0);
             _best.SetText("BEST {0}", best);
+            if (_speed == null) return;
+            _speed.gameObject.SetActive(speedPct > 100);
+            _speed.SetText("SPEED {0}%", speedPct);
         }
 
         /// <summary>Weekly Twists banner: this week's twist (tap for Classic), or Classic (tap for the twist). Null hides it.</summary>

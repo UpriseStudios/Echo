@@ -63,9 +63,15 @@ namespace Echo.Editor
                 // A user revision: worlds. The normal one is everyone's; Christmas Town is sold (and free to see every
                 // December); the Haunted Graveyard is the Community Graveyard's reward, never sold.
                 new CosmeticItem { Id = "world_echo", DisplayName = "Echo", Type = CosmeticType.World, Color = Hex(0x3A5A8A) },
-                new CosmeticItem { Id = "world_christmas", DisplayName = "Christmas Town", Type = CosmeticType.World, Color = Hex(0x5A86B0),
-                    PurchaseOnly = true, ProductId = ProductIds.WorldChristmas, BundleProductId = ProductIds.WorldsBundle,
-                    World = AssetDatabase.LoadAssetAtPath<SeasonTheme>(SeasonThemes.Dir + "/" + SeasonIds.Christmas + ".asset") },
+                StoreWorld("world_christmas", "Christmas Town", 0x5A86B0, ProductIds.WorldChristmas, SeasonIds.Christmas),
+                StoreWorld("world_halloween", "Halloween Night", 0x5A2A7A, ProductIds.WorldHalloween, SeasonIds.Halloween),
+                StoreWorld("world_neon", "Neon Night", 0x5A2A6A, ProductIds.WorldNeon, SeasonIds.NeonNight),
+                StoreWorld("world_sunken", "Sunken Ruins", 0x1E5A6A, ProductIds.WorldSunken, SeasonIds.SunkenRuins),
+                StoreWorld("world_autumn", "Autumn Woods", 0xC0703A, ProductIds.WorldAutumn, SeasonIds.AutumnWoods),
+                StoreWorld("world_beach", "Beach", 0x7AC8F0, ProductIds.WorldBeach, SeasonIds.Beach),
+                StoreWorld("world_desert", "Desert Dunes", 0xF0B868, ProductIds.WorldDesert, SeasonIds.DesertDunes),
+                StoreWorld("world_volcano", "Volcanic Waste", 0x5A2A22, ProductIds.WorldVolcano, SeasonIds.VolcanicWaste),
+                StoreWorld("world_toytown", "Toy Town", 0xFF8AC8, ProductIds.WorldToyTown, SeasonIds.ToyTown),
                 new CosmeticItem { Id = "world_graveyard", DisplayName = "Haunted Graveyard", Type = CosmeticType.World, Color = Hex(0x4A6450),
                     ServerReward = true, UnlockText = "Community Graveyard: finish a week in the top 10",
                     World = AssetDatabase.LoadAssetAtPath<SeasonTheme>(SeasonThemes.Dir + "/" + SeasonIds.Graveyard + ".asset") },
@@ -188,6 +194,14 @@ namespace Echo.Editor
             item.AdsToUnlock = ads;
             return item;
         }
+
+        // A user revision: a world sold in the store, on its own and in the Worlds Bundle; never won in a mode.
+        static CosmeticItem StoreWorld(string id, string name, int swatch, string productId, string themeId) => new CosmeticItem
+        {
+            Id = id, DisplayName = name, Type = CosmeticType.World, Color = Hex(swatch), PurchaseOnly = true,
+            ProductId = productId, BundleProductId = ProductIds.WorldsBundle,
+            World = AssetDatabase.LoadAssetAtPath<SeasonTheme>(SeasonThemes.Dir + "/" + themeId + ".asset"),
+        };
 
         static CosmeticItem Runner(string id, string name, int score, string product, float r, float g, float b) =>
             new CosmeticItem { Id = id, DisplayName = name, Type = CosmeticType.Runner, UnlockScore = score, ProductId = product, Color = new Color(r, g, b) };

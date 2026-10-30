@@ -23,6 +23,16 @@ namespace Echo.Game.Seasons
         [Tooltip("Replaces the Graveyard hills.")]
         public Sprite NearLayer;
 
+        [Header("Colours (a user revision: distinct hues, not shades of the sky; alpha 0 keeps the derived colour)")]
+        [Tooltip("The far layer's colour.")]
+        public Color FarTint = Color.clear;
+        [Tooltip("The near layer's colour.")]
+        public Color NearTint = Color.clear;
+        [Tooltip("The floor, so gaps stand out.")]
+        public Color FloorColour = Color.clear;
+        [Tooltip("Spikes and blocks, so they read as hazards.")]
+        public Color HazardColour = Color.clear;
+
         [Header("Background effects layer (behind the floor and everything on it)")]
         public SeasonEffect Effect;
         public Sprite[] EffectSprites = new Sprite[0];

@@ -19,26 +19,32 @@ MonoBehaviour:
   - {r: 0.5411765, g: 0.22745098, b: 0.3529412, a: 1}
   - {r: 0.6901961, g: 0.3372549, b: 0.16470589, a: 1}
   PaletteBlend: 0.75
-  FarLayer: {fileID: 0}
-  NearLayer: {fileID: 0}
-  Effect: 0
-  EffectSprites: []
-  EffectColours: []
-  EffectCount: 40
-  EffectFall: 1.2
+  FarLayer: {fileID: 21300000, guid: 546edb452727adb4095657ff6cd3f10b, type: 3}
+  NearLayer: {fileID: 21300000, guid: a913ccfd4834e2e48af671b46a7cf93e, type: 3}
+  FarTint: {r: 0.65882355, g: 0.5176471, b: 0.7529412, a: 1}
+  NearTint: {r: 0.14117648, g: 0.07058824, b: 0.17254902, a: 1}
+  FloorColour: {r: 0.3529412, g: 0.36862746, b: 0.45490196, a: 1}
+  HazardColour: {r: 0.5411765, g: 1, b: 0.22745098, a: 1}
+  Effect: 2
+  EffectSprites:
+  - {fileID: 21300000, guid: 70b1cc2f2cc9ebe4cbdbaa1d978036b1, type: 3}
+  EffectColours:
+  - {r: 0.1, g: 0.05, b: 0.12, a: 0.9}
+  EffectCount: 8
+  EffectFall: 1.1
   EffectSway: 0.3
   EffectBand: 1
-  EffectParallax: 0.3
+  EffectParallax: 0.6
   Fireworks: 0
   FireworkSpark: {fileID: 0}
   FireworkColours: []
   FireworksPerMinute: 6
   ResetShowSeconds: 0
   ResetShowToast: 
-  Flyer: {fileID: 0}
-  FlyerColour: {r: 0, g: 0, b: 0, a: 1}
+  Flyer: {fileID: 21300000, guid: 4606d124fb13f404fb5cb61bd65674f5, type: 3}
+  FlyerColour: {r: 0.07, g: 0.03, b: 0.09, a: 0.9}
   FlyerEvery: 45
-  FlyerSpeed: 2.4
+  FlyerSpeed: 2.8
   Spike: {fileID: 0}
   Block: {fileID: 0}
   GroundTop: {fileID: 0}

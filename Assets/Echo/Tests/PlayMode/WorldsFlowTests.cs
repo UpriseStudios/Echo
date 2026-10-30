@@ -82,11 +82,17 @@ namespace Echo.Tests.PlayMode
 
             Click("Title/Skins");
             yield return null;
+            Click("Skins/Tabs/Worlds");
+            yield return null;
+            StringAssert.Contains("best value", SkinsButton("Worlds Bundle").GetComponentInChildren<TMP_Text>().text, "the bundle leads the tab");
+            Assert.IsNotNull(SkinsButton("Christmas Town").transform.Find("Preview/Far").GetComponent<Image>().sprite, "a picture of the world");
             Button graveyard = SkinsButton("Haunted Graveyard");
             Assert.IsFalse(graveyard.interactable, "a mode reward is never sold");
             StringAssert.Contains("top 10", graveyard.GetComponentInChildren<TMP_Text>().text);
             StringAssert.Contains("£0.99", SkinsButton("Christmas Town").GetComponentInChildren<TMP_Text>().text);
             StringAssert.Contains("£2.99", SkinsButton("Worlds Bundle").GetComponentInChildren<TMP_Text>().text);
+            foreach (string world in new[] { "Halloween Night", "Neon Night", "Sunken Ruins", "Autumn Woods", "Beach", "Desert Dunes", "Volcanic Waste", "Toy Town" })
+                StringAssert.Contains("£0.99", SkinsButton(world).GetComponentInChildren<TMP_Text>().text, world + " is in the store");
 
             SkinsButton("Christmas Town").onClick.Invoke();   // buy
             yield return null;
@@ -94,6 +100,7 @@ namespace Echo.Tests.PlayMode
             SkinsButton("Christmas Town").onClick.Invoke();   // wear
             yield return null;
             Assert.AreEqual("world_christmas", game.CurrentSave.Cosmetics.Equipped.World);
+            CollectionAssert.Contains(((Echo.Services.Mocks.MockAnalytics)game.Services.Analytics).Events, "world_equipped world=world_christmas bought=True");
             Click("Skins/Close");
             yield return null;
             Assert.AreEqual(SeasonIds.Christmas, game.ActiveBackdrop.Id, "worn out of season");
@@ -118,6 +125,29 @@ namespace Echo.Tests.PlayMode
             yield return null;
             Assert.AreEqual(SeasonIds.Christmas, game.ActiveBackdrop.Id);
             Assert.IsNull(game.ActiveSeason);
+        }
+
+        [UnityTest, Timeout(120000)]
+        public IEnumerator TheGravestoneYouChoose_WinsOverTheSeasons()
+        {
+            yield return Load();
+            var game = Object.FindAnyObjectByType<EchoGame>();
+            var graves = Object.FindAnyObjectByType<Echo.Game.Views.GraveViews>();
+            game.ForceSeason(SeasonIds.Christmas);
+            Sprite snowman = graves.Current;
+            game.CurrentSave.Cosmetics.Owned.Add("grave_heart");
+
+            Click("Title/Skins");
+            yield return null;
+            Click("Skins/Tabs/Extras");
+            yield return null;
+            SkinsButton("Heart").onClick.Invoke();
+            yield return null;
+            Assert.AreNotEqual(snowman, graves.Current, "a user revision: the chosen stone wins over the season's");
+            SkinsButton("Stone").onClick.Invoke();
+            yield return null;
+            Assert.AreEqual(snowman, graves.Current, "the plain stone gives way to the season's");
+            Click("Skins/Close");
         }
     }
 }

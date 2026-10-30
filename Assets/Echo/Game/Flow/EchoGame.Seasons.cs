@@ -146,6 +146,9 @@ namespace Echo.Game.Flow
             return world != null && world.World != null && CosmeticUnlocks.IsOwned(world, _progress.Best, _save.Cosmetics.Owned) ? world.World : null;
         }
 
+        /// <summary>Whether the backdrop brings its own scenery, and so stands for the whole run.</summary>
+        bool OwnScenery => _backdrop != null && (_backdrop.FarLayer != null || _backdrop.NearLayer != null);
+
         /// <summary>The backdrop showing now (a season's, a world's or a mode's), or null for the normal one.</summary>
         public SeasonTheme ActiveBackdrop => _backdrop;
 
@@ -162,7 +165,11 @@ namespace Echo.Game.Flow
             _season = theme;
             _backdrop = backdrop;
             _seasonApplied = true;
-            if (_background != null) _background.SetSeason(backdrop != null ? backdrop.FarLayer : null, backdrop != null ? backdrop.NearLayer : null);
+            if (_background != null)
+            {
+                _background.SetSeason(backdrop != null ? backdrop.FarLayer : null, backdrop != null ? backdrop.NearLayer : null);
+                _background.SetTints(backdrop != null ? backdrop.FarTint : Color.clear, backdrop != null ? backdrop.NearTint : Color.clear);
+            }
             _courseView.SetSeason(theme != null ? theme.Spike : null, theme != null ? theme.Block : null, theme != null ? theme.GroundTop : null);
             ApplyGrave();
             _ghostViews.SetSeason(theme != null ? theme.GhostAccessory : null, theme != null ? theme.NemesisAccessory : null);
@@ -175,13 +182,14 @@ namespace Echo.Game.Flow
 
         CosmeticItem _equippedGrave;
 
-        // A season's gravestone shows during its season; otherwise the one the player wears (the stone by default). A
-        // reel watched back wears the stone, as its run's own grave isn't recorded.
+        // The gravestone the player chose wins (a user revision: device testing found a season's grave hid every choice);
+        // a season's gravestone replaces only the plain stone, during its season. A reel watched back wears the stone, as
+        // its run's own grave isn't recorded.
         void ApplyGrave()
         {
             if (_graves == null) return;
-            if (_season != null && _season.Grave != null) _graves.SetSeason(_season.Grave, _season.GraveInColour);
-            else if (_equippedGrave != null && !_equippedGrave.Tintable && _equippedGrave.Sprite != null) _graves.SetSeason(_equippedGrave.Sprite, true);
+            if (_equippedGrave != null && !_equippedGrave.Tintable && _equippedGrave.Sprite != null) _graves.SetSeason(_equippedGrave.Sprite, true);
+            else if (_season != null && _season.Grave != null) _graves.SetSeason(_season.Grave, _season.GraveInColour);
             else _graves.SetSeason(null, false);
         }
 
@@ -281,13 +289,19 @@ namespace Echo.Game.Flow
         {
             if (_catalog == null) return;
             var e = _save.Cosmetics.Equipped;
-            foreach (var (type, id) in new[] { (CosmeticType.Character, e.Character), (CosmeticType.Trail, e.Trail), (CosmeticType.Grave, e.Grave) })
+            foreach (var (type, id) in new[] { (CosmeticType.Character, e.Character), (CosmeticType.Trail, e.Trail), (CosmeticType.Grave, e.Grave), (CosmeticType.World, e.World) })
             {
                 if (_equipLogged.TryGetValue(type, out string had) && had == id) continue;
                 bool first = !_equipLogged.ContainsKey(type);
                 _equipLogged[type] = id;
                 CosmeticItem item = _catalog.Find(id);
                 if (first || item == null) continue;
+                // A user revision: which worlds players wear (bought, earned in a mode, or the normal one).
+                if (type == CosmeticType.World)
+                {
+                    Log(AnalyticsEvents.WorldEquipped, ("world", id), ("bought", item.PurchaseOnly));
+                    continue;
+                }
                 if (!string.IsNullOrEmpty(item.UnlockAchievement) || item.ProductId == Echo.Services.Iap.ProductIds.PackChristmas)
                     Log(AnalyticsEvents.SeasonalSkinEquipped, ("skin", id));
             }

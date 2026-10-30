@@ -18,6 +18,10 @@ MonoBehaviour:
   PaletteBlend: 1
   FarLayer: {fileID: 0}
   NearLayer: {fileID: 0}
+  FarTint: {r: 0, g: 0, b: 0, a: 0}
+  NearTint: {r: 0, g: 0, b: 0, a: 0}
+  FloorColour: {r: 0, g: 0, b: 0, a: 0}
+  HazardColour: {r: 0, g: 0, b: 0, a: 0}
   Effect: 0
   EffectSprites: []
   EffectColours: []

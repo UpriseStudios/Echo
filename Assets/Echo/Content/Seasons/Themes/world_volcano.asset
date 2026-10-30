@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 514eecd290c77574994cd74a5e68239f, type: 3}
+  m_Name: world_volcano
+  m_EditorClassIdentifier: Echo.Game::Echo.Game.Seasons.SeasonTheme
+  Id: world_volcano
+  Title: Volcanic Waste
+  PaletteStops:
+  - {r: 0.3529412, g: 0.16470589, b: 0.13333334, a: 1}
+  - {r: 0.22745098, g: 0.11764706, b: 0.11764706, a: 1}
+  - {r: 0.16470589, g: 0.078431375, b: 0.078431375, a: 1}
+  PaletteBlend: 0.9
+  FarLayer: {fileID: 21300000, guid: d30c47cb549ef0f4ab5e099bc36f100b, type: 3}
+  NearLayer: {fileID: 21300000, guid: a4dc7937706a49f409c3c8e84934fdba, type: 3}
+  FarTint: {r: 1, g: 1, b: 1, a: 1}
+  NearTint: {r: 1, g: 1, b: 1, a: 1}
+  FloorColour: {r: 0.47843137, g: 0.4392157, b: 0.4392157, a: 1}
+  HazardColour: {r: 1, g: 0.8784314, b: 0.4392157, a: 1}
+  Effect: 1
+  EffectSprites:
+  - {fileID: 21300000, guid: 0d08ada0359579f40b3de423617d7f48, type: 3}
+  - {fileID: 21300000, guid: aea1fe385b8446740ba0e1ca6fa95f75, type: 3}
+  EffectColours:
+  - {r: 0.62, g: 0.6, b: 0.6, a: 0.8}
+  - {r: 1, g: 0.5411765, b: 0.16470589, a: 1}
+  EffectCount: 50
+  EffectFall: 0.5
+  EffectSway: 0.3
+  EffectBand: 1
+  EffectParallax: 0.3
+  Fireworks: 0
+  FireworkSpark: {fileID: 0}
+  FireworkColours: []
+  FireworksPerMinute: 6
+  ResetShowSeconds: 0
+  ResetShowToast: 
+  Flyer: {fileID: 21300000, guid: d89ee2fc9dec98e4284a9d8e4f66da5a, type: 3}
+  FlyerColour: {r: 1, g: 0.5411765, b: 0.16470589, a: 1}
+  FlyerEvery: 20
+  FlyerSpeed: 4
+  Spike: {fileID: 0}
+  Block: {fileID: 0}
+  GroundTop: {fileID: 0}
+  Grave: {fileID: 0}
+  GraveInColour: 0
+  Headstone: {fileID: 0}
+  GhostAccessory: {fileID: 0}
+  NemesisAccessory: {fileID: 0}
+  DeathLine: 
+  DeathLineNemesisOnly: 0
+  Stinger: {fileID: 0}
+  MusicStems: []

@@ -149,6 +149,8 @@ namespace Echo.Tests.PlayMode
             // Wear the Halo: on the runner, and on the ghost its run leaves.
             Click("Title/Skins");
             yield return null;
+            Click("Skins/Tabs/Extras");
+            yield return null;
             var skinButtons = Find("Skins").GetComponentsInChildren<UnityEngine.UI.Button>();
             var haloButton = skinButtons.FirstOrDefault(b => b.GetComponentInChildren<TMP_Text>() is TMP_Text t && t.text.StartsWith("Halo"));
             Assert.IsNotNull(haloButton, "no Halo in Skins: " + string.Join(" | ", skinButtons.Select(b => b.GetComponentInChildren<TMP_Text>()?.text ?? "?").Where(t => !t.Contains("<size=70%>"))));

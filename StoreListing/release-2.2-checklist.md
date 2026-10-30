@@ -10,6 +10,9 @@ Everything below is yours to do. The Graveyard ships switched off; its first wee
 - [ ] Saves: the Graveyard adds a `graveyard` section to save schema 5 (unsent runs, the next run number, the last
       summary seen). If 2.1 has shipped with schema 5, nothing to migrate: the section is new and starts empty.
 
+Worlds and the tabbed store ship in 2.1 (see its checklist, section 3); the Haunted Graveyard world is granted by the
+Graveyard's server code below, with a player's first Gravekeeper badge.
+
 ## 2. Production backend
 
 - [ ] The UGS service account needs the **Scheduler** and **Triggers** roles in production too (it has them in

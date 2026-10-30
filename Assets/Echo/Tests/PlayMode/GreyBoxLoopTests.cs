@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Echo.Core.Ghosts;
@@ -111,13 +112,23 @@ namespace Echo.Tests.PlayMode
 
                 if (screen == "Skins")
                 {
+                    // A user revision: the store is in tabs, so count every tab's list (a redraw lands a frame later).
                     var content = GameObject.Find("Canvas/SafeArea/Skins/Scroll/Viewport/Content").transform;
-                    var buttons = content.GetComponentsInChildren<UnityEngine.UI.Button>();
-                    int characters = buttons.Count(b => b.transform.Find("Preview") != null);
+                    int total = 0, characters = 0;
+                    foreach (string tab in System.Enum.GetNames(typeof(Echo.Game.UI.SkinsTab)))
+                    {
+                        Click($"Canvas/SafeArea/Skins/Tabs/{tab}");
+                        yield return null;
+                        var buttons = content.GetComponentsInChildren<UnityEngine.UI.Button>();
+                        total += buttons.Length;
+                        characters += buttons.Count(b => b.transform.Find("Preview") != null && b.transform.Find("Preview/Far") == null);
+                    }
+                    Click("Canvas/SafeArea/Skins/Tabs/Runners");
+                    yield return null;
                     // Seasons doc: Santa and Rudolph always show (to earn); the Christmas Pack only while on sale (December), so not here.
                     Assert.AreEqual(15 + 32 + 4 + 2 + 1, characters, "hooded + 8 base, Pumpkin, 5 earned, 8 packs of 4, the Elementals, Santa and Rudolph, the Gravekeeper");
-                    Assert.AreEqual(54 + 1 + 8 + 1 + 1 + 26 + 3 + 4, buttons.Length,
-                        "characters, the Season bundle, 8 skin packs, the Elementals trial, power-ups, 6 colours + 10 trails + 4 palettes + 4 gravestones + 2 accessories, 3 colour packs, 3 worlds + the Worlds Bundle");
+                    Assert.AreEqual(54 + 1 + 8 + 1 + 1 + 26 + 3 + 12, total,
+                        "characters, the Season bundle, 8 skin packs, the Elementals trial, power-ups, 6 colours + 10 trails + 4 palettes + 4 gravestones + 2 accessories, 3 colour packs, 11 worlds + the Worlds Bundle");
                 }
 
                 Click($"Canvas/SafeArea/{screen}/Close");

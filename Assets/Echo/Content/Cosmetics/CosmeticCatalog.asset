@@ -2813,6 +2813,254 @@ MonoBehaviour:
     ScarfAnchor: {x: 0, y: 0}
     Reaction: 0
     HeadTop: 0.85
+  - Id: world_halloween
+    DisplayName: Halloween Night
+    Type: 6
+    Color: {r: 0.3529412, g: 0.16470589, b: 0.47843137, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.world.halloween
+    BundleProductId: echo.worlds.bundle
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 0
+    UnlockText: 
+    World: {fileID: 11400000, guid: afd1391ce9a54a64c870733c04e4f250, type: 2}
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: world_neon
+    DisplayName: Neon Night
+    Type: 6
+    Color: {r: 0.3529412, g: 0.16470589, b: 0.41568628, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.world.neon
+    BundleProductId: echo.worlds.bundle
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 0
+    UnlockText: 
+    World: {fileID: 11400000, guid: f58f09e462a63e848b5ce3f0e793792d, type: 2}
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: world_sunken
+    DisplayName: Sunken Ruins
+    Type: 6
+    Color: {r: 0.11764706, g: 0.3529412, b: 0.41568628, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.world.sunken
+    BundleProductId: echo.worlds.bundle
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 0
+    UnlockText: 
+    World: {fileID: 11400000, guid: 9d5a261f48c37a24c8a97663491cbd57, type: 2}
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: world_autumn
+    DisplayName: Autumn Woods
+    Type: 6
+    Color: {r: 0.7529412, g: 0.4392157, b: 0.22745098, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.world.autumn
+    BundleProductId: echo.worlds.bundle
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 0
+    UnlockText: 
+    World: {fileID: 11400000, guid: bbd25ae78d683fe4ab5220543b48c50c, type: 2}
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: world_beach
+    DisplayName: Beach
+    Type: 6
+    Color: {r: 0.47843137, g: 0.78431374, b: 0.9411765, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.world.beach
+    BundleProductId: echo.worlds.bundle
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 0
+    UnlockText: 
+    World: {fileID: 11400000, guid: 0c887d1fb4e9ce24a9d47212737131a5, type: 2}
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: world_desert
+    DisplayName: Desert Dunes
+    Type: 6
+    Color: {r: 0.9411765, g: 0.72156864, b: 0.40784314, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.world.desert
+    BundleProductId: echo.worlds.bundle
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 0
+    UnlockText: 
+    World: {fileID: 11400000, guid: 938422f5156e568498df6857245492a5, type: 2}
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: world_volcano
+    DisplayName: Volcanic Waste
+    Type: 6
+    Color: {r: 0.3529412, g: 0.16470589, b: 0.13333334, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.world.volcano
+    BundleProductId: echo.worlds.bundle
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 0
+    UnlockText: 
+    World: {fileID: 11400000, guid: 3e57a846657d58247af5237df3e5a25b, type: 2}
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: world_toytown
+    DisplayName: Toy Town
+    Type: 6
+    Color: {r: 1, g: 0.5411765, b: 0.78431374, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.world.toytown
+    BundleProductId: echo.worlds.bundle
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 0
+    UnlockText: 
+    World: {fileID: 11400000, guid: 013a0791b9cd6ac428e36db20b09ad0d, type: 2}
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
   - Id: world_graveyard
     DisplayName: Haunted Graveyard
     Type: 6

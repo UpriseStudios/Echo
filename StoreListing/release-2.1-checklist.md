@@ -36,6 +36,35 @@ the server replays.
 - [ ] It isn't part of the Season of Echo bundle; bundle owners don't get it. The Skins screen lists it only during
       Christmas and New Year, or once a player owns part of it.
 
+### Worlds (backdrops for every run)
+
+Create all ten in **Google Play Console** (Monetise > Products > In-app products) and **App Store Connect** (In-App
+Purchases), each **non-consumable**, then activate them. The game asks the store for every product at launch; any that
+are missing show as "Unavailable" in Skins > Worlds and can't be bought.
+
+| Product ID | Price | Name | Description |
+|---|---|---|---|
+| `echo.world.christmas` | £0.99 | Christmas Town | A snowy town at the North Pole, with Santa's sleigh in the sky. Wear it all year. |
+| `echo.world.halloween` | £0.99 | Halloween Night | A haunted manor under a full moon, a pumpkin patch, bats and a witch. Wear it all year. |
+| `echo.world.neon` | £0.99 | Neon Night | A rain-soaked city of neon signs, with hover cars overhead. |
+| `echo.world.sunken` | £0.99 | Sunken Ruins | A temple under the sea: kelp, rising bubbles and a passing whale. |
+| `echo.world.autumn` | £0.99 | Autumn Woods | Golden hills and falling leaves, with geese flying over. |
+| `echo.world.beach` | £0.99 | Beach | Palm trees, a sparkling sea and a plane towing a banner across the sky. |
+| `echo.world.desert` | £0.99 | Desert Dunes | Pyramids and saguaros on rolling dunes, with blowing sand and a circling vulture. |
+| `echo.world.volcano` | £0.99 | Volcanic Waste | A ruined Roman town beneath an erupting volcano, with falling ash and flying lava. |
+| `echo.world.toytown` | £0.99 | Toy Town | A wild cartoon world: candy hills, a rainbow, giant mushrooms and a striped balloon. |
+| `echo.worlds.bundle` | £2.99 | Worlds Bundle | All nine worlds: Christmas Town, Halloween Night, Neon Night, Sunken Ruins, Autumn Woods, Beach, Desert Dunes, Volcanic Waste and Toy Town. |
+
+- [ ] App Store review screenshot for each: Skins > Worlds in the recording APK (every world is unlocked there), or
+      `TestResults/Screenshots/05_skins_worlds.png`.
+- [ ] Rules the store copy must keep (a user decision):
+  - Worlds are looks only: the backdrop (sky, scenery, drifting effects, the odd flyer in the sky), never how a run plays.
+  - Christmas Town and Halloween Night show free to everyone during their season; buying one keeps it all year.
+  - A world sold in the store is never won in a mode, and a mode's reward is never sold. The **Haunted Graveyard**
+    (the Community Graveyard's reward, a first weekly top 10) has no product and must never get one.
+  - The bundle's description names the nine worlds rather than promising future ones. A world added to the bundle
+    later still reaches its owners: the game re-reads purchases at every launch.
+
 ## 4. Analytics (Unity Analytics > Event Manager, production)
 
 Events or parameters that aren't defined are dropped. Integer = whole number, Boolean = true/false, String = text.
@@ -54,6 +83,9 @@ Events or parameters that aren't defined are dropped. Integer = whole number, Bo
 | `onelife_started` | `date` string, `leaders` integer |
 | `onelife_finished` | `distance` integer, `rank` integer |
 | `onelife_abandoned` | `distance` integer, `rank` integer |
+| `world_equipped` | `world` string, `bought` boolean |
+
+`iap_purchase` (already defined) covers the world products; `productId` tells them apart.
 
 `challenge_run` and `clip_saved` came after 2.0.4, so they ship in 2.1 too; skip any you've already made.
 `challenge_sent` keeps its parameters, but is now also sent when a clip is shared. `egg_collected` (Easter) comes
@@ -72,10 +104,17 @@ with 2.2.
       `"enabled": true` (dates 1 to 24 December, result showing until New Year). Its rewards (Halo, Coal trail, team
       badges) come from the server. One Life: set its two windows' `"enabled": true` (Christmas Day, then Sundays
       through 2027). The production deploy creates the `onelife` leaderboard.
+- [ ] **Play Data safety / App Store App Privacy for worlds**: no change. A world is a purchase like the skin packs;
+      what's worn stays on the phone.
 - [ ] **What's new** (suggested):
-      *Seasons are here! Snow, Santa hats and a red-nosed Nemesis all December, fireworks at New Year, and a
-      heartbreaking Valentine's. Earn Santa, Rudolph and more with seasonal achievements, or get the Christmas Pack.
-      Clips can now be saved straight to your gallery, in a new Vertical format with your own caption.*
+      *Seasons are here! A snowy town at the North Pole with Santa's sleigh overhead and Jingle Bells all December,
+      Auld Lang Syne at New Year, and a heartbreaking Valentine's. Earn Santa, Rudolph and more with seasonal
+      achievements, or get the Christmas Pack. NEW: Worlds! Change the backdrop of every run: Neon Night, Sunken Ruins,
+      Autumn Woods, Beach, Desert Dunes, Volcanic Waste, Toy Town, Halloween Night and Christmas Town, in a redesigned
+      store. The title now shows how fast your runs have become. Clips can now be saved straight to your
+      gallery, in a new Vertical format with your own caption.*
+- [ ] **Store listing**: consider a screenshot or two of the worlds in play (wear one in the recording APK, then
+      record with Settings > Recording on).
 - [ ] Check readability in `TestResults/Screenshots`: `season30_<season>_1..3.png` (a real run through a 30-ghost
       graveyard; in real play ghosts spread out and are met a few at a time) and `season30crowd_<season>.png` (the
       worst case, 15 ghosts piled on screen). Optional: December store screenshots from them once the art is final.
@@ -87,8 +126,17 @@ on internal testing for anything online.
 
 - [ ] Settings > Dev: season through **christmas**, **newyear**, **valentines**, **halloween**, **bonfire**: the
       effects stay behind the floor, the runner, ghosts and obstacles; hazards still read as hazards.
-- [ ] Christmas: Santa hats, red-nosed Nemesis, snowman graves; the Christmas Pack shows in Skins and buys
-      (internal testing licence).
+- [ ] Christmas: Santa hats, red-nosed Nemesis, snowman graves; the town with Santa's sleigh crossing the sky every
+      40 s or so; Jingle Bells (it changes at the title or a run's start); the Christmas Pack shows in Skins and buys
+      (internal testing licence). New Year: Auld Lang Syne.
+- [ ] Gravestones: during Christmas, a gravestone you chose (the Heart) shows; the plain Stone gives way to the
+      snowman.
+- [ ] Store: the six tabs (Runners, Packs, Worlds, Style, Extras, Free); each paid tab opens with its bundle.
+- [ ] Worlds (internal testing licence, on a release-signed build, not the recording APK where everything is
+      unlocked): buy one, wear it, Restore on a second install; the bundle unlocks all nine. A world lasts the whole run: no Castle or
+      Space comes over it. Settings > Seasons off
+      keeps your world during a forced season; on shows the season's look (Valentine's keeps the world behind it).
+      The Community Graveyard always wears its own look.
 - [ ] Achievements: in a development-server build with **Dev: daily** set to a December date, Daily Haunt runs
       count for Twelve Days and Lead the Way; Stats lists them under SEASONAL, outside the count.
 - [ ] Clips: Reels > Clip > Vertical, add a hook, Make video, **Save to gallery** (Android 10+: Movies/Echo; Android
@@ -98,14 +146,19 @@ on internal testing for anything online.
 
 ## 7. Art
 
-All the seasonal art is generated by `Assets/Echo/Editor/Art` (`PixelSeasons`, `PixelSeasonalCast`) in the game's
-pixel style, and is final. To change a look, change its drawing there and rebuild; SeasonArtTests checks every reskin
+All the seasonal art is generated by `Assets/Echo/Editor/Art` (`PixelSeasons`, `PixelSeasonalCast`,
+`PixelChristmasTown`, and the worlds in `PixelWorldsArt` and `PixelModeArt`) in the game's pixel style, and is final.
+The carols are generated by `Assets/Echo/Editor/CarolMusic.cs` only when their files are missing, so a recording
+dropped in under the same names (`xmas_stem*`, `newyear_stem*` in `Content/Audio`) is kept. To change a look, change its drawing there and rebuild; SeasonArtTests checks every reskin
 keeps the original's size and outline.
 
 ## 8. Known limits
 
 - Saving to the gallery needs Android 10 or later; older phones use Share.
-- A replayed reel shows the plain stone grave (the run's gravestone isn't recorded).
+- A replayed reel shows the plain stone grave (the run's gravestone isn't recorded), and the world worn now rather
+  than the one worn then.
+- A world worn out of season changes only the backdrop: Christmas Town in July has no Santa hats, snowman graves or
+  Jingle Bells.
 - Offline, seasonal achievements use the phone's date, so changing the clock could fake one. The rewards are
   cosmetic, and the seasons doc accepts this.
 - Pumpkin's free Halloween week (25–31 October, from 2.0) stays until Halloween is switched on in the schedule.

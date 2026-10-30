@@ -25,9 +25,18 @@ namespace Echo.Services.Iap
         /// world won in a mode is never sold, and a world sold is never won.
         /// </summary>
         public const string WorldChristmas = "echo.world.christmas";
+        public const string WorldHalloween = "echo.world.halloween";
+        public const string WorldNeon = "echo.world.neon";
+        public const string WorldSunken = "echo.world.sunken";
+        public const string WorldAutumn = "echo.world.autumn";
+        public const string WorldBeach = "echo.world.beach";
+        public const string WorldDesert = "echo.world.desert";
+        public const string WorldVolcano = "echo.world.volcano";
+        public const string WorldToyTown = "echo.world.toytown";
         public const string WorldsBundle = "echo.worlds.bundle";
 
-        public static readonly string[] Worlds = { WorldChristmas };
+        public static readonly string[] Worlds =
+            { WorldChristmas, WorldHalloween, WorldNeon, WorldSunken, WorldAutumn, WorldBeach, WorldDesert, WorldVolcano, WorldToyTown };
 
         public static readonly string[] Packs =
         {
@@ -37,7 +46,8 @@ namespace Echo.Services.Iap
         public static readonly string[] All =
         {
             PackUndead, PackDungeon, PackCritters, PackSpace, PackRetro, PackRoyal, PackMonsters, PackOddballs,
-            SeasonOfEcho, PackChristmas, WorldChristmas, WorldsBundle,
+            SeasonOfEcho, PackChristmas, WorldChristmas, WorldHalloween, WorldNeon, WorldSunken, WorldAutumn,
+            WorldBeach, WorldDesert, WorldVolcano, WorldToyTown, WorldsBundle,
         };
     }
 }

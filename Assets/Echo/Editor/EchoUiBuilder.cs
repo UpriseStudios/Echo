@@ -124,6 +124,10 @@ namespace Echo.Editor
 
             var bestPill = Pill(root, "BestPill", new Vector2(0, 296), new Vector2(380, 92));
             var best = MakeText(root, "Best", "BEST 0", 36, _black, new Vector2(0.5f, 0.5f), new Vector2(0, 296), new Vector2(380, 92));
+            // The main game's speed, once a new best has raised it (a user revision).
+            var speed = MakeText(root, "Speed", "SPEED 100%", 26, _black, new Vector2(0.5f, 0.5f), new Vector2(0, 222), new Vector2(500, 44));
+            speed.color = Soft;
+            Wire(view, "_speed", speed);
 
             var tap = MakeText(root, "TapToRun", "TAP TO RUN", 60, _black, new Vector2(0.5f, 0.5f), new Vector2(0, -480), new Vector2(1000, 130));
             tap.gameObject.AddComponent<Pulse>();
@@ -1003,12 +1007,34 @@ namespace Echo.Editor
             RectTransform root = MenuPanel(parent, "Skins", "Skins");
             var view = root.gameObject.AddComponent<SkinsView>();
 
-            // One scrolling list between the heading and the footer; SkinsView fills it from templates.
+            // A user revision: the store in tabs (SkinsTab order), a bar under the heading.
+            RectTransform tabBar = NewRect("Tabs", root);
+            tabBar.anchorMin = new Vector2(0f, 1f);
+            tabBar.anchorMax = new Vector2(1f, 1f);
+            tabBar.pivot = new Vector2(0.5f, 1f);
+            tabBar.offsetMin = new Vector2(40, -300);
+            tabBar.offsetMax = new Vector2(-40, -206);
+            var tabRow = tabBar.gameObject.AddComponent<HorizontalLayoutGroup>();
+            tabRow.spacing = 8;
+            tabRow.childControlWidth = tabRow.childControlHeight = true;
+            tabRow.childForceExpandWidth = tabRow.childForceExpandHeight = true;
+            string[] tabNames = System.Enum.GetNames(typeof(SkinsTab));
+            var tabs = new Button[tabNames.Length];
+            for (int i = 0; i < tabs.Length; i++)
+            {
+                tabs[i] = MakeButton(tabBar, tabNames[i], tabNames[i], Vector2.zero, new Vector2(160, 94), ButtonStyle.Secondary);
+                var label = tabs[i].GetComponentInChildren<TMP_Text>();
+                label.enableAutoSizing = true;
+                label.fontSizeMin = 12;
+                label.fontSizeMax = 22;
+            }
+
+            // One scrolling list between the tabs and the footer; SkinsView fills it from templates.
             RectTransform scrollRt = NewRect("Scroll", root);
             scrollRt.anchorMin = Vector2.zero;
             scrollRt.anchorMax = Vector2.one;
             scrollRt.offsetMin = new Vector2(40, 200);
-            scrollRt.offsetMax = new Vector2(-40, -200);
+            scrollRt.offsetMax = new Vector2(-40, -320);
             var dragArea = scrollRt.gameObject.AddComponent<Image>();
             dragArea.color = new Color(0f, 0f, 0f, 0f);
             var scroll = scrollRt.gameObject.AddComponent<ScrollRect>();
@@ -1053,14 +1079,44 @@ namespace Echo.Editor
             previewImage.preserveAspect = true;
             previewImage.raycastTarget = false;
             var characterLabel = character.GetComponentInChildren<TMP_Text>().rectTransform;
-            characterLabel.anchorMin = characterLabel.anchorMax = new Vector2(0.5f, 0f);
+            characterLabel.anchorMin = new Vector2(0f, 0f);
+            characterLabel.anchorMax = new Vector2(1f, 0f);
             characterLabel.pivot = new Vector2(0.5f, 0f);
             characterLabel.anchoredPosition = new Vector2(0, 14);
-            characterLabel.sizeDelta = new Vector2(286, 146); // name, then up to two lines of how to unlock
+            characterLabel.sizeDelta = new Vector2(-24, 146); // the card's width: name, then up to two lines of how to unlock
+            // A user revision: a skin pack's four characters in one row.
+            RectTransform packGrid = Grid(root, "PackGridTemplate", new Vector2(235, 400), 4);
             ((TMP_Text)characterLabel.GetComponent<TMP_Text>()).fontSizeMax = 26;
 
             var item = MakeButton(root, "ItemTemplate", "Item", Vector2.zero, new Vector2(490, 120), ButtonStyle.Secondary);
             item.GetComponentInChildren<TMP_Text>().fontSizeMax = 26;
+
+            // A world's card: a little picture (sky, far layer, near layer) over its name and price.
+            RectTransform worldGrid = Grid(root, "WorldGridTemplate", new Vector2(490, 340), 2);
+            var world = MakeButton(root, "WorldTemplate", "World", Vector2.zero, new Vector2(490, 340), ButtonStyle.Secondary);
+            RectTransform picture = NewRect("Preview", (RectTransform)world.transform);
+            picture.anchorMin = picture.anchorMax = new Vector2(0.5f, 1f);
+            picture.pivot = new Vector2(0.5f, 1f);
+            picture.anchoredPosition = new Vector2(0, -16);
+            picture.sizeDelta = new Vector2(456, 200);
+            picture.gameObject.AddComponent<Image>().raycastTarget = false;
+            picture.gameObject.AddComponent<RectMask2D>();
+            foreach (var (layer, height) in new[] { ("Far", 199f), ("Near", 100f) })
+            {
+                RectTransform rt = NewRect(layer, picture);
+                rt.anchorMin = new Vector2(0f, 0f);
+                rt.anchorMax = new Vector2(1f, 0f);
+                rt.pivot = new Vector2(0.5f, 0f);
+                rt.anchoredPosition = Vector2.zero;
+                rt.sizeDelta = new Vector2(0, height);
+                rt.gameObject.AddComponent<Image>().raycastTarget = false;
+            }
+            var worldLabel = world.GetComponentInChildren<TMP_Text>().rectTransform;
+            worldLabel.anchorMin = worldLabel.anchorMax = new Vector2(0.5f, 0f);
+            worldLabel.pivot = new Vector2(0.5f, 0f);
+            worldLabel.anchoredPosition = new Vector2(0, 12);
+            worldLabel.sizeDelta = new Vector2(466, 112);
+            ((TMP_Text)worldLabel.GetComponent<TMP_Text>()).fontSizeMax = 26;
 
             var product = MakeButton(root, "ProductTemplate", "Pack", Vector2.zero, new Vector2(1000, 116), ButtonStyle.Primary);
             product.gameObject.AddComponent<LayoutElement>().preferredHeight = 116;
@@ -1069,8 +1125,14 @@ namespace Echo.Editor
             var restore = MakeButton(root, "Restore", "Restore", new Vector2(-260, -850), new Vector2(460, 110), ButtonStyle.Secondary);
             var close = MakeButton(root, "Close", "Back", new Vector2(260, -850), new Vector2(460, 110), ButtonStyle.Secondary);
 
-            foreach (Component template in new Component[] { header, characterGrid, itemGrid, character, item, product })
+            foreach (Component template in new Component[] { header, characterGrid, itemGrid, character, item, product, worldGrid, world, packGrid })
                 template.gameObject.SetActive(false);
+            WireArray(view, "_tabs", tabs);
+            Wire(view, "_worldGridTemplate", worldGrid);
+            Wire(view, "_packGridTemplate", packGrid);
+            Wire(view, "_worldTemplate", world);
+            Wire(view, "_normalFar", UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(EchoArt.Dir + "/bg_mountains.png"));
+            Wire(view, "_normalNear", UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(EchoArt.Dir + "/bg_graveyard.png"));
 
             Wire(view, "_root", root.gameObject);
             Wire(view, "_scroll", scroll);

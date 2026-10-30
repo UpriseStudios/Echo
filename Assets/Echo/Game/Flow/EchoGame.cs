@@ -480,7 +480,9 @@ namespace Echo.Game.Flow
 
             // Themed Biomes (value-adds doc): the scenery and the night follow the distance; units are metres.
             float metres = PreviewMetres ?? Mathf.Max(0f, _runnerView.Position.x);
-            EnvironmentState env = Biomes.At(metres);
+            // A user revision: a world (or season, or mode) with its own scenery is the whole run, so the Castle, Space
+            // and nightfall never come over it.
+            EnvironmentState env = OwnScenery ? Biomes.At(0f) : Biomes.At(metres);
             if (State == GameState.Running && _activeChallenge != null && !_passedTheirGrave && _run.Distance > _activeChallenge.Distance)
             {
                 _passedTheirGrave = true;
@@ -497,10 +499,18 @@ namespace Echo.Game.Flow
             float viewW = _cameraRig.Right - _cameraRig.Left;
             if (_background != null) _background.Render(_cameraRig.transform.position.x, viewW, _cameraRig.Bottom, _cameraRig.Height, background, env);
             RenderSeasonEffects();
-            // Obstacles keep their contrast at night: against a dark sky they turn pale instead of dark.
-            Color obstacles = Color.Lerp(PaletteSampler.Darker(day, 0.5f), Color.Lerp(day, Color.white, 0.3f), env.Night * 0.75f);
-            _courseView.Render(_course, _cameraRig.Left, _cameraRig.Right, Mathf.Max(0, _run.Tick - 1),
-                background, PaletteSampler.Darker(Color.Lerp(day, background, 0.5f), 0.7f), obstacles);
+            // Obstacles keep their contrast at night: against a dark sky they turn pale instead of dark. A world can set
+            // its own hazard and floor colours (a user revision). A world's hazard colour is chosen to stand out from its
+            // sky and scenery by colour as well as brightness (WorldContrastTests), so it is used as it is; colours drawn
+            // from the sky are kept apart from it by brightness.
+            bool ownHazard = _backdrop != null && _backdrop.HazardColour.a > 0f;
+            Color obstacles = ownHazard ? _backdrop.HazardColour
+                : ColourContrast.Apart(Color.Lerp(PaletteSampler.Darker(day, 0.5f), Color.Lerp(day, Color.white, 0.3f), env.Night * 0.75f),
+                    background, ColourContrast.HazardMin);
+            Color floor = _backdrop != null && _backdrop.FloorColour.a > 0f ? Color.Lerp(_backdrop.FloorColour, background, env.Night * 0.3f)
+                : PaletteSampler.Darker(Color.Lerp(day, background, 0.5f), 0.7f);
+            _courseView.Render(_course, _cameraRig.Left, _cameraRig.Right, Mathf.Max(0, _run.Tick - 1), background,
+                ColourContrast.Apart(floor, background, ColourContrast.FloorMin), obstacles);
             if (_ambient != null)
                 _ambient.Render(env, _runnerView.Position, _cameraRig.Left, _cameraRig.Right, _cameraRig.Bottom, _cameraRig.Height,
                     _background != null ? _background.GraveyardLeft : 0f, _background != null ? _background.NearTileWidth : 0f,
@@ -532,6 +542,8 @@ namespace Echo.Game.Flow
             _prevPlayer = _run.Player;
         }
 
+        int _speedSeen;   // the main game's speed at its last run this session
+
         void PrepareRun()
         {
             _graveyardLook = false;
@@ -539,6 +551,9 @@ namespace Echo.Game.Flow
             ApplyCosmetics(); // an Elementals trial that has run out falls back to the free character here
             if (!CourseIs(_progress.Seed)) _course = new Course(_library, _progress.Seed);
             _run = RunRules.StartRun(_progress, _course, _cfg, RunOptionsNow());
+            // A user revision: the first run after a new best says the game has sped up (tech spec: +5% a best).
+            if (_speedSeen > 0 && _run.SpeedPct > _speedSeen) _hud.QueueToast($"SPEED UP · {_run.SpeedPct}%");
+            _speedSeen = _run.SpeedPct;
             ApplyTwist(_run.Options.Twist);
             _bountySeen = false;
             _duelNemesis = null;
@@ -1020,7 +1035,7 @@ namespace Echo.Game.Flow
             _graveyardLook = false;
             RefreshSeason();
             CheckTeamReveal();
-            _title.Show(_progress.Best);
+            _title.Show(_progress.Best, _cfg.SpeedPctForClears(_progress.Clears));
             _title.SetExitVisible(CanQuit);
             _title.SetDevServer(!_recordingMode && _serviceConfig != null && _serviceConfig.ShowsDevServerTag);
             _title.SetAdButtons(!_recordingMode);

@@ -34,6 +34,7 @@ namespace Echo.Services.Analytics
         public const string GraveyardWeekComplete = "graveyard_week_complete";
         public const string SeasonalAchievement = "seasonal_achievement";
         public const string SeasonalSkinEquipped = "seasonal_skin_equipped";
+        public const string WorldEquipped = "world_equipped";           // a user revision: worlds
         public const string IapPurchase = "iap_purchase";
         public const string UnlockAdWatched = "unlock_ad_watched";   // addition: ad-unlocked characters
         // Value-adds doc.

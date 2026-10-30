@@ -67,6 +67,15 @@ namespace Echo.Game.Views
             if (_nearLayer != null) _nearLayer.sprite = _near;
         }
 
+        Color _farTint = Color.clear, _nearTint = Color.clear;
+
+        /// <summary>A world's own layer colours (a user revision); alpha 0 keeps the colours drawn from the sky.</summary>
+        public void SetTints(Color far, Color near)
+        {
+            _farTint = far;
+            _nearTint = near;
+        }
+
         /// <summary>The RoyalBanners flourish: pennants, lit windows and torches over the Castle.</summary>
         public void SetBanners(bool on) => _banners = on;
 
@@ -76,12 +85,13 @@ namespace Echo.Game.Views
         public void Render(float cameraX, float viewWidth, float viewBottom, float viewHeight, Color background, in EnvironmentState env)
         {
             // Far peaks hazy and a touch lighter than the sky, near layers darker: depth from value, 16-bit style.
-            Color far = Color.Lerp(background, Color.white, 0.14f);
+            Color far = _farTint.a > 0f ? Color.Lerp(_farTint, background, env.Night * 0.45f) : Color.Lerp(background, Color.white, 0.14f);
             far.a = 1f - env.Space;
             Place(_farLayer, _far, cameraX, viewWidth, _farParallax, _farScale, far);
 
             Color near = PaletteSampler.Darker(background, 0.72f);
-            GraveyardLeft = Place(_nearLayer, _near, cameraX, viewWidth, _nearParallax, _nearScale, Faded(near, env.Graveyard));
+            Color worldNear = _nearTint.a > 0f ? Color.Lerp(_nearTint, background, env.Night * 0.35f) : near;
+            GraveyardLeft = Place(_nearLayer, _near, cameraX, viewWidth, _nearParallax, _nearScale, Faded(worldNear, env.Graveyard));
             Place(_castleLayer, _castle, cameraX, viewWidth, _nearParallax, _nearScale, Faded(near, env.Castle - env.Space));
             // The moon surface keeps its own grey: tinted from a near-black sky it would vanish.
             Place(_spaceLayer, _space, cameraX, viewWidth, _nearParallax, _nearScale, Faded(new Color(0.3f, 0.32f, 0.42f), env.Space));

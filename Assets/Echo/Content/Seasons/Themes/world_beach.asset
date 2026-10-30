@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 514eecd290c77574994cd74a5e68239f, type: 3}
+  m_Name: world_beach
+  m_EditorClassIdentifier: Echo.Game::Echo.Game.Seasons.SeasonTheme
+  Id: world_beach
+  Title: Beach
+  PaletteStops:
+  - {r: 0.47843137, g: 0.78431374, b: 0.9411765, a: 1}
+  - {r: 0.3529412, g: 0.6901961, b: 0.9098039, a: 1}
+  - {r: 0.22745098, g: 0.5647059, b: 0.84705883, a: 1}
+  PaletteBlend: 0.9
+  FarLayer: {fileID: 21300000, guid: 8ac3153b343bf1e479fd5336b7faaf00, type: 3}
+  NearLayer: {fileID: 21300000, guid: c8a9f0c5d0aac4b4caa18142308eabe4, type: 3}
+  FarTint: {r: 1, g: 1, b: 1, a: 1}
+  NearTint: {r: 1, g: 1, b: 1, a: 1}
+  FloorColour: {r: 0.84705883, g: 0.72156864, b: 0.47058824, a: 1}
+  HazardColour: {r: 0.6901961, g: 0.0627451, b: 0.16470589, a: 1}
+  Effect: 2
+  EffectSprites:
+  - {fileID: 21300000, guid: 4c0c6a1f1769a4d458a61977c044589f, type: 3}
+  EffectColours:
+  - {r: 1, g: 1, b: 1, a: 1}
+  EffectCount: 6
+  EffectFall: 0.9
+  EffectSway: 0.3
+  EffectBand: 1
+  EffectParallax: 0.4
+  Fireworks: 0
+  FireworkSpark: {fileID: 0}
+  FireworkColours: []
+  FireworksPerMinute: 6
+  ResetShowSeconds: 0
+  ResetShowToast: 
+  Flyer: {fileID: 21300000, guid: daab9172858c63c4a97fbed1309167b4, type: 3}
+  FlyerColour: {r: 1, g: 1, b: 1, a: 1}
+  FlyerEvery: 35
+  FlyerSpeed: 2.6
+  Spike: {fileID: 0}
+  Block: {fileID: 0}
+  GroundTop: {fileID: 0}
+  Grave: {fileID: 0}
+  GraveInColour: 0
+  Headstone: {fileID: 0}
+  GhostAccessory: {fileID: 0}
+  NemesisAccessory: {fileID: 0}
+  DeathLine: 
+  DeathLineNemesisOnly: 0
+  Stinger: {fileID: 0}
+  MusicStems: []
