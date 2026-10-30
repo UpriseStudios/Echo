@@ -614,6 +614,11 @@ namespace Echo.Editor
             var tallyText = MakeText(tally, "Text", "", 24, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -16), new Vector2(940, 70));
             tally.gameObject.SetActive(false);
             Wire(view, "_tally", tally.gameObject);
+            // Modes doc, the Community Graveyard: today's board or the week's, where the watch hint would be.
+            var boardToggle = MakeButton(root, "BoardToggle", "Show this week", new Vector2(0, 590), new Vector2(560, 64), ButtonStyle.Secondary);
+            boardToggle.GetComponentInChildren<TMP_Text>().fontSize = 24;
+            boardToggle.gameObject.SetActive(false);
+            Wire(view, "_boardToggle", boardToggle);
             Wire(view, "_tallyNice", niceFill);
             Wire(view, "_tallyText", tallyText);
             yesterday.color = Soft;

@@ -29,6 +29,9 @@ namespace Echo.Services.Analytics
         public const string OneLifeStarted = "onelife_started";       // One Life
         public const string OneLifeFinished = "onelife_finished";
         public const string OneLifeAbandoned = "onelife_abandoned";
+        public const string GraveyardOpened = "graveyard_opened";     // Community Graveyard
+        public const string GraveyardRunEnd = "graveyard_run_end";
+        public const string GraveyardWeekComplete = "graveyard_week_complete";
         public const string SeasonalAchievement = "seasonal_achievement";
         public const string SeasonalSkinEquipped = "seasonal_skin_equipped";
         public const string IapPurchase = "iap_purchase";

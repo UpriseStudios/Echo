@@ -180,6 +180,33 @@ namespace Echo.Services.Backend
             return Call("SubmitOneLife", args, OneLifeSubmitResult.Failed);
         }
 
+        public Task<GraveyardInfo> GetGraveyardAsync(string dateOverride, bool forceModes) =>
+            Call("GetGraveyard", ModeArgs(dateOverride, forceModes), GraveyardInfo.Failed);
+
+        public Task<GraveyardSubmitResult> SubmitGraveyardRunAsync(string date, string setVersion, string packet, string dateOverride, bool forceModes)
+        {
+            var args = ModeArgs(dateOverride, forceModes);
+            args["date"] = date;
+            args["setVersion"] = setVersion;
+            args["packet"] = packet;
+            return Call("SubmitGraveyardRun", args, GraveyardSubmitResult.Failed);
+        }
+
+        public Task<DailyRunResult> GetGraveyardRunAsync(int rank, bool weekly, string dateOverride, bool forceModes)
+        {
+            var args = ModeArgs(dateOverride, forceModes);
+            args["rank"] = rank;
+            args["weekly"] = weekly;
+            return Call("GetGraveyardRun", args, DailyRunResult.Failed);
+        }
+
+        public Task<DailyRunResult> GetOneLifeRunAsync(int rank, string dateOverride, bool forceModes)
+        {
+            var args = ModeArgs(dateOverride, forceModes);
+            args["rank"] = rank;
+            return Call("GetOneLifeRun", args, DailyRunResult.Failed);
+        }
+
         public async Task<string> GetPlayerNameAsync()
         {
             if (!SignedIn) return null;

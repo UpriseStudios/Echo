@@ -36,6 +36,9 @@ namespace EchoCloud
         public List<DailyBoardEntry> Daily { get; set; } = new List<DailyBoardEntry>();
         public List<DailyBoardEntry> Weekly { get; set; } = new List<DailyBoardEntry>();
 
+        /// <summary>Last week's summary, if you played it (modes doc: the end of the week); null otherwise.</summary>
+        public GraveyardWeekSummary LastWeek { get; set; }
+
         /// <summary>Rewards granted from weeks that have closed since you last looked (cosmetic and badge ids).</summary>
         public List<string> Rewards { get; set; } = new List<string>();
     }

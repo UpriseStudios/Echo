@@ -19,22 +19,50 @@ namespace Echo.Game.Audio
         int _ghosts;
         bool _enabled = true;
 
+        AudioClip[] _playing;
+
         void Start()
         {
             _sources = new AudioSource[_stems.Length];
             _level = new float[_stems.Length];
-            double startAt = AudioSettings.dspTime + 0.2;
             for (int i = 0; i < _stems.Length; i++)
             {
                 var src = gameObject.AddComponent<AudioSource>();
-                src.clip = _stems[i];
                 src.loop = true;
                 src.playOnAwake = false;
                 src.volume = 0f;
-                src.PlayScheduled(startAt);
                 _sources[i] = src;
             }
             if (_level.Length > 0) _level[0] = 1f;
+            Play(_wanted ?? _stems);
+        }
+
+        AudioClip[] _wanted;
+
+        /// <summary>
+        /// A user revision: a season's own stems (Christmas), or null for the main tune. Every stem restarts together, so
+        /// they stay in step; only called between runs (seasons doc: checked at the title and run start).
+        /// </summary>
+        public void SetStems(AudioClip[] stems)
+        {
+            AudioClip[] wanted = stems != null && stems.Length == _stems.Length ? stems : _stems;
+            _wanted = wanted;
+            if (_sources != null && wanted != _playing) Play(wanted);
+        }
+
+        /// <summary>The stems playing now (tests).</summary>
+        public AudioClip[] Playing => _playing;
+
+        void Play(AudioClip[] stems)
+        {
+            _playing = stems;
+            double startAt = AudioSettings.dspTime + 0.2;
+            for (int i = 0; i < _sources.Length; i++)
+            {
+                _sources[i].Stop();
+                _sources[i].clip = stems[i];
+                _sources[i].PlayScheduled(startAt);
+            }
         }
 
         public void SetGhostsOnScreen(int ghosts) => _ghosts = ghosts;

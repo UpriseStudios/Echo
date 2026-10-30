@@ -11,6 +11,12 @@ namespace Echo.Game.Seasons
         public const string Easter = "easter";
         public const string AprilFools = "aprilfools";
 
+        /// <summary>
+        /// A user revision: the Community Graveyard's own look, shown in its lobby and runs over any season. Never
+        /// scheduled.
+        /// </summary>
+        public const string Graveyard = "mode_graveyard";
+
         /// <summary>Seasons phase 1: a theme that exercises every override. Never scheduled; only forced.</summary>
         public const string Test = "test";
     }

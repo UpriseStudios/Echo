@@ -80,6 +80,30 @@ namespace EchoCloud
             public string Leaders { get; set; } = "";
         }
 
+        /// <summary>A user revision: the run at a rank on today's board, whole (its taps and the leaders it faced), to watch.</summary>
+        public async Task<GetDailyRunResponse> GetRunAsync(int rank)
+        {
+            var r = new GetDailyRunResponse();
+            if (!Open) return FailRun(r, "closed");
+            List<LeaderboardRow> top = rank >= 1 && rank <= 100 ? await _board.TopAsync(rank) : new List<LeaderboardRow>();
+            LeaderboardRow row = top.Count >= rank && rank >= 1 ? top[rank - 1] : null;
+            if (row == null) return FailRun(r, "not-found");
+            Record rec = Read<Record>(await _days.GetAsync(Bucket(DateKey(Today)), row.PlayerId));
+            if (rec == null || string.IsNullOrEmpty(rec.Packet)) return FailRun(r, "not-available");
+            r.Ok = true;
+            r.Packet = rec.Packet;
+            r.Name = row.Name;
+            r.Rank = row.Rank;
+            r.Distance = row.Distance;
+            return r;
+        }
+
+        static GetDailyRunResponse FailRun(GetDailyRunResponse r, string error)
+        {
+            r.Error = error;
+            return r;
+        }
+
         public sealed class Meta
         {
             public List<string> Days { get; set; } = new List<string>();

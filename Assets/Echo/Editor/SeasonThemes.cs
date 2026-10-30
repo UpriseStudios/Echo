@@ -20,13 +20,22 @@ namespace Echo.Editor
         public static SeasonTheme[] Build()
         {
             if (!AssetDatabase.IsValidFolder(Dir)) AssetDatabase.CreateFolder("Assets/Echo/Content/Seasons", "Themes");
-            var themes = new List<SeasonTheme> { Halloween(), BonfireNight(), Christmas(), NewYear(), Valentines(), Test() };
+            var themes = new List<SeasonTheme> { Halloween(), BonfireNight(), Christmas(), NewYear(), Valentines(), Graveyard(), Test() };
             foreach (SeasonTheme t in themes) EditorUtility.SetDirty(t);
             return themes.ToArray();
         }
 
         // Seasons doc: falling snow, snow-capped obstacles, ghosts in Santa hats, snowman graves, a red-nosed Nemesis.
-        static SeasonTheme Christmas() => Snowy(Load(SeasonIds.Christmas), "Christmas");
+        static SeasonTheme Christmas()
+        {
+            SeasonTheme t = Snowy(Load(SeasonIds.Christmas), "Christmas");
+            // A user revision: now and then Santa's sleigh crosses the sky over the town, as a silhouette.
+            t.Flyer = Load<Sprite>(SeasonArt.SleighPath);
+            t.FlyerColour = new Color(0.08f, 0.1f, 0.18f, 0.85f);
+            t.FlyerEvery = 40f;
+            t.FlyerSpeed = 2.4f;
+            return t;
+        }
 
         // New Year inside Christmas: the same snow, plus fireworks, and a show when the Daily Haunt board resets.
         static SeasonTheme NewYear()
@@ -39,6 +48,7 @@ namespace Echo.Editor
             t.ResetShowSeconds = 120f;
             t.ResetShowToast = "HAPPY NEW YEAR!";
             t.Stinger = null;
+            t.MusicStems = Carol(CarolMusic.AuldLangSyne);
             return t;
         }
 
@@ -75,6 +85,27 @@ namespace Echo.Editor
             return t;
         }
 
+        // A user revision: the Community Graveyard's own look, over any season: a sickly green dusk, dead trees and a
+        // ruined chapel, a crowded graveyard, low fog and will-o'-wisps drifting through. Never scheduled.
+        static SeasonTheme Graveyard()
+        {
+            const string id = SeasonIds.Graveyard;
+            SeasonTheme t = Plain(Load(id), "Community Graveyard");
+            t.PaletteStops = new[] { Hex(0x4A6450), Hex(0x34404E), Hex(0x2A2640) };
+            t.PaletteBlend = 0.85f;
+            t.FarLayer = Sprite(id, SeasonArt.Far);
+            t.NearLayer = Sprite(id, SeasonArt.Near);
+            t.Effect = SeasonEffect.Drifting;
+            t.EffectSprites = new[] { Load<Sprite>(SeasonArt.EffectPath(id, 0)), Load<Sprite>(SeasonArt.EffectPath(id, 1)), Load<Sprite>(SeasonArt.EffectPath(id, 2)) };
+            t.EffectColours = new[] { new Color(0.82f, 0.9f, 0.84f, 0.75f), new Color(0.78f, 0.86f, 0.82f, 0.6f), Hex(0x9CFFB0) };
+            t.EffectCount = 27;
+            t.EffectFall = -0.35f;
+            t.EffectSway = 0.12f;
+            t.EffectBand = 0.4f;
+            t.EffectParallax = 0.5f;
+            return t;
+        }
+
         // Every override off, for a theme to switch on only what it needs.
         static SeasonTheme Plain(SeasonTheme t, string title)
         {
@@ -85,11 +116,13 @@ namespace Echo.Editor
             t.Effect = SeasonEffect.None;
             t.EffectSprites = new Sprite[0];
             t.EffectColours = new Color[0];
+            t.EffectBand = 1f;
             t.Fireworks = false;
             t.FireworkSpark = null;
             t.FireworkColours = new Color[0];
             t.ResetShowSeconds = 0f;
             t.ResetShowToast = "";
+            t.Flyer = null;
             t.Spike = t.Block = t.GroundTop = null;
             t.Grave = t.Headstone = null;
             t.GraveInColour = false;
@@ -97,6 +130,7 @@ namespace Echo.Editor
             t.DeathLine = "";
             t.DeathLineNemesisOnly = false;
             t.Stinger = null;
+            t.MusicStems = new AudioClip[0];
             return t;
         }
 
@@ -120,6 +154,7 @@ namespace Echo.Editor
             t.FireworkColours = new Color[0];
             t.ResetShowSeconds = 0f;
             t.ResetShowToast = "";
+            t.Flyer = null;
             t.Spike = Sprite(art, SeasonArt.Spike);
             t.Block = Sprite(art, SeasonArt.Block);
             t.GroundTop = Sprite(art, SeasonArt.GroundTop);
@@ -131,6 +166,8 @@ namespace Echo.Editor
             t.DeathLine = "";
             t.DeathLineNemesisOnly = false;
             t.Stinger = Load<AudioClip>(PlaceholderAudio.PathFor(PlaceholderAudio.ChristmasStinger));
+            // A user revision: "Jingle Bells" in place of the main tune (New Year swaps in "Auld Lang Syne").
+            t.MusicStems = Carol(CarolMusic.JingleBells);
             return t;
         }
 
@@ -161,6 +198,7 @@ namespace Echo.Editor
             t.DeathLine = "Test season: every override is on.";
             t.DeathLineNemesisOnly = false;
             t.Stinger = Load<AudioClip>(PlaceholderAudio.PathFor(PlaceholderAudio.TestSeasonStinger));
+            t.MusicStems = new AudioClip[0];
             return t;
         }
 
@@ -176,6 +214,8 @@ namespace Echo.Editor
             theme.Id = id;
             return theme;
         }
+
+        static AudioClip[] Carol(CarolMusic carol) => Array.ConvertAll(carol.StemNames, n => Load<AudioClip>(PlaceholderAudio.PathFor(n)));
 
         static Sprite Sprite(string season, string part) => Load<Sprite>(SeasonArt.PathFor(season, part));
 

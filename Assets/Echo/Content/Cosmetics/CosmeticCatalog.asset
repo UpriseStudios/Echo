@@ -2179,6 +2179,44 @@ MonoBehaviour:
     ScarfAnchor: {x: -0.03125, y: 0.53125}
     Reaction: 0
     HeadTop: 0.875
+  - Id: char_gravekeeper
+    DisplayName: Gravekeeper
+    Type: 3
+    Color: {r: 0.24313726, g: 0.2901961, b: 0.22745098, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 1
+    UnlockText: 'Community Graveyard: play all 7 days, 4 weeks'
+    RunFrames:
+    - {fileID: 21300000, guid: 472ce41492efe3140b25df1e92cf4ca1, type: 3}
+    - {fileID: 21300000, guid: 1c124975a27508b49b5e0d8153fd32ed, type: 3}
+    - {fileID: 21300000, guid: 0c8e15c7dbb966a41b47d118de12a36c, type: 3}
+    - {fileID: 21300000, guid: d445f22af936ca9489d6618f524de7c2, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 45afcb9986017dd41808a90badc9d52c, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: d11858004b9cc2347a9e6f156f186e34, type: 3}
+    - {fileID: 21300000, guid: fac6d394867f13e45869c616dd7f6ac0, type: 3}
+    - {fileID: 21300000, guid: 8ddc35ec2467eaa469b0d55d50372851, type: 3}
+    - {fileID: 21300000, guid: 042a25b919c5fd24e8a14f73dd8fd2aa, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: b98b0ba23c6fa1f439046de81007e95d, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.90625
   - Id: runner_default
     DisplayName: White
     Type: 0

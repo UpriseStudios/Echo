@@ -21,13 +21,15 @@ namespace Echo.Game.Views
         [SerializeField] Material _material;
 
         SpriteRenderer[] _pool, _sparks;
+        SpriteRenderer _flyer;
         SeasonTheme _theme;
-        bool _falling, _fireworks, _shown;
+        bool _falling, _drifting, _fireworks, _flying, _shown;
 
         void Awake()
         {
             _pool = Pool("Particle", MaxParticles);
             _sparks = Pool("Spark", MaxBursts * SparksPerBurst);
+            _flyer = Pool("Flyer", 1)[0];
         }
 
         SpriteRenderer[] Pool(string name, int count)
@@ -50,8 +52,10 @@ namespace Echo.Game.Views
         {
             _theme = theme;
             _falling = theme != null && theme.Effect == SeasonEffect.Falling && theme.EffectSprites.Length > 0;
+            _drifting = theme != null && theme.Effect == SeasonEffect.Drifting && theme.EffectSprites.Length > 0;
             _fireworks = theme != null && theme.Fireworks && theme.FireworkSpark != null && theme.FireworksPerMinute > 0f;
-            if (!_falling && !_fireworks) Hide();
+            _flying = theme != null && theme.Flyer != null && theme.FlyerEvery > 0f && theme.FlyerSpeed > 0f;
+            if (!_falling && !_drifting && !_fireworks && !_flying) Hide();
         }
 
         void Hide()
@@ -59,20 +63,47 @@ namespace Echo.Game.Views
             if (!_shown || _pool == null) return;
             foreach (SpriteRenderer sr in _pool) sr.enabled = false;
             foreach (SpriteRenderer sr in _sparks) sr.enabled = false;
+            _flyer.enabled = false;
             _shown = false;
         }
 
         /// <param name="show">0 to 1: the New Year show at the board reset, when fireworks go off ten times as often.</param>
         public void Render(float left, float right, float bottom, float height, float time, float show = 0f)
         {
-            if (_pool == null || (!_falling && !_fireworks))
+            if (_pool == null || (!_falling && !_drifting && !_fireworks && !_flying))
             {
                 Hide();
                 return;
             }
             _shown = true;
-            Falling(left, right, bottom, height, time);
+            if (_drifting) Drifting(left, right, bottom, height, time);
+            else Falling(left, right, bottom, height, time);
             Fireworks(left, right, bottom, height, time, show);
+            Flyer(left, right, bottom, height, time);
+        }
+
+        // Now and then a silhouette crosses high in the sky, left to right, on a gentle rise and fall (Santa's sleigh).
+        void Flyer(float left, float right, float bottom, float height, float time)
+        {
+            if (!_flying)
+            {
+                _flyer.enabled = false;
+                return;
+            }
+            float span = right - left + 4f;
+            int pass = Mathf.FloorToInt(time / _theme.FlyerEvery);
+            float age = time - pass * _theme.FlyerEvery;
+            if (age * _theme.FlyerSpeed > span)
+            {
+                _flyer.enabled = false;
+                return;
+            }
+            float x = left - 2f + age * _theme.FlyerSpeed;
+            float y = bottom + height * Mathf.Lerp(0.72f, 0.88f, Hash01(pass, 10)) + 0.25f * Mathf.Sin(age * 1.6f);
+            _flyer.sprite = _theme.Flyer;
+            _flyer.color = _theme.FlyerColour;
+            _flyer.transform.localPosition = new Vector3(SimUnits.Pixel(x), SimUnits.Pixel(y), 0f);
+            _flyer.enabled = true;
         }
 
         void Falling(float left, float right, float bottom, float height, float time)
@@ -92,6 +123,32 @@ namespace Echo.Game.Views
                 float sway = _theme.EffectSway * Mathf.Sin(time * Mathf.Lerp(0.8f, 1.8f, v) + u * 6.283f);
                 float x = left - 0.5f + Mathf.Repeat(u * width - left * _theme.EffectParallax + sway, width);
                 float y = bottom + height + 0.5f - Mathf.Repeat(v * (height + 1f) + time * fall, height + 1f);
+                sr.sprite = _theme.EffectSprites[i % _theme.EffectSprites.Length];
+                sr.color = _theme.EffectColours.Length > 0 ? _theme.EffectColours[i % _theme.EffectColours.Length] : Color.white;
+                sr.transform.localPosition = new Vector3(SimUnits.Pixel(x), SimUnits.Pixel(y), 0f);
+                sr.enabled = true;
+            }
+        }
+
+        // Low sprites crossing the view sideways at their own pace, bobbing gently (the Community Graveyard's fog).
+        void Drifting(float left, float right, float bottom, float height, float time)
+        {
+            int count = Mathf.Min(_theme.EffectCount, MaxParticles);
+            float width = right - left + 4f;
+            float band = height * _theme.EffectBand;
+            for (int i = 0; i < MaxParticles; i++)
+            {
+                SpriteRenderer sr = _pool[i];
+                if (i >= count)
+                {
+                    sr.enabled = false;
+                    continue;
+                }
+                float u = Hash01(i, 1), v = Hash01(i, 2), w = Hash01(i, 3);
+                float drift = _theme.EffectFall * Mathf.Lerp(0.5f, 1.5f, w);
+                float bob = _theme.EffectSway * Mathf.Sin(time * Mathf.Lerp(0.4f, 0.9f, v) + u * 6.283f);
+                float x = left - 2f + Mathf.Repeat(u * width - left * _theme.EffectParallax + time * drift, width);
+                float y = bottom + v * band + bob;
                 sr.sprite = _theme.EffectSprites[i % _theme.EffectSprites.Length];
                 sr.color = _theme.EffectColours.Length > 0 ? _theme.EffectColours[i % _theme.EffectColours.Length] : Color.white;
                 sr.transform.localPosition = new Vector3(SimUnits.Pixel(x), SimUnits.Pixel(y), 0f);

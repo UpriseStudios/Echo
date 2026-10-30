@@ -135,6 +135,12 @@ namespace Echo.Tests.PlayMode
             Application.targetFrameRate = -1;
             QualitySettings.vSyncCount = 0;
 
+            // Earlier tests leave garbage behind; collect it and run its finalizers now, so neither a collection nor the
+            // finalizer thread (which can allocate, and the heap reading counts every thread) lands in a measured second.
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+
             // Guard: the heap reading must register a small allocation, or a pass would mean nothing.
             long probe = GC.GetTotalMemory(false);
             var junk = new byte[256][];

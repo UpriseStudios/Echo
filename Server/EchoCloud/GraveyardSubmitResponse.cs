@@ -11,6 +11,9 @@ namespace EchoCloud
         public bool NewBest { get; set; }
         public int BestToday { get; set; }
         public int WeekTotal { get; set; }
+
+        /// <summary>Days of this week with a run (7: the week is complete).</summary>
+        public int DaysPlayed { get; set; }
         public int DailyRank { get; set; }
         public int WeeklyRank { get; set; }
 

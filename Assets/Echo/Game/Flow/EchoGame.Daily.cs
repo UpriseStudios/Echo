@@ -59,6 +59,7 @@ namespace Echo.Game.Flow
             _dailyLobby.PlayClicked += OnLobbyPlay;   // the Daily Haunt's, or One Life's
             _dailyLobby.BackClicked += CloseMenu;
             _dailyLobby.RowClicked += OnDailyRowClicked;
+            _dailyLobby.BoardToggleClicked += OnGraveyardBoardToggle;
         }
 
         static string TodayUtc() => DateTime.UtcNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -83,6 +84,7 @@ namespace Echo.Game.Flow
             _dailyLabelIn = 1f;
             if (State == GameState.Title) RefreshDailyButton();
             if (_lobbyOneLife) TickOneLifeLabels();
+            else if (_lobbyGraveyard) TickGraveyardLabels();
             else if (_dailyLobby != null && _dailyLobby.IsOpen && _daily != null && _daily.Ok)
             {
                 int left = Math.Max(0, _daily.SecondsLeft - (int)(Time.realtimeSinceStartup - _dailyFetchedAt));
@@ -102,6 +104,8 @@ namespace Echo.Game.Flow
             _serverDay = null;
             _dailyLeaders.Clear();
             _dailyOwn.Clear();
+            _graveyard = null;
+            _graveyardGhosts.Clear();
         }
 
         // ---- Banish your own ghost (a user decision: own ghosts only, 3 a day, a rewarded ad) ----
@@ -179,11 +183,18 @@ namespace Echo.Game.Flow
         bool _dailyWatchBusy;
         int _dailyWatchCredit;   // the rank an ad has paid for whose run hasn't arrived yet
 
+        // The board showing in the lobby: the Daily Haunt's, One Life's, or the Graveyard's (today's or the week's).
+        List<DailyBoardRow> LobbyBoard() =>
+            _lobbyOneLife ? (_oneLife != null && _oneLife.Ok ? _oneLife.Board : null)
+            : _lobbyGraveyard ? (_graveyard != null && _graveyard.Ok ? (_graveyardWeekly ? _graveyard.Weekly : _graveyard.Daily) : null)
+            : _daily != null && _daily.Ok ? _daily.Board : null;
+
+        // A user revision: every board's top runs can be watched the same way, a rewarded ad unless it's your own.
         void OnDailyRowClicked(int index)
         {
-            if (_lobbyOneLife) return;   // One Life's runs aren't for watching
-            if (_daily == null || !_daily.Ok || index < 0 || index >= _daily.Board.Count || _dailyWatchBusy || !_dailyLobby.IsOpen) return;
-            DailyBoardRow row = _daily.Board[index];
+            List<DailyBoardRow> board = LobbyBoard();
+            if (board == null || index < 0 || index >= board.Count || _dailyWatchBusy || !_dailyLobby.IsOpen) return;
+            DailyBoardRow row = board[index];
             if (row.IsYou || _dailyWatchCredit == row.Rank)
             {
                 WatchDailyRun(row);
@@ -207,7 +218,10 @@ namespace Echo.Game.Flow
         {
             _dailyWatchBusy = true;
             _dailyLobby.SetStatus(row.IsYou ? "Fetching your run..." : $"Fetching {row.Name}'s run...");
-            DailyRunResult r = await _services.Backend.GetDailyRunAsync(row.Rank, DailyDateOverride);
+            bool oneLife = _lobbyOneLife, graveyard = _lobbyGraveyard, weekly = _graveyardWeekly;
+            DailyRunResult r = oneLife ? await _services.Backend.GetOneLifeRunAsync(row.Rank, DailyDateOverride, OneLifeForced)
+                : graveyard ? await _services.Backend.GetGraveyardRunAsync(row.Rank, weekly, DailyDateOverride, GraveyardForced)
+                : await _services.Backend.GetDailyRunAsync(row.Rank, DailyDateOverride);
             _dailyWatchBusy = false;
             if (this == null || !_dailyLobby.IsOpen) return;
             if (!r.Ok || !ReelPacket.TryDecode(r.Packet, out Reel reel) || !reel.PlayableOn(_contentVersion))
@@ -217,9 +231,11 @@ namespace Echo.Game.Flow
             }
             _dailyWatchCredit = 0;
             LastDailyRunWatched = r;
-            Log(AnalyticsEvents.DailyRunWatched, ("rank", r.Rank), ("own", row.IsYou));
+            Log(AnalyticsEvents.DailyRunWatched, ("rank", r.Rank), ("own", row.IsYou),
+                ("mode", oneLife ? Echo.Core.Modes.ModeIds.OneLife : graveyard ? Echo.Core.Modes.ModeIds.Graveyard : "daily"));
             _dailyLobby.Hide();
-            StartExternalReplay(reel, $"#{r.Rank} · {r.Name} · {r.Distance} m", OpenDailyLobby);
+            Action back = oneLife ? OpenOneLifeLobby : graveyard ? (Action)OpenGraveyardLobby : OpenDailyLobby;
+            StartExternalReplay(reel, $"#{r.Rank} · {r.Name} · {r.Distance} m" + (graveyard && weekly ? " (best of the week)" : ""), back);
         }
 
         /// <summary>The last run fetched to watch, for tests.</summary>
@@ -239,6 +255,8 @@ namespace Echo.Game.Flow
             OpenMenu(() =>
             {
                 _lobbyOneLife = false;
+                _lobbyGraveyard = false;
+                ShowGraveyardLook(false);
                 _dailyLobby.SetPlay(false, "Play today's course");
                 _dailyLobby.Show();
                 _dailyLobby.SetHeading("Daily Haunt");

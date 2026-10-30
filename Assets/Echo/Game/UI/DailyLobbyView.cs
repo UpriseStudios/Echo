@@ -58,6 +58,19 @@ namespace Echo.Game.UI
             if (_watchHint != null && !on) _watchHint.gameObject.SetActive(false);
         }
 
+        // Modes doc, the Community Graveyard: its two boards, today's and the week's, one at a time.
+        [SerializeField] Button _boardToggle;
+
+        public event Action BoardToggleClicked;
+
+        /// <summary>The board toggle's label ("Show this week"), or null to hide it.</summary>
+        public void SetBoardToggle(string label)
+        {
+            if (_boardToggle == null) return;
+            _boardToggle.gameObject.SetActive(label != null);
+            if (label != null) _boardToggle.GetComponentInChildren<TMP_Text>().text = label;
+        }
+
         [SerializeField] GameObject _tally;
         [SerializeField] RectTransform _tallyNice;
         [SerializeField] TMP_Text _tallyText;
@@ -97,6 +110,7 @@ namespace Echo.Game.UI
         {
             _play.onClick.AddListener(() => PlayClicked?.Invoke());
             _back.onClick.AddListener(() => BackClicked?.Invoke());
+            if (_boardToggle != null) _boardToggle.onClick.AddListener(() => BoardToggleClicked?.Invoke());
             for (int i = 0; i < _rows.Length; i++)
             {
                 int index = i;
@@ -110,6 +124,7 @@ namespace Echo.Game.UI
         public void Show()
         {
             _root.SetActive(true);
+            SetBoardToggle(null);
             SetMessage("Checking today's course...", playable: false);
             SetLoading(true);
         }
@@ -160,6 +175,7 @@ namespace Echo.Game.UI
             _yesterday.text = "";
             _lines = 0;
             if (_watchHint != null) _watchHint.gameObject.SetActive(false);
+            SetBoardToggle(null);
             foreach (TMP_Text row in _rows) row.text = "";
         }
 

@@ -37,6 +37,10 @@ namespace Echo.Editor
             Write(StemNames[3], Stem(Pad));
             Write(StemNames[4], Stem(Arp));
             Write(StemNames[5], Stem(Lead));
+            // A user revision: Christmas and New Year have their own carols (CarolMusic), six stems like these.
+            foreach (CarolMusic carol in new[] { CarolMusic.JingleBells, CarolMusic.AuldLangSyne })
+                for (int i = 0; i < carol.StemNames.Length; i++)
+                    Write(carol.StemNames[i], Loop(carol.Stems[i], carol.Samples));
             Write(Jump, Sfx(0.08, (t, d) => Square(Lerp(880, 1320, t / d), t) * Env(t, d, 0.005)));
             Write(NearMiss, Sfx(0.28, (t, d) => Noise(t) * Math.Sin(Math.PI * t / d) * 0.6));
             Write(Death, Sfx(0.32, (t, d) => Crush(Square(Lerp(220, 55, t / d), t) * 0.7 + Noise(t) * 0.4, 6) * Env(t, d, 0.002)));
@@ -112,6 +116,13 @@ namespace Echo.Editor
         static float[] Stem(Func<double, double> f)
         {
             var data = new float[StemSamples];
+            for (int i = 0; i < data.Length; i++) data[i] = (float)Clamp(f((double)i / Rate));
+            return data;
+        }
+
+        static float[] Loop(Func<double, double> f, int samples)
+        {
+            var data = new float[samples];
             for (int i = 0; i < data.Length; i++) data[i] = (float)Clamp(f((double)i / Rate));
             return data;
         }

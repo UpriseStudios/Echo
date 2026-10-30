@@ -102,7 +102,7 @@ namespace Echo.Tests.PlayMode
             yield return Frames(3);
             Assert.AreEqual("One Life", Find("DailyLobby/Heading").GetComponent<TMP_Text>().text);
             StringAssert.Contains("BraveGhost#1111", Text("DailyLobby/Row0"));
-            Assert.IsFalse(Showing("DailyLobby/WatchHint"), "One Life's runs aren't for watching");
+            Assert.IsTrue(Showing("DailyLobby/WatchHint"), "a user revision: One Life's runs can be watched");
             StringAssert.Contains("Start your one run", Text("DailyLobby/Play"));
             Click("DailyLobby/Play");
             yield return null;
@@ -145,6 +145,17 @@ namespace Echo.Tests.PlayMode
             Assert.IsFalse(Showing("DailyLobby/Play"), "today's run is had");
             StringAssert.Contains("Your run today", Find("DailyLobby/You").GetComponent<TMP_Text>().text);
             Assert.AreEqual(1, backend.OneLifeSubmissions);
+
+            // A user revision: today's runs can be watched (your own needs no ad).
+            Assert.IsTrue(Showing("DailyLobby/WatchHint"));
+            StringAssert.Contains("MockRunner", Text("DailyLobby/Row1"));
+            Click("DailyLobby/Row1");
+            yield return Frames(2);
+            Assert.AreEqual(GameState.Replay, game.State);
+            Assert.IsTrue(game.CurrentReplay.Reel.Options.OneLife);
+            Click("Replay/Exit");
+            yield return Frames(3);
+            Assert.AreEqual("One Life", Find("DailyLobby/Heading").GetComponent<TMP_Text>().text, "back in One Life's lobby");
         }
 
         [UnityTest, Timeout(300000)]

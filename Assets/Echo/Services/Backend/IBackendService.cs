@@ -65,6 +65,24 @@ namespace Echo.Services.Backend
 
         Task<OneLifeSubmitResult> SubmitOneLifeAsync(string date, string token, string packet, string dateOverride, bool forceModes);
 
+        /// <summary>
+        /// The Community Graveyard (modes doc): the week's course, today's ghosts and their version, both boards, your
+        /// standing, last week's summary and rewards from weeks since closed.
+        /// </summary>
+        Task<GraveyardInfo> GetGraveyardAsync(string dateOverride, bool forceModes);
+
+        /// <summary>Sends a finished Graveyard run, with the ghost set version it was played against.</summary>
+        Task<GraveyardSubmitResult> SubmitGraveyardRunAsync(string date, string setVersion, string packet, string dateOverride, bool forceModes);
+
+        /// <summary>
+        /// A user revision: a run on the Graveyard's board to watch, whole (today's, or for the week's board that player's
+        /// best single run of the week). After a rewarded ad, unless it's your own.
+        /// </summary>
+        Task<DailyRunResult> GetGraveyardRunAsync(int rank, bool weekly, string dateOverride, bool forceModes);
+
+        /// <summary>A user revision: a run on today's One Life board to watch (after a rewarded ad, unless it's your own).</summary>
+        Task<DailyRunResult> GetOneLifeRunAsync(int rank, string dateOverride, bool forceModes);
+
         /// <summary>The player's generated online name (as on the boards), or null when not signed in.</summary>
         Task<string> GetPlayerNameAsync();
 

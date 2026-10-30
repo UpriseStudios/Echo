@@ -11,6 +11,7 @@ namespace Echo.Game.UI
             id.StartsWith("team_nice_") ? "<color=#FFE9A0>[NICE]</color> "
             : id.StartsWith("team_naughty_") ? "<color=#FF7A6A>[NAUGHTY]</color> "
             : id.StartsWith("onelife_") ? "<color=#73F2FF>[ONE LIFE]</color> "
+            : id.StartsWith("gravekeeper_") ? "<color=#B8C8B0>[GRAVEKEEPER]</color> "
             : "";
 
         /// <summary>Its name in the profile, e.g. "Team Nice 2026".</summary>
@@ -21,6 +22,8 @@ namespace Echo.Game.UI
                 return $"Team {(parts[1] == "nice" ? "Nice" : "Naughty")} {parts[2]}";
             if (parts.Length == 2 && parts[0] == "onelife" && parts[1].Length == 8)
                 return $"One Life top 100, {parts[1].Substring(6, 2)}/{parts[1].Substring(4, 2)}/{parts[1].Substring(0, 4)}";
+            if (parts.Length == 2 && parts[0] == "gravekeeper" && parts[1].Length == 8)
+                return $"Gravekeeper, week of {parts[1].Substring(6, 2)}/{parts[1].Substring(4, 2)}/{parts[1].Substring(0, 4)}";
             return id;
         }
 

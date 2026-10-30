@@ -24,6 +24,7 @@ MonoBehaviour:
   EffectCount: 40
   EffectFall: 1.2
   EffectSway: 0.3
+  EffectBand: 1
   EffectParallax: 0.3
   Fireworks: 0
   FireworkSpark: {fileID: 0}
@@ -31,6 +32,10 @@ MonoBehaviour:
   FireworksPerMinute: 6
   ResetShowSeconds: 0
   ResetShowToast: 
+  Flyer: {fileID: 0}
+  FlyerColour: {r: 0, g: 0, b: 0, a: 1}
+  FlyerEvery: 45
+  FlyerSpeed: 2.4
   Spike: {fileID: 0}
   Block: {fileID: 0}
   GroundTop: {fileID: 0}
@@ -42,3 +47,4 @@ MonoBehaviour:
   DeathLine: It's complicated.
   DeathLineNemesisOnly: 1
   Stinger: {fileID: 0}
+  MusicStems: []

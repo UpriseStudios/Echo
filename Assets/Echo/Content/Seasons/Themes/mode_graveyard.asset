@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 514eecd290c77574994cd74a5e68239f, type: 3}
+  m_Name: mode_graveyard
+  m_EditorClassIdentifier: Echo.Game::Echo.Game.Seasons.SeasonTheme
+  Id: mode_graveyard
+  Title: Community Graveyard
+  PaletteStops:
+  - {r: 0.2901961, g: 0.39215687, b: 0.3137255, a: 1}
+  - {r: 0.20392157, g: 0.2509804, b: 0.30588236, a: 1}
+  - {r: 0.16470589, g: 0.14901961, b: 0.2509804, a: 1}
+  PaletteBlend: 0.85
+  FarLayer: {fileID: 21300000, guid: 5d943944c38477c478076e721e791a78, type: 3}
+  NearLayer: {fileID: 21300000, guid: 890d90982b2791149bcef5a9bd40f7a2, type: 3}
+  Effect: 2
+  EffectSprites:
+  - {fileID: 21300000, guid: 6839981418120a54cb956a328a95d961, type: 3}
+  - {fileID: 21300000, guid: 84b0588ff6a1c1b4ca2b73d1906bd122, type: 3}
+  - {fileID: 21300000, guid: 413dbb98695737d408c2d0aab50ce925, type: 3}
+  EffectColours:
+  - {r: 0.82, g: 0.9, b: 0.84, a: 0.75}
+  - {r: 0.78, g: 0.86, b: 0.82, a: 0.6}
+  - {r: 0.6117647, g: 1, b: 0.6901961, a: 1}
+  EffectCount: 27
+  EffectFall: -0.35
+  EffectSway: 0.12
+  EffectBand: 0.4
+  EffectParallax: 0.5
+  Fireworks: 0
+  FireworkSpark: {fileID: 0}
+  FireworkColours: []
+  FireworksPerMinute: 6
+  ResetShowSeconds: 0
+  ResetShowToast: 
+  Flyer: {fileID: 0}
+  FlyerColour: {r: 0, g: 0, b: 0, a: 1}
+  FlyerEvery: 45
+  FlyerSpeed: 2.4
+  Spike: {fileID: 0}
+  Block: {fileID: 0}
+  GroundTop: {fileID: 0}
+  Grave: {fileID: 0}
+  GraveInColour: 0
+  Headstone: {fileID: 0}
+  GhostAccessory: {fileID: 0}
+  NemesisAccessory: {fileID: 0}
+  DeathLine: 
+  DeathLineNemesisOnly: 0
+  Stinger: {fileID: 0}
+  MusicStems: []

@@ -29,6 +29,7 @@ MonoBehaviour:
   EffectCount: 56
   EffectFall: 0.7
   EffectSway: 0.35
+  EffectBand: 1
   EffectParallax: 0.25
   Fireworks: 0
   FireworkSpark: {fileID: 0}
@@ -36,6 +37,10 @@ MonoBehaviour:
   FireworksPerMinute: 6
   ResetShowSeconds: 0
   ResetShowToast: 
+  Flyer: {fileID: 21300000, guid: d1d3c8c7e8dec6e48bf179431130c48c, type: 3}
+  FlyerColour: {r: 0.08, g: 0.1, b: 0.18, a: 0.85}
+  FlyerEvery: 40
+  FlyerSpeed: 2.4
   Spike: {fileID: 21300000, guid: ffd8742045894fb499dca587d76db062, type: 3}
   Block: {fileID: 21300000, guid: ac46b2709d717a5449738bb3255b0547, type: 3}
   GroundTop: {fileID: 21300000, guid: 502059f2a0ff65542bc350bb64f14ae9, type: 3}
@@ -47,3 +52,10 @@ MonoBehaviour:
   DeathLine: 
   DeathLineNemesisOnly: 0
   Stinger: {fileID: 8300000, guid: cdbfd5f028805014aba2c9c50fa8d9e5, type: 3}
+  MusicStems:
+  - {fileID: 8300000, guid: cb4b84a374d72e74fbf264215032cca8, type: 3}
+  - {fileID: 8300000, guid: e2e54644f58541447a54c461a1cc5b90, type: 3}
+  - {fileID: 8300000, guid: f1f073263ac8c8943a64886230d71cc7, type: 3}
+  - {fileID: 8300000, guid: ae96d1330b2dcab48abb7918917fdaab, type: 3}
+  - {fileID: 8300000, guid: 807cac62f2b496f4ea7fcff6727abbb4, type: 3}
+  - {fileID: 8300000, guid: 64f02610cbb09554293844ff48c746fa, type: 3}

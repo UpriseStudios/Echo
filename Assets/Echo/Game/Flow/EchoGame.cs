@@ -534,6 +534,7 @@ namespace Echo.Game.Flow
 
         void PrepareRun()
         {
+            _graveyardLook = false;
             RefreshSeason();
             ApplyCosmetics(); // an Elementals trial that has run out falls back to the free character here
             if (!CourseIs(_progress.Seed)) _course = new Course(_library, _progress.Seed);
@@ -663,6 +664,11 @@ namespace Echo.Game.Flow
             if (_run.Options.OneLife)
             {
                 EndOneLife();
+                return;
+            }
+            if (_run.Options.Graveyard)
+            {
+                EndGraveyard();
                 return;
             }
             if (_run.Options.Daily)
@@ -925,6 +931,11 @@ namespace Echo.Game.Flow
                 LeaveOneLife();
                 return;
             }
+            if (_run.Options.Graveyard)
+            {
+                PlayGraveyard();
+                return;
+            }
             if (_run.Options.Daily)
             {
                 PlayDaily();
@@ -1006,6 +1017,7 @@ namespace Echo.Game.Flow
 
         void ShowTitle()
         {
+            _graveyardLook = false;
             RefreshSeason();
             CheckTeamReveal();
             _title.Show(_progress.Best);
@@ -1454,6 +1466,7 @@ namespace Echo.Game.Flow
             WireBackend();
             ProcessPendingLink();
             _ = FlushOneLife();   // a One Life run cut off when the game was last closed
+            _ = FlushGraveyard();
         }
 
         void OnConsentChosen(bool personalisedAds, bool analytics)

@@ -102,6 +102,43 @@ namespace Echo.Tests.EditMode
         }
 
         [Test]
+        public void TheGraveyardsLook_DriftsFogLow_AndIsNeverScheduled()
+        {
+            SeasonTheme t = Themes().Find(x => x.Id == SeasonIds.Graveyard);
+            Assert.IsNotNull(t, "the Community Graveyard's look");
+            Assert.AreEqual(SeasonEffect.Drifting, t.Effect);
+            Assert.Less(t.EffectBand, 0.5f, "fog keeps low");
+            Assert.IsNotNull(t.FarLayer);
+            Assert.IsNotNull(t.NearLayer);
+            Assert.IsNull(t.Spike, "obstacles are the normal ones");
+            Assert.IsEmpty(t.MusicStems, "the music follows the season");
+            string schedule = File.ReadAllText("Assets/Echo/Content/Seasons/seasons.json");
+            StringAssert.DoesNotContain(SeasonIds.Graveyard, schedule);
+        }
+
+        [Test]
+        public void ChristmasAndNewYear_HaveTheirOwnCarols_SixStemsInStep()
+        {
+            foreach (string id in new[] { SeasonIds.Christmas, SeasonIds.NewYear })
+            {
+                SeasonTheme t = Themes().Find(x => x.Id == id);
+                Assert.AreEqual(6, t.MusicStems.Length, id + ": six stems, like the main tune");
+                foreach (AudioClip clip in t.MusicStems)
+                {
+                    Assert.IsNotNull(clip, id);
+                    Assert.AreEqual(t.MusicStems[0].samples, clip.samples, id + ": every stem the same length, so they stay in step");
+                }
+            }
+            SeasonTheme christmas = Themes().Find(x => x.Id == SeasonIds.Christmas), newYear = Themes().Find(x => x.Id == SeasonIds.NewYear);
+            Assert.AreEqual(8 * 4 * 60f / 132f, christmas.MusicStems[0].length, 0.01f, "Jingle Bells: 8 bars at 132 bpm");
+            Assert.AreEqual(8 * 4 * 60f / 96f, newYear.MusicStems[0].length, 0.01f, "Auld Lang Syne: 8 bars at 96 bpm");
+            StringAssert.Contains("melody", christmas.MusicStems[0].name, "the tune is stem 0, which always plays");
+            Assert.IsNotNull(christmas.Flyer, "Santa's sleigh crosses the Christmas sky");
+            Assert.IsNull(newYear.Flyer);
+            Assert.IsTrue(Themes().FindAll(x => x.Id != SeasonIds.Christmas && x.Id != SeasonIds.NewYear).TrueForAll(x => x.MusicStems.Length == 0));
+        }
+
+        [Test]
         public void TheTestTheme_TurnsEveryOverrideOn()
         {
             SeasonTheme t = Themes().Find(x => x.Id == SeasonIds.Test);

@@ -29,10 +29,12 @@ namespace Echo.Game.Seasons
         [Tooltip("Each sprite drawn in turn in these colours; empty draws them as they are.")]
         public Color[] EffectColours = new Color[0];
         [Range(0, Views.SeasonEffectsView.MaxParticles)] public int EffectCount = 40;
-        [Tooltip("Units a second.")]
+        [Tooltip("Units a second: down for Falling, sideways for Drifting (negative drifts left).")]
         public float EffectFall = 1.2f;
         [Tooltip("Units either side.")]
         public float EffectSway = 0.3f;
+        [Tooltip("Drifting: the share of the view's height, from the bottom, the sprites keep to.")]
+        [Range(0.05f, 1f)] public float EffectBand = 1f;
         [Tooltip("How far the layer drifts back as the camera moves (0 fixed to the screen, 1 fixed to the world).")]
         [Range(0f, 1f)] public float EffectParallax = 0.3f;
 
@@ -46,6 +48,14 @@ namespace Echo.Game.Seasons
         public float ResetShowSeconds;
         [Tooltip("The toast as the show starts, e.g. HAPPY NEW YEAR!")]
         public string ResetShowToast = "";
+
+        [Header("A silhouette crossing the sky now and then (also behind the floor): Santa's sleigh")]
+        public Sprite Flyer;
+        public Color FlyerColour = Color.black;
+        [Tooltip("Seconds between passes.")]
+        public float FlyerEvery = 45f;
+        [Tooltip("Units a second across the view.")]
+        public float FlyerSpeed = 2.4f;
 
         [Header("Obstacles: same size and outline as the originals, greyscale, tinted as hazards")]
         public Sprite Spike;
@@ -75,5 +85,7 @@ namespace Echo.Game.Seasons
         [Header("Music")]
         [Tooltip("Played once over the music when the season first shows in a session (optional).")]
         public AudioClip Stinger;
+        [Tooltip("A user revision: the season's own music, six stems like the main tune's; empty keeps the main tune.")]
+        public AudioClip[] MusicStems = new AudioClip[0];
     }
 }

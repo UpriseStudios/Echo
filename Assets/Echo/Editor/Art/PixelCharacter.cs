@@ -32,6 +32,9 @@ namespace Echo.Editor.Art
         /// <summary>Seasons doc: earned with this (seasonal) achievement, kept for good.</summary>
         public string UnlockAchievement = "";
 
+        /// <summary>Modes doc: granted by the server (PixelModeCast), never sold or earned on the device.</summary>
+        public bool ServerReward;
+
         /// <summary>Applied to every frame after drawing: inverted colours or an RGB glitch.</summary>
         public PixelEffect Effect;
 

@@ -54,7 +54,8 @@ namespace Echo.Editor.Art
 
         public static PixelCanvas ChristmasBlock() => Capped(PixelWorld.Block(), 3, 0.95f);
         public static PixelCanvas ChristmasGroundTop() => Capped(PixelWorld.GroundTop(), 3, 0.9f);
-        public static PixelCanvas ChristmasFar() => Capped(PixelWorld.Mountains(), 7, 0.8f);
+        /// <summary>A user revision: a snowy town and the North Pole in front of the snow-capped mountains.</summary>
+        public static PixelCanvas ChristmasFar() => PixelChristmasTown.Far();
         public static PixelCanvas ChristmasNear() => Capped(PixelWorld.GraveyardHills(), 3, 0.75f);
         public static PixelCanvas ChristmasHeadstone() => Snowed(PixelWorld.Headstone(), 4);
 

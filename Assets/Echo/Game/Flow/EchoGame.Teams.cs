@@ -43,7 +43,7 @@ namespace Echo.Game.Flow
             ShowTally();
             if (_team == null) return;
             if (_team.Team != "") RememberTeam(_team);
-            if (_team.Open && _team.Team == "" && _dailyLobby != null && _dailyLobby.IsOpen && !_lobbyOneLife && !ChallengeCardOpen) AskForSide();
+            if (_team.Open && _team.Team == "" && _dailyLobby != null && _dailyLobby.IsOpen && !_lobbyOneLife && !_lobbyGraveyard && !ChallengeCardOpen) AskForSide();
             else if (_team.Ended && _team.Team != "") RevealTeamResult();
         }
 
@@ -98,7 +98,7 @@ namespace Echo.Game.Flow
 
         void TickTeam()
         {
-            if (_dailyLobby == null || !_dailyLobby.IsOpen || _lobbyOneLife || _team == null) return;
+            if (_dailyLobby == null || !_dailyLobby.IsOpen || _lobbyOneLife || _lobbyGraveyard || _team == null) return;
             if (Time.realtimeSinceStartup - _teamFetchedAt >= TeamRefreshSeconds) _ = LoadTeamEvent();
         }
 

@@ -33,6 +33,7 @@ MonoBehaviour:
   EffectCount: 40
   EffectFall: 1.2
   EffectSway: 0.3
+  EffectBand: 1
   EffectParallax: 0.3
   Fireworks: 0
   FireworkSpark: {fileID: 0}
@@ -40,6 +41,10 @@ MonoBehaviour:
   FireworksPerMinute: 6
   ResetShowSeconds: 0
   ResetShowToast: 
+  Flyer: {fileID: 0}
+  FlyerColour: {r: 0, g: 0, b: 0, a: 1}
+  FlyerEvery: 45
+  FlyerSpeed: 2.4
   Spike: {fileID: 21300000, guid: 8d48bb3d15400334f9fcbd444ac3e8df, type: 3}
   Block: {fileID: 21300000, guid: fa509a8da0ada9846a50a152671d2585, type: 3}
   GroundTop: {fileID: 21300000, guid: e630ccd6edf59a349a9287dc32c986f5, type: 3}
@@ -51,3 +56,4 @@ MonoBehaviour:
   DeathLine: 'Test season: every override is on.'
   DeathLineNemesisOnly: 0
   Stinger: {fileID: 8300000, guid: cfb613ba3f753de4ca2b5a780976b21e, type: 3}
+  MusicStems: []

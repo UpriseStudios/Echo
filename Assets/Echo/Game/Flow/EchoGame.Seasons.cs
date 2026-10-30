@@ -104,10 +104,23 @@ namespace Echo.Game.Flow
         /// <summary>The scheduled season's id on this UTC moment (UK local date), or null.</summary>
         public string ScheduledSeason(DateTime utc) => _schedule.ActiveOn(UkCalendar.Date(utc))?.Id;
 
+        // A user revision: the Community Graveyard's lobby and runs wear its own look over any season (a forced season
+        // still wins, for testing). Set by the Graveyard, cleared by the title, a main run and the other lobbies.
+        bool _graveyardLook;
+
+        void ShowGraveyardLook(bool on)
+        {
+            _graveyardLook = on;
+            RefreshSeason();
+        }
+
         void RefreshSeason()
         {
             string id = ForcedSeason ?? ScheduledSeason(SeasonNowUtc());
-            SeasonTheme theme = ThemeFor(id);
+            SeasonTheme season = ThemeFor(id);
+            // The music follows the season even in the Graveyard: a December graveyard still plays the Christmas tune.
+            if (_music != null) _music.SetStems(season != null && season.MusicStems.Length > 0 ? season.MusicStems : null);
+            SeasonTheme theme = _graveyardLook && ForcedSeason == null ? ThemeFor(SeasonIds.Graveyard) ?? season : season;
             if (_seasonApplied && theme == _season) return;
             ApplySeason(theme);
         }
@@ -233,7 +246,7 @@ namespace Echo.Game.Flow
         // season_active: once a session for each season shown, after the session has started (so after consent).
         void LogSeasonActive()
         {
-            if (!_sessionLive || _season == null || _seasonLogged == _season.Id) return;
+            if (!_sessionLive || _season == null || _seasonLogged == _season.Id || _season.Id == SeasonIds.Graveyard) return;
             _seasonLogged = _season.Id;
             Log(AnalyticsEvents.SeasonActive, ("season", _season.Id), ("forced", ForcedSeason != null));
         }
@@ -283,7 +296,7 @@ namespace Echo.Game.Flow
         {
             var order = new List<string> { null, NoSeason };
             foreach (SeasonTheme t in _seasonThemes)
-                if (t != null) order.Add(t.Id);
+                if (t != null) order.Add(t.Id);   // the Graveyard's look too, to see it outside the mode
             int next = (order.IndexOf(ForcedSeason) + 1) % order.Count;
             ForceSeason(order[next]);
             return SeasonLabel();

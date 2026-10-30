@@ -131,6 +131,17 @@ namespace EchoCloud
             string packet, string dateOverride = null, bool forceModes = false) =>
             await (await Graveyard(context, api, dateOverride, forceModes)).SubmitAsync(context.PlayerId, date, setVersion, packet);
 
+        // A user revision: the mode boards can be watched like the Daily Haunt's (the ad is the client's).
+        [CloudCodeFunction("GetGraveyardRun")]
+        public async Task<GetDailyRunResponse> GetGraveyardRun(IExecutionContext context, IGameApiClient api, int rank, bool weekly = false,
+            string dateOverride = null, bool forceModes = false) =>
+            await (await Graveyard(context, api, dateOverride, forceModes)).GetRunAsync(rank, weekly);
+
+        [CloudCodeFunction("GetOneLifeRun")]
+        public async Task<GetDailyRunResponse> GetOneLifeRun(IExecutionContext context, IGameApiClient api, int rank, string dateOverride = null,
+            bool forceModes = false) =>
+            await (await OneLife(context, api, dateOverride, forceModes)).GetRunAsync(rank);
+
         // Modes doc: the Scheduler's trigger at 00:00 UTC builds the day's ghosts (graveyard.sched, graveyard.tr); the
         // first lobby after midnight would build the same set if it hasn't run.
         [CloudCodeFunction("BuildGraveyardSet")]

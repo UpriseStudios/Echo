@@ -74,6 +74,21 @@ namespace Echo.Server.Tests
         }
 
         [Test]
+        public void TodaysRuns_CanBeWatched()
+        {
+            OneLifeService day = On("2026-12-25T09:00:00");
+            OneLifeStartResponse start = day.StartAsync("a").Result;
+            OneLifeSubmitResponse sent = day.SubmitAsync("a", start.Date, start.Token, ReelPacket.Encode(Play(start, 7))).Result;
+            Assert.IsTrue(sent.Ok, sent.Error);
+            GetDailyRunResponse run = On("2026-12-25T10:00:00").GetRunAsync(1).Result;
+            Assert.IsTrue(run.Ok, run.Error);
+            Assert.AreEqual(sent.Distance, run.Distance);
+            Assert.IsTrue(ReelPacket.TryDecode(run.Packet, out Reel watched) && watched.Options.OneLife);
+            Assert.AreEqual("not-found", On("2026-12-25T10:00:00").GetRunAsync(2).Result.Error);
+            Assert.AreEqual("closed", On("2026-12-24T10:00:00").GetRunAsync(1).Result.Error);
+        }
+
+        [Test]
         public void TheToken_IsNeeded_AndSingleUse()
         {
             OneLifeService day = On("2026-12-25T09:00:00");

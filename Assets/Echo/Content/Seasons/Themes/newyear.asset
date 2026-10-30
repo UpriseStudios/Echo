@@ -29,6 +29,7 @@ MonoBehaviour:
   EffectCount: 56
   EffectFall: 0.7
   EffectSway: 0.35
+  EffectBand: 1
   EffectParallax: 0.25
   Fireworks: 1
   FireworkSpark: {fileID: 21300000, guid: bf8eaea8295555b45a46c6bd6f9e28a3, type: 3}
@@ -41,6 +42,10 @@ MonoBehaviour:
   FireworksPerMinute: 5
   ResetShowSeconds: 120
   ResetShowToast: HAPPY NEW YEAR!
+  Flyer: {fileID: 0}
+  FlyerColour: {r: 0, g: 0, b: 0, a: 1}
+  FlyerEvery: 45
+  FlyerSpeed: 2.4
   Spike: {fileID: 21300000, guid: ffd8742045894fb499dca587d76db062, type: 3}
   Block: {fileID: 21300000, guid: ac46b2709d717a5449738bb3255b0547, type: 3}
   GroundTop: {fileID: 21300000, guid: 502059f2a0ff65542bc350bb64f14ae9, type: 3}
@@ -52,3 +57,10 @@ MonoBehaviour:
   DeathLine: 
   DeathLineNemesisOnly: 0
   Stinger: {fileID: 0}
+  MusicStems:
+  - {fileID: 8300000, guid: 6a04baa4a2d43ac49bc3da86c3ea95e8, type: 3}
+  - {fileID: 8300000, guid: 04387794c4f739a42b42573466dd6ed7, type: 3}
+  - {fileID: 8300000, guid: beb818b820cb09a48968ed11568676e3, type: 3}
+  - {fileID: 8300000, guid: c8851ea41be0bef4b867a1258a9f94eb, type: 3}
+  - {fileID: 8300000, guid: a5815a16061895243a776c43e88d49b8, type: 3}
+  - {fileID: 8300000, guid: 24133babf0a370f4d94a685f556d5847, type: 3}

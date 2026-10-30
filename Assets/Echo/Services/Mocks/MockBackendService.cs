@@ -276,6 +276,7 @@ namespace Echo.Services.Mocks
         // ---- One Life (modes doc): the server's rules in miniature ----
 
         public bool OneLifeOpen;
+        string _oneLifePacket = "";
         public string OneLifeToken = "";
         public bool OneLifeUsed, OneLifeFinished;
         public int OneLifeDistance;
@@ -291,6 +292,7 @@ namespace Echo.Services.Mocks
                 Finished = OneLifeFinished, Distance = OneLifeDistance, Rank = OneLifeFinished ? 1 : 0 };
             int rank = 1;
             foreach (var l in OneLifeLeaders) r.Board.Add(new DailyBoardRow { Rank = rank++, Name = l.ghost.Name, Distance = l.distance });
+            if (OneLifeFinished) r.Board.Add(new DailyBoardRow { Rank = rank, Name = "MockRunner#1234", Distance = OneLifeDistance, IsYou = true });
             r.Rewards.AddRange(OneLifeRewards);
             OneLifeRewards.Clear();
             if (!r.Open) r.Error = "closed";
@@ -326,7 +328,101 @@ namespace Echo.Services.Mocks
             ReplayCheckResult replay = LocalReplay?.Invoke(packet);
             OneLifeFinished = true;
             OneLifeDistance = replay != null && replay.Accepted ? replay.Distance : reel.Distance;
+            _oneLifePacket = packet;
             return Task.FromResult(new OneLifeSubmitResult { Ok = true, Distance = OneLifeDistance, Rank = 1, Abandoned = reel.Abandoned, BoardClosed = date != Today });
+        }
+
+        // ---- the Community Graveyard (modes doc): the server's rules in miniature ----
+
+        public bool GraveyardOpen;
+        public int GraveyardDay, GraveyardSize, GraveyardSubmissions;
+        public readonly List<GhostRecord> GraveyardGhosts = new List<GhostRecord>();
+        public readonly List<string> GraveyardRewards = new List<string>();
+        public GraveyardWeekSummary GraveyardLastWeek;
+        public const string GraveyardSetVersion = "mockset";
+        int _graveyardBest, _graveyardWeek, _graveyardNextRun = 1;
+        string _graveyardBestPacket = "";
+
+        public Task<GraveyardInfo> GetGraveyardAsync(string dateOverride, bool forceModes)
+        {
+            if (Offline) return Task.FromResult(GraveyardInfo.Failed("offline"));
+            SignedIn = true;
+            var r = new GraveyardInfo { Ok = GraveyardOpen || forceModes, Open = GraveyardOpen || forceModes, Date = Today, SecondsLeft = SecondsLeft };
+            r.Rewards.AddRange(GraveyardRewards);
+            GraveyardRewards.Clear();
+            r.LastWeek = GraveyardLastWeek;
+            if (!r.Open)
+            {
+                r.Error = "closed";
+                return Task.FromResult(r);
+            }
+            uint seed = (uint)SeedFor("graveyard-week");
+            var ghosts = new List<GhostRecord>(GraveyardGhosts);
+            ghosts.Sort((a, b) => a.RunIndex.CompareTo(b.RunIndex));
+            r.Seed = seed;
+            r.ContentVersion = ContentVersion;
+            r.Day = GraveyardDay;
+            r.DaysLeft = 6 - GraveyardDay;
+            r.SetVersion = GraveyardSetVersion;
+            r.GhostsPacket = ReelPacket.Encode(new Reel { ContentVersion = ContentVersion, Seed = seed, SpeedPct = DailyRules.SpeedPct, RunIndex = 1, Run = new GhostRecord(), Ghosts = ghosts });
+            r.Size = GraveyardSize;
+            r.BestToday = _graveyardBest;
+            r.WeekTotal = _graveyardWeek;
+            r.DaysPlayed = _graveyardBest > 0 ? 1 : 0;
+            r.NextRunIndex = _graveyardNextRun;
+            r.DailyRank = r.WeeklyRank = _graveyardBest > 0 ? 1 : 0;
+            if (_graveyardBest > 0)
+            {
+                r.Daily.Add(new DailyBoardRow { Rank = 1, Name = "MockRunner#1234", Distance = _graveyardBest, IsYou = true });
+                r.Weekly.Add(new DailyBoardRow { Rank = 1, Name = "MockRunner#1234", Distance = _graveyardWeek, IsYou = true });
+            }
+            return Task.FromResult(r);
+        }
+
+        public Task<GraveyardSubmitResult> SubmitGraveyardRunAsync(string date, string setVersion, string packet, string dateOverride, bool forceModes)
+        {
+            if (Offline) return Task.FromResult(GraveyardSubmitResult.Failed("offline"));
+            GraveyardSubmissions++;
+            if (!GraveyardOpen && !forceModes) return Task.FromResult(GraveyardSubmitResult.Failed("closed"));
+            if (setVersion != GraveyardSetVersion) return Task.FromResult(GraveyardSubmitResult.Failed("ghosts"));
+            if (!ReelPacket.TryDecode(packet, out Reel reel)) return Task.FromResult(GraveyardSubmitResult.Failed("malformed"));
+            string broken = Echo.Core.Modes.GraveyardRules.Check(reel);
+            if (broken != null) return Task.FromResult(GraveyardSubmitResult.Failed(broken));
+            if (reel.RunIndex < _graveyardNextRun) return Task.FromResult(GraveyardSubmitResult.Failed("run-index"));
+            ReplayCheckResult replay = LocalReplay?.Invoke(packet);
+            int distance = replay != null && replay.Accepted ? replay.Distance : reel.Distance;
+            _graveyardNextRun = reel.RunIndex + 1;
+            bool newBest = distance > _graveyardBest;
+            if (newBest)
+            {
+                _graveyardWeek += distance - _graveyardBest;
+                _graveyardBest = distance;
+                _graveyardBestPacket = packet;
+            }
+            GraveyardSize++;
+            return Task.FromResult(new GraveyardSubmitResult
+            {
+                Ok = true, Distance = distance, NewBest = newBest, BestToday = _graveyardBest, WeekTotal = _graveyardWeek, DaysPlayed = 1,
+                DailyRank = 1, WeeklyRank = 1,
+            });
+        }
+
+        public int ModeRunsFetched;
+
+        // The board in the mocks holds only your own run, at rank 1.
+        public Task<DailyRunResult> GetGraveyardRunAsync(int rank, bool weekly, string dateOverride, bool forceModes) =>
+            Task.FromResult(ModeRun(rank, _graveyardBestPacket, weekly ? _graveyardWeek : _graveyardBest));
+
+        // Your One Life run sits below the leaders.
+        public Task<DailyRunResult> GetOneLifeRunAsync(int rank, string dateOverride, bool forceModes) =>
+            Task.FromResult(ModeRun(rank - OneLifeLeaders.Count, _oneLifePacket, OneLifeDistance));
+
+        DailyRunResult ModeRun(int rank, string packet, int distance)
+        {
+            if (Offline) return DailyRunResult.Failed("offline");
+            ModeRunsFetched++;
+            if (rank != 1 || string.IsNullOrEmpty(packet)) return DailyRunResult.Failed("not-found");
+            return new DailyRunResult { Ok = true, Packet = packet, Name = "MockRunner#1234", Rank = 1, Distance = distance };
         }
 
         public Task<string> GetPlayerNameAsync() => Task.FromResult(SignedIn ? "MockRunner#1234" : null);

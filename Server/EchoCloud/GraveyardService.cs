@@ -29,11 +29,15 @@ namespace EchoCloud
     public sealed class GraveyardService
     {
         public const string WeekPrefix = "echo_gy_week_", SectionPrefix = "echo_gy_sec_", RunPrefix = "echo_gy_runs_";
+
+        /// <summary>A user revision: each player's best run of the day, whole (taps and the ghosts it faced), to watch.</summary>
+        public const string BestPrefix = "echo_gy_best_";
         public const int KeepDays = 21;
         public const int BadgeTop = 10, FullWeeksForSkin = 4;
         public const string SkinId = "char_gravekeeper";
         const string MetaKey = "graveyard_meta";
         const string TotalKey = "total";
+        const string SummaryKey = "summary";
 
         // SectionTally is a Core type, with fields.
         static readonly JsonSerializerOptions Json = new JsonSerializerOptions { IncludeFields = true };
@@ -101,6 +105,14 @@ namespace EchoCloud
             public int Size { get; set; }
         }
 
+        /// <summary>A closed week's deadliest section and size, worked out once and kept with the week.</summary>
+        public sealed class WeekDeaths
+        {
+            public int Index { get; set; }
+            public int Deaths { get; set; }
+            public int Size { get; set; }
+        }
+
         public sealed class Meta
         {
             public List<string> Weeks { get; set; } = new List<string>();
@@ -164,9 +176,11 @@ namespace EchoCloud
             var r = new GraveyardResponse { Open = Open, Date = DateKey(Today) };
             DateTime monday = Monday(Today);
             r.Rewards = await SettleAsync(playerId);
+            r.LastWeek = await LastWeekAsync(playerId);
             await Housekeeping.SweepAsync(_days, WeekPrefix, Today, KeepDays);
             await Housekeeping.SweepAsync(_days, SectionPrefix, Today, KeepDays);
             await Housekeeping.SweepAsync(_days, RunPrefix, Today, KeepDays);
+            await Housekeeping.SweepAsync(_days, BestPrefix, Today, KeepDays);
             if (!Open)
             {
                 r.Error = "closed";
@@ -245,11 +259,16 @@ namespace EchoCloud
             if (!result.Finished) return Fail(r, "unfinished");
             r.Distance = result.Distance;
             r.NewBest = r.Distance > (mine.Bests.TryGetValue(date, out int had) ? had : 0);
-            if (r.NewBest) mine.Bests[date] = r.Distance;
+            if (r.NewBest)
+            {
+                mine.Bests[date] = r.Distance;
+                await _days.SetAsync(BestPrefix + Key(day), playerId, packet);
+            }
             mine.NextRun[date] = reel.RunIndex + 1;
             await _days.SetAsync(weekBucket, playerId, JsonSerializer.Serialize(mine));
             r.BestToday = mine.Bests[date];
             r.WeekTotal = mine.Total;
+            r.DaysPlayed = mine.Bests.Count;
             r.BoardClosed = late;
             if (!late)
             {
@@ -286,6 +305,56 @@ namespace EchoCloud
             return r;
         }
 
+        // ---- watching a run (a user revision: like the Daily Haunt's board) ----
+
+        /// <summary>
+        /// The run at a rank on today's board, or on the week's (that player's best single run of the week), whole: its
+        /// taps and the ghosts it faced.
+        /// </summary>
+        public async Task<GetDailyRunResponse> GetRunAsync(int rank, bool weekly)
+        {
+            var r = new GetDailyRunResponse();
+            if (!Open)
+            {
+                r.Error = "closed";
+                return r;
+            }
+            IDailyStore board = weekly ? _week : _day;
+            List<LeaderboardRow> top = rank >= 1 && rank <= 100 ? await board.TopAsync(rank) : new List<LeaderboardRow>();
+            LeaderboardRow row = top.Count >= rank && rank >= 1 ? top[rank - 1] : null;
+            if (row == null)
+            {
+                r.Error = "not-found";
+                return r;
+            }
+            DateTime day = Today;
+            int distance = row.Distance;
+            if (weekly)
+            {
+                PlayerWeek theirs = Read<PlayerWeek>(await _days.GetAsync(WeekPrefix + Key(Monday(Today)), row.PlayerId));
+                var best = theirs?.Bests.OrderByDescending(kv => kv.Value).ThenBy(kv => kv.Key, StringComparer.Ordinal).FirstOrDefault();
+                if (best == null || best.Value.Key == null)
+                {
+                    r.Error = "not-available";
+                    return r;
+                }
+                day = Parse(best.Value.Key);
+                distance = best.Value.Value;
+            }
+            string packet = await _days.GetAsync(BestPrefix + Key(day), row.PlayerId);
+            if (string.IsNullOrEmpty(packet))
+            {
+                r.Error = "not-available";
+                return r;
+            }
+            r.Ok = true;
+            r.Packet = packet;
+            r.Name = row.Name;
+            r.Rank = row.Rank;
+            r.Distance = distance;
+            return r;
+        }
+
         // ---- rewards once a week has closed ----
 
         async Task<List<string>> SettleAsync(string playerId)
@@ -300,7 +369,7 @@ namespace EchoCloud
                 meta.Settled.Add(week);
                 changed = true;
                 var weeks = (await _days.GetAllAsync(WeekPrefix + week))
-                    .Where(kv => !kv.Key.StartsWith("set_", StringComparison.Ordinal))
+                    .Where(kv => !kv.Key.StartsWith("set_", StringComparison.Ordinal) && kv.Key != SummaryKey)
                     .Select(kv => (Id: kv.Key, Total: Read<PlayerWeek>(kv.Value)?.Total ?? 0))
                     .OrderByDescending(x => x.Total).ThenBy(x => x.Id, StringComparer.Ordinal).ToList();
                 int rank = weeks.FindIndex(x => x.Id == playerId) + 1;
@@ -318,6 +387,51 @@ namespace EchoCloud
             return earned;
         }
 
+        // ---- the end of the week ----
+
+        /// <summary>Last week's summary for a player who played it: its deadliest spot, its champion and their own rank.</summary>
+        async Task<GraveyardWeekSummary> LastWeekAsync(string playerId)
+        {
+            DateTime monday = Monday(Today).AddDays(-7);
+            string bucket = WeekPrefix + Key(monday);
+            PlayerWeek mine = Read<PlayerWeek>(await _days.GetAsync(bucket, playerId));
+            if (mine == null || mine.Bests.Count == 0) return null;
+            WeekDeaths deaths = Read<WeekDeaths>(await _days.GetAsync(bucket, SummaryKey));
+            if (deaths == null)
+            {
+                deaths = new WeekDeaths();
+                var sections = new Dictionary<int, int>();
+                for (int d = 0; d < 7; d++)
+                    foreach (var kv in await _days.GetAllAsync(SectionPrefix + Key(monday.AddDays(d))))
+                    {
+                        if (kv.Key == TotalKey) deaths.Size += int.TryParse(kv.Value, out int n) ? n : 0;
+                        else if (Read<SectionTally>(kv.Value) is SectionTally s)
+                            sections[s.Index] = (sections.TryGetValue(s.Index, out int had) ? had : 0) + s.Deaths;
+                    }
+                foreach (var kv in sections.OrderByDescending(kv => kv.Value).ThenBy(kv => kv.Key).Take(1))
+                {
+                    deaths.Index = kv.Key;
+                    deaths.Deaths = kv.Value;
+                }
+                await _days.SetAsync(bucket, SummaryKey, JsonSerializer.Serialize(deaths, Json));
+            }
+            // The week board's archive: the board as everyone saw it when the week closed.
+            LeaderboardRow champion = await _week.YesterdaysWinnerAsync();
+            LeaderboardRow place = await _week.YesterdaysPlaceAsync(playerId);
+            return new GraveyardWeekSummary
+            {
+                Week = DateKey(monday),
+                DeadliestMetres = deaths.Index * GraveyardRules.SectionMetres,
+                DeadliestDeaths = deaths.Deaths,
+                Size = deaths.Size,
+                Champion = champion?.Name ?? "",
+                ChampionTotal = champion?.Distance ?? 0,
+                Rank = place?.Rank ?? 0,
+                Total = mine.Total,
+                DaysPlayed = mine.Bests.Count,
+            };
+        }
+
         /// <summary>Delete online data: the player's weeks, their runs in the pool and their board scores (tallies stay as counts).</summary>
         public static async Task ForgetPlayerAsync(IDayStore days, IDailyStore day, IDailyStore week, string playerId, DateTime today)
         {
@@ -327,6 +441,7 @@ namespace EchoCloud
                 await days.DeleteAsync(WeekPrefix + Key(Monday(date)), playerId);
                 foreach (string key in (await days.GetAllAsync(RunPrefix + Key(date))).Keys.Where(k => k.StartsWith(playerId + "_", StringComparison.Ordinal)))
                     await days.DeleteAsync(RunPrefix + Key(date), key);
+                await days.DeleteAsync(BestPrefix + Key(date), playerId);
             }
             await day.DeleteScoreAsync(playerId);
             await week.DeleteScoreAsync(playerId);

@@ -199,6 +199,49 @@ namespace Echo.Server.Tests
         }
 
         [Test]
+        public void AClosedWeek_HasASummary_ForThoseWhoPlayedIt()
+        {
+            GraveyardSubmitResponse a = Run("2027-01-18T10:00:00", "a", 3);
+            Run("2027-01-19T10:00:00", "a", 5);
+            Run("2027-01-19T11:00:00", "b", 7);
+            Assert.IsNull(On("2027-01-24T10:00:00").GetAsync("a").Result.LastWeek, "the week is still running");
+            _weekBoard.Midnight();   // the weekly board's reset archives it
+
+            GraveyardWeekSummary s = On("2027-01-25T09:00:00").GetAsync("a").Result.LastWeek;
+            Assert.IsNotNull(s);
+            Assert.AreEqual("2027-01-18", s.Week);
+            Assert.AreEqual(3, s.Size);
+            Assert.Greater(s.DeadliestDeaths, 0);
+            Assert.AreEqual(0, s.DeadliestMetres % GraveyardRules.SectionMetres);
+            Assert.AreEqual(2, s.DaysPlayed);
+            Assert.Greater(s.Rank, 0);
+            Assert.IsNotEmpty(s.Champion);
+            Assert.GreaterOrEqual(s.ChampionTotal, s.Total);
+            Assert.AreEqual(1, a.DaysPlayed);
+            Assert.IsNull(On("2027-01-25T09:00:00").GetAsync("c").Result.LastWeek, "c didn't play it");
+        }
+
+        [Test]
+        public void TheTopRuns_CanBeWatched_TodaysAndTheWeeksBest()
+        {
+            GraveyardSubmitResponse mon = Run("2027-01-18T10:00:00", "a", 3);
+            _dayBoard.Midnight();
+            GraveyardSubmitResponse tue = Run("2027-01-19T10:00:00", "a", 9);
+            GraveyardService day = On("2027-01-19T12:00:00");
+
+            GetDailyRunResponse today = day.GetRunAsync(1, weekly: false).Result;
+            Assert.IsTrue(today.Ok, today.Error);
+            Assert.AreEqual(tue.Distance, today.Distance);
+            Assert.IsTrue(ReelPacket.TryDecode(today.Packet, out Reel watched));
+            Assert.IsTrue(watched.Options.Graveyard, "the whole run, as played");
+
+            GetDailyRunResponse week = day.GetRunAsync(1, weekly: true).Result;
+            Assert.IsTrue(week.Ok, week.Error);
+            Assert.AreEqual(Math.Max(mon.Distance, tue.Distance), week.Distance, "the week's: their best single run");
+            Assert.AreEqual("not-found", day.GetRunAsync(2, weekly: false).Result.Error);
+        }
+
+        [Test]
         public void DeletingYourData_RemovesYourRunsAndScores_AndTheSetsSkipThem()
         {
             Run("2027-01-18T10:00:00", "a", 3);

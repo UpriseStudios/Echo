@@ -40,6 +40,8 @@ namespace Echo.Game.Flow
             OpenMenu(() =>
             {
                 _lobbyOneLife = true;
+                _lobbyGraveyard = false;
+                ShowGraveyardLook(false);
                 _dailyLobby.Show();
                 _dailyLobby.SetHeading("One Life");
                 _dailyLobby.SetTally(null, 0.5f);
@@ -50,6 +52,7 @@ namespace Echo.Game.Flow
         void OnLobbyPlay()
         {
             if (_lobbyOneLife) AskOneLife();
+            else if (_lobbyGraveyard) PlayGraveyard();
             else PlayDaily();
         }
 
@@ -94,7 +97,7 @@ namespace Echo.Game.Flow
                 : o.Finished ? $"Your run today: {o.Distance} m" + (o.Rank > 0 ? $" · #{o.Rank}" : "")
                 : "Your run is on its way to the board.";
             _dailyLobby.SetDay(you, board, "", o.Board.Count > 0 ? "Today's top runs are the ghosts you'll meet." : "Nobody has had their run yet: set the pace.");
-            _dailyLobby.SetWatchable(false);
+            _dailyLobby.SetWatchable(o.Board.Count > 0);
             _dailyLobby.SetPlay(!o.Played, "Start your one run");
             TickOneLifeLabels();
         }

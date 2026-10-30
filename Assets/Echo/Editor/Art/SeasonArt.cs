@@ -27,6 +27,9 @@ namespace Echo.Editor.Art
         /// <summary>One Life's Christmas Day 2026 gravestones (finishers; the top 3 in gold).</summary>
         public static string ChristmasDayGravePath(bool gold) => $"{Dir}/grave_xmasday_2026{(gold ? "_gold" : "")}.png";
 
+        /// <summary>Santa's sleigh crossing the Christmas sky (a user revision).</summary>
+        public static string SleighPath => $"{Dir}/fx_sleigh.png";
+
         /// <summary>A firework spark, shared by every season with fireworks.</summary>
         public static string SparkPath => $"{Dir}/fx_spark.png";
 
@@ -59,6 +62,7 @@ namespace Echo.Editor.Art
             EchoArt.Write(EffectPath(x, 0), PixelSeasons.Snowflake(0));
             EchoArt.Write(EffectPath(x, 1), PixelSeasons.Snowflake(1));
             EchoArt.Write(SparkPath, PixelSeasons.Spark());
+            EchoArt.Write(SleighPath, PixelChristmasTown.Sleigh());
             // Valentine's, and the Heart gravestone (a cosmetic earned then, worn all year).
             const string v = Game.Seasons.SeasonIds.Valentines;
             EchoArt.Write(PathFor(v, NemesisAccessory), PixelSeasons.NemesisHeart());
@@ -66,6 +70,13 @@ namespace Echo.Editor.Art
             EchoArt.Write(HaloPath, PixelSeasons.Halo());
             EchoArt.Write(ChristmasDayGravePath(false), PixelSeasons.ChristmasDayGrave(false));
             EchoArt.Write(ChristmasDayGravePath(true), PixelSeasons.ChristmasDayGrave(true));
+            // A user revision: the Community Graveyard's own look.
+            const string g = Game.Seasons.SeasonIds.Graveyard;
+            EchoArt.Write(PathFor(g, Far), PixelModeArt.GraveyardFar());
+            EchoArt.Write(PathFor(g, Near), PixelModeArt.GraveyardNear());
+            EchoArt.Write(EffectPath(g, 0), PixelModeArt.Fog(0));
+            EchoArt.Write(EffectPath(g, 1), PixelModeArt.Fog(1));
+            EchoArt.Write(EffectPath(g, 2), PixelModeArt.Wisp());
             // Halloween (switched off until next year).
             const string h = Game.Seasons.SeasonIds.Halloween;
             EchoArt.Write(PathFor(h, Grave), PixelSeasons.PumpkinGrave());
@@ -76,7 +87,7 @@ namespace Echo.Editor.Art
             // The hat's trim sits on the head; the nose lands on the face, 5 px forward and 6 down from the head's top.
             EchoArt.ImportSprite(PathFor(x, GhostAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 2f / 9f));
             EchoArt.ImportSprite(PathFor(x, NemesisAccessory), EchoArt.WorldPpu, new Vector2((2.5f - 5f) / 5f, (2.5f + 6f) / 5f));
-            foreach (string fx in new[] { EffectPath(x, 0), EffectPath(x, 1), SparkPath })
+            foreach (string fx in new[] { EffectPath(x, 0), EffectPath(x, 1), SparkPath, SleighPath })
                 EchoArt.ImportSprite(fx, EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
 
             EchoArt.ImportSprite(PathFor(v, NemesisAccessory), EchoArt.WorldPpu, new Vector2(0.5f, -1f / 9f));
@@ -88,6 +99,10 @@ namespace Echo.Editor.Art
             EchoArt.ImportSprite(PathFor(h, Grave), EchoArt.WorldPpu, new Vector2(0.5f, 2f / 16f));
             // The web's top row sits 3 px above the head's top, so it drapes down over the back of the head.
             EchoArt.ImportSprite(PathFor(h, GhostAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 5f / 9f));
+
+            EchoArt.ImportSprite(PathFor(g, Far), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(PathFor(g, Near), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
+            for (int i = 0; i < 3; i++) EchoArt.ImportSprite(EffectPath(g, i), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
 
             ImportAs(t);
             EchoArt.ImportSprite(PathFor(t, GhostAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 1f / 10f));

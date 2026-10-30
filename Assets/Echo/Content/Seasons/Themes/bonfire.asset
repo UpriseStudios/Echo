@@ -24,6 +24,7 @@ MonoBehaviour:
   EffectCount: 40
   EffectFall: 1.2
   EffectSway: 0.3
+  EffectBand: 1
   EffectParallax: 0.3
   Fireworks: 1
   FireworkSpark: {fileID: 21300000, guid: bf8eaea8295555b45a46c6bd6f9e28a3, type: 3}
@@ -36,6 +37,10 @@ MonoBehaviour:
   FireworksPerMinute: 14
   ResetShowSeconds: 0
   ResetShowToast: 
+  Flyer: {fileID: 0}
+  FlyerColour: {r: 0, g: 0, b: 0, a: 1}
+  FlyerEvery: 45
+  FlyerSpeed: 2.4
   Spike: {fileID: 0}
   Block: {fileID: 0}
   GroundTop: {fileID: 0}
@@ -47,3 +52,4 @@ MonoBehaviour:
   DeathLine: 
   DeathLineNemesisOnly: 0
   Stinger: {fileID: 0}
+  MusicStems: []

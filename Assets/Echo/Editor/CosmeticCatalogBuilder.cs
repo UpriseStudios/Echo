@@ -130,6 +130,7 @@ namespace Echo.Editor
                 HeadTop = HeadTopPixels(c) / PixelRig.PixelsPerUnit,
                 Reaction = CharacterReactions.For(c.Id),
                 AllAchievements = c.AllAchievements,
+                ServerReward = c.ServerReward,
             };
         }
 

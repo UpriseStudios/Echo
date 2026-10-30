@@ -140,6 +140,12 @@ namespace Echo.Game.Flow
                 OpenOneLifeLobby();
                 return;
             }
+            if (mode.Id == Echo.Core.Modes.ModeIds.Graveyard)
+            {
+                CloseMenu();
+                OpenGraveyardLobby();
+                return;
+            }
             // Modes doc phase 1 is the framework: each mode's own screen comes with its phase.
             _modesView.SetStatus(mode.Open ? $"{ModeNames.Name(mode.Id)} is coming in this update." : $"{ModeNames.Name(mode.Id)}: {ModeNames.Countdown(false, mode.SecondsLeft)}");
         }
