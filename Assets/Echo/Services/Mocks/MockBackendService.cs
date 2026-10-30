@@ -407,6 +407,93 @@ namespace Echo.Services.Mocks
             });
         }
 
+        // ---- Ghost Duels (modes doc): the server's rules in miniature ----
+
+        public bool RankedOpen;
+        public int Rating = Echo.Core.Modes.RankedRules.StartRating, RankedDuels, RankedToday;
+        public int AwayWins, AwayLosses, AwayChange;
+        public readonly List<string> RankedRewards = new List<string>();
+
+        /// <summary>The opponent the next duel gets: a run, its name, rating and how far it went.</summary>
+        public GhostRecord DuelRival;
+        public string DuelRivalName = "RivalGhost#2024";
+        public int DuelRivalRating = 1000, DuelRivalDistance = 120;
+        public int DuelsSubmitted;
+        string _duelToken = "";
+        bool _duelRanked;
+
+        public Task<RankedProfileInfo> GetDuelProfileAsync(string dateOverride, bool forceModes)
+        {
+            if (Offline) return Task.FromResult(RankedProfileInfo.Failed("offline"));
+            SignedIn = true;
+            var r = new RankedProfileInfo { Open = RankedOpen || forceModes, Rating = Rating, Duels = RankedDuels, Season = 1, SecondsLeft = 400000,
+                DuelsLeftToday = Echo.Core.Modes.RankedRules.RankedPerDay - RankedToday, AwayWins = AwayWins, AwayLosses = AwayLosses, AwayChange = AwayChange };
+            r.Rewards.AddRange(RankedRewards);
+            RankedRewards.Clear();
+            AwayWins = AwayLosses = AwayChange = 0;
+            if (!r.Open)
+            {
+                r.Error = "closed";
+                return Task.FromResult(r);
+            }
+            r.Ok = true;
+            r.Rank = RankedDuels > 0 ? 1 : 0;
+            r.Tier = Echo.Core.Modes.RankedRules.Tier(Rating, 0);
+            if (RankedDuels > 0) r.Board.Add(new DailyBoardRow { Rank = 1, Name = "MockRunner#1234", Distance = Rating, IsYou = true });
+            return Task.FromResult(r);
+        }
+
+        public Task<RankedStart> StartDuelAsync(bool ranked, string dateOverride, bool forceModes)
+        {
+            if (Offline) return Task.FromResult(RankedStart.Failed("offline"));
+            if (!RankedOpen && !forceModes) return Task.FromResult(RankedStart.Failed("closed"));
+            if (ranked && RankedToday >= Echo.Core.Modes.RankedRules.RankedPerDay) return Task.FromResult(RankedStart.Failed("limit"));
+            if (ranked) RankedToday++;
+            _duelToken = "duel-" + (RankedToday + DuelsSubmitted);
+            _duelRanked = ranked;
+            uint seed = (uint)SeedFor("ranked-arena");
+            GhostRecord rival = DuelRival ?? new GhostRecord { RunIndex = 1, DeathTick = 900, TapTicks = new int[0], SpeedPct = DailyRules.SpeedPct };
+            return Task.FromResult(new RankedStart
+            {
+                Ok = true, Ranked = ranked, Token = _duelToken, Season = 1, Arena = 3, Seed = seed, ContentVersion = ContentVersion,
+                OpponentPacket = ReelPacket.Encode(new Reel { ContentVersion = ContentVersion, Seed = seed, SpeedPct = DailyRules.SpeedPct, RunIndex = 1, Run = rival, Ghosts = new List<GhostRecord>() }),
+                OpponentName = DuelRivalName, OpponentSkin = rival.SkinId, OpponentTier = Echo.Core.Modes.RankedRules.Tier(DuelRivalRating, 0),
+                OpponentRating = DuelRivalRating, DuelsLeftToday = Echo.Core.Modes.RankedRules.RankedPerDay - RankedToday,
+            });
+        }
+
+        public Task<RankedSubmitResult> SubmitDuelAsync(string token, string packet, string dateOverride, bool forceModes)
+        {
+            if (Offline) return Task.FromResult(RankedSubmitResult.Failed("offline"));
+            DuelsSubmitted++;
+            if (string.IsNullOrEmpty(_duelToken) || token != _duelToken) return Task.FromResult(RankedSubmitResult.Failed("token"));
+            _duelToken = "";
+            if (!ReelPacket.TryDecode(packet, out Reel reel)) return Task.FromResult(RankedSubmitResult.Failed("malformed"));
+            string broken = Echo.Core.Modes.RankedRules.Check(reel);
+            if (broken != null) return Task.FromResult(RankedSubmitResult.Failed(broken));
+            ReplayCheckResult replay = LocalReplay?.Invoke(packet);
+            int distance = replay != null && replay.Accepted ? replay.Distance : reel.Distance;
+            int score = Echo.Core.Modes.RankedRules.Score(distance, DuelRivalDistance);
+            var r = new RankedSubmitResult
+            {
+                Ok = true, Ranked = _duelRanked, Distance = distance, OpponentDistance = DuelRivalDistance, RatingBefore = Rating,
+                Outcome = score == 1000 ? "won" : score == 500 ? "draw" : "lost",
+            };
+            if (_duelRanked)
+            {
+                string before = Echo.Core.Modes.RankedRules.Tier(Rating, 0);
+                r.Change = Echo.Core.Modes.RankedRules.Change(Rating, DuelRivalRating, RankedDuels, score);
+                Rating += r.Change;
+                RankedDuels++;
+                r.TierUp = Echo.Core.Modes.RankedRules.TierOrder(Echo.Core.Modes.RankedRules.Tier(Rating, 0)) > Echo.Core.Modes.RankedRules.TierOrder(before);
+            }
+            r.RatingAfter = Rating;
+            r.Tier = Echo.Core.Modes.RankedRules.Tier(Rating, 0);
+            r.Rank = 1;
+            r.DuelsLeftToday = Echo.Core.Modes.RankedRules.RankedPerDay - RankedToday;
+            return Task.FromResult(r);
+        }
+
         public int ModeRunsFetched;
 
         // The board in the mocks holds only your own run, at rank 1.

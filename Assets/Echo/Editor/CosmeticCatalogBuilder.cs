@@ -84,6 +84,13 @@ namespace Echo.Editor
                     UnlockText = "Naughty vs Nice: win as Naughty", TrailStriped = false,
                     TrailStops = new[] { Hex(0x141414), Hex(0x3A2A22), Hex(0xFF6A2A), Hex(0x1C1C1C), Hex(0x3A2A22), Hex(0xFFA040) } },
 
+                // Modes doc, Ghost Duels: a trail for each final tier (Phantom's flows), granted by the server once a season
+                // ends; Wraith (the top 100) also earns the Wraith character.
+                DuelTrail("bronze", "Bronze Duellist", 0xD8925A, false, Hex(0x8A4A22), Hex(0xD8925A), Hex(0xF2C08A)),
+                DuelTrail("silver", "Silver Duellist", 0xD8E0E8, false, Hex(0x8A96A4), Hex(0xD8E0E8), Hex(0xFFFFFF)),
+                DuelTrail("gold", "Gold Duellist", 0xFFD24A, false, Hex(0xC9962A), Hex(0xFFD24A), Hex(0xFFF0A0)),
+                DuelTrail("phantom", "Phantom", 0xB08AFF, true, Hex(0x6A3AE8), Hex(0xB08AFF), Hex(0x73F2FF), Hex(0xFFFFFF), Hex(0x73F2FF), Hex(0xB08AFF)),
+
                 // Modes doc, One Life: Christmas Day 2026's gravestones, granted by the server.
                 new CosmeticItem { Id = "grave_xmasday_2026", DisplayName = "Christmas Day 2026", Type = CosmeticType.Grave, Color = Hex(0xC8D2DA),
                     ServerReward = true, UnlockText = "One Life: finish your run on Christmas Day 2026",
@@ -205,6 +212,13 @@ namespace Echo.Editor
 
         static CosmeticItem Runner(string id, string name, int score, string product, float r, float g, float b) =>
             new CosmeticItem { Id = id, DisplayName = name, Type = CosmeticType.Runner, UnlockScore = score, ProductId = product, Color = new Color(r, g, b) };
+
+        static CosmeticItem DuelTrail(string tier, string name, int colour, bool animated, params Color[] stops) => new CosmeticItem
+        {
+            Id = "trail_duel_" + tier, DisplayName = name, Type = CosmeticType.Trail, Color = Hex(colour), ServerReward = true,
+            UnlockText = tier == "phantom" ? "Ghost Duels: finish a season Phantom or Wraith" : $"Ghost Duels: finish a season {char.ToUpperInvariant(tier[0]) + tier.Substring(1)}",
+            TrailStops = stops, TrailStriped = false, TrailAnimated = animated,
+        };
 
         static CosmeticItem Trail(string id, string name, int score, string product, float r, float g, float b) =>
             new CosmeticItem { Id = id, DisplayName = name, Type = CosmeticType.Trail, UnlockScore = score, ProductId = product, Color = new Color(r, g, b) };

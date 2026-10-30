@@ -41,6 +41,7 @@ namespace Echo.Game.Flow
             {
                 _lobbyOneLife = true;
                 _lobbyGraveyard = false;
+                _lobbyRanked = false;
                 ShowGraveyardLook(false);
                 _dailyLobby.Show();
                 _dailyLobby.SetHeading("One Life");
@@ -53,6 +54,7 @@ namespace Echo.Game.Flow
         {
             if (_lobbyOneLife) AskOneLife();
             else if (_lobbyGraveyard) PlayGraveyard();
+            else if (_lobbyRanked) AskRanked();
             else PlayDaily();
         }
 

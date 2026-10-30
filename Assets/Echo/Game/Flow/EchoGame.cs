@@ -686,6 +686,11 @@ namespace Echo.Game.Flow
                 EndGraveyard();
                 return;
             }
+            if (_run.Options.Ranked)
+            {
+                EndDuel();
+                return;
+            }
             if (_run.Options.Daily)
             {
                 EndDaily();
@@ -949,6 +954,11 @@ namespace Echo.Game.Flow
             if (_run.Options.Graveyard)
             {
                 PlayGraveyard();
+                return;
+            }
+            if (_run.Options.Ranked)
+            {
+                LeaveDuel();
                 return;
             }
             if (_run.Options.Daily)
@@ -1225,7 +1235,7 @@ namespace Echo.Game.Flow
             if (trail != null)
             {
                 _ghostViews.SetTrailColor(trail.Color);
-                _ghostViews.SetTrailStops(trail.TrailStops, trail.TrailStriped);
+                _ghostViews.SetTrailStops(trail.TrailStops, trail.TrailStriped, trail.TrailAnimated);
             }
             if (palette != null) _paletteStops = palette.PaletteStops;
         }
@@ -1402,6 +1412,7 @@ namespace Echo.Game.Flow
             if (paused)
             {
                 KeepOneLifeRun();   // modes doc: closing the game ends a One Life run where it is
+                KeepDuelRun();      // and a ranked duel
                 LogSessionEnd();
                 if (State == GameState.Running)
                 {
@@ -1429,6 +1440,7 @@ namespace Echo.Game.Flow
         void OnApplicationQuit()
         {
             KeepOneLifeRun();
+            KeepDuelRun();
             // A run cut off mid-run is discarded (tech spec 7); a pending one is committed.
             if ((State == GameState.Dying || State == GameState.DeathScreen) && _run != null && !_run.Committed)
                 CommitAndSave();
@@ -1482,6 +1494,7 @@ namespace Echo.Game.Flow
             ProcessPendingLink();
             _ = FlushOneLife();   // a One Life run cut off when the game was last closed
             _ = FlushGraveyard();
+            _ = FlushDuel();
         }
 
         void OnConsentChosen(bool personalisedAds, bool analytics)

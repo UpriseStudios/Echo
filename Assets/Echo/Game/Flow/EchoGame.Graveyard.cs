@@ -43,6 +43,7 @@ namespace Echo.Game.Flow
             OpenMenu(() =>
             {
                 _lobbyOneLife = false;
+                _lobbyRanked = false;
                 _lobbyGraveyard = true;
                 _graveyardWeekly = false;
                 _dailyLobby.Show();

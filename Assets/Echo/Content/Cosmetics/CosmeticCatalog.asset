@@ -20,6 +20,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -59,6 +60,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -98,6 +100,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -137,6 +140,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -176,6 +180,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -215,6 +220,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -254,6 +260,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -293,6 +300,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -332,6 +340,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -371,6 +380,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -410,6 +420,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -449,6 +460,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -488,6 +500,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -527,6 +540,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -566,6 +580,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -605,6 +620,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.undead
@@ -644,6 +660,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.undead
@@ -683,6 +700,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.undead
@@ -722,6 +740,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.undead
@@ -761,6 +780,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.dungeon
@@ -800,6 +820,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.dungeon
@@ -839,6 +860,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.dungeon
@@ -878,6 +900,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.dungeon
@@ -917,6 +940,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.critters
@@ -956,6 +980,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.critters
@@ -995,6 +1020,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.critters
@@ -1034,6 +1060,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.critters
@@ -1073,6 +1100,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.space
@@ -1112,6 +1140,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.space
@@ -1151,6 +1180,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.space
@@ -1190,6 +1220,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.space
@@ -1229,6 +1260,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.retro
@@ -1268,6 +1300,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.retro
@@ -1307,6 +1340,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.retro
@@ -1346,6 +1380,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.retro
@@ -1385,6 +1420,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.royal
@@ -1424,6 +1460,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.royal
@@ -1463,6 +1500,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.royal
@@ -1502,6 +1540,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.royal
@@ -1541,6 +1580,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.monsters
@@ -1580,6 +1620,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.monsters
@@ -1619,6 +1660,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.monsters
@@ -1658,6 +1700,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.monsters
@@ -1697,6 +1740,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.oddballs
@@ -1736,6 +1780,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.oddballs
@@ -1775,6 +1820,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.oddballs
@@ -1814,6 +1860,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.oddballs
@@ -1853,6 +1900,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -1892,6 +1940,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -1931,6 +1980,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -1970,6 +2020,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -2009,6 +2060,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -2048,6 +2100,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -2087,6 +2140,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.christmas
@@ -2126,6 +2180,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.christmas
@@ -2165,6 +2220,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.christmas
@@ -2204,6 +2260,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.pack.christmas
@@ -2243,6 +2300,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -2275,6 +2333,46 @@ MonoBehaviour:
     ScarfAnchor: {x: -0.03125, y: 0.53125}
     Reaction: 0
     HeadTop: 0.90625
+  - Id: char_wraith
+    DisplayName: Wraith
+    Type: 3
+    Color: {r: 0.11764706, g: 0.16470589, b: 0.24313726, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    TrailAnimated: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 1
+    UnlockText: 'Ghost Duels: finish a season in the top 100'
+    World: {fileID: 0}
+    RunFrames:
+    - {fileID: 21300000, guid: d1fbb8d4dbc259a418d77011446de0d7, type: 3}
+    - {fileID: 21300000, guid: 856311e02f3bab94184eba3f6087863f, type: 3}
+    - {fileID: 21300000, guid: 9a3f38a8855e9664fb400686bfe5eb21, type: 3}
+    - {fileID: 21300000, guid: e6ecf3245b5127840ba9b805a817f2c3, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 1c4806fcfd3209b4d94b3c0f2f8d11b2, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: f8c891c58f53d47448ff706b18a8e749, type: 3}
+    - {fileID: 21300000, guid: e9506a36337575b46b8eb461b27056ff, type: 3}
+    - {fileID: 21300000, guid: ba665538745b3e3479a1ad09815b8371, type: 3}
+    - {fileID: 21300000, guid: 2fbf1b0271c3f3044b44b634219c668b, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: a856b52390158f84cbe84af7b73d00e6, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
   - Id: runner_default
     DisplayName: White
     Type: 0
@@ -2282,6 +2380,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -2313,6 +2412,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 100
     ProductId: 
@@ -2344,6 +2444,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 250
     ProductId: 
@@ -2375,6 +2476,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 500
     ProductId: 
@@ -2406,6 +2508,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 1000
     ProductId: 
@@ -2437,6 +2540,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 3000
     ProductId: 
@@ -2468,6 +2572,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -2499,6 +2604,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -2530,6 +2636,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -2561,6 +2668,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -2592,6 +2700,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 150
     ProductId: 
@@ -2623,6 +2732,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 400
     ProductId: 
@@ -2654,6 +2764,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 3000
     ProductId: 
@@ -2691,6 +2802,7 @@ MonoBehaviour:
     - {r: 0.9098039, g: 0.15686275, b: 0.22745098, a: 1}
     - {r: 1, g: 1, b: 1, a: 1}
     TrailStriped: 1
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -2727,6 +2839,7 @@ MonoBehaviour:
     - {r: 0.2901961, g: 0.84705883, b: 1, a: 1}
     - {r: 0.5411765, g: 1, b: 0.41568628, a: 1}
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -2758,6 +2871,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -2789,6 +2903,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.world.christmas
@@ -2820,6 +2935,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.world.halloween
@@ -2851,6 +2967,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.world.neon
@@ -2882,6 +2999,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.world.sunken
@@ -2913,6 +3031,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.world.autumn
@@ -2944,6 +3063,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.world.beach
@@ -2975,6 +3095,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.world.desert
@@ -3006,6 +3127,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.world.volcano
@@ -3037,6 +3159,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: echo.world.toytown
@@ -3068,6 +3191,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -3099,6 +3223,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -3130,6 +3255,7 @@ MonoBehaviour:
     Sprite: {fileID: 21300000, guid: 46c96fcefcd740b4aa5cceb7f249be12, type: 3}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -3167,6 +3293,7 @@ MonoBehaviour:
     - {r: 0.22745098, g: 0.16470589, b: 0.13333334, a: 1}
     - {r: 1, g: 0.627451, b: 0.2509804, a: 1}
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -3191,6 +3318,149 @@ MonoBehaviour:
     ScarfAnchor: {x: 0, y: 0}
     Reaction: 0
     HeadTop: 0.85
+  - Id: trail_duel_bronze
+    DisplayName: Bronze Duellist
+    Type: 1
+    Color: {r: 0.84705883, g: 0.57254905, b: 0.3529412, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops:
+    - {r: 0.5411765, g: 0.2901961, b: 0.13333334, a: 1}
+    - {r: 0.84705883, g: 0.57254905, b: 0.3529412, a: 1}
+    - {r: 0.9490196, g: 0.7529412, b: 0.5411765, a: 1}
+    TrailStriped: 0
+    TrailAnimated: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 1
+    UnlockText: 'Ghost Duels: finish a season Bronze'
+    World: {fileID: 0}
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: trail_duel_silver
+    DisplayName: Silver Duellist
+    Type: 1
+    Color: {r: 0.84705883, g: 0.8784314, b: 0.9098039, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops:
+    - {r: 0.5411765, g: 0.5882353, b: 0.6431373, a: 1}
+    - {r: 0.84705883, g: 0.8784314, b: 0.9098039, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    TrailStriped: 0
+    TrailAnimated: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 1
+    UnlockText: 'Ghost Duels: finish a season Silver'
+    World: {fileID: 0}
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: trail_duel_gold
+    DisplayName: Gold Duellist
+    Type: 1
+    Color: {r: 1, g: 0.8235294, b: 0.2901961, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops:
+    - {r: 0.7882353, g: 0.5882353, b: 0.16470589, a: 1}
+    - {r: 1, g: 0.8235294, b: 0.2901961, a: 1}
+    - {r: 1, g: 0.9411765, b: 0.627451, a: 1}
+    TrailStriped: 0
+    TrailAnimated: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 1
+    UnlockText: 'Ghost Duels: finish a season Gold'
+    World: {fileID: 0}
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: trail_duel_phantom
+    DisplayName: Phantom
+    Type: 1
+    Color: {r: 0.6901961, g: 0.5411765, b: 1, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops:
+    - {r: 0.41568628, g: 0.22745098, b: 0.9098039, a: 1}
+    - {r: 0.6901961, g: 0.5411765, b: 1, a: 1}
+    - {r: 0.4509804, g: 0.9490196, b: 1, a: 1}
+    - {r: 1, g: 1, b: 1, a: 1}
+    - {r: 0.4509804, g: 0.9490196, b: 1, a: 1}
+    - {r: 0.6901961, g: 0.5411765, b: 1, a: 1}
+    TrailStriped: 0
+    TrailAnimated: 1
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 1
+    UnlockText: 'Ghost Duels: finish a season Phantom or Wraith'
+    World: {fileID: 0}
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
   - Id: grave_xmasday_2026
     DisplayName: Christmas Day 2026
     Type: 4
@@ -3198,6 +3468,7 @@ MonoBehaviour:
     Sprite: {fileID: 21300000, guid: 85fd04961887c474d812486e76e33b16, type: 3}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -3229,6 +3500,7 @@ MonoBehaviour:
     Sprite: {fileID: 21300000, guid: cbf78188491e7e847a7e3377187fb012, type: 3}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -3260,6 +3532,7 @@ MonoBehaviour:
     Sprite: {fileID: 21300000, guid: 03784a3e46c5b594c8b5d0619f5dfe60, type: 3}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -3291,6 +3564,7 @@ MonoBehaviour:
     Sprite: {fileID: 21300000, guid: 1868e9ed541b099439d5233bcece5dd7, type: 3}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops: []
     UnlockScore: 0
     ProductId: 
@@ -3322,6 +3596,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops:
     - {r: 0.16078432, g: 0.4509804, b: 0.5019608, a: 1}
     - {r: 0.35686275, g: 0.23529412, b: 0.54901963, a: 1}
@@ -3356,6 +3631,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops:
     - {r: 0.3529412, g: 0.3529412, b: 0.3529412, a: 1}
     - {r: 0.23921569, g: 0.23921569, b: 0.23921569, a: 1}
@@ -3390,6 +3666,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops:
     - {r: 0.18431373, g: 0.41960785, b: 0.22745098, a: 1}
     - {r: 0.41960785, g: 0.41568628, b: 0.18431373, a: 1}
@@ -3424,6 +3701,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     TrailStops: []
     TrailStriped: 0
+    TrailAnimated: 0
     PaletteStops:
     - {r: 0.11764706, g: 0.16470589, b: 0.3529412, a: 1}
     - {r: 0.22745098, g: 0.11764706, b: 0.3529412, a: 1}

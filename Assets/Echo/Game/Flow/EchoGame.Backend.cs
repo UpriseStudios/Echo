@@ -97,6 +97,8 @@ namespace Echo.Game.Flow
             // Nothing of the old online ID is sent again: unsent daily runs and today's fetched day go too.
             _save.Daily.Pending.Clear();
             _save.Graveyard.Pending.Clear();
+            _save.Ranked.Pending = "";
+            _save.Ranked.Token = "";
             ForgetModes();
             ForgetDailyDay();
             Save();

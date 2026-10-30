@@ -59,7 +59,11 @@ namespace Echo.Game.Flow
             _dailyLobby.PlayClicked += OnLobbyPlay;   // the Daily Haunt's, or One Life's
             _dailyLobby.BackClicked += CloseMenu;
             _dailyLobby.RowClicked += OnDailyRowClicked;
-            _dailyLobby.BoardToggleClicked += OnGraveyardBoardToggle;
+            _dailyLobby.BoardToggleClicked += () =>
+            {
+                if (_lobbyRanked) _ = BeginDuel(false);   // Ghost Duels: the second button is practice
+                else OnGraveyardBoardToggle();
+            };
         }
 
         static string TodayUtc() => DateTime.UtcNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -85,6 +89,7 @@ namespace Echo.Game.Flow
             if (State == GameState.Title) RefreshDailyButton();
             if (_lobbyOneLife) TickOneLifeLabels();
             else if (_lobbyGraveyard) TickGraveyardLabels();
+            else if (_lobbyRanked) TickRankedLabels();
             else if (_dailyLobby != null && _dailyLobby.IsOpen && _daily != null && _daily.Ok)
             {
                 int left = Math.Max(0, _daily.SecondsLeft - (int)(Time.realtimeSinceStartup - _dailyFetchedAt));
@@ -185,7 +190,8 @@ namespace Echo.Game.Flow
 
         // The board showing in the lobby: the Daily Haunt's, One Life's, or the Graveyard's (today's or the week's).
         List<DailyBoardRow> LobbyBoard() =>
-            _lobbyOneLife ? (_oneLife != null && _oneLife.Ok ? _oneLife.Board : null)
+            _lobbyRanked ? null   // Ghost Duels' board ranks ratings; there's no one run to watch
+            : _lobbyOneLife ? (_oneLife != null && _oneLife.Ok ? _oneLife.Board : null)
             : _lobbyGraveyard ? (_graveyard != null && _graveyard.Ok ? (_graveyardWeekly ? _graveyard.Weekly : _graveyard.Daily) : null)
             : _daily != null && _daily.Ok ? _daily.Board : null;
 
@@ -256,6 +262,7 @@ namespace Echo.Game.Flow
             {
                 _lobbyOneLife = false;
                 _lobbyGraveyard = false;
+                _lobbyRanked = false;
                 ShowGraveyardLook(false);
                 _dailyLobby.SetPlay(false, "Play today's course");
                 _dailyLobby.Show();

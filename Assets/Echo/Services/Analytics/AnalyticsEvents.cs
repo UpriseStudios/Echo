@@ -32,6 +32,10 @@ namespace Echo.Services.Analytics
         public const string GraveyardOpened = "graveyard_opened";     // Community Graveyard
         public const string GraveyardRunEnd = "graveyard_run_end";
         public const string GraveyardWeekComplete = "graveyard_week_complete";
+        public const string DuelStarted = "duel_started";               // Ghost Duels ("Ranked" in code)
+        public const string RankedResult = "ranked_result";             // duel_result belongs to the Nemesis Duel
+        public const string RankedTierUp = "ranked_tier_up";
+        public const string RankedSeasonReward = "ranked_season_reward";
         public const string SeasonalAchievement = "seasonal_achievement";
         public const string SeasonalSkinEquipped = "seasonal_skin_equipped";
         public const string WorldEquipped = "world_equipped";           // a user revision: worlds

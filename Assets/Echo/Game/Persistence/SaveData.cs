@@ -51,6 +51,7 @@ namespace Echo.Game.Persistence
         [JsonProperty("modes")] public ModesSaveData Modes = new ModesSaveData();
         [JsonProperty("oneLife")] public OneLifeSaveData OneLife = new OneLifeSaveData();
         [JsonProperty("graveyard")] public GraveyardSaveData Graveyard = new GraveyardSaveData();
+        [JsonProperty("ranked")] public RankedSaveData Ranked = new RankedSaveData();
 
         /// <summary>Power-ups held, up to PowerUpRules.MaxHeld of each (a user revision).</summary>
         [JsonProperty("powerUps")] public PowerUpsSaveData PowerUps = new PowerUpsSaveData();

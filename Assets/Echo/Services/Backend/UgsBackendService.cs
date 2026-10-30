@@ -207,6 +207,24 @@ namespace Echo.Services.Backend
             return Call("GetOneLifeRun", args, DailyRunResult.Failed);
         }
 
+        public Task<RankedProfileInfo> GetDuelProfileAsync(string dateOverride, bool forceModes) =>
+            Call("GetDuelProfile", ModeArgs(dateOverride, forceModes), RankedProfileInfo.Failed);
+
+        public Task<RankedStart> StartDuelAsync(bool ranked, string dateOverride, bool forceModes)
+        {
+            var args = ModeArgs(dateOverride, forceModes);
+            args["ranked"] = ranked;
+            return Call("StartDuel", args, RankedStart.Failed);
+        }
+
+        public Task<RankedSubmitResult> SubmitDuelAsync(string token, string packet, string dateOverride, bool forceModes)
+        {
+            var args = ModeArgs(dateOverride, forceModes);
+            args["token"] = token;
+            args["packet"] = packet;
+            return Call("SubmitDuel", args, RankedSubmitResult.Failed);
+        }
+
         public async Task<string> GetPlayerNameAsync()
         {
             if (!SignedIn) return null;

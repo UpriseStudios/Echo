@@ -12,7 +12,20 @@ namespace Echo.Game.UI
             : id.StartsWith("team_naughty_") ? "<color=#FF7A6A>[NAUGHTY]</color> "
             : id.StartsWith("onelife_") ? "<color=#73F2FF>[ONE LIFE]</color> "
             : id.StartsWith("gravekeeper_") ? "<color=#B8C8B0>[GRAVEKEEPER]</color> "
+            : id.StartsWith("duel_") ? DuelTag(id)
             : "";
+
+        // Ghost Duels' final tier for a season, e.g. duel_gold_s1: [GOLD S1] in the tier's colour.
+        static string DuelTag(string id)
+        {
+            string[] parts = id.Split('_');
+            if (parts.Length != 3) return "";
+            string colour = parts[1] switch
+            {
+                "bronze" => "#D8925A", "silver" => "#D8E0E8", "gold" => "#FFD24A", "phantom" => "#B08AFF", "wraith" => "#73F2FF", _ => "#FFFFFF",
+            };
+            return $"<color={colour}>[{parts[1].ToUpperInvariant()} {parts[2].ToUpperInvariant()}]</color> ";
+        }
 
         /// <summary>Its name in the profile, e.g. "Team Nice 2026".</summary>
         public static string Name(string id)
@@ -22,6 +35,8 @@ namespace Echo.Game.UI
                 return $"Team {(parts[1] == "nice" ? "Nice" : "Naughty")} {parts[2]}";
             if (parts.Length == 2 && parts[0] == "onelife" && parts[1].Length == 8)
                 return $"One Life top 100, {parts[1].Substring(6, 2)}/{parts[1].Substring(4, 2)}/{parts[1].Substring(0, 4)}";
+            if (parts.Length == 3 && parts[0] == "duel")
+                return $"Ghost Duels season {parts[2].Substring(1)}: {char.ToUpperInvariant(parts[1][0]) + parts[1].Substring(1)}";
             if (parts.Length == 2 && parts[0] == "gravekeeper" && parts[1].Length == 8)
                 return $"Gravekeeper, week of {parts[1].Substring(6, 2)}/{parts[1].Substring(4, 2)}/{parts[1].Substring(0, 4)}";
             return id;

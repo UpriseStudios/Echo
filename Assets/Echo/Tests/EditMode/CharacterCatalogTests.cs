@@ -50,8 +50,9 @@ namespace Echo.Tests.EditMode
         public void PumpkinTakesFiveAds_TheRestAreEarnedFromStats()
         {
             CosmeticItem[] characters = Characters();
-            Assert.AreEqual(15 + 32 + 4 + 2 + 4 + 1, characters.Length,
-                "the base cast, 8 packs of 4, the Elementals, Santa and Rudolph, the Christmas Pack and the Gravekeeper");
+            Assert.AreEqual(15 + 32 + 4 + 2 + 4 + 2, characters.Length,
+                "the base cast, 8 packs of 4, the Elementals, Santa and Rudolph, the Christmas Pack, the Gravekeeper and Wraith");
+            Assert.IsTrue(characters.Single(c => c.Id == "char_wraith").ServerReward, "granted by the server only");
             Assert.IsTrue(characters.Single(c => c.Id == "char_gravekeeper").ServerReward, "granted by the server only");
             Assert.AreEqual(5, characters.Single(c => c.Id == "char_pumpkin").AdsToUnlock);
 

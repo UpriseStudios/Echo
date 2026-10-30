@@ -23,6 +23,9 @@ namespace Echo.Game.UI
 
             /// <summary>Badge tags before the name (BadgeNames.Tags), or "".</summary>
             public string Badges;
+
+            /// <summary>After the number: " m" when null; "" for a rating (Ghost Duels).</summary>
+            public string Unit;
         }
 
         [SerializeField] GameObject _root;
@@ -188,7 +191,7 @@ namespace Echo.Game.UI
             for (int i = 0; i < _rows.Length; i++)
             {
                 bool filled = i < board.Count;
-                _rows[i].text = filled ? $"{board[i].Rank,2}  {board[i].Badges}{board[i].Name}" + $"<pos=78%>{board[i].Distance} m" : (i == 0 ? "No runs yet today. Be the first ghost." : "");
+                _rows[i].text = filled ? $"{board[i].Rank,2}  {board[i].Badges}{board[i].Name}" + $"<pos=78%>{board[i].Distance}{board[i].Unit ?? " m"}" : (i == 0 ? "No runs yet today. Be the first ghost." : "");
                 _rows[i].color = filled && board[i].IsYou ? _youColor : _rowColor;
             }
             _lines = board.Count;

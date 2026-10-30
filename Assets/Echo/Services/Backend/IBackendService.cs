@@ -83,6 +83,17 @@ namespace Echo.Services.Backend
         /// <summary>A user revision: a run on today's One Life board to watch (after a rewarded ad, unless it's your own).</summary>
         Task<DailyRunResult> GetOneLifeRunAsync(int rank, string dateOverride, bool forceModes);
 
+        /// <summary>
+        /// Ghost Duels (modes doc; "Ranked" in code): your rating, tier, duels left today, the season, recent results, the
+        /// board, the "while you were away" note (shown once) and season rewards.
+        /// </summary>
+        Task<RankedProfileInfo> GetDuelProfileAsync(string dateOverride, bool forceModes);
+
+        /// <summary>Starts a duel (ranked, or unrated practice): a single-use token, the arena and the opponent's run.</summary>
+        Task<RankedStart> StartDuelAsync(bool ranked, string dateOverride, bool forceModes);
+
+        Task<RankedSubmitResult> SubmitDuelAsync(string token, string packet, string dateOverride, bool forceModes);
+
         /// <summary>The player's generated online name (as on the boards), or null when not signed in.</summary>
         Task<string> GetPlayerNameAsync();
 

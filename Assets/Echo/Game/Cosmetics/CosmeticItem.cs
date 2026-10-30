@@ -25,6 +25,8 @@ namespace Echo.Game.Cosmetics
         public Color[] TrailStops = new Color[0];
         [Tooltip("Hard stripes between the stops rather than a blend.")]
         public bool TrailStriped;
+        [Tooltip("The colours flow along the trail over time (Ghost Duels' Phantom trail).")]
+        public bool TrailAnimated;
 
         [Tooltip("Palette only: background colour at 0 m, 500 m and 1000 m.")]
         public Color[] PaletteStops = new Color[0];

@@ -169,8 +169,13 @@ namespace Echo.Game.Views
         readonly GradientAlphaKey[] _trailAlpha = new GradientAlphaKey[2];
         readonly Gradient _trailGradient = new Gradient();
 
-        public void SetTrailStops(Color[] stops, bool striped)
+        // Ghost Duels' Phantom trail: its colours flow along it, by recolouring the same keys (no allocation).
+        Color[] _trailStops = new Color[0];
+        bool _trailAnimated;
+
+        public void SetTrailStops(Color[] stops, bool striped, bool animated = false)
         {
+            _trailAnimated = animated;
             if (stops == null || stops.Length < 2)
             {
                 _trailKeys = null;
@@ -180,6 +185,8 @@ namespace Echo.Game.Views
             int n = Mathf.Min(stops.Length, 8);
             _trailKeys = new GradientColorKey[n];
             for (int k = 0; k < n; k++) _trailKeys[k] = new GradientColorKey(stops[k], striped ? (k + 1f) / n : k / (n - 1f));
+            _trailStops = new Color[n];
+            for (int k = 0; k < n; k++) _trailStops[k] = stops[k];
             _trailGradient.mode = striped ? GradientMode.Fixed : GradientMode.Blend;
         }
 
@@ -386,6 +393,11 @@ namespace Echo.Game.Views
             var c = new Color(color.r, color.g, color.b, a * (_lantern ? LanternTrailAlpha : TrailAlpha));
             if (_trailKeys != null)
             {
+                if (_trailAnimated)
+                {
+                    int shift = (int)(Time.time * 6f);
+                    for (int k = 0; k < _trailKeys.Length; k++) _trailKeys[k].color = _trailStops[(k + shift) % _trailStops.Length];
+                }
                 _trailAlpha[0] = new GradientAlphaKey(c.a, 0f);
                 _trailAlpha[1] = new GradientAlphaKey(_trailGradient.mode == GradientMode.Fixed ? c.a : 0f, 1f);
                 _trailGradient.SetKeys(_trailKeys, _trailAlpha);
