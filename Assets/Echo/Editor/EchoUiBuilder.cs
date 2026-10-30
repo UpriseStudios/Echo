@@ -932,8 +932,11 @@ namespace Echo.Editor
             var music = MakeButton(root, "Music", "Music: On", new Vector2(0, 520), new Vector2(760, 112), ButtonStyle.Secondary);
             var sfx = MakeButton(root, "Sfx", "Sound effects: On", new Vector2(0, 390), new Vector2(760, 112), ButtonStyle.Secondary);
             var haptics = MakeButton(root, "Haptics", "Haptics: On", new Vector2(0, 260), new Vector2(760, 112), ButtonStyle.Secondary);
-            var glow = MakeButton(root, "Glow", "Glow: On", new Vector2(0, 130), new Vector2(760, 112), ButtonStyle.Secondary);
-            foreach (var toggle in new[] { music, sfx, haptics, glow })
+            // Glow and, a user revision (worlds), whether seasons' looks show over your world, side by side.
+            var glow = MakeButton(root, "Glow", "Glow: On", new Vector2(-194, 130), new Vector2(372, 112), ButtonStyle.Secondary);
+            var seasonal = MakeButton(root, "SeasonalLooks", "Seasons: On", new Vector2(194, 130), new Vector2(372, 112), ButtonStyle.Secondary);
+            Wire(view, "_seasonalLooks", seasonal);
+            foreach (var toggle in new[] { music, sfx, haptics, glow, seasonal })
             {
                 var label = toggle.GetComponentInChildren<TMP_Text>();
                 label.alignment = TextAlignmentOptions.MidlineLeft;

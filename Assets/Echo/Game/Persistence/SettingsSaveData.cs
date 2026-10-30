@@ -13,5 +13,11 @@ namespace Echo.Game.Persistence
 
         /// <summary>The name on Ghost Challenges ("Jamie's Ghost"); asked for the first time one is sent.</summary>
         [JsonProperty("playerName")] public string PlayerName = "";
+
+        /// <summary>
+        /// A user revision (worlds): a season's look shows during its dates over the world you wear (on), or your world
+        /// always shows (off). Seasonal achievements count either way.
+        /// </summary>
+        [JsonProperty("seasonalLooks")] public bool SeasonalLooks = true;
     }
 }

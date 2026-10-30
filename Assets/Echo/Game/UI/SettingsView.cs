@@ -17,6 +17,8 @@ namespace Echo.Game.UI
         [SerializeField] Button _sfx;
         [SerializeField] Button _haptics;
         [SerializeField] Button _glow;
+        // A user revision (worlds): whether a season's look shows over the world you wear.
+        [SerializeField] Button _seasonalLooks;
         [SerializeField] Button _privacy;
         [SerializeField] Button _deleteOnline;
         [SerializeField] Button _howToPlay;
@@ -65,6 +67,7 @@ namespace Echo.Game.UI
             _sfx.onClick.AddListener(() => Toggle(() => _settings.Sfx = !_settings.Sfx));
             _haptics.onClick.AddListener(() => Toggle(() => _settings.Haptics = !_settings.Haptics));
             _glow.onClick.AddListener(() => Toggle(() => _settings.Glow = !_settings.Glow));
+            if (_seasonalLooks != null) _seasonalLooks.onClick.AddListener(() => Toggle(() => _settings.SeasonalLooks = !_settings.SeasonalLooks));
             _privacy.onClick.AddListener(() => PrivacyClicked?.Invoke());
             if (_deleteOnline != null) _deleteOnline.onClick.AddListener(() => DeleteOnlineClicked?.Invoke());
             if (_howToPlay != null) _howToPlay.onClick.AddListener(() => HowToPlayClicked?.Invoke());
@@ -162,14 +165,15 @@ namespace Echo.Game.UI
             SetLabel(_music, Toggle("Music", _settings.Music));
             SetLabel(_sfx, Toggle("Sound effects", _settings.Sfx));
             SetLabel(_haptics, Toggle("Haptics", _settings.Haptics));
-            SetLabel(_glow, Toggle("Glow", _settings.Glow));
+            SetLabel(_glow, Toggle("Glow", _settings.Glow, 72));
+            if (_seasonalLooks != null) SetLabel(_seasonalLooks, Toggle("Seasons", _settings.SeasonalLooks, 72));
             if (_name != null)
                 SetLabel(_name, $"Name<pos=60%><color=#FFC94A>{(string.IsNullOrEmpty(_settings.PlayerName) ? "not set" : _settings.PlayerName)}</color>");
         }
 
         // Name on the left, state on the right: amber ON, dim OFF.
-        static string Toggle(string name, bool on) =>
-            $"{name}<pos=80%>{(on ? "<color=#FFC94A>ON</color>" : "<color=#FFFFFF66>OFF</color>")}";
+        static string Toggle(string name, bool on, int at = 80) =>
+            $"{name}<pos={at}%>{(on ? "<color=#FFC94A>ON</color>" : "<color=#FFFFFF66>OFF</color>")}";
 
         static void SetLabel(Button b, string text) => b.GetComponentInChildren<TMP_Text>().text = text;
     }

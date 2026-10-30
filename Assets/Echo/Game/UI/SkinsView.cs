@@ -133,6 +133,7 @@ namespace Echo.Game.UI
             Section("Palettes", null, CosmeticType.Palette);
             Section("Gravestones", null, CosmeticType.Grave);
             Section("Accessories", null, CosmeticType.Accessory);
+            WorldsSection();
 
             // Colour packs (a user revision: no longer sold): each unlocks at a score, or after enough rewarded ads.
             Header("Colour packs", "score or ads");
@@ -161,6 +162,48 @@ namespace Echo.Game.UI
             foreach (CosmeticItem item in _catalog.Items)
                 if (item.Type == CosmeticType.Character && item.ProductId == productId) CharacterCard(pack, item);
             ProductButton($"{name} Pack", productId, PackOwned(productId));
+        }
+
+        // A user revision: worlds, the backdrop of every run. Store worlds (each with a price, and the Worlds Bundle) and
+        // mode rewards (never sold) share one grid; a season's own look still shows in its dates unless Settings says not.
+        void WorldsSection()
+        {
+            Header("Worlds", "the backdrop of every run");
+            RectTransform grid = Grid(_itemGridTemplate);
+            foreach (CosmeticItem item in _catalog.Items)
+                if (item.Type == CosmeticType.World) WorldButton(grid, item);
+            bool anySold = false, allOwned = true;
+            foreach (CosmeticItem item in _catalog.Items)
+                if (item.Type == CosmeticType.World && item.BundleProductId == ProductIds.WorldsBundle)
+                {
+                    anySold = true;
+                    allOwned &= CosmeticUnlocks.IsOwned(item, _best, _cosmetics.Owned);
+                }
+            if (anySold) ProductButton("Worlds Bundle", ProductIds.WorldsBundle, allOwned);
+        }
+
+        void WorldButton(RectTransform grid, CosmeticItem item)
+        {
+            Button button = Instantiate(_itemTemplate, grid);
+            button.gameObject.SetActive(true);
+            bool owned = CosmeticUnlocks.IsOwned(item, _best, _cosmetics.Owned);
+            bool equipped = Equipped(item.Type) == item.Id;
+            string price = item.PurchaseOnly ? _price(item.ProductId) : null;
+
+            var image = button.GetComponent<Image>();
+            image.color = Swatch(item, owned);
+            var label = button.GetComponentInChildren<TMP_Text>();
+            label.text = $"{item.DisplayName}\n<size=72%>" +
+                         (equipped ? "Equipped" : owned ? "Tap to wear" : item.ServerReward ? item.UnlockText : price ?? "Unavailable") + "</size>";
+            label.color = Luminance(image.color) > 0.55f ? new Color(0.08f, 0.1f, 0.12f) : Color.white;
+
+            button.interactable = !equipped && (owned || price != null);
+            CosmeticItem captured = item;
+            button.onClick.AddListener(() =>
+            {
+                if (CosmeticUnlocks.IsOwned(captured, _best, _cosmetics.Owned)) Equip(captured);
+                else BuyClicked?.Invoke(captured.ProductId);
+            });
         }
 
         // Earned only in an event; Pumpkin also unlocks with ads, so it stays with the main cast.
@@ -344,6 +387,7 @@ namespace Echo.Game.UI
                 case CosmeticType.Trail: e.Trail = item.Id; break;
                 case CosmeticType.Grave: e.Grave = item.Id; break;
                 case CosmeticType.Accessory: e.Accessory = item.Id; break;
+                case CosmeticType.World: e.World = item.Id; break;
                 default: e.Palette = item.Id; break;
             }
             Refresh();
@@ -357,6 +401,7 @@ namespace Echo.Game.UI
             CosmeticType.Trail => _cosmetics.Equipped.Trail,
             CosmeticType.Grave => _cosmetics.Equipped.Grave,
             CosmeticType.Accessory => _cosmetics.Equipped.Accessory,
+            CosmeticType.World => _cosmetics.Equipped.World,
             _ => _cosmetics.Equipped.Palette,
         };
 

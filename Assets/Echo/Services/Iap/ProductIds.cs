@@ -20,6 +20,15 @@ namespace Echo.Services.Iap
         /// <summary>Seasons doc (version 2.1): four Christmas characters at £1.99, sold each December, not in the bundle.</summary>
         public const string PackChristmas = "echo.pack.christmas";
 
+        /// <summary>
+        /// A user revision: worlds, £0.99 each, and the Worlds Bundle (£2.99) with every world sold in the store. A
+        /// world won in a mode is never sold, and a world sold is never won.
+        /// </summary>
+        public const string WorldChristmas = "echo.world.christmas";
+        public const string WorldsBundle = "echo.worlds.bundle";
+
+        public static readonly string[] Worlds = { WorldChristmas };
+
         public static readonly string[] Packs =
         {
             PackUndead, PackDungeon, PackCritters, PackSpace, PackRetro, PackRoyal, PackMonsters, PackOddballs,
@@ -28,7 +37,7 @@ namespace Echo.Services.Iap
         public static readonly string[] All =
         {
             PackUndead, PackDungeon, PackCritters, PackSpace, PackRetro, PackRoyal, PackMonsters, PackOddballs,
-            SeasonOfEcho, PackChristmas,
+            SeasonOfEcho, PackChristmas, WorldChristmas, WorldsBundle,
         };
     }
 }

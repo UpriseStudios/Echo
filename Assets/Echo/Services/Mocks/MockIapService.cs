@@ -35,6 +35,8 @@ namespace Echo.Services.Mocks
             !MockPolicy.Grants ? null
             : productId == ProductIds.SeasonOfEcho ? "£4.99"
             : System.Array.IndexOf(ProductIds.Packs, productId) >= 0 || productId == ProductIds.PackChristmas ? "£1.99"
+            : System.Array.IndexOf(ProductIds.Worlds, productId) >= 0 ? "£0.99"
+            : productId == ProductIds.WorldsBundle ? "£2.99"
             : null;
     }
 }

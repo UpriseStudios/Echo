@@ -253,8 +253,8 @@ namespace Echo.Game.Flow
             // A challenge link that launched the game, or arrives while it runs (echoghost://challenge/CODE).
             Application.deepLinkActivated += OpenChallengeLink;
             if (!string.IsNullOrEmpty(Application.absoluteURL)) OpenChallengeLink(Application.absoluteURL);
-            _skins.Changed += () => { ApplyCosmetics(); LogSeasonalEquip(); Save(); };
-            _settings.Changed += () => { ApplySettings(); Save(); };
+            _skins.Changed += () => { ApplyCosmetics(); RefreshSeason(); LogSeasonalEquip(); Save(); };
+            _settings.Changed += () => { ApplySettings(); RefreshSeason(); Save(); };
             _settings.PrivacyClicked += () => { _settings.Hide(); _consentFromSettings = true; _consentView.Show(); };
             _settings.DevAdFailureToggled += () => _services.ToggleMockAdFailure();
             _settings.ServerCheckClicked += OnServerCheck;

@@ -94,8 +94,9 @@ namespace Echo.Editor
             return (0, 0, 1);
         }
 
-        // The tune, an octave up, as a bright pulse that holds, with a short gap before each note so repeats are heard
-        // (jin-gle bells), plus a light bass on the bar's root.
+        // The tune as a soft, round voice (mostly triangle, a touch of sine an octave up for shine) that holds, with a
+        // short gap before each note so repeats are heard (jin-gle bells), plus a light bass on the bar's root. A user
+        // revision: the first, a thin pulse an octave higher, was too shrill.
         double MelodyAndBass(double t)
         {
             var (f, into, length) = NoteAt(t);
@@ -105,7 +106,7 @@ namespace Echo.Editor
                 double attack = Math.Min(1, into / 0.008);
                 double env = attack * (0.55 + 0.45 * Math.Exp(-into * 5));
                 double vib = 1 + 0.004 * Math.Sin(2 * Math.PI * 5.5 * into) * Math.Min(1, into * 2);
-                voice = Pulse(f * 2 * vib, t, 0.25) * env * 0.26;
+                voice = (Triangle(f * vib, t) * 0.85 + Math.Sin(2 * Math.PI * f * 2 * vib * t) * 0.15) * env * 0.42;
             }
             int beatIndex = (int)(t / _beat);
             double tb = t - beatIndex * _beat;
@@ -113,15 +114,15 @@ namespace Echo.Editor
             return voice + bass;
         }
 
-        // Sleigh bells shaken in eighths, a little louder on the beat.
+        // Sleigh bells shaken in eighths, a little louder on the beat: kept gentle, a short shimmer rather than a hiss.
         double Bells(double t)
         {
             double step = _beat / 2;
             int n = (int)(t / step);
             double ts = t - n * step;
             double accent = n % 2 == 0 ? 1.0 : 0.6;
-            double jingle = Math.Sin(2 * Math.PI * 5274 * t) * 0.5 + Math.Sin(2 * Math.PI * 6645 * t) * 0.35 + Noise(t) * 0.45;
-            return jingle * Math.Exp(-ts * 22) * 0.3 * accent;
+            double jingle = Math.Sin(2 * Math.PI * 2637 * t) * 0.5 + Math.Sin(2 * Math.PI * 3322 * t) * 0.3 + Noise(t) * 0.15;
+            return jingle * Math.Exp(-ts * 30) * 0.16 * accent;
         }
 
         // A soft kick on 1 and 3.
@@ -147,9 +148,9 @@ namespace Echo.Editor
             int n = (int)(t / step);
             int bar = BarAt(t);
             double[] ratios = { 1, _thirds[bar], 1.498, 2, 1.498, _thirds[bar], 1, 1.498 };
-            double f = _roots[bar] * 4 * ratios[n % ratios.Length];
+            double f = _roots[bar] * 2 * ratios[n % ratios.Length];
             double ts = t - n * step;
-            double bell = Math.Sin(2 * Math.PI * f * t) + 0.4 * Math.Sin(2 * Math.PI * f * 2.76 * t) * Math.Exp(-ts * 12);
+            double bell = Math.Sin(2 * Math.PI * f * t) + 0.15 * Math.Sin(2 * Math.PI * f * 2.76 * t) * Math.Exp(-ts * 20);
             return bell * Math.Exp(-ts * 5) * 0.12;
         }
 
@@ -168,10 +169,9 @@ namespace Echo.Editor
             }
             if (best == 0) return 0;
             double env = Math.Min(1, into / 0.02) * (0.6 + 0.4 * Math.Exp(-into * 3));
-            return Triangle(best * 2, t) * env * 0.12;
+            return Math.Sin(2 * Math.PI * best * t) * env * 0.14;
         }
 
-        static double Pulse(double f, double t, double duty) => (f * t - Math.Floor(f * t)) < duty ? 1 : -1;
         static double Saw(double f, double t) => 2 * (f * t - Math.Floor(f * t + 0.5));
         static double Triangle(double f, double t) => 2 * Math.Abs(Saw(f, t)) - 1;
 

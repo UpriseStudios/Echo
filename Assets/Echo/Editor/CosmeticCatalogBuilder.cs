@@ -3,6 +3,8 @@ using System.IO;
 using Echo.Core.Achievements;
 using Echo.Editor.Art;
 using Echo.Game.Cosmetics;
+using Echo.Game.Seasons;
+using Echo.Services.Iap;
 using UnityEditor;
 using UnityEngine;
 
@@ -57,6 +59,16 @@ namespace Echo.Editor
                     true, Hex(0xE8283A), Hex(0xFFFFFF), Hex(0xE8283A), Hex(0xFFFFFF), Hex(0xE8283A), Hex(0xFFFFFF)),
                 Seasonal(Trail("trail_fireworks", "Fireworks", 0, "", 1f, 0.86f, 0.45f), AchievementIds.FirstFooter, "New Year: First Footer",
                     false, Hex(0xFFD24A), Hex(0xFF5A8A), Hex(0x8A6AFF), Hex(0x4AD8FF), Hex(0x8AFF6A)),
+
+                // A user revision: worlds. The normal one is everyone's; Christmas Town is sold (and free to see every
+                // December); the Haunted Graveyard is the Community Graveyard's reward, never sold.
+                new CosmeticItem { Id = "world_echo", DisplayName = "Echo", Type = CosmeticType.World, Color = Hex(0x3A5A8A) },
+                new CosmeticItem { Id = "world_christmas", DisplayName = "Christmas Town", Type = CosmeticType.World, Color = Hex(0x5A86B0),
+                    PurchaseOnly = true, ProductId = ProductIds.WorldChristmas, BundleProductId = ProductIds.WorldsBundle,
+                    World = AssetDatabase.LoadAssetAtPath<SeasonTheme>(SeasonThemes.Dir + "/" + SeasonIds.Christmas + ".asset") },
+                new CosmeticItem { Id = "world_graveyard", DisplayName = "Haunted Graveyard", Type = CosmeticType.World, Color = Hex(0x4A6450),
+                    ServerReward = true, UnlockText = "Community Graveyard: finish a week in the top 10",
+                    World = AssetDatabase.LoadAssetAtPath<SeasonTheme>(SeasonThemes.Dir + "/" + SeasonIds.Graveyard + ".asset") },
 
                 // Modes doc, Naughty vs Nice: rewards granted by the server to the winning side.
                 new CosmeticItem { Id = "acc_none", DisplayName = "None", Type = CosmeticType.Accessory, Color = Hex(0x3A4A54) },

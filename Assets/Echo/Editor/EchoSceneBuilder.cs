@@ -59,6 +59,7 @@ namespace Echo.Editor
             ConfigurePlayer();
             SetAppIcon();
             PlaceholderAudio.EnsureAll();
+            SeasonThemes.Build();   // the catalog's worlds point at the theme assets
             var catalog = CosmeticCatalogBuilder.Build();
             var serviceConfig = EnsureServiceConfig();
             BuildScene(material, catalog, serviceConfig);

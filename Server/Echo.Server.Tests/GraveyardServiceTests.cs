@@ -186,7 +186,7 @@ namespace Echo.Server.Tests
             for (int d = 0; d < 7; d++) Run($"2027-01-{18 + d}T10:00:00", "a", (uint)(d + 1));
             Run("2027-01-18T12:00:00", "b", 77);
             List<string> a = On("2027-01-25T09:00:00").GetAsync("a").Result.Rewards;
-            CollectionAssert.AreEqual(new[] { "gravekeeper_20270118" }, a);
+            CollectionAssert.AreEquivalent(new[] { "gravekeeper_20270118", GraveyardService.WorldId }, a, "the first badge brings the Haunted Graveyard world");
             Assert.IsEmpty(On("2027-01-25T10:00:00").GetAsync("a").Result.Rewards, "settled once");
             Assert.IsTrue(On("2027-01-25T09:00:00").GetAsync("b").Result.Rewards.Contains("gravekeeper_20270118"), "top 10 of 2");
 
@@ -196,6 +196,7 @@ namespace Echo.Server.Tests
                     Run(new DateTime(2027, 1, 18).AddDays(7 * w + d).ToString("yyyy-MM-dd") + "T10:00:00", "a", (uint)(w * 10 + d + 1));
             List<string> fourth = On("2027-02-15T09:00:00").GetAsync("a").Result.Rewards;
             Assert.Contains(GraveyardService.SkinId, fourth);
+            Assert.IsFalse(fourth.Contains(GraveyardService.WorldId), "the world comes once");
         }
 
         [Test]

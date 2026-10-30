@@ -35,6 +35,9 @@ namespace EchoCloud
         public const int KeepDays = 21;
         public const int BadgeTop = 10, FullWeeksForSkin = 4;
         public const string SkinId = "char_gravekeeper";
+
+        /// <summary>A user revision: the Haunted Graveyard world, with a player's first Gravekeeper badge (never sold).</summary>
+        public const string WorldId = "world_graveyard";
         const string MetaKey = "graveyard_meta";
         const string TotalKey = "total";
         const string SummaryKey = "summary";
@@ -378,7 +381,10 @@ namespace EchoCloud
                 var badges = new List<BadgeEntry>();
                 DateTime monday = DateTime.ParseExact(week, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
                 if (rank >= 1 && rank <= BadgeTop)
+                {
                     badges.Add(new BadgeEntry { Id = "gravekeeper_" + week, Until = new DateTimeOffset(monday.AddDays(14)).ToUnixTimeSeconds() });
+                    if (!(await RewardStore.ReadAsync(_day, playerId)).Cosmetics.Contains(WorldId)) cosmetics.Add(WorldId);
+                }
                 if (mine != null && mine.Bests.Count >= 7 && ++meta.FullWeeks == FullWeeksForSkin) cosmetics.Add(SkinId);
                 if (cosmetics.Count + badges.Count > 0 && await RewardStore.GrantAsync(_days, _day, playerId, "graveyard_" + week, cosmetics, badges))
                     earned.AddRange(cosmetics.Concat(badges.Select(b => b.Id)));

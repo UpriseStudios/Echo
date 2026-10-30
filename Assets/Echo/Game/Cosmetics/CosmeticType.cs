@@ -10,5 +10,10 @@ namespace Echo.Game.Cosmetics
         Grave,
         /// <summary>Modes doc: worn on the runner's head (and by its ghosts), e.g. the Halo from Naughty vs Nice.</summary>
         Accessory,
+        /// <summary>
+        /// A user revision: a world, the backdrop of every run (sky, scenery layers, drifting effects, a flyer in the
+        /// sky). Sold in the store or granted by a mode, never both.
+        /// </summary>
+        World,
     }
 }

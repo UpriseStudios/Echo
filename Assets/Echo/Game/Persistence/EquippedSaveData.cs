@@ -14,5 +14,8 @@ namespace Echo.Game.Persistence
 
         /// <summary>Schema 5 (version 2.1): the runner's accessory (the Halo); none by default.</summary>
         [JsonProperty("accessory")] public string Accessory = "acc_none";
+
+        /// <summary>Schema 5: the world (a user revision); the normal one by default.</summary>
+        [JsonProperty("world")] public string World = "world_echo";
     }
 }

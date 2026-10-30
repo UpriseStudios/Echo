@@ -68,6 +68,9 @@ namespace Echo.Game.Cosmetics
         public bool EarnedByScore => !PurchaseOnly && !AllAchievements && UnlockStat == CosmeticUnlockStat.None && string.IsNullOrEmpty(UnlockAchievement)
             && !ServerReward && (AdsToUnlock == 0 || UnlockScore > 0);
 
+        [Tooltip("World only: the look whose backdrop it wears (sky, layers, effects, flyer); null for the normal world.")]
+        public Echo.Game.Seasons.SeasonTheme World;
+
         [Header("Character")]
         public Sprite[] RunFrames = new Sprite[0];
         public Sprite JumpFrame;

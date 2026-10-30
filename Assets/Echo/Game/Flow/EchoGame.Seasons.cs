@@ -35,6 +35,10 @@ namespace Echo.Game.Flow
         string _scheduleJson;
         string _seasonsCachePath;
         SeasonTheme _season;
+
+        // A user revision (worlds): the backdrop (sky, scenery layers, effects, flyer) can come from the world the player
+        // wears while the rest of the season (obstacles, graves, ghost hats, the death line) still shows.
+        SeasonTheme _backdrop;
         bool _seasonApplied;
         readonly HashSet<string> _stingersPlayed = new HashSet<string>();
 
@@ -120,10 +124,30 @@ namespace Echo.Game.Flow
             SeasonTheme season = ThemeFor(id);
             // The music follows the season even in the Graveyard: a December graveyard still plays the Christmas tune.
             if (_music != null) _music.SetStems(season != null && season.MusicStems.Length > 0 ? season.MusicStems : null);
-            SeasonTheme theme = _graveyardLook && ForcedSeason == null ? ThemeFor(SeasonIds.Graveyard) ?? season : season;
-            if (_seasonApplied && theme == _season) return;
-            ApplySeason(theme);
+            SeasonTheme mode = _graveyardLook && ForcedSeason == null ? ThemeFor(SeasonIds.Graveyard) : null;
+            // Which look wins (a user decision): a mode's own look in that mode; otherwise the Seasonal looks setting
+            // says whether a season shows over the world you wear (a forced season too, so the setting can be tried).
+            bool seasonal = _save == null || _save.Settings.SeasonalLooks;
+            SeasonTheme details = mode ?? (seasonal ? season : null);
+            SeasonTheme backdrop = mode ?? (seasonal && HasBackdrop(season) ? season : WornWorld());
+            if (_seasonApplied && details == _season && backdrop == _backdrop) return;
+            ApplySeason(details, backdrop);
         }
+
+        static bool HasBackdrop(SeasonTheme t) =>
+            t != null && (t.PaletteStops.Length > 0 || t.FarLayer != null || t.NearLayer != null || t.Effect != SeasonEffect.None
+                          || t.Fireworks || t.Flyer != null);
+
+        /// <summary>The world the player wears, if it's owned and isn't the normal one.</summary>
+        SeasonTheme WornWorld()
+        {
+            if (_catalog == null || _save == null || _progress == null) return null;
+            CosmeticItem world = _catalog.Resolve(_save.Cosmetics.Equipped.World, CosmeticType.World);
+            return world != null && world.World != null && CosmeticUnlocks.IsOwned(world, _progress.Best, _save.Cosmetics.Owned) ? world.World : null;
+        }
+
+        /// <summary>The backdrop showing now (a season's, a world's or a mode's), or null for the normal one.</summary>
+        public SeasonTheme ActiveBackdrop => _backdrop;
 
         SeasonTheme ThemeFor(string id)
         {
@@ -133,16 +157,17 @@ namespace Echo.Game.Flow
             return null;
         }
 
-        void ApplySeason(SeasonTheme theme)
+        void ApplySeason(SeasonTheme theme, SeasonTheme backdrop)
         {
             _season = theme;
+            _backdrop = backdrop;
             _seasonApplied = true;
-            if (_background != null) _background.SetSeason(theme != null ? theme.FarLayer : null, theme != null ? theme.NearLayer : null);
+            if (_background != null) _background.SetSeason(backdrop != null ? backdrop.FarLayer : null, backdrop != null ? backdrop.NearLayer : null);
             _courseView.SetSeason(theme != null ? theme.Spike : null, theme != null ? theme.Block : null, theme != null ? theme.GroundTop : null);
             ApplyGrave();
             _ghostViews.SetSeason(theme != null ? theme.GhostAccessory : null, theme != null ? theme.NemesisAccessory : null);
             _deathScreen.SetHeadstoneSprite(theme != null ? theme.Headstone : null);
-            if (_seasonEffects != null) _seasonEffects.SetTheme(theme);
+            if (_seasonEffects != null) _seasonEffects.SetTheme(backdrop);
             if (theme != null && theme.Stinger != null && _stingersPlayed.Add(theme.Id) && _music != null) _music.PlayStinger(theme.Stinger);
             Debug.Log($"[Seasons] {(theme != null ? theme.Id : "no season")}{(ForcedSeason != null ? " (forced)" : "")}");
             LogSeasonActive();
@@ -163,8 +188,8 @@ namespace Echo.Game.Flow
         // The season's sky, blended over the player's palette.
         Color SeasonDay(Color day, float metres)
         {
-            if (_season == null || _season.PaletteStops.Length == 0) return day;
-            return Color.Lerp(day, PaletteSampler.Sample(_season.PaletteStops, metres), _season.PaletteBlend);
+            if (_backdrop == null || _backdrop.PaletteStops.Length == 0) return day;
+            return Color.Lerp(day, PaletteSampler.Sample(_backdrop.PaletteStops, metres), _backdrop.PaletteBlend);
         }
 
         void RenderSeasonEffects()
@@ -183,7 +208,7 @@ namespace Echo.Game.Flow
         // known. Checked once a second, so the date sums never run every frame.
         float ResetShow()
         {
-            if (_season == null || _season.ResetShowSeconds <= 0f) return 0f;
+            if (_season == null || _season.ResetShowSeconds <= 0f || _backdrop != _season) return 0f;
             if (PreviewResetShow) return 1f;
             if (Time.realtimeSinceStartup < _showCheckAt) return _show;
             _showCheckAt = Time.realtimeSinceStartup + 1f;
