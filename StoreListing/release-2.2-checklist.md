@@ -52,3 +52,25 @@ Graveyard's server code below, with a player's first Gravekeeper badge.
 
 - [ ] **Gravekeeper badge**: the weekly top 10, shown beside their name for the following week.
 - [ ] **Gravekeeper character**: the fourth week a player plays all 7 days. Granted by the server; nothing to set up.
+
+## 6. Ghost Duels ("Ranked" in code)
+
+Ships switched off, like the Graveyard; its first season is planned for 1 February to 28 March 2027.
+
+- [ ] The deploy adds the module endpoints `GetDuelProfile`, `StartDuel` and `SubmitDuel`, the board
+      **`duel_season_1`** (keep latest, no reset: it ranks by rating) and the Remote Config key **`ranked`**:
+      `{ "seasons": [ { "n", "start", "end", "arenas": [10 seeds] } ] }`. The `ranked` window in `modes` is switched off.
+- [ ] Each new season needs: an entry in `ranked` (its dates and 10 arena seeds), a `Server/Config/duel_season_N.lb`
+      (copy season 1's, change the name), and new reference runs: run
+      `dotnet run --project Server/Tools/ReplayProbe -- references`, which writes
+      `Server/EchoCloud/RankedReferences.json` for every arena in `ranked`, then deploy. Reference runs are opponents
+      when nobody is near a player's rating (five per arena, 150 m to 1,200 m, standing for ratings 850 to 1,450).
+- [ ] Going live: set the `ranked` window's `enabled` to `true` in production `modes`.
+- [ ] Privacy: the policy now covers Ghost Duels (rating and generated name on a public board, ranked runs raced by
+      others under that name, kept 60 days after the season). Update the store data forms before switching it on.
+- [ ] Analytics (Event Manager): `duel_started` (`ranked` boolean, `arena` integer, `opponentTier` string),
+      `duel_result` already exists for the Nemesis Duel; Ghost Duels send `ranked_result` (`outcome` string, `change`
+      integer, `tier` string, `ranked` boolean), plus `ranked_tier_up` (`tier` string) and `ranked_season_reward`
+      (`tier` string, `season` integer).
+- [ ] Rewards by final tier (granted by the server when the player returns after the season): a tier badge and trail
+      (Bronze, Silver, Gold), the animated Phantom trail, and the Wraith skin for the top 100.

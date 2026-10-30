@@ -16,10 +16,13 @@ namespace Echo.Server.Tests
         public Task<string> GetPlayerAsync(string p, string k) => Task.FromResult(Items.TryGetValue(p + "/" + k, out string v) ? v : null);
         public Task SetPlayerAsync(string p, string k, string json) { Items[p + "/" + k] = json; return Task.CompletedTask; }
 
+        /// <summary>A keep-latest board (Ghost Duels' ratings) rather than keep-best (the daily boards).</summary>
+        public bool KeepLatest;
+
         public Task SubmitAsync(string playerId, int distance)
         {
             var board = Today;
-            board[playerId] = Math.Max(distance, board.TryGetValue(playerId, out int had) ? had : 0);
+            board[playerId] = KeepLatest ? distance : Math.Max(distance, board.TryGetValue(playerId, out int had) ? had : 0);
             return Task.CompletedTask;
         }
 

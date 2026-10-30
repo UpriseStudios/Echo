@@ -38,6 +38,9 @@ namespace Echo.Server.Tools
                 }
                 Environment = "production";
             }
+            // Ghost Duels' reference runs are made offline: no sign-in.
+            if (args.Length > 0 && args[0] == "references")
+                return References.Run(GameContent.Shared, System.IO.Path.GetFullPath(System.IO.Path.Combine(AppContext.BaseDirectory, "../../../../..")));
             // Echo's own project (the Unity project's cloudProjectId), never the CLI's saved one, which may be another game.
             string projectId = System.Environment.GetEnvironmentVariable("ECHO_UGS_PROJECT_ID") ?? EchoProjectId();
             using var http = new HttpClient();
@@ -57,6 +60,7 @@ namespace Echo.Server.Tools
             if (args.Length > 0 && args[0] == "team") return await ProbeTeam(http, projectId, token);
             if (args.Length > 0 && args[0] == "onelife") return await ProbeOneLife(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "graveyard") return await ProbeGraveyard(http, projectId, token, content);
+            if (args.Length > 0 && args[0] == "ranked") return await ProbeRanked(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "modes") return await ProbeModes(http, projectId, token, args.Length > 1 ? args[1] : null);
             if (args.Length > 0 && args[0] == "switches") return await ProbeSwitches(http, projectId, token, args.Length > 1 && args[1] == "off");
             Console.WriteLine("  #   course   ghosts  device m  server m  device score  server score  match");
@@ -311,6 +315,45 @@ namespace Echo.Server.Tools
                 && again.GetProperty("error").GetString() == "token" && second.GetProperty("error").GetString() == "used"
                 && closed.GetProperty("error").GetString() == "closed";
             Console.WriteLine(good ? "\nOne Life works on the deployed server." : "\nONE LIFE FAILED.");
+            return good ? 0 : 1;
+        }
+
+        // Ghost Duels against development, forced on (the latest configured season): the profile, a ranked duel replayed
+        // and rated, the token spent, a practice duel that moves nothing, and closed when not forced.
+        static async Task<int> ProbeRanked(HttpClient http, string projectId, string token, GameContent content)
+        {
+            var forced = new { forceModes = true };
+            JsonElement profile = await Call(http, projectId, token, "GetDuelProfile", forced);
+            Console.WriteLine($"Profile: ok {profile.GetProperty("ok").GetBoolean()} {profile.GetProperty("error").GetString()}, season {profile.GetProperty("season").GetInt32()}, rating {profile.GetProperty("rating").GetInt32()}, tier {profile.GetProperty("tier").GetString()}, {profile.GetProperty("duelsLeftToday").GetInt32()} left today");
+            if (!profile.GetProperty("ok").GetBoolean()) return 1;
+
+            async Task<(JsonElement start, JsonElement sent, Echo.Core.Reels.Reel reel)> Duel(bool ranked)
+            {
+                JsonElement start = await Call(http, projectId, token, "StartDuel", new { ranked, forceModes = true });
+                Console.WriteLine($"Start ({(ranked ? "ranked" : "practice")}): ok {start.GetProperty("ok").GetBoolean()} {start.GetProperty("error").GetString()}, arena {start.GetProperty("arena").GetInt32()}, vs {start.GetProperty("opponentName").GetString()} ({start.GetProperty("opponentTier").GetString()}, {start.GetProperty("opponentRating").GetInt32()})");
+                ReelPacket.TryDecode(start.GetProperty("opponentPacket").GetString(), out Echo.Core.Reels.Reel rival);
+                Course course = content.CourseFor(start.GetProperty("seed").GetUInt32());
+                Echo.Core.Reels.Reel reel = null;
+                for (uint s = 1700; reel == null; s++)
+                    reel = ParityRuns.Drive(RankedRules.Start(course, rival.Run, content.Config), course, s, content.Config, content.ContentVersion).Reel;
+                JsonElement sent = await Call(http, projectId, token, "SubmitDuel",
+                    new { token = start.GetProperty("token").GetString(), packet = ReelPacket.Encode(reel), forceModes = true });
+                Console.WriteLine($"Submit: ok {sent.GetProperty("ok").GetBoolean()} {sent.GetProperty("error").GetString()}, {sent.GetProperty("distance").GetInt32()} m (device {reel.Distance} m) vs {sent.GetProperty("opponentDistance").GetInt32()} m: {sent.GetProperty("outcome").GetString()}, rating {sent.GetProperty("ratingBefore").GetInt32()} -> {sent.GetProperty("ratingAfter").GetInt32()}");
+                return (start, sent, reel);
+            }
+
+            var (rankedStart, ranked, rankedReel) = await Duel(true);
+            JsonElement again = await Call(http, projectId, token, "SubmitDuel",
+                new { token = rankedStart.GetProperty("token").GetString(), packet = ReelPacket.Encode(rankedReel), forceModes = true });
+            var (_, practice, _) = await Duel(false);
+            JsonElement closed = await Call(http, projectId, token, "StartDuel", new { ranked = true });
+            Console.WriteLine($"Token again: {again.GetProperty("error").GetString()}; not forced (switched off): {closed.GetProperty("error").GetString()}");
+            bool good = ranked.GetProperty("ok").GetBoolean() && ranked.GetProperty("distance").GetInt32() == rankedReel.Distance
+                && ranked.GetProperty("ratingAfter").GetInt32() != ranked.GetProperty("ratingBefore").GetInt32()
+                && again.GetProperty("error").GetString() == "token"
+                && practice.GetProperty("ok").GetBoolean() && practice.GetProperty("ratingAfter").GetInt32() == practice.GetProperty("ratingBefore").GetInt32()
+                && closed.GetProperty("error").GetString() == "closed";
+            Console.WriteLine(good ? "\nGhost Duels work on the deployed server." : "\nGHOST DUELS FAILED.");
             return good ? 0 : 1;
         }
 

@@ -24,15 +24,20 @@ namespace EchoCloud
         /// <summary>Modes doc: the competitive modes' windows from the "modes" key (none when it's missing or unreadable).</summary>
         public IReadOnlyList<ModeWindow> Modes { get; }
 
-        public FeatureSwitches(bool daily, bool serverChallenges, IReadOnlyList<ModeWindow> modes = null)
+        /// <summary>Ghost Duels: the seasons and their arenas from the "ranked" key (none when it's missing or unreadable).</summary>
+        public IReadOnlyList<RankedSeason> RankedSeasons { get; }
+
+        public FeatureSwitches(bool daily, bool serverChallenges, IReadOnlyList<ModeWindow> modes = null, IReadOnlyList<RankedSeason> rankedSeasons = null)
         {
             Daily = daily;
             ServerChallenges = serverChallenges;
             Modes = modes ?? new List<ModeWindow>();
+            RankedSeasons = rankedSeasons ?? new List<RankedSeason>();
         }
 
         public static FeatureSwitches From(IDictionary<string, object> settings) =>
-            new FeatureSwitches(On(settings, DailyKey), On(settings, ServerChallengesKey), ModeSchedule.Parse(Json(settings, ModeSchedule.Key)));
+            new FeatureSwitches(On(settings, DailyKey), On(settings, ServerChallengesKey), ModeSchedule.Parse(Json(settings, ModeSchedule.Key)),
+                RankedSchedule.Parse(Json(settings, RankedSchedule.Key)));
 
         // A JSON value arrives as a JSON token or as text, depending on the serializer.
         static string Json(IDictionary<string, object> settings, string key)
@@ -56,7 +61,7 @@ namespace EchoCloud
             try
             {
                 var response = await api.RemoteConfigSettings.AssignSettingsGetAsync(context, context.AccessToken, context.ProjectId,
-                    context.EnvironmentId, "settings", new List<string> { DailyKey, ServerChallengesKey, ModeSchedule.Key });
+                    context.EnvironmentId, "settings", new List<string> { DailyKey, ServerChallengesKey, ModeSchedule.Key, RankedSchedule.Key });
                 return From(response.Data.Configs?.Settings);
             }
             catch (System.Exception)

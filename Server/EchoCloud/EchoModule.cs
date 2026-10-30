@@ -131,6 +131,33 @@ namespace EchoCloud
             string packet, string dateOverride = null, bool forceModes = false) =>
             await (await Graveyard(context, api, dateOverride, forceModes)).SubmitAsync(context.PlayerId, date, setVersion, packet);
 
+        // Modes doc, Ghost Duels ("Ranked" in code).
+        [CloudCodeFunction("GetDuelProfile")]
+        public async Task<RankedProfileResponse> GetDuelProfile(IExecutionContext context, IGameApiClient api, string dateOverride = null,
+            bool forceModes = false) =>
+            await (await Ranked(context, api, dateOverride, forceModes)).ProfileAsync(context.PlayerId);
+
+        [CloudCodeFunction("StartDuel")]
+        public async Task<RankedStartResponse> StartDuel(IExecutionContext context, IGameApiClient api, bool ranked = true, string dateOverride = null,
+            bool forceModes = false) =>
+            await (await Ranked(context, api, dateOverride, forceModes)).StartAsync(context.PlayerId, ranked);
+
+        [CloudCodeFunction("SubmitDuel")]
+        public async Task<RankedSubmitResponse> SubmitDuel(IExecutionContext context, IGameApiClient api, string token, string packet,
+            string dateOverride = null, bool forceModes = false) =>
+            await (await Ranked(context, api, dateOverride, forceModes)).SubmitAsync(context.PlayerId, token, packet);
+
+        static async Task<RankedService> Ranked(IExecutionContext context, IGameApiClient api, string dateOverride, bool forceModes)
+        {
+            FeatureSwitches switches = await FeatureSwitches.ReadAsync(context, api);
+            return new RankedService(GameContent.Shared, new CloudDayStore(api, context), new CloudDailyStore(api, context), switches.Modes,
+                switches.RankedSeasons, season => DuelBoard(context, api, season), RankedReference.Shipped,
+                ModeSchedule.Now(DevelopmentOnly(context, dateOverride)), forceModes && context.EnvironmentName == Development);
+        }
+
+        static CloudDailyStore DuelBoard(IExecutionContext context, IGameApiClient api, RankedSeason season) =>
+            new CloudDailyStore(api, context, () => AdminKey(context, api), season.Board);
+
         // A user revision: the mode boards can be watched like the Daily Haunt's (the ad is the client's).
         [CloudCodeFunction("GetGraveyardRun")]
         public async Task<GetDailyRunResponse> GetGraveyardRun(IExecutionContext context, IGameApiClient api, int rank, bool weekly = false,
@@ -176,6 +203,9 @@ namespace EchoCloud
         {
             await TeamService.ForgetPlayerAsync(new CloudDayStore(api, context), (await FeatureSwitches.ReadAsync(context, api)).Modes, context.PlayerId);
             await OneLifeService.ForgetPlayerAsync(new CloudDayStore(api, context), OneLifeBoard(context, api), context.PlayerId, DateTime.UtcNow.Date);
+            FeatureSwitches forget = await FeatureSwitches.ReadAsync(context, api);
+            await RankedService.ForgetPlayerAsync(new CloudDayStore(api, context), forget.RankedSeasons, season => DuelBoard(context, api, season),
+                context.PlayerId);
             await GraveyardService.ForgetPlayerAsync(new CloudDayStore(api, context), GraveyardBoard(context, api, CloudDailyStore.GraveyardDailyBoard),
                 GraveyardBoard(context, api, CloudDailyStore.GraveyardWeeklyBoard), context.PlayerId, DateTime.UtcNow.Date);
             await Challenges(context, api).ForgetPlayerAsync(context.PlayerId);   // first: it needs their index

@@ -37,9 +37,12 @@ try {
         $lb = Get-Content $board.FullName -Raw | ConvertFrom-Json
         # The first reset after now that the board's schedule allows: the next midnight, or the next Monday's for a
         # weekly board ("0 0 * * 1").
-        $first = [DateTime]::UtcNow.Date.AddDays(1)
-        if ($lb.ResetConfig.Schedule -eq '0 0 * * 1') { while ($first.DayOfWeek -ne [DayOfWeek]::Monday) { $first = $first.AddDays(1) } }
-        $lb.ResetConfig.Start = $first.ToString("yyyy-MM-ddT00:00:00Z")
+        # A board with no reset (Ghost Duels' rating boards) is deployed as it is.
+        if ($lb.PSObject.Properties['ResetConfig']) {
+            $first = [DateTime]::UtcNow.Date.AddDays(1)
+            if ($lb.ResetConfig.Schedule -eq '0 0 * * 1') { while ($first.DayOfWeek -ne [DayOfWeek]::Monday) { $first = $first.AddDays(1) } }
+            $lb.ResetConfig.Start = $first.ToString("yyyy-MM-ddT00:00:00Z")
+        }
         [System.IO.File]::WriteAllText((Join-Path $staging $board.Name), ($lb | ConvertTo-Json -Depth 5), (New-Object System.Text.UTF8Encoding $false))
         $targets += (Join-Path $staging $board.Name)
     }

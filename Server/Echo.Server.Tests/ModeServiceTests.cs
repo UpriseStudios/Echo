@@ -96,6 +96,14 @@ namespace Echo.Server.Tests
             Assert.IsNotEmpty(shipped);
             Assert.IsTrue(shipped.All(w => !w.Enabled), "every mode ships switched off; going live is a Remote Config change");
             CollectionAssert.IsSubsetOf(shipped.Select(w => w.Id).Distinct(), ModeIds.All);
+
+            // Ghost Duels: the shipped seasons read whole, each with 10 arenas, and the ranked key is JSON.
+            List<RankedSeason> seasons = RankedSchedule.Parse(entries.GetProperty(RankedSchedule.Key).GetRawText());
+            Assert.IsNotEmpty(seasons);
+            Assert.IsTrue(seasons.All(x => x.Arenas.Count == RankedRules.ArenasPerSeason && x.Arenas.Distinct().Count() == RankedRules.ArenasPerSeason));
+            Assert.AreEqual("JSON", JsonDocument.Parse(rc).RootElement.GetProperty("types").GetProperty(RankedSchedule.Key).GetString());
+            Assert.IsTrue(File.Exists(Path.Combine(TestContext.CurrentContext.TestDirectory, "..", "..", "..", "..", "Config",
+                seasons[0].Board + ".lb")), "each season's board is in Config");
         }
     }
 }

@@ -30,5 +30,11 @@ namespace Echo.Core.Rules
 
         /// <summary>Modes doc, the Community Graveyard: the week's course against the community's ghosts (Daily is set too).</summary>
         public bool Graveyard;
+
+        /// <summary>
+        /// Modes doc, Ghost Duels ("Ranked" in code): one arena, one rival run racing alongside in lockstep that can never
+        /// kill (Daily is set too).
+        /// </summary>
+        public bool Ranked;
     }
 }

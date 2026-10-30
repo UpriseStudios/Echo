@@ -36,7 +36,9 @@ namespace Echo.Core.Rules
             if (ghosts == null) throw new ArgumentNullException(nameof(ghosts));
             _cfg = cfg;
             Options = options;
-            _ghostCfg = options.Twist == Twist.GiantGhosts ? cfg.WithGhostScale(WeeklyTwists.GiantGhostPct) : cfg;
+            // Ghost Duels: the rival races alongside from the start, not as a slow echo met at its grave.
+            _ghostCfg = options.Ranked ? cfg.WithLockstepGhosts()
+                : options.Twist == Twist.GiantGhosts ? cfg.WithGhostScale(WeeklyTwists.GiantGhostPct) : cfg;
             RunIndex = runIndex;
             SpeedPct = speedPct;
             _speed = cfg.SpeedForPct(speedPct);
@@ -85,7 +87,8 @@ namespace Echo.Core.Rules
         int _ghostSafeTicks;
 
         // Ghost touches do nothing during Phase and for a moment after the Shield breaks.
-        bool GhostsSafe => _ghostSafeTicks > 0 || PhaseActive;
+        // and always in a Ghost Duel, where the rival is only a marker.
+        bool GhostsSafe => _ghostSafeTicks > 0 || PhaseActive || Options.Ranked;
 
         /// <summary>Arms the Ghost Shield; once per run.</summary>
         public bool UseShield()

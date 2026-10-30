@@ -19,12 +19,20 @@
         { "id": "naughty_nice", "enabled": false, "start": "2026-12-01T00:00:00Z", "end": "2026-12-25T00:00:00Z", "show_until": "2027-01-01T00:00:00Z" },
         { "id": "one_life", "enabled": false, "start": "2026-12-25T00:00:00Z", "end": "2026-12-26T00:00:00Z" },
         { "id": "one_life", "enabled": false, "start": "2027-01-01T00:00:00Z", "end": "2028-01-01T00:00:00Z", "weekdays": ["sun"] },
-        { "id": "graveyard", "enabled": false, "start": "2027-01-18T00:00:00Z", "end": "2028-01-17T00:00:00Z" }
+        { "id": "graveyard", "enabled": false, "start": "2027-01-18T00:00:00Z", "end": "2028-01-17T00:00:00Z" },
+        { "id": "ranked", "enabled": false, "start": "2027-02-01T00:00:00Z", "end": "2028-02-01T00:00:00Z" }
+      ]
+    },
+    "ranked": {
+      "seasons": [
+        { "n": 1, "start": "2027-02-01T00:00:00Z", "end": "2027-03-29T00:00:00Z",
+          "arenas": [ 104729, 224737, 350377, 479909, 611953, 746773, 882377, 1020379, 1159523, 1299709 ] }
       ]
     }
   },
   "types": {
     "seasons": "JSON",
-    "modes": "JSON"
+    "modes": "JSON",
+    "ranked": "JSON"
   }
 }
