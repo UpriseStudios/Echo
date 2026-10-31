@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a17b07049887e4804980e9016e49ad41, type: 3}
   m_Name: PlayGamesSettings
   m_EditorClassIdentifier: Google.Play.Games::GooglePlayGames.PlayGamesSettings
-  mAppId: 
-  mWebClientId: 
+  mAppId: 129871515811
+  mWebClientId: 129871515811-r7pmc25jhq8si0a9e6dtkennuhuf9g9f.apps.googleusercontent.com
   mNearbyServiceId: 

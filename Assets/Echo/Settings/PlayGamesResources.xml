@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Google Play game services IDs. Save this file as res/values/games-ids.xml in your project.-->
+<resources>
+  <!--app_id-->
+  <string name="app_id" translatable="false">129871515811</string>
+  <!--package_name-->
+  <string name="package_name" translatable="false">com.uprise.echo</string>
+  <!--achievement Hello Again-->
+  <string name="achievement_hello_again" translatable="false">CgkIo6HI5-MDEAIQCA</string>
+  <!--achievement That Was Me?!-->
+  <string name="achievement_that_was_me" translatable="false">CgkIo6HI5-MDEAIQEg</string>
+  <!--achievement Déjà Vu-->
+  <string name="achievement_dj_vu" translatable="false">CgkIo6HI5-MDEAIQJA</string>
+  <!--achievement Seriously?-->
+  <string name="achievement_seriously" translatable="false">CgkIo6HI5-MDEAIQCg</string>
+  <!--achievement Sworn Enemy-->
+  <string name="achievement_sworn_enemy" translatable="false">CgkIo6HI5-MDEAIQFw</string>
+  <!--achievement Crowded House-->
+  <string name="achievement_crowded_house" translatable="false">CgkIo6HI5-MDEAIQHg</string>
+  <!--achievement Echo Chamber-->
+  <string name="achievement_echo_chamber" translatable="false">CgkIo6HI5-MDEAIQDg</string>
+  <!--achievement Haunted-->
+  <string name="achievement_haunted" translatable="false">CgkIo6HI5-MDEAIQBg</string>
+  <!--achievement They're Everywhere-->
+  <string name="achievement_theyre_everywhere" translatable="false">CgkIo6HI5-MDEAIQAw</string>
+  <!--achievement Army of Me-->
+  <string name="achievement_army_of_me" translatable="false">CgkIo6HI5-MDEAIQBQ</string>
+  <!--achievement Costume Party-->
+  <string name="achievement_costume_party" translatable="false">CgkIo6HI5-MDEAIQEw</string>
+  <!--achievement Close One-->
+  <string name="achievement_close_one" translatable="false">CgkIo6HI5-MDEAIQEQ</string>
+  <!--achievement Thread the Needle-->
+  <string name="achievement_thread_the_needle" translatable="false">CgkIo6HI5-MDEAIQCQ</string>
+  <!--achievement How Did I Survive That?-->
+  <string name="achievement_how_did_i_survive_that" translatable="false">CgkIo6HI5-MDEAIQHA</string>
+  <!--achievement No Fear-->
+  <string name="achievement_no_fear" translatable="false">CgkIo6HI5-MDEAIQDA</string>
+  <!--achievement Fresh Start-->
+  <string name="achievement_fresh_start" translatable="false">CgkIo6HI5-MDEAIQKA</string>
+  <!--achievement Exorcist-->
+  <string name="achievement_exorcist" translatable="false">CgkIo6HI5-MDEAIQAQ</string>
+  <!--achievement Mass Exorcism-->
+  <string name="achievement_mass_exorcism" translatable="false">CgkIo6HI5-MDEAIQJw</string>
+  <!--achievement So Close-->
+  <string name="achievement_so_close" translatable="false">CgkIo6HI5-MDEAIQFA</string>
+  <!--achievement Absolutely Smashed It-->
+  <string name="achievement_absolutely_smashed_it" translatable="false">CgkIo6HI5-MDEAIQJQ</string>
+  <!--achievement Perfect Echo-->
+  <string name="achievement_perfect_echo" translatable="false">CgkIo6HI5-MDEAIQGw</string>
+  <!--achievement Graveyard Shift-->
+  <string name="achievement_graveyard_shift" translatable="false">CgkIo6HI5-MDEAIQHw</string>
+  <!--achievement Unfinished Business-->
+  <string name="achievement_unfinished_business" translatable="false">CgkIo6HI5-MDEAIQIA</string>
+  <!--achievement Getting Started-->
+  <string name="achievement_getting_started" translatable="false">CgkIo6HI5-MDEAIQAA</string>
+  <!--achievement Going Somewhere-->
+  <string name="achievement_going_somewhere" translatable="false">CgkIo6HI5-MDEAIQIQ</string>
+  <!--achievement Long Way From Home-->
+  <string name="achievement_long_way_from_home" translatable="false">CgkIo6HI5-MDEAIQIg</string>
+  <!--achievement Untouchable-->
+  <string name="achievement_untouchable" translatable="false">CgkIo6HI5-MDEAIQGg</string>
+  <!--achievement Bad Decisions-->
+  <string name="achievement_bad_decisions" translatable="false">CgkIo6HI5-MDEAIQFQ</string>
+  <!--achievement I Can Fix This-->
+  <string name="achievement_i_can_fix_this" translatable="false">CgkIo6HI5-MDEAIQDw</string>
+  <!--achievement Just One More-->
+  <string name="achievement_just_one_more" translatable="false">CgkIo6HI5-MDEAIQGQ</string>
+  <!--achievement Haunted by Strangers-->
+  <string name="achievement_haunted_by_strangers" translatable="false">CgkIo6HI5-MDEAIQAg</string>
+  <!--achievement Passing Through-->
+  <string name="achievement_passing_through" translatable="false">CgkIo6HI5-MDEAIQCw</string>
+  <!--achievement Top Ten-->
+  <string name="achievement_top_ten" translatable="false">CgkIo6HI5-MDEAIQJg</string>
+  <!--achievement Daily Grind-->
+  <string name="achievement_daily_grind" translatable="false">CgkIo6HI5-MDEAIQEA</string>
+  <!--achievement Twelve Days-->
+  <string name="achievement_twelve_days" translatable="false">CgkIo6HI5-MDEAIQIw</string>
+  <!--achievement Lead the Way-->
+  <string name="achievement_lead_the_way" translatable="false">CgkIo6HI5-MDEAIQFg</string>
+  <!--achievement Snowed Under-->
+  <string name="achievement_snowed_under" translatable="false">CgkIo6HI5-MDEAIQDQ</string>
+  <!--achievement First Footer-->
+  <string name="achievement_first_footer" translatable="false">CgkIo6HI5-MDEAIQGA</string>
+  <!--achievement Trick or Treat-->
+  <string name="achievement_trick_or_treat" translatable="false">CgkIo6HI5-MDEAIQBw</string>
+  <!--achievement It's Complicated-->
+  <string name="achievement_its_complicated" translatable="false">CgkIo6HI5-MDEAIQBA</string>
+  <!--achievement Egg Hunt-->
+  <string name="achievement_egg_hunt" translatable="false">CgkIo6HI5-MDEAIQHQ</string>
+</resources>

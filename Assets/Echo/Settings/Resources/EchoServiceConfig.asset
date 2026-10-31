@@ -20,8 +20,100 @@ MonoBehaviour:
   ContinueAdUnitIos: k8ws0qguzxr2nopk
   UnlockAdUnitAndroid: 04cfksbewjo4gpdi
   UnlockAdUnitIos: 9sfykqa67w9fpi37
+  BanishTenAdUnitAndroid: REPLACE_ME
+  BanishTenAdUnitIos: REPLACE_ME
   PowerUpAdUnitAndroid: j5h3stsq9y1ba5zr
   PowerUpAdUnitIos: 7408h5oakz0x5hol
+  DailyBanishAdUnitAndroid: REPLACE_ME
+  DailyBanishAdUnitIos: REPLACE_ME
+  WatchRunAdUnitAndroid: REPLACE_ME
+  WatchRunAdUnitIos: REPLACE_ME
   StoreUrlAndroid: https://play.google.com/store/apps/details?id=com.uprise.echo
   StoreUrlIos: REPLACE_ME
+  UgsEnvironmentDevelopment: development
+  UgsEnvironmentRelease: production
+  PlayGamesWebClientId: 129871515811-r7pmc25jhq8si0a9e6dtkennuhuf9g9f.apps.googleusercontent.com
+  PlayGamesAchievements:
+  - EchoId: hello_again
+    PlayId: CgkIo6HI5-MDEAIQCA
+  - EchoId: that_was_me
+    PlayId: CgkIo6HI5-MDEAIQEg
+  - EchoId: deja_vu
+    PlayId: CgkIo6HI5-MDEAIQJA
+  - EchoId: seriously
+    PlayId: CgkIo6HI5-MDEAIQCg
+  - EchoId: sworn_enemy
+    PlayId: CgkIo6HI5-MDEAIQFw
+  - EchoId: crowded_house
+    PlayId: CgkIo6HI5-MDEAIQHg
+  - EchoId: echo_chamber
+    PlayId: CgkIo6HI5-MDEAIQDg
+  - EchoId: haunted
+    PlayId: CgkIo6HI5-MDEAIQBg
+  - EchoId: theyre_everywhere
+    PlayId: CgkIo6HI5-MDEAIQAw
+  - EchoId: army_of_me
+    PlayId: CgkIo6HI5-MDEAIQBQ
+  - EchoId: costume_party
+    PlayId: CgkIo6HI5-MDEAIQEw
+  - EchoId: close_one
+    PlayId: CgkIo6HI5-MDEAIQEQ
+  - EchoId: thread_the_needle
+    PlayId: CgkIo6HI5-MDEAIQCQ
+  - EchoId: how_did_i_survive
+    PlayId: CgkIo6HI5-MDEAIQHA
+  - EchoId: no_fear
+    PlayId: CgkIo6HI5-MDEAIQDA
+  - EchoId: fresh_start
+    PlayId: CgkIo6HI5-MDEAIQKA
+  - EchoId: exorcist
+    PlayId: CgkIo6HI5-MDEAIQAQ
+  - EchoId: mass_exorcism
+    PlayId: CgkIo6HI5-MDEAIQJw
+  - EchoId: so_close
+    PlayId: CgkIo6HI5-MDEAIQFA
+  - EchoId: smashed_it
+    PlayId: CgkIo6HI5-MDEAIQJQ
+  - EchoId: perfect_echo
+    PlayId: CgkIo6HI5-MDEAIQGw
+  - EchoId: graveyard_shift
+    PlayId: CgkIo6HI5-MDEAIQHw
+  - EchoId: unfinished_business
+    PlayId: CgkIo6HI5-MDEAIQIA
+  - EchoId: getting_started
+    PlayId: CgkIo6HI5-MDEAIQAA
+  - EchoId: going_somewhere
+    PlayId: CgkIo6HI5-MDEAIQIQ
+  - EchoId: long_way_from_home
+    PlayId: CgkIo6HI5-MDEAIQIg
+  - EchoId: untouchable
+    PlayId: CgkIo6HI5-MDEAIQGg
+  - EchoId: bad_decisions
+    PlayId: CgkIo6HI5-MDEAIQFQ
+  - EchoId: i_can_fix_this
+    PlayId: CgkIo6HI5-MDEAIQDw
+  - EchoId: just_one_more
+    PlayId: CgkIo6HI5-MDEAIQGQ
+  - EchoId: haunted_by_strangers
+    PlayId: CgkIo6HI5-MDEAIQAg
+  - EchoId: passing_through
+    PlayId: CgkIo6HI5-MDEAIQCw
+  - EchoId: top_ten
+    PlayId: CgkIo6HI5-MDEAIQJg
+  - EchoId: daily_grind
+    PlayId: CgkIo6HI5-MDEAIQEA
+  - EchoId: twelve_days
+    PlayId: CgkIo6HI5-MDEAIQIw
+  - EchoId: lead_the_way
+    PlayId: CgkIo6HI5-MDEAIQFg
+  - EchoId: snowed_under
+    PlayId: CgkIo6HI5-MDEAIQDQ
+  - EchoId: first_footer
+    PlayId: CgkIo6HI5-MDEAIQGA
+  - EchoId: trick_or_treat
+    PlayId: CgkIo6HI5-MDEAIQBw
+  - EchoId: its_complicated
+    PlayId: CgkIo6HI5-MDEAIQBA
+  - EchoId: egg_hunt
+    PlayId: CgkIo6HI5-MDEAIQHQ
   RealServicesInEditor: 0
