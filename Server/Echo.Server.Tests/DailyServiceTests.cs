@@ -55,6 +55,49 @@ namespace Echo.Server.Tests
             return await _daily.SubmitAsync(player, d.Date, d.LeaderVersion, ReelPacket.Encode(reel));
         }
 
+        // A user report (dev build): the lobby said "Your best today: 488 m · #1" over a board holding the same player at
+        // 887 m, a run from another day (the live board is the real day's; the record was a date override's).
+        [Test]
+        public async Task TheLobby_NeverShowsABoardRowFromAnotherDay_AndItsRankFollowsTheBoard()
+        {
+            SubmitDailyResponse mine = await PlayAndSubmit("alice", 1);
+            Assert.IsTrue(mine.Ok, mine.Error);
+            _store.Today["alice"] = mine.BestDistance + 399;   // the live board holds a better run from another day
+
+            GetDailyResponse lobby = await _daily.GetDailyAsync("alice");
+            Assert.AreEqual(mine.BestDistance, lobby.BestDistance, "your best is today's record");
+            Assert.IsFalse(lobby.Board.Any(r => r.IsYou), "the other day's row isn't on today's board");
+            Assert.AreEqual(0, lobby.Rank, "so no rank either: the two agree");
+
+            SubmitDailyResponse theirs = await PlayAndSubmit("bob", 7);
+            Assert.IsTrue(theirs.Ok, theirs.Error);
+            GetDailyResponse bobs = await _daily.GetDailyAsync("bob");
+            Assert.AreEqual(1, bobs.Board.Single(r => r.IsYou).Rank, "ranks are counted over what's left");
+            Assert.AreEqual(1, bobs.Rank);
+            Assert.AreEqual(bobs.BestDistance, bobs.Board.Single(r => r.IsYou).Distance, "the row and the best agree");
+        }
+
+        // A user report: "No leader ghosts yet" while the board had an entry. That entry was the player: your own leader
+        // ghost is never shown to you, and the board marks the row as yours; anyone else meets it.
+        [Test]
+        public async Task TheOnlyLeader_IsYou_SoYouMeetNoLeaderGhost_ButEveryoneElseDoes()
+        {
+            SubmitDailyResponse mine = await PlayAndSubmit("alice", 1);
+            Assert.IsTrue(mine.Ok, mine.Error);
+
+            GetDailyResponse yours = await _daily.GetDailyAsync("alice");
+            Assert.AreEqual(1, yours.Board.Count);
+            Assert.IsTrue(yours.Board[0].IsYou, "the only entry is you");
+            Assert.AreEqual(1, yours.Rank);
+            Assert.IsTrue(ReelPacket.TryDecode(yours.GhostsPacket, out Reel own));
+            Assert.IsFalse(own.Ghosts.Any(g => g.Leader), "never your own leader ghost");
+
+            GetDailyResponse bobs = await _daily.GetDailyAsync("bob");
+            Assert.IsTrue(ReelPacket.TryDecode(bobs.GhostsPacket, out Reel theirs));
+            Assert.AreEqual(1, theirs.Ghosts.Count(g => g.Leader), "anyone else meets it");
+            Assert.AreEqual(yours.Board[0].Name, theirs.Ghosts.Single(g => g.Leader).Name);
+        }
+
         [Test]
         public void TheSeed_IsTheSameAllDay_DifferentEachDay_AndNeedsTheSalt()
         {
@@ -107,10 +150,13 @@ namespace Echo.Server.Tests
         static string Day(string yyyyMMdd) => DailyService.DayPrefix + yyyyMMdd;
         string Today() => Day(DailyService.DateKey(_now).Replace("-", ""));
 
-        // Another player joins the top of today's board with the given player's best run, so the leader set changes.
+        // Another player joins the top of today's board with the given player's best run, so the leader set changes. Their
+        // day's record says so too: the board only counts rows a record backs (DailyService.BoardFor).
         void Overtake(string from, string player, int distance)
         {
-            _days.Buckets[Today()][player] = _days.Buckets[Today()][from];
+            var record = System.Text.Json.Nodes.JsonNode.Parse(_days.Buckets[Today()][from])!;
+            record["BestDistance"] = distance;
+            _days.Buckets[Today()][player] = record.ToJsonString();
             _store.Today[player] = distance;
         }
 

@@ -148,7 +148,7 @@ namespace EchoCloud
                 NextRunIndex = day.NextRunIndex,
                 BanishesLeft = Math.Max(0, DailyRules.BanishesPerDay - day.BanishesUsed),
             };
-            List<LeaderboardRow> rows = await _store.TopAsync(100);
+            List<LeaderboardRow> rows = await BoardFor(date);
             // Badges beside the names the lobby shows (the top 10) and yours: one read.
             var badged = rows.Take(DailyRules.Leaders).Select(r => r.PlayerId).Append(playerId).Distinct().ToList();
             Dictionary<string, List<string>> badges = await TeamService.BadgesAsync(_days, badged, new DateTimeOffset(DateTime.SpecifyKind(now, DateTimeKind.Utc)).ToUnixTimeSeconds());
@@ -158,7 +158,13 @@ namespace EchoCloud
                     Rank = row.Rank, Name = row.Name, Distance = row.Distance, IsYou = row.PlayerId == playerId,
                     Badges = badges.TryGetValue(row.PlayerId, out List<string> b) ? b : new List<string>(),
                 });
-            response.Rank = (await _store.PlayerAsync(playerId))?.Rank ?? 0;
+            response.Rank = rows.FirstOrDefault(r => r.PlayerId == playerId)?.Rank ?? 0;
+            if (response.Rank == 0 && day.BestDistance > 0)
+            {
+                // Beyond the rows checked: the live board's rank, if its entry is this day's run.
+                LeaderboardRow mine = await _store.PlayerAsync(playerId);
+                if (mine != null && mine.Distance <= day.BestDistance) response.Rank = mine.Rank;
+            }
             try
             {
                 LeaderboardRow winner = await _store.YesterdaysWinnerAsync();
@@ -304,7 +310,8 @@ namespace EchoCloud
         {
             var response = new GetDailyRunResponse();
             string date = DateKey(Now(dateOverride));
-            List<LeaderboardRow> top = rank >= 1 && rank <= 100 ? await _store.TopAsync(rank) : new List<LeaderboardRow>();
+            // The same board the lobby showed, so a tapped rank is the run that was listed there.
+            List<LeaderboardRow> top = rank >= 1 && rank <= BoardRowsChecked ? await BoardFor(date) : new List<LeaderboardRow>();
             LeaderboardRow row = top.Count >= rank && rank >= 1 ? top[rank - 1] : null;
             if (row == null)
             {
@@ -336,7 +343,7 @@ namespace EchoCloud
 
             var set = new LeaderSet { BuiltUtc = now };
             int rank = 0;
-            foreach (LeaderboardRow row in await _store.TopAsync(DailyRules.Leaders))
+            foreach (LeaderboardRow row in (await BoardFor(date)).Take(DailyRules.Leaders))
             {
                 PlayerDay theirs = await ReadDay(row.PlayerId, date);
                 GhostRecord best = Best(theirs);
@@ -412,6 +419,29 @@ namespace EchoCloud
         static string Bucket(string date) => DayPrefix + date.Replace("-", "");
 
         async Task<LeaderCache> ReadCache(string date) => Read<LeaderCache>(await _days.GetAsync(Bucket(date), LeadersKey)) ?? new LeaderCache();
+
+        /// <summary>Rows of the live board checked against the day's records: twice the leaders, as the lobby shows 10.</summary>
+        public const int BoardRowsChecked = DailyRules.Leaders * 2;
+
+        /// <summary>
+        /// The board as the day's records stand (a user report: a lobby showed "Your best today: 488 m · #1" over a board
+        /// holding the same player at 887 m). The live leaderboard is the real day's, while a day's records can be another
+        /// date's (the development date override); so a row only counts if that player's record for this date reaches its
+        /// distance, and ranks are counted again over what's left.
+        /// </summary>
+        async Task<List<LeaderboardRow>> BoardFor(string date)
+        {
+            List<LeaderboardRow> rows = await _store.TopAsync(BoardRowsChecked);
+            if (rows.Count == 0) return rows;
+            Dictionary<string, string> records = await _days.GetManyAsync(Bucket(date), rows.Select(r => r.PlayerId).Distinct().ToList());
+            var kept = new List<LeaderboardRow>();
+            foreach (LeaderboardRow row in rows)
+            {
+                if (!records.TryGetValue(row.PlayerId, out string json) || !(Read<PlayerDay>(json) is PlayerDay d) || d.BestDistance < row.Distance) continue;
+                kept.Add(new LeaderboardRow { Rank = kept.Count + 1, PlayerId = row.PlayerId, Name = row.Name, Distance = row.Distance });
+            }
+            return kept;
+        }
 
         async Task<PlayerDay> ReadDay(string playerId, string date) =>
             Read<PlayerDay>(await _days.GetAsync(Bucket(date), playerId)) ?? new PlayerDay();

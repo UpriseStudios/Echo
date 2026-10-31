@@ -191,7 +191,9 @@ namespace Echo.Game.UI
             for (int i = 0; i < _rows.Length; i++)
             {
                 bool filled = i < board.Count;
-                _rows[i].text = filled ? $"{board[i].Rank,2}  {board[i].Badges}{board[i].Name}" + $"<pos=78%>{board[i].Distance}{board[i].Unit ?? " m"}" : (i == 0 ? "No runs yet today. Be the first ghost." : "");
+                // A user report: one row each, "1 · [badge] Name · 887 m", shrunk to fit rather than wrapped.
+                _rows[i].text = filled ? $"{board[i].Rank} · {board[i].Badges}{board[i].Name} · {board[i].Distance:N0}{board[i].Unit ?? " m"}"
+                    : (i == 0 ? "No runs yet today. Be the first ghost." : "");
                 _rows[i].color = filled && board[i].IsYou ? _youColor : _rowColor;
             }
             _lines = board.Count;

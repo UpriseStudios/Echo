@@ -52,6 +52,9 @@ namespace Echo.Server.Tools
             Console.WriteLine($"Content version {content.ContentVersion}\n");
             if (challengeMode) return await ProbeChallenges(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "daily") return await ProbeDaily(http, projectId, token, content);
+            if (args.Length > 0 && args[0] == "seed-daily")
+                return await SeedDaily(http, projectId, token, content, args.Length > 1 && int.TryParse(args[1], out int players) ? players : 10,
+                    args.Length > 2 ? args[2] : null);
             if (args.Length > 0 && args[0] == "grace") return await ProbeGrace(http, projectId, token, content);
             if (args.Length > 0 && args[0] == "names") return await ProbeNames(http, token);
             if (args.Length > 0 && args[0] == "smoke") return await SmokeProbe.Run(http, projectId, token, content.ContentVersion, Environment);
@@ -138,6 +141,45 @@ namespace Echo.Server.Tools
 
         // Two anonymous players play today's Daily Haunt: the first sets a best, the second meets them as a leader
         // ghost. A faked distance is corrected, and a date override (development only) gives tomorrow's course.
+        // A user request: fill the development Daily Haunt board for recording. Each of `players` fresh anonymous players
+        // (development only, like every probe) plays one real run against the day's leader ghosts and sends it through
+        // SubmitDailyRun, so the server replays and ranks it like any player's: real names, real runs (watchable from the
+        // board), varied lengths. Optionally on a development date ("yyyy-MM-dd", matching the game's Dev: daily).
+        static async Task<int> SeedDaily(HttpClient http, string projectId, string firstToken, GameContent content, int players, string date)
+        {
+            int sent = 0;
+            for (int i = 0; i < players; i++)
+            {
+                string token = i == 0 ? firstToken : await SignInAnonymously(http, projectId);
+                JsonElement d = await Call(http, projectId, token, "GetDaily", date != null ? (object)new { dateOverride = date } : new { });
+                if (!d.GetProperty("ok").GetBoolean())
+                {
+                    Console.WriteLine($"Player {i + 1}: GetDaily {d.GetProperty("error").GetString()}");
+                    continue;
+                }
+                ReelPacket.TryDecode(d.GetProperty("ghostsPacket").GetString(), out Echo.Core.Reels.Reel ghosts);
+                Course course = content.CourseFor((uint)d.GetProperty("seed").GetInt64());
+                Echo.Core.Reels.Reel reel = null;
+                for (uint s = 3000 + (uint)i * 97; reel == null; s++)
+                {
+                    var run = Echo.Core.Daily.DailyRules.Start(course,
+                        Echo.Core.Daily.DailyRules.Ghosts(ghosts.Ghosts.Where(g => g.Leader), ghosts.Ghosts.Where(g => !g.Leader)),
+                        d.GetProperty("nextRunIndex").GetInt32(), content.Config);
+                    reel = ParityRuns.Drive(run, course, s, content.Config, content.ContentVersion).Reel;
+                }
+                JsonElement r = await Call(http, projectId, token, "SubmitDailyRun", new
+                {
+                    date = d.GetProperty("date").GetString(), leaderVersion = d.GetProperty("leaderVersion").GetString(),
+                    packet = ReelPacket.Encode(reel), dateOverride = date,
+                });
+                bool ok = r.GetProperty("ok").GetBoolean();
+                if (ok) sent++;
+                Console.WriteLine($"Player {i + 1}: {(ok ? $"{r.GetProperty("distance").GetInt32()} m, rank {r.GetProperty("rank").GetInt32()}, as {r.GetProperty("playerName").GetString()}" : r.GetProperty("error").GetString())}");
+            }
+            Console.WriteLine($"\n{sent} of {players} runs on the development board{(date != null ? " for " + date : "")}.");
+            return sent == players ? 0 : 1;
+        }
+
         static async Task<int> ProbeDaily(HttpClient http, string projectId, string tokenA, GameContent content)
         {
             async Task<(JsonElement daily, Echo.Core.Reels.Reel reel, Echo.Core.Reels.Reel ghosts)> Play(string token, uint style)

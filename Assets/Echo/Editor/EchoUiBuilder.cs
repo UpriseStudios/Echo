@@ -571,6 +571,9 @@ namespace Echo.Editor
             countdown.color = GhostCyan;
             var you = MakeText(root, "You", "", 40, _black, new Vector2(0.5f, 0.5f), new Vector2(0, 650), new Vector2(980, 70));
             you.color = Accent;
+            // A user report: "Your best today: 488 m · #1" ran off a 1080 x 2340 screen. Header lines shrink to fit.
+            FitOneLine(countdown, 20);
+            FitOneLine(you, 22);
 
             Pill(root, "BoardCard", new Vector2(0, 160), new Vector2(980, 820), Card);
             // A user decision: any run on the board can be watched (a rewarded ad, unless it's your own).
@@ -581,6 +584,7 @@ namespace Echo.Editor
             {
                 rows[i] = MakeText(root, "Row" + i, "", 38, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, 520 - i * 78), new Vector2(900, 70));
                 rows[i].alignment = TextAlignmentOptions.MidlineLeft;
+                FitOneLine(rows[i], 18);
                 rows[i].raycastTarget = true;
                 var tap = rows[i].gameObject.AddComponent<Button>();
                 tap.targetGraphic = rows[i];
@@ -601,6 +605,7 @@ namespace Echo.Editor
             loaderFigure.preserveAspect = true;
             loaderFigure.raycastTarget = false;
             var yesterday = MakeText(root, "Yesterday", "", 32, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -300), new Vector2(980, 56));
+            FitOneLine(yesterday, 18);
             // Modes doc, Naughty vs Nice: the tally bar (Nice from the left), the totals and your side.
             RectTransform tally = NewRect("Tally", root);
             tally.anchorMin = tally.anchorMax = new Vector2(0.5f, 0.5f);
@@ -1147,6 +1152,15 @@ namespace Echo.Editor
             Wire(view, "_restore", restore);
             root.gameObject.SetActive(false);
             return view;
+        }
+
+        // One line that shrinks (down to minSize) rather than wrapping or running off the screen.
+        static void FitOneLine(TMP_Text text, float minSize)
+        {
+            text.textWrappingMode = TextWrappingModes.NoWrap;
+            text.enableAutoSizing = true;
+            text.fontSizeMax = text.fontSize;
+            text.fontSizeMin = minSize;
         }
 
         static RectTransform Grid(RectTransform parent, string name, Vector2 cell, int columns)

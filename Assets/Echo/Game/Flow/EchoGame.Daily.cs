@@ -348,7 +348,11 @@ namespace Echo.Game.Flow
                 ? $"Your best today: {_daily.BestDistance} m · #{_daily.Rank}"
                 : "You haven't run today's course yet.";
             string yesterday = string.IsNullOrEmpty(_daily.YesterdayWinner) ? "" : $"Yesterday's winner: {_daily.YesterdayWinner} · {_daily.YesterdayWinnerDistance} m";
-            string ghosts = _dailyLeaders.Count == 0 ? "No leader ghosts yet: set the pace."
+            // A user report: "No leader ghosts yet" read as a bug when the only board entry was the player, whose own
+            // leader ghost is never shown to them.
+            bool youLead = _daily.Board.Exists(r => r.IsYou && r.Rank == 1);
+            string ghosts = _dailyLeaders.Count == 0
+                ? youLead ? "You lead today. Everyone else races your ghost." : "No leader ghosts yet: set the pace."
                 : $"{_dailyLeaders.Count} leader ghosts and {_dailyOwn.Count} of yours await. Pass a leader to beat them.";
             _dailyLobby.SetDay(you, board, yesterday, ghosts);
             TickDailyLabels(0f);
