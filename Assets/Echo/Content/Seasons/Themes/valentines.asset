@@ -48,6 +48,8 @@ MonoBehaviour:
   Headstone: {fileID: 0}
   GhostAccessory: {fileID: 0}
   NemesisAccessory: {fileID: 21300000, guid: f9812931bbc4e8247812b0b25f2c40ff, type: 3}
+  ForceCharacter: 
+  RunToast: 
   DeathLine: It's complicated.
   DeathLineNemesisOnly: 1
   Stinger: {fileID: 0}

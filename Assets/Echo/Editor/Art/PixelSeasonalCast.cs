@@ -15,7 +15,7 @@ namespace Echo.Editor.Art
     public static class PixelSeasonalCast
     {
         /// <summary>Earned with a seasonal achievement: Santa and Rudolph.</summary>
-        public static readonly PixelCharacter[] Earned = { Santa(), Rudolph() };
+        public static readonly PixelCharacter[] Earned = { Santa(), Rudolph(), PixelEaster.Chick() };
 
         public static readonly PixelPack ChristmasPack = Pack(ProductIds.PackChristmas, "Christmas", Elf(), Snowman(), Gingerbread(), Nutcracker());
 

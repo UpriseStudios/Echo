@@ -87,6 +87,11 @@ namespace Echo.Game.Seasons
         [Tooltip("Worn by the Nemesis instead of its horns.")]
         public Sprite NemesisAccessory;
 
+        [Header("Everyone wears (April Fools): the runner and every ghost, for looks only; runs still record the real skin")]
+        public string ForceCharacter = "";
+        [Tooltip("Said once a session as a run starts.")]
+        public string RunToast = "";
+
         [Header("Death screen")]
         public string DeathLine = "";
         [Tooltip("Only when the Nemesis ended the run.")]

@@ -22,7 +22,8 @@ namespace Echo.Editor
             if (!AssetDatabase.IsValidFolder(Dir)) AssetDatabase.CreateFolder("Assets/Echo/Content/Seasons", "Themes");
             var themes = new List<SeasonTheme>
             {
-                Halloween(), BonfireNight(), Christmas(), NewYear(), Valentines(), Graveyard(), NeonNight(), SunkenRuins(), AutumnWoods(),
+                Halloween(), BonfireNight(), Christmas(), NewYear(), Valentines(), Easter(), AprilFools(), Graveyard(), NeonNight(),
+                SunkenRuins(), AutumnWoods(),
                 Beach(), DesertDunes(), VolcanicWaste(), ToyTown(), Test(),
             };
             foreach (SeasonTheme t in themes) EditorUtility.SetDirty(t);
@@ -63,6 +64,38 @@ namespace Echo.Editor
             t.NemesisAccessory = Sprite(SeasonIds.Valentines, SeasonArt.NemesisAccessory);
             t.DeathLine = "It's complicated.";
             t.DeathLineNemesisOnly = true;
+            return t;
+        }
+
+        // Seasons doc: spikes become painted eggs (same outline, still hazards), a pastel sky with blossom drifting down,
+        // painted-egg gravestones and bunny ears on the ghosts; the egg hunt is the game's (EggHuntView).
+        static SeasonTheme Easter()
+        {
+            const string id = SeasonIds.Easter;
+            SeasonTheme t = Plain(Load(id), "Easter");
+            t.PaletteStops = new[] { Hex(0x9AD8F0), Hex(0xF0C8E8), Hex(0xC8E8B0) };
+            t.PaletteBlend = 0.6f;
+            t.Effect = SeasonEffect.Falling;
+            t.EffectSprites = new[] { Load<Sprite>(SeasonArt.EffectPath(id, 0)), Load<Sprite>(SeasonArt.EffectPath(id, 1)) };
+            t.EffectColours = new[] { Hex(0xFFD8EC), Hex(0xFFFFFF), Hex(0xF8B8D8) };
+            t.EffectCount = 30;
+            t.EffectFall = 0.6f;
+            t.EffectSway = 0.5f;
+            t.EffectParallax = 0.25f;
+            t.Spike = Sprite(id, SeasonArt.Spike);
+            t.Grave = Sprite(id, SeasonArt.Grave);
+            t.GraveInColour = true;
+            t.GhostAccessory = Sprite(id, SeasonArt.GhostAccessory);
+            return t;
+        }
+
+        // Seasons doc: everyone runs as the Banana for the day; the player's own skin returns at midnight (runs still record
+        // it, so the day's ghosts go back to their own skins too).
+        static SeasonTheme AprilFools()
+        {
+            SeasonTheme t = Plain(Load(SeasonIds.AprilFools), "April Fools");
+            t.ForceCharacter = "char_banana";
+            t.RunToast = "APRIL FOOLS! EVERYONE'S A BANANA";
             return t;
         }
 
@@ -261,6 +294,8 @@ namespace Echo.Editor
             t.DeathLineNemesisOnly = false;
             t.Stinger = null;
             t.MusicStems = new AudioClip[0];
+            t.ForceCharacter = "";
+            t.RunToast = "";
             return t;
         }
 

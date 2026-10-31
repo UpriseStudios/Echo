@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 514eecd290c77574994cd74a5e68239f, type: 3}
+  m_Name: easter
+  m_EditorClassIdentifier: Echo.Game::Echo.Game.Seasons.SeasonTheme
+  Id: easter
+  Title: Easter
+  PaletteStops:
+  - {r: 0.6039216, g: 0.84705883, b: 0.9411765, a: 1}
+  - {r: 0.9411765, g: 0.78431374, b: 0.9098039, a: 1}
+  - {r: 0.78431374, g: 0.9098039, b: 0.6901961, a: 1}
+  PaletteBlend: 0.6
+  FarLayer: {fileID: 0}
+  NearLayer: {fileID: 0}
+  FarTint: {r: 0, g: 0, b: 0, a: 0}
+  NearTint: {r: 0, g: 0, b: 0, a: 0}
+  FloorColour: {r: 0, g: 0, b: 0, a: 0}
+  HazardColour: {r: 0, g: 0, b: 0, a: 0}
+  Effect: 1
+  EffectSprites:
+  - {fileID: 21300000, guid: 6f8384a34a671cb4bb520bdf2596db06, type: 3}
+  - {fileID: 21300000, guid: 487ad6ec12b53984c8ede091d821206b, type: 3}
+  EffectColours:
+  - {r: 1, g: 0.84705883, b: 0.9254902, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0.972549, g: 0.72156864, b: 0.84705883, a: 1}
+  EffectCount: 30
+  EffectFall: 0.6
+  EffectSway: 0.5
+  EffectBand: 1
+  EffectParallax: 0.25
+  Fireworks: 0
+  FireworkSpark: {fileID: 0}
+  FireworkColours: []
+  FireworksPerMinute: 6
+  ResetShowSeconds: 0
+  ResetShowToast: 
+  Flyer: {fileID: 0}
+  FlyerColour: {r: 0, g: 0, b: 0, a: 1}
+  FlyerEvery: 45
+  FlyerSpeed: 2.4
+  Spike: {fileID: 21300000, guid: 1fcd8cb184f047e4b91810c47208f298, type: 3}
+  Block: {fileID: 0}
+  GroundTop: {fileID: 0}
+  Grave: {fileID: 21300000, guid: 01c6a230d8e21d5459ae7a91c84a81f3, type: 3}
+  GraveInColour: 1
+  Headstone: {fileID: 0}
+  GhostAccessory: {fileID: 21300000, guid: ebc5e2e5554f1794e84029086a754b69, type: 3}
+  NemesisAccessory: {fileID: 0}
+  ForceCharacter: 
+  RunToast: 
+  DeathLine: 
+  DeathLineNemesisOnly: 0
+  Stinger: {fileID: 0}
+  MusicStems: []

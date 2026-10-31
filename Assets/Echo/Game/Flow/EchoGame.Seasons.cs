@@ -30,6 +30,7 @@ namespace Echo.Game.Flow
         [SerializeField] TextAsset _seasonSchedule;
         [SerializeField] SeasonTheme[] _seasonThemes = new SeasonTheme[0];
         [SerializeField] SeasonEffectsView _seasonEffects;
+        [SerializeField] EggHuntView _eggHunt;
 
         SeasonSchedule _schedule = new SeasonSchedule();
         string _scheduleJson;
@@ -41,6 +42,7 @@ namespace Echo.Game.Flow
         SeasonTheme _backdrop;
         bool _seasonApplied;
         readonly HashSet<string> _stingersPlayed = new HashSet<string>();
+        readonly HashSet<string> _seasonToasted = new HashSet<string>();
 
         /// <summary>The season showing now, or null.</summary>
         public SeasonTheme ActiveSeason => _season;
@@ -175,6 +177,7 @@ namespace Echo.Game.Flow
             _ghostViews.SetSeason(theme != null ? theme.GhostAccessory : null, theme != null ? theme.NemesisAccessory : null);
             _deathScreen.SetHeadstoneSprite(theme != null ? theme.Headstone : null);
             if (_seasonEffects != null) _seasonEffects.SetTheme(backdrop);
+            if (_catalog != null && _save != null && _progress != null) ApplyCosmetics();
             if (theme != null && theme.Stinger != null && _stingersPlayed.Add(theme.Id) && _music != null) _music.PlayStinger(theme.Stinger);
             Debug.Log($"[Seasons] {(theme != null ? theme.Id : "no season")}{(ForcedSeason != null ? " (forced)" : "")}");
             LogSeasonActive();
@@ -244,13 +247,29 @@ namespace Echo.Game.Flow
         /// <summary>The events counting towards seasonal achievements on this UK date.</summary>
         public SeasonalContext SeasonalOn(DateTime ukDate) => SeasonalEvents.On(_schedule, ukDate);
 
+        // Seasons doc, Easter: two eggs hidden in each main-game run while Easter's achievements count (the Daily Haunt and
+        // the modes get the looks but no eggs). Any other run clears them.
+        void PlantEggs()
+        {
+            if (_eggHunt == null) return;
+            // A forced Easter (development builds, the recording APK) hides eggs too, to see the hunt; only the real event counts them.
+            if (SeasonalOn(UkCalendar.Date(SeasonNowUtc())).Easter != null || ForcedSeason == SeasonIds.Easter) _eggHunt.Plant(_course, _run.RunIndex);
+            else _eggHunt.Clear();
+        }
+
+        /// <summary>The egg hunt's view (tests).</summary>
+        public EggHuntView EggHunt => _eggHunt;
+
         // A main-game run, on today's date (seasons doc rule 6: the server's when it has told us, the device's otherwise).
         void CountSeasonalRun(GhostRecord nemesisBefore)
         {
             SeasonalContext s = SeasonalOn(UkCalendar.Date(SeasonNowUtc()));
+            int eggs = _eggHunt != null ? _eggHunt.Found : 0;
+            if (_eggHunt != null) _eggHunt.Clear();
             if (!s.Any) return;
             bool byNemesis = _run.Cause == DeathCause.Ghost && _run.Killer != null && _run.Killer == nemesisBefore;
             foreach (string id in AchievementRules.OnSeasonalRunEnded(_progress, _run, s, byNemesis)) SeasonalEarned(id);
+            foreach (string id in AchievementRules.OnEggsFound(_progress, s, eggs)) SeasonalEarned(id);
             GrantAchievementRewards();
         }
 

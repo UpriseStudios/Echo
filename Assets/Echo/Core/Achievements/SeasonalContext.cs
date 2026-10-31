@@ -21,15 +21,20 @@ namespace Echo.Core.Achievements
         /// <summary>Valentine's, on 14 February itself.</summary>
         public readonly string ValentinesDay;
 
-        public SeasonalContext(string christmas = null, string newYearsDay = null, string halloween = null, string valentinesDay = null)
+        /// <summary>Easter (Good Friday to Easter Monday): the egg hunt.</summary>
+        public readonly string Easter;
+
+        public SeasonalContext(string christmas = null, string newYearsDay = null, string halloween = null, string valentinesDay = null,
+            string easter = null)
         {
             Christmas = christmas;
             NewYearsDay = newYearsDay;
             Halloween = halloween;
             ValentinesDay = valentinesDay;
+            Easter = easter;
         }
 
-        public bool Any => Christmas != null || NewYearsDay != null || Halloween != null || ValentinesDay != null;
+        public bool Any => Christmas != null || NewYearsDay != null || Halloween != null || ValentinesDay != null || Easter != null;
 
         /// <summary>The event counting now for a season's achievements, or null.</summary>
         public string KeyFor(string season) =>
@@ -37,6 +42,7 @@ namespace Echo.Core.Achievements
             : season == AchievementCatalog.NewYear ? NewYearsDay
             : season == AchievementCatalog.Halloween ? Halloween
             : season == AchievementCatalog.Valentines ? ValentinesDay
+            : season == AchievementCatalog.Easter ? Easter
             : null;
     }
 }

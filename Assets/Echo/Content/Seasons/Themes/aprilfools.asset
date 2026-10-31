@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 514eecd290c77574994cd74a5e68239f, type: 3}
+  m_Name: aprilfools
+  m_EditorClassIdentifier: Echo.Game::Echo.Game.Seasons.SeasonTheme
+  Id: aprilfools
+  Title: April Fools
+  PaletteStops: []
+  PaletteBlend: 1
+  FarLayer: {fileID: 0}
+  NearLayer: {fileID: 0}
+  FarTint: {r: 0, g: 0, b: 0, a: 0}
+  NearTint: {r: 0, g: 0, b: 0, a: 0}
+  FloorColour: {r: 0, g: 0, b: 0, a: 0}
+  HazardColour: {r: 0, g: 0, b: 0, a: 0}
+  Effect: 0
+  EffectSprites: []
+  EffectColours: []
+  EffectCount: 40
+  EffectFall: 1.2
+  EffectSway: 0.3
+  EffectBand: 1
+  EffectParallax: 0.3
+  Fireworks: 0
+  FireworkSpark: {fileID: 0}
+  FireworkColours: []
+  FireworksPerMinute: 6
+  ResetShowSeconds: 0
+  ResetShowToast: 
+  Flyer: {fileID: 0}
+  FlyerColour: {r: 0, g: 0, b: 0, a: 1}
+  FlyerEvery: 45
+  FlyerSpeed: 2.4
+  Spike: {fileID: 0}
+  Block: {fileID: 0}
+  GroundTop: {fileID: 0}
+  Grave: {fileID: 0}
+  GraveInColour: 0
+  Headstone: {fileID: 0}
+  GhostAccessory: {fileID: 0}
+  NemesisAccessory: {fileID: 0}
+  ForceCharacter: char_banana
+  RunToast: APRIL FOOLS! EVERYONE'S A BANANA
+  DeathLine: 
+  DeathLineNemesisOnly: 0
+  Stinger: {fileID: 0}
+  MusicStems: []

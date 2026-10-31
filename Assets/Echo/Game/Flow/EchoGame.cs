@@ -469,6 +469,15 @@ namespace Echo.Game.Flow
                 _sfx.NearMiss();
                 _hud.PopNearMiss();
             }
+
+            // Seasons doc, Easter: an egg touched is found (outside the simulation; nothing about the run changes).
+            if (_eggHunt != null && _eggHunt.Collect(after, _cfg) > 0)
+            {
+                _sfx.GhostClear();
+                _hud.QueueToast("EGG FOUND!");
+                Vector2 egg = new Vector2(SimUnits.ToWorld(after.X), SimUnits.ToWorld(after.Y) + 1.2f);
+                _shards.Burst(egg, new Vector2(0.4f, 0.4f), new Color(1f, 0.85f, 0.95f, 0.9f), 10, 2.5f, 0.4f);
+            }
         }
 
         void Render()
@@ -499,6 +508,7 @@ namespace Echo.Game.Flow
             float viewW = _cameraRig.Right - _cameraRig.Left;
             if (_background != null) _background.Render(_cameraRig.transform.position.x, viewW, _cameraRig.Bottom, _cameraRig.Height, background, env);
             RenderSeasonEffects();
+            if (_eggHunt != null) _eggHunt.Render(Time.time);
             // Obstacles keep their contrast at night: against a dark sky they turn pale instead of dark. A world can set
             // its own hazard and floor colours (a user revision). A world's hazard colour is chosen to stand out from its
             // sky and scenery by colour as well as brightness (WorldContrastTests), so it is used as it is; colours drawn
@@ -599,6 +609,14 @@ namespace Echo.Game.Flow
 
         void StartRunning(bool freshRun = true)
         {
+            // Seasons doc, Easter: a main-game run hides its eggs as it starts (the run is prepared earlier, behind the title,
+            // before a season may change); any other run has none.
+            if (freshRun && _eggHunt != null)
+            {
+                if (_run.Options.Daily || _run.Options.Challenge || _run.Options.Duel) _eggHunt.Clear();
+                else PlantEggs();
+            }
+            if (freshRun && _season != null && !string.IsNullOrEmpty(_season.RunToast) && _seasonToasted.Add(_season.Id)) _hud.QueueToast(_season.RunToast);
             // Recorded at the start, not when the run is prepared: the title screen's Skins can still change it.
             if (freshRun) _run.SkinId = EquippedCharacterId();
             if (freshRun) _run.AccessoryId = EquippedAccessoryId();
@@ -1210,9 +1228,14 @@ namespace Echo.Game.Flow
             var e = _save.Cosmetics.Equipped;
             CosmeticItem runner = _catalog.Resolve(e.Runner, CosmeticType.Runner);
             CosmeticItem character = _catalog.Resolve(characterId ?? e.Character, CosmeticType.Character);
+            // Seasons doc, April Fools: everyone runs as the season's character for the day (looks only).
+            string fool = _season != null ? _season.ForceCharacter : "";
+            _ghostViews.SetSkinOverride(fool);
+            bool fooled = !string.IsNullOrEmpty(fool) && _catalog.Find(fool) is CosmeticItem forced && forced.Type == CosmeticType.Character;
+            if (fooled) character = _catalog.Find(fool);   // worn for looks, so never the locked-skin fallback below
             // A character that is not owned (still locked, an Elemental whose trial ran out, or from an old save) falls
             // back to the free one.
-            if (characterId == null && character != null && !ElementalTrial.Available(character, _progress.Best, _save.Cosmetics))
+            if (characterId == null && !fooled && character != null && !ElementalTrial.Available(character, _progress.Best, _save.Cosmetics))
                 character = _catalog.Resolve(null, CosmeticType.Character);
             CosmeticItem trail = _catalog.Resolve(e.Trail, CosmeticType.Trail);
             CosmeticItem palette = _catalog.Resolve(e.Palette, CosmeticType.Palette);

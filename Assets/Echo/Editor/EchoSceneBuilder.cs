@@ -270,6 +270,10 @@ namespace Echo.Editor
             // Seasons doc: the season's effects layer, sorted behind the floor and everything on it.
             var seasonEffects = Child<SeasonEffectsView>(world, "SeasonEffects");
             Wire(seasonEffects, "_material", material);
+            // Seasons doc, Easter: the egg hunt's eggs.
+            var eggHunt = Child<EggHuntView>(world, "EggHunt");
+            Wire(eggHunt, "_material", material);
+            Wire(eggHunt, "_egg", AssetDatabase.LoadAssetAtPath<Sprite>(SeasonArt.EggPath));
 
             var courseView = Child<CourseView>(world, "Course");
             Wire(courseView, "_material", material);
@@ -424,6 +428,7 @@ namespace Echo.Editor
             Wire(game, "_copycatView", copycat);
             Wire(game, "_ambient", ambient);
             Wire(game, "_seasonEffects", seasonEffects);
+            Wire(game, "_eggHunt", eggHunt);
             WireArray(game, "_seasonThemes", SeasonThemes.Build());
             Wire(game, "_seasonSchedule", AssetDatabase.LoadAssetAtPath<TextAsset>(SeasonThemes.SchedulePath)
                 ?? throw new InvalidOperationException($"missing {SeasonThemes.SchedulePath}"));

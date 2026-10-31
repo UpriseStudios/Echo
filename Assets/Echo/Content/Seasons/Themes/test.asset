@@ -57,6 +57,8 @@ MonoBehaviour:
   Headstone: {fileID: 21300000, guid: 309a2e47f6d288c4b87e749bbddc84c4, type: 3}
   GhostAccessory: {fileID: 21300000, guid: d62be2f8e21960342a1acd03fac04c43, type: 3}
   NemesisAccessory: {fileID: 21300000, guid: f445a4d7194cd854485d809bf8f695e0, type: 3}
+  ForceCharacter: 
+  RunToast: 
   DeathLine: 'Test season: every override is on.'
   DeathLineNemesisOnly: 0
   Stinger: {fileID: 8300000, guid: cfb613ba3f753de4ca2b5a780976b21e, type: 3}

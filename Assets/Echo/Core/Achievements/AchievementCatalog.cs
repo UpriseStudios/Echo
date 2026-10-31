@@ -57,6 +57,7 @@ namespace Echo.Core.Achievements
             new AchievementDef(FirstFooter, "First Footer", "Finish a Daily Haunt run on 1 January", online: true, season: NewYear),
             new AchievementDef(TrickOrTreat, "Trick or Treat", "Play 10 runs during Halloween", 10, season: Halloween),
             new AchievementDef(ItsComplicated, "It's Complicated", "Get killed by your Nemesis on 14 February", season: Valentines),
+            new AchievementDef(EggHunt, "Egg Hunt", "Find 10 hidden eggs during Easter", 10, season: Easter),
         };
 
         // Season ids (the game's schedule names them the same).
@@ -64,6 +65,7 @@ namespace Echo.Core.Achievements
         public const string NewYear = "newyear";
         public const string Halloween = "halloween";
         public const string Valentines = "valentines";
+        public const string Easter = "easter";
 
         /// <summary>The single-player set (all but the online extras): the Elementals need every one of these.</summary>
         public static int SinglePlayerCount

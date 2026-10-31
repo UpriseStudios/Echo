@@ -159,7 +159,13 @@ namespace Echo.Game.Views
         Sprite AccessoryFor(string id) => SkinFor(id) is CosmeticItem item && item.Type == CosmeticType.Accessory ? item.Sprite : null;
 
         CosmeticItem SkinFor(string id) =>
-            !string.IsNullOrEmpty(id) && _skins.TryGetValue(id, out CosmeticItem item) ? item : null;
+            _skinOverride ?? (!string.IsNullOrEmpty(id) && _skins.TryGetValue(id, out CosmeticItem item) ? item : null);
+
+        CosmeticItem _skinOverride;
+
+        /// <summary>Seasons doc, April Fools: every ghost wears this character for the day; null for their own skins.</summary>
+        public void SetSkinOverride(string id) =>
+            _skinOverride = !string.IsNullOrEmpty(id) && _skins.TryGetValue(id, out CosmeticItem item) && item.Type == CosmeticType.Character ? item : null;
 
         public void SetTrailColor(Color color) => _color = color;
 

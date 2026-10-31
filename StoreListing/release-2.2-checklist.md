@@ -74,3 +74,16 @@ Ships switched off, like the Graveyard; its first season is planned for 1 Februa
       (`tier` string, `season` integer).
 - [ ] Rewards by final tier (granted by the server when the player returns after the season): a tier badge and trail
       (Bronze, Silver, Gold), the animated Phantom trail, and the Wraith skin for the top 100.
+
+## 7. Easter and April Fools
+
+Both are switched on in the season schedule (built in, and Remote Config `seasons`): Easter 26 to 29 March 2027 with
+its achievement, April Fools every 1 April with none. Everything is looks only, except the egg hunt, which lives outside
+the simulation and changes nothing about a run.
+
+- [ ] Analytics: `seasonal_achievement` already covers Egg Hunt (`id` egg_hunt); `seasonal_skin_equipped` covers the
+      Easter Chick. The doc's `egg_collected` isn't sent: Egg Hunt's progress is the count.
+- [ ] Phone check in the recording APK: Settings > Dev: season > easter: painted-egg spikes, blossom, egg graves,
+      bunny ears, and two eggs hanging over each main-game run (a hop collects them). Dev: season > aprilfools: you and
+      every ghost are the Banana, with the toast once; your own skin is back with the season off.
+- [ ] Store: Easter Chick is earned only (Egg Hunt), never sold.

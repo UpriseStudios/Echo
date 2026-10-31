@@ -2133,6 +2133,46 @@ MonoBehaviour:
     ScarfAnchor: {x: -0.03125, y: 0.53125}
     Reaction: 18
     HeadTop: 0.875
+  - Id: char_easter_chick
+    DisplayName: Easter Chick
+    Type: 3
+    Color: {r: 1, g: 0.84705883, b: 0.2901961, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    TrailAnimated: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: egg_hunt
+    ServerReward: 0
+    UnlockText: 'Easter: Egg Hunt'
+    World: {fileID: 0}
+    RunFrames:
+    - {fileID: 21300000, guid: 47c4298ae4d25b546845dbb032196c24, type: 3}
+    - {fileID: 21300000, guid: 617c2294243a3c148a88f2e00991b939, type: 3}
+    - {fileID: 21300000, guid: 5c12a6a4b82151e4cbb6d3b726e48028, type: 3}
+    - {fileID: 21300000, guid: 89338237e187ef149aa701c3116e87ce, type: 3}
+    JumpFrame: {fileID: 21300000, guid: a281488261968b54f8582a9038c6da85, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: cc3073b8acec7de4497cb673ae499faf, type: 3}
+    - {fileID: 21300000, guid: d3c37548c64d97a43b25d84d1732fa9a, type: 3}
+    - {fileID: 21300000, guid: 2d7a1302202d7f0419fafcb178ada73b, type: 3}
+    - {fileID: 21300000, guid: cfd0fcec24ec423498a82589aadf15bf, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 5d283e300b9f8254492e79c99e21b9ad, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.84375
   - Id: char_elf
     DisplayName: Elf
     Type: 3

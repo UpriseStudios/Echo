@@ -116,6 +116,18 @@ namespace Echo.Core.Achievements
             return earned;
         }
 
+        /// <summary>
+        /// Seasons doc, Easter: eggs found in a main-game run (the egg hunt is the main game's only; the game places and
+        /// collects them, outside the simulation). They add up across the event towards Egg Hunt.
+        /// </summary>
+        public static List<string> OnEggsFound(Progress p, SeasonalContext s, int eggs)
+        {
+            var earned = new List<string>();
+            if (s.Easter == null || eggs <= 0) return earned;
+            ReportSeasonal(p, AchievementIds.EggHunt, s.Easter, Fresh(p, AchievementIds.EggHunt, s.Easter) + eggs, earned);
+            return earned;
+        }
+
         // Trick or Treat: every run counts, the main game's and the Daily Haunt's.
         static void CountHalloweenRun(Progress p, SeasonalContext s, List<string> earned)
         {

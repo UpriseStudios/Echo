@@ -126,8 +126,8 @@ namespace Echo.Tests.PlayMode
                     Click("Canvas/SafeArea/Skins/Tabs/Runners");
                     yield return null;
                     // Seasons doc: Santa and Rudolph always show (to earn); the Christmas Pack only while on sale (December), so not here.
-                    Assert.AreEqual(15 + 32 + 4 + 2 + 2, characters, "hooded + 8 base, Pumpkin, 5 earned, 8 packs of 4, the Elementals, Santa and Rudolph, the Gravekeeper and Wraith");
-                    Assert.AreEqual(55 + 1 + 8 + 1 + 1 + 30 + 3 + 12, total,
+                    Assert.AreEqual(15 + 32 + 4 + 3 + 2, characters, "hooded + 8 base, Pumpkin, 5 earned, 8 packs of 4, the Elementals, Santa, Rudolph and the Easter Chick, the Gravekeeper and Wraith");
+                    Assert.AreEqual(56 + 1 + 8 + 1 + 1 + 30 + 3 + 12, total,
                         "characters, the Season bundle, 8 skin packs, the Elementals trial, power-ups, 6 colours + 14 trails + 4 palettes + 4 gravestones + 2 accessories, 3 colour packs, 11 worlds + the Worlds Bundle");
                 }
 

@@ -36,7 +36,7 @@ namespace Echo.Tests.EditMode
         }
 
         [Test]
-        public void TheBuiltInSchedule_Has21sSeasonsOn_AndTheRestDormant()
+        public void TheBuiltInSchedule_HasItsSeasonsOn_HalloweenAndBonfireDormant()
         {
             SeasonSchedule s = Parse(BuiltIn);
             Assert.IsNull(On(s, 2026, 10, 28), "Halloween ships dormant in 2.1");
@@ -51,8 +51,10 @@ namespace Echo.Tests.EditMode
             Assert.AreEqual(SeasonIds.Valentines, On(s, 2027, 2, 13));
             Assert.AreEqual(SeasonIds.Valentines, On(s, 2027, 2, 15));
             Assert.IsNull(On(s, 2027, 2, 16));
-            Assert.IsNull(On(s, 2027, 3, 27), "Easter comes in 2.2");
-            Assert.IsNull(On(s, 2027, 4, 1), "so does April Fools");
+            Assert.AreEqual(SeasonIds.Easter, On(s, 2027, 3, 27), "Easter 2027 (a user decision: built now)");
+            Assert.IsNull(On(s, 2027, 3, 30), "Easter Monday is its last day");
+            Assert.AreEqual(SeasonIds.AprilFools, On(s, 2027, 4, 1), "and April Fools");
+            Assert.IsNull(On(s, 2027, 4, 2));
         }
 
         [Test]

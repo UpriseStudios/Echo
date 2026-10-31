@@ -33,6 +33,9 @@ namespace Echo.Editor.Art
         /// <summary>A world's or season's silhouette crossing the sky (a user revision).</summary>
         public static string FlyerPath(string id) => PathFor(id, "flyer");
 
+        /// <summary>The Easter egg hunt's egg (seasons doc).</summary>
+        public static string EggPath => $"{Dir}/fx_egg.png";
+
         /// <summary>A firework spark, shared by every season with fireworks.</summary>
         public static string SparkPath => $"{Dir}/fx_spark.png";
 
@@ -94,6 +97,14 @@ namespace Echo.Editor.Art
             WriteWorld(de, PixelColourWorlds.DesertFar(), PixelColourWorlds.DesertNear(), PixelColourWorlds.Vulture(), PixelColourWorlds.SandWisp());
             WriteWorld(vo, PixelColourWorlds.VolcanoFar(), PixelColourWorlds.VolcanoNear(), PixelColourWorlds.LavaBomb(), PixelColourWorlds.Ash(0), PixelColourWorlds.Ash(1));
             WriteWorld(to, PixelColourWorlds.ToyFar(), PixelColourWorlds.ToyNear(), PixelColourWorlds.Balloon(), PixelColourWorlds.Star(), PixelColourWorlds.Heart());
+            // Easter: painted-egg spikes, an egg gravestone, bunny ears, blossom, and the egg hunt's egg.
+            const string ea = Game.Seasons.SeasonIds.Easter;
+            EchoArt.Write(PathFor(ea, Spike), PixelEaster.Spike());
+            EchoArt.Write(PathFor(ea, Grave), PixelEaster.Grave());
+            EchoArt.Write(PathFor(ea, GhostAccessory), PixelEaster.BunnyEars());
+            EchoArt.Write(EffectPath(ea, 0), PixelEaster.Petal(0));
+            EchoArt.Write(EffectPath(ea, 1), PixelEaster.Petal(1));
+            EchoArt.Write(EggPath, PixelEaster.Egg());
             // Halloween (switched off until next year).
             const string h = Game.Seasons.SeasonIds.Halloween;
             EchoArt.Write(PathFor(h, Grave), PixelSeasons.PumpkinGrave());
@@ -128,6 +139,13 @@ namespace Echo.Editor.Art
                 EchoArt.ImportSprite(FlyerPath(id), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
                 for (int i = 0; i < effects; i++) EchoArt.ImportSprite(EffectPath(id, i), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
             }
+
+            EchoArt.ImportSprite(PathFor(ea, Spike), 16f, Vector2.zero);
+            EchoArt.ImportSprite(PathFor(ea, Grave), EchoArt.WorldPpu, new Vector2(0.5f, 2f / 16f));
+            // The ears' base sits over the top of the head, like the Santa hat's trim.
+            EchoArt.ImportSprite(PathFor(ea, GhostAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 2f / 11f));
+            foreach (string fx in new[] { EffectPath(ea, 0), EffectPath(ea, 1), EggPath })
+                EchoArt.ImportSprite(fx, EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
 
             ImportAs(t);
             EchoArt.ImportSprite(PathFor(t, GhostAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 1f / 10f));

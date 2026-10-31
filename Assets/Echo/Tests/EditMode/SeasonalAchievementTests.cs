@@ -52,6 +52,44 @@ namespace Echo.Tests.EditMode
         }
 
         [Test]
+        public void EggHunt_CountsEggsThroughEaster_AndEarnsTheChick()
+        {
+            SeasonSchedule schedule = BuiltIn();
+            SeasonalContext easter = SeasonalEvents.On(schedule, new DateTime(2027, 3, 27));
+            Assert.AreEqual("easter-2027", easter.Easter);
+            Assert.IsNull(SeasonalEvents.On(schedule, new DateTime(2027, 3, 30)).Easter, "Easter Monday is the last day");
+            Assert.IsFalse(SeasonalEvents.On(schedule, new DateTime(2027, 4, 1)).Any, "April Fools has no achievement");
+
+            var p = new Progress();
+            Assert.IsEmpty(AchievementRules.OnEggsFound(p, SeasonalContext.None, 2), "outside Easter, eggs count for nothing");
+            for (int run = 0; run < 4; run++) Assert.IsEmpty(AchievementRules.OnEggsFound(p, easter, 2));
+            Assert.AreEqual(8, AchievementRules.SeasonalProgressNow(p, AchievementIds.EggHunt, easter));
+            CollectionAssert.AreEqual(new[] { AchievementIds.EggHunt }, AchievementRules.OnEggsFound(p, easter, 2), "10 eggs");
+            Assert.IsTrue(AchievementCatalog.Find(AchievementIds.EggHunt).Seasonal, "outside the 30 and the Elementals");
+
+            CosmeticCatalog catalog = AssetDatabase.LoadAssetAtPath<CosmeticCatalog>("Assets/Echo/Content/Cosmetics/CosmeticCatalog.asset");
+            CosmeticItem chick = catalog.Find("char_easter_chick");
+            Assert.IsNotNull(chick);
+            Assert.AreEqual(AchievementIds.EggHunt, chick.UnlockAchievement);
+            Assert.IsFalse(chick.PurchaseOnly, "earned, never sold");
+        }
+
+        [Test]
+        public void AprilFools_PutsEveryoneInTheBanana_AndEaster_PaintsTheSpikes()
+        {
+            var themes = AssetDatabase.FindAssets("t:" + nameof(SeasonTheme))
+                .Select(g => AssetDatabase.LoadAssetAtPath<SeasonTheme>(AssetDatabase.GUIDToAssetPath(g))).ToList();
+            SeasonTheme fools = themes.Single(t => t.Id == SeasonIds.AprilFools);
+            Assert.AreEqual("char_banana", fools.ForceCharacter);
+            Assert.IsNotEmpty(fools.RunToast);
+            SeasonTheme easter = themes.Single(t => t.Id == SeasonIds.Easter);
+            Assert.IsNotNull(easter.Spike, "painted eggs (SeasonArtTests checks the outline)");
+            Assert.IsNotNull(easter.Grave);
+            Assert.IsNotNull(easter.GhostAccessory);
+            Assert.IsTrue(themes.Where(t => t.Id != SeasonIds.AprilFools).All(t => string.IsNullOrEmpty(t.ForceCharacter)));
+        }
+
+        [Test]
         public void TwelveDays_CountsDifferentDays_AndStartsAgainNextYear()
         {
             var p = new Progress();
@@ -122,7 +160,7 @@ namespace Echo.Tests.EditMode
             string[] seasonal = AchievementCatalog.All.Where(d => d.Seasonal).Select(d => d.Id).ToArray();
             Assert.AreEqual(0, AchievementCatalog.SinglePlayerEarned(seasonal));
             foreach (AchievementDef def in AchievementCatalog.All.Where(d => d.Seasonal))
-                Assert.IsNotNull(new SeasonalContext("c", "n", "h", "v").KeyFor(def.Season), def.Id + " belongs to a known event");
+                Assert.IsNotNull(new SeasonalContext("c", "n", "h", "v", "e").KeyFor(def.Season), def.Id + " belongs to a known event");
         }
 
         static CosmeticCatalog Catalog()
