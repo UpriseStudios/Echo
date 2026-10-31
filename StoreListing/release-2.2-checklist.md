@@ -87,3 +87,27 @@ the simulation and changes nothing about a run.
       bunny ears, and two eggs hanging over each main-game run (a hop collects them). Dev: season > aprilfools: you and
       every ghost are the Banana, with the toast once; your own skin is back with the season off.
 - [ ] Store: Easter Chick is earned only (Egg Hunt), never sold.
+
+## 8. Google Play Games, the store listing and Play's quality bar
+
+Play Games Services v2 ships in 2.2 switched off by its own setup: until the steps in
+`StoreListing/PlayGames/README.md` are done, nothing starts and nothing is sent.
+
+- [ ] Play Console: create the Play Games Services project, both Android credentials (app signing and upload SHA-1)
+      and the Game server credential; import `StoreListing/PlayGames/achievements.zip` (41, 920 points); turn on Saved
+      Games; upload `game_stats_events.csv` and `game_stats.zip`; add yourself as a tester; publish the configuration;
+      turn on Sidekick.
+- [ ] Save Achievements > Get resources (Android XML) as `Assets/Echo/Settings/PlayGamesResources.xml`, put the Game
+      server web client id in `EchoServiceConfig` (Play Games Web Client Id), then Echo > Play Games > Import Resources.
+      Check the console says 41 of 41 achievements matched (the seasonal ones are on Play too).
+- [ ] UGS dashboard (development and production): Player Authentication > Identity providers > Google Play Games, with
+      the web client id and secret.
+- [ ] Phone check (internal testing, signed by Play): Play Games signs in after the privacy choice; Settings shows
+      Achievements; earned achievements appear in Play Games; a second phone on the same Google account offers
+      "Progress found" on its title, and Daily Haunt history follows after sign-in.
+- [ ] Data safety (Play Console): Google Play Games is Google's own service; the linked Play Games identifier is the
+      only new thing Echo's server stores (with the online ID it already declares). Republish the privacy policy
+      (`StoreListing/privacy-policy.body.html`), which now covers Play Games.
+- [ ] Store listing: upload `StoreListing/feature_graphic_1024x500.png` (redrawn).
+- [ ] Screens: the activity is now resizable and the UI fits 3:4 to 9:21. In Play Console > Device catalog, check
+      tablets and foldables aren't excluded; on a tablet, the game fills the screen.

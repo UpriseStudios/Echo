@@ -26,6 +26,7 @@ namespace Echo.Services
         public IIapService Iap;
         public IAnalytics Analytics;
         public Echo.Services.Backend.IBackendService Backend;
+        public Echo.Services.PlayGames.IPlayGamesService PlayGames;
 
         /// <summary>What started and what did not, for the development status readout.</summary>
         public string Note = "";
@@ -116,6 +117,23 @@ namespace Echo.Services
                 {
                     real.Fail("LevelPlay", e);
                 }
+
+#if UNITY_ANDROID
+            // Play's Level Up guidelines: Play Games Services v2 at start, once the privacy choice is made.
+            if (!Echo.Services.PlayGames.PlayGamesService.Configured)
+                real.Note += "Play Games not set up yet (StoreListing/PlayGames/README.md). ";
+            else
+                try
+                {
+                    var playGames = new Echo.Services.PlayGames.PlayGamesService(config);
+                    real.PlayGames = playGames;
+                    if (real.Backend is Echo.Services.Backend.UgsBackendService ugs) ugs.PlayGamesAuthCode = playGames.GetServerAuthCodeAsync;
+                }
+                catch (Exception e)
+                {
+                    real.Fail("Play Games", e);
+                }
+#endif
 
             if (real.Note.Length == 0) real.Note = "Real services running.";
             return real;

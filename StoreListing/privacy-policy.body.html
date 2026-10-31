@@ -78,6 +78,7 @@
         <thead><tr><th>What</th><th>Where it goes</th><th>When</th></tr></thead>
         <tbody>
           <tr><td>Your game save (scores, ghosts, reels, skins, settings)</td><td>Stays on your device</td><td><span class="tag">Always local</span></td></tr>
+          <tr><td>Achievements, game stats and a copy of your save (Android)</td><td>Your Google Play Games account</td><td><span class="tag">Only if you use Play Games</span></td></tr>
           <tr><td>Ad data for rewarded ads</td><td>Unity LevelPlay and its ad partners</td><td><span class="tag">Only when ads load or play</span></td></tr>
           <tr><td>Personalised ads</td><td>Unity LevelPlay and its ad partners</td><td><span class="tag on">Only if you accept</span></td></tr>
           <tr><td>Gameplay analytics</td><td>Unity Analytics</td><td><span class="tag on">Only if you accept</span></td></tr>
@@ -105,7 +106,8 @@
     <p>Echo saves your progress in a file on your phone: your best score and stats, your ghosts (stored as the timing of
       your taps, not as video), achievements, the skins and power-ups you hold, your highlights reel, your settings and
       privacy choices, and the name you choose for Ghost Challenges. We never receive this file. Uninstalling Echo
-      deletes it.</p>
+      deletes it. On Android, if you use Google Play Games, a copy is also kept in your Play Games account (see
+      below), so you can carry on from another phone.</p>
     <ul>
       <li><strong>Ghost Challenges.</strong> When you send a challenge, your run, the ghosts it met, your chosen name
         and the skin you wore go into a link, either inside the link itself or kept on our game server for the link to
@@ -159,7 +161,8 @@
     <p><strong>Settings › Delete online data</strong> deletes your Daily Haunt runs, your entry on today's board, the
       challenges you've sent, your One Life runs and today's One Life entry, your Community Graveyard runs and board
       entries, your Ghost Duels ratings, runs and board entries, your event teams, rewards and badges, and your
-      online ID. Metres you added to a team
+      online ID with its link to Play Games. Your achievements, stats and saved game in Google Play Games are Google's
+      to delete, from the Play Games app or your Google account. Metres you added to a team
       stay in its total, as an anonymous sum. Past days' archived boards can't be edited by anyone; they hold only
       the random ID, the generated name and a distance, which nothing links to you once your online ID is deleted.
       Uninstalling Echo does not delete online data, and afterwards nothing tells us which data was yours, so use the
@@ -195,6 +198,15 @@
     <h3>Online features: Unity Gaming Services</h3>
     <p>The Daily Haunt and challenges run on Unity Gaming Services (Authentication, Cloud Code, Cloud Save,
       Leaderboards and Remote Config), which store and process this data for us, as described above.</p>
+
+    <h3>Google Play Games (Android)</h3>
+    <p>If you use Google Play Games, Echo signs in to it after your privacy choice and sends Google your achievements,
+      game stats (for each finished run: its distance, score, ghosts passed and near misses, and your best distance)
+      and a copy of your game save, kept in your Play Games account so you can restore it on another device. If you
+      use the online features, your online ID is also linked to your Play Games account, so the same online progress
+      follows you to a new phone; we receive only an identifier for that Play Games account, never your name or email.
+      Google handles this under its own policy, and you can manage or delete it in the Play Games app and your Google
+      account. Echo works fully without Play Games.</p>
 
     <h3>Purchases: Google Play and the App Store</h3>
     <p>Skin packs are bought through Google Play or the App Store, using Unity IAP. The store handles your payment; we

@@ -959,6 +959,10 @@ namespace Echo.Editor
             // How to play (a user revision): the tutorial clips again.
             var howTo = MakeButton(root, "HowToPlay", "How to play", new Vector2(0, -130), new Vector2(760, 112), ButtonStyle.Secondary);
             Wire(view, "_howToPlay", howTo);
+            // Google Play Games (Android, once set up): shares the row, shown by SettingsView.SetPlayGames.
+            var playGames = MakeButton(root, "PlayGames", "Play Games", new Vector2(194, -130), new Vector2(372, 112), ButtonStyle.Secondary);
+            Wire(view, "_playGames", playGames);
+            playGames.gameObject.SetActive(false);
             var privacy = MakeButton(root, "Privacy", "Privacy choices", new Vector2(0, -260), new Vector2(760, 112), ButtonStyle.Secondary);
             // Privacy policy (2.0): the Daily Haunt runs, board entry and challenges kept on the server, deleted on request.
             var deleteOnline = MakeButton(root, "DeleteOnline", "Delete online data", new Vector2(0, -390), new Vector2(760, 112), ButtonStyle.Secondary);

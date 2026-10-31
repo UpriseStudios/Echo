@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "Echo.Core",
         "Echo.Game",
-        "Echo.Services"
+        "Echo.Services",
+        "Echo.Editor"
     ],
     "includePlatforms": [
         "Editor"

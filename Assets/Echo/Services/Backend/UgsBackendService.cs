@@ -9,7 +9,8 @@ using UnityEngine;
 namespace Echo.Services.Backend
 {
     /// <summary>
-    /// The real backend: anonymous Unity Authentication, the EchoCloud Cloud Code module and Remote Config.
+    /// The real backend: Unity Authentication (anonymous, linked to Play Games when the player has it), the EchoCloud
+    /// Cloud Code module and Remote Config.
     /// Created once Unity Services are initialised (after consent); nothing signs in until a feature asks.
     /// </summary>
     public sealed class UgsBackendService : IBackendService
@@ -25,12 +26,28 @@ namespace Echo.Services.Backend
         public bool SignedIn => AuthenticationService.Instance.IsSignedIn;
         public string Status => _status;
 
+        /// <summary>
+        /// A one-use Play Games server auth code, when Play Games is signed in (set by RealServices). With it the
+        /// online account follows the player's Play Games account between devices.
+        /// </summary>
+        public Func<Task<string>> PlayGamesAuthCode;
+
+        const string LinkedKey = "echo_ugs_play_games_linked_";
+
         public async Task<bool> SignInAsync()
         {
             if (SignedIn) return true;
             try
             {
-                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+                string code = PlayGamesAuthCode != null ? await PlayGamesAuthCode() : null;
+                // A new device or a fresh install: the account linked to Play Games, or a new one linked to it.
+                if (code != null && !AuthenticationService.Instance.SessionTokenExists && await SignInWithPlayGamesAsync(code))
+                    code = null;
+                if (!SignedIn)
+                {
+                    await AuthenticationService.Instance.SignInAnonymouslyAsync();
+                    if (code != null) await LinkPlayGamesAsync(code);
+                }
                 _status = "signed in as " + AuthenticationService.Instance.PlayerId;
                 return true;
             }
@@ -39,6 +56,50 @@ namespace Echo.Services.Backend
                 _status = "sign-in failed: " + e.Message;
                 Debug.LogWarning("[Backend] " + _status);
                 return false;
+            }
+        }
+
+        // False (and still signed out) when Play Games sign-in isn't set up in UGS yet or fails: the caller goes on
+        // anonymously, as before Play Games.
+        async Task<bool> SignInWithPlayGamesAsync(string code)
+        {
+            try
+            {
+                await AuthenticationService.Instance.SignInWithGooglePlayGamesAsync(code);
+                PlayerPrefs.SetInt(LinkedKey + AuthenticationService.Instance.PlayerId, 1);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[Backend] Play Games sign-in: " + e.Message);
+                return false;
+            }
+        }
+
+        // This device's anonymous account takes the Play Games account, once. If Play Games already belongs to another
+        // account (the player's, from another device), this device switches to that one; the anonymous account's
+        // online data stays behind, as when the game is reinstalled.
+        async Task LinkPlayGamesAsync(string code)
+        {
+            string key = LinkedKey + AuthenticationService.Instance.PlayerId;
+            if (PlayerPrefs.GetInt(key, 0) == 1) return;
+            try
+            {
+                await AuthenticationService.Instance.LinkWithGooglePlayGamesAsync(code);
+                PlayerPrefs.SetInt(key, 1);
+            }
+            catch (AuthenticationException e) when (e.ErrorCode == AuthenticationErrorCodes.AccountAlreadyLinked)
+            {
+                string fresh = await PlayGamesAuthCode();
+                if (fresh == null) return;
+                AuthenticationService.Instance.SignOut(true);
+                AuthenticationService.Instance.ClearSessionToken();
+                if (!await SignInWithPlayGamesAsync(fresh)) await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            }
+            catch (Exception e)
+            {
+                // Not set up in UGS yet, or offline: stay anonymous and try again next session.
+                Debug.LogWarning("[Backend] Play Games link: " + e.Message);
             }
         }
 

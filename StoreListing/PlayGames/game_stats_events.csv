@@ -1,0 +1,6 @@
+Event Name,Property Name,Property Type
+runEnded,distance,INT64
+runEnded,score,INT64
+runEnded,ghostsPassed,INT64
+runEnded,nearMisses,INT64
+progressUpdate,currentProgress,INT64

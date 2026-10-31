@@ -5,6 +5,7 @@ using Echo.Services.Analytics;
 using Echo.Services.Backend;
 using Echo.Services.Iap;
 using Echo.Services.Mocks;
+using Echo.Services.PlayGames;
 using Echo.Services.Share;
 
 namespace Echo.Game.Bootstrap
@@ -20,6 +21,7 @@ namespace Echo.Game.Bootstrap
         public IAnalytics Analytics { get; private set; }
         public IShareService Share { get; private set; }
         public IBackendService Backend { get; private set; }
+        public IPlayGamesService PlayGames { get; private set; }
 
         public event Action<string> Entitled;
 
@@ -29,7 +31,7 @@ namespace Echo.Game.Bootstrap
         public string StartupNote = "Real services not started yet (they wait for the privacy choice).";
 
         /// <summary>The development status readout: what is running, and how ads and the store are doing.</summary>
-        public string StatusReport => StartupNote + "\nAds: " + Ads.Status + "\nStore: " + Iap.Status + "\nBackend: " + Backend.Status;
+        public string StatusReport => StartupNote + "\nAds: " + Ads.Status + "\nStore: " + Iap.Status + "\nBackend: " + Backend.Status + "\nPlay Games: " + PlayGames.Status;
 
         public static EchoServices CreateMocks()
         {
@@ -39,6 +41,7 @@ namespace Echo.Game.Bootstrap
                 Analytics = new MockAnalytics(),
                 Share = new MockShareService(),
                 Backend = new MockBackendService(),
+                PlayGames = new MockPlayGamesService(),
             };
             s.SetIap(new MockIapService());
             return s;
@@ -50,7 +53,11 @@ namespace Echo.Game.Bootstrap
             if (real.Analytics != null) Analytics = real.Analytics;
             if (real.Iap != null) SetIap(real.Iap);
             if (real.Backend != null) Backend = real.Backend;
+            if (real.PlayGames != null) PlayGames = real.PlayGames;
         }
+
+        /// <summary>Tests: a Play Games service to start with.</summary>
+        public void UsePlayGames(IPlayGamesService playGames) => PlayGames = playGames;
 
         /// <summary>The native share sheet, which needs no consent, so it replaces the mock at launch.</summary>
         public void AdoptShare(IShareService share)

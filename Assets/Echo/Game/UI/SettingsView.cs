@@ -22,6 +22,9 @@ namespace Echo.Game.UI
         [SerializeField] Button _privacy;
         [SerializeField] Button _deleteOnline;
         [SerializeField] Button _howToPlay;
+        // Google Play Games (Play's Level Up guidelines): sign in, or the achievements, beside How to play.
+        [SerializeField] Button _playGames;
+        public event Action PlayGamesClicked;
         [SerializeField] Button _recording;
         [SerializeField] Button _recordingHud;
         [SerializeField] Button _devAdFailure;
@@ -96,7 +99,19 @@ namespace Echo.Game.UI
                 if (label != null) SetLabel(_season, label);
             });
             if (_name != null) _name.onClick.AddListener(() => NameClicked?.Invoke());
+            if (_playGames != null) _playGames.onClick.AddListener(() => PlayGamesClicked?.Invoke());
             if (_heading != null) _heading.onClick.AddListener(OnHeadingTapped);
+        }
+
+        /// <summary>The Play Games button, sharing How to play's row; hidden where Play Games isn't available.</summary>
+        public void SetPlayGames(bool visible, string label)
+        {
+            if (_playGames == null || _howToPlay == null) return;
+            _playGames.gameObject.SetActive(visible);
+            if (visible) SetLabel(_playGames, label);
+            var row = (RectTransform)_howToPlay.transform;
+            row.sizeDelta = new Vector2(visible ? 372 : 760, row.sizeDelta.y);
+            row.anchoredPosition = new Vector2(visible ? -194 : 0, row.anchoredPosition.y);
         }
 
         /// <summary>The forced-season button and its label.</summary>

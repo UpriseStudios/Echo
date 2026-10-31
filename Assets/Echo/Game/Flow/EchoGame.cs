@@ -174,7 +174,7 @@ namespace Echo.Game.Flow
             _library = ChunkLibrary.FromJson(json);
             _contentVersion = ContentVersion.Compute(_library, _cfg);
 
-            _services = EchoServices.CreateMocks();
+            _services = CreateServices();
             WireBackend();
             string savePath = SavePathOverride ?? Path.Combine(Application.persistentDataPath, "echo_save.json");
             _saves = new SaveSystem(savePath);
@@ -259,6 +259,7 @@ namespace Echo.Game.Flow
             _settings.DevAdFailureToggled += () => _services.ToggleMockAdFailure();
             _settings.ServerCheckClicked += OnServerCheck;
             _settings.DeleteOnlineClicked += AskDeleteOnlineData;
+            _settings.PlayGamesClicked += OnPlayGamesClicked;
             _settings.DailyDateClicked += CycleDailyDate;
             _settings.DevModesClicked += ToggleForceModes;
             _title.ModesClicked += OpenModes;
@@ -289,7 +290,9 @@ namespace Echo.Game.Flow
             // tech spec 19: no ad or analytics SDK starts before the player has chosen.
             if (_save.Consent.Decided)
             {
-                StartRealServices();
+                // Restored from a Play Games save: the services already running came along (EchoGame.PlayGames).
+                if (_servicesCarried) ServicesSettled();
+                else StartRealServices();
                 MaybeStartHowToPlay();
             }
             else
@@ -605,6 +608,7 @@ namespace Echo.Game.Flow
             _hud.SetVisible(false);
             _hud.SetCountdown(0);
             ShowTitle();
+            OfferCloudSave();
         }
 
         void StartRunning(bool freshRun = true)
@@ -684,6 +688,8 @@ namespace Echo.Game.Flow
 
         void EnterDeathScreen()
         {
+            // The main game's run is final only once committed (a Continue may revive it); every other run is now.
+            if (!_run.Options.Duel && (_run.Options.Daily || _run.Options.Challenge)) PlayGamesRunEnded();
             if (_run.Options.Duel)
             {
                 EndDuel(won: false);
@@ -906,7 +912,11 @@ namespace Echo.Game.Flow
             then?.Invoke();
         }
 
-        void OnDestroy() => Application.deepLinkActivated -= OpenChallengeLink;
+        void OnDestroy()
+        {
+            Application.deepLinkActivated -= OpenChallengeLink;
+            if (_services != null) _services.Entitled -= OnEntitled;
+        }
 
         void HideDeathScreen()
         {
@@ -1018,7 +1028,11 @@ namespace Echo.Game.Flow
             _sfx.GhostClear();
         }
 
-        void ToastAchievement(string id) => _hud.QueueToast("Achievement: " + AchievementCatalog.Find(id).Title);
+        void ToastAchievement(string id)
+        {
+            _hud.QueueToast("Achievement: " + AchievementCatalog.Find(id).Title);
+            OnAchievementEarned(id);
+        }
 
         // ---- value-adds (each behind its FeatureFlags switch) ----
 
@@ -1187,6 +1201,7 @@ namespace Echo.Game.Flow
                     _awakenPending = true;
             }
             Save();
+            PlayGamesRunEnded();
         }
 
         void Save()
@@ -1437,6 +1452,8 @@ namespace Echo.Game.Flow
                 KeepOneLifeRun();   // modes doc: closing the game ends a One Life run where it is
                 KeepDuelRun();      // and a ranked duel
                 LogSessionEnd();
+                _ = UploadCloudSave(true);
+                PlayGames.FlushEvents();
                 if (State == GameState.Running)
                 {
                     _resumeCountdown = false;
@@ -1518,6 +1535,7 @@ namespace Echo.Game.Flow
             _ = FlushOneLife();   // a One Life run cut off when the game was last closed
             _ = FlushGraveyard();
             _ = FlushDuel();
+            _ = StartPlayGames(interactive: false);
         }
 
         void OnConsentChosen(bool personalisedAds, bool analytics)
@@ -1602,6 +1620,7 @@ namespace Echo.Game.Flow
         {
             _settings.Show(_save.Settings, Debug.isDebugBuild && _services.UsingMockAds, DevTools);
             _settings.SetSeason(SeasonDevSetting, SeasonLabel());
+            RefreshPlayGamesButton();
             // Development builds only: what the ad and store SDKs are doing, readable on the phone itself.
             _settings.SetStatus(Debug.isDebugBuild ? _services.StatusReport : null);
             ApplyRecordingMode();

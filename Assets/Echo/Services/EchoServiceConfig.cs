@@ -50,6 +50,13 @@ namespace Echo.Services
         [Tooltip("UGS environment for release builds.")]
         public string UgsEnvironmentRelease = "production";
 
+        [Header("Google Play Games")]
+        [Tooltip("The Game server credential's OAuth web client id (StoreListing/PlayGames/README.md); with it, Play Games sign-in also carries the online account between devices.")]
+        public string PlayGamesWebClientId = Placeholder;
+        [Tooltip("Echo achievement ids and their Play ids. Written by Echo > Play Games > Import Resources.")]
+        public System.Collections.Generic.List<Echo.Services.PlayGames.PlayGamesAchievement> PlayGamesAchievements =
+            new System.Collections.Generic.List<Echo.Services.PlayGames.PlayGamesAchievement>();
+
         [Header("Development")]
         [Tooltip("Use the real SDKs in the editor too (normally mocks run in the editor).")]
         public bool RealServicesInEditor;
