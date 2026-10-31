@@ -21,9 +21,14 @@ The files here are made by `python StoreListing/PlayGames/make_play_games.py` fr
 
 1. **Grow users > Play Games Services > Setup and management > Configuration**: create a new Play Games Services
    project for Echo (a game that doesn't use Google APIs yet).
-2. **Credentials > Add credential > Android**: package `com.uprise.echo`, and the
-   SHA-1 of the **app signing key** (Release > Setup > App integrity > App signing). Add a second Android
-   credential with the **upload key** SHA-1 for sideloaded and internal builds.
+2. **Credentials > Add credential > Android**, package `com.uprise.echo`, one credential per signing key. Both
+   Play SHA-1s are on **Test and release > App integrity > Play app signing > Settings** (the App signing page):
+   - **App signing key certificate** SHA-1: every build installed from Play (internal testing included; Play
+     re-signs them).
+   - **Upload key certificate** SHA-1: builds you sign and install yourself (the release bundle via bundletool).
+     Also `keytool -list -v -keystore "C:/Users/jamie/OneDrive/Documents/uprise-echo.keystore" -alias echo-ghost`.
+   - Optional, the **debug key** SHA-1, to try Play Games in the recording APK:
+     `keytool -list -v -keystore "%USERPROFILE%\.android\debug.keystore" -alias androiddebugkey -storepass android`.
 3. **Credentials > Add credential > Game server**: create (or pick) an OAuth **Web application** client in Google
    Cloud. Keep its client ID and secret; the client ID goes into the game (step 3), the pair into UGS (step 4).
 4. **Achievements > Import**: upload `achievements.zip`. Check the list (41, 920 points, 3 hidden).
