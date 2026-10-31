@@ -3,6 +3,9 @@ Google Play feature graphic (1024 x 500, 24-bit PNG, no alpha) for Echo.
 
 Built from the game's own generated pixel art (Assets/Echo/Content/Art, written by Echo/Generate Art), composed
 at the game's pixel scale (256 x 125) and scaled up 4x with no smoothing, so it looks exactly like the game.
+As on the app icon, the figures are drawn at 2x so they read at the small sizes Play shows the graphic at:
+the runner at the top of a jump, and the same jump replayed behind it by the ghosts of earlier runs, the
+nearest one the horned Nemesis.
 Run from the repo root:  python StoreListing/make_feature_graphic.py
 """
 import os
@@ -14,25 +17,31 @@ FONTS = os.path.join(ROOT, 'Assets', 'Echo', 'Content', 'Fonts')
 OUT = os.path.join(ROOT, 'StoreListing')
 
 W, H, SCALE = 256, 125, 4
-GROUND = 96             # y of the ground's top edge, from the top
+GROUND = 104            # y of the ground's top edge, from the top
 
-SKY = (36, 103, 115)
+TOP = (30, 92, 108)     # the app icon's dusk: teal overhead, violet at the horizon
+HORIZON = (78, 60, 124)
 CYAN = (115, 242, 255)
 RED = (255, 84, 84)
-GOLD = (255, 201, 74)
 WHITE = (255, 255, 255)
+INK = (10, 18, 34)
 
 
 def load(name):
     return Image.open(os.path.join(ART, name)).convert('RGBA')
 
 
-def char(name):
-    return load(os.path.join('Characters', name))
+def char(name, scale=2):
+    img = load(os.path.join('Characters', name))
+    return img.resize((img.width * scale, img.height * scale), Image.NEAREST)
 
 
 def lerp(a, b, t):
     return tuple(round(a[i] + (b[i] - a[i]) * t) for i in range(3))
+
+
+def shade(rgb, k):
+    return tuple(round(v * k) for v in rgb)
 
 
 def tint(img, rgb, alpha=1.0):
@@ -57,78 +66,92 @@ def tile_row(canvas, img, y, offset=0):
         x += img.width
 
 
-def text(canvas, s, font, x, y, fill, shadow=None):
+def sky(c):
+    """Banded dusk with a checkerboard dither between bands, like the icon's sky."""
+    bands = 8
+    px = c.load()
+    for y in range(H):
+        t = min(1.0, y / GROUND) * (bands - 1)
+        lo, frac = int(t), t - int(t)
+        a = lerp(TOP, HORIZON, lo / (bands - 1))
+        b = lerp(TOP, HORIZON, min(bands - 1, lo + 1) / (bands - 1))
+        for x in range(W):
+            use_b = frac > 0.5 and (x + y) % 2 == 0 or frac > 0.8
+            px[x, y] = (b if use_b else a) + (255,)
+
+
+def text(canvas, s, font, x, y, fill, shadow=None, offset=1):
     layer = Image.new('RGBA', canvas.size, (0, 0, 0, 0))
     d = ImageDraw.Draw(layer)
     d.fontmode = '1'   # hard pixels, no anti-aliasing
     if shadow:
-        d.text((x + 1, y + 1), s, font=font, fill=shadow)
-    elif canvas.width > W:
-        d.text((x + 4, y + 4), s, font=font, fill=(8, 30, 36, 255))
+        d.text((x + offset, y + offset), s, font=font, fill=shadow)
     d.text((x, y), s, font=font, fill=fill)
     canvas.alpha_composite(layer)
 
 
 def main():
-    c = Image.new('RGBA', (W, H), SKY + (255,))
+    c = Image.new('RGBA', (W, H))
+    sky(c)
 
-    # A soft moon glow and the moon, high on the right.
-    glow = tint(load('fx_glow.png'), (190, 240, 245), 0.35).resize((96, 96), Image.NEAREST)
+    # The moon behind the jump, a soft glow round it, and a few stars.
+    glow = tint(load('fx_glow.png'), (200, 240, 250), 0.3).resize((112, 112), Image.NEAREST)
     moon = load('fx_full_moon.png')
-    paste(c, glow, 226 - 48, 34 - 48)
-    paste(c, moon, 226 - moon.width // 2, 34 - moon.height // 2)
-    for (sx, sy) in [(150, 10), (128, 26), (96, 6), (182, 40), (240, 52), (60, 14), (20, 30)]:
-        paste(c, tint(load('fx_star.png'), WHITE, 0.7), sx, sy)
+    paste(c, glow, 170 - 56, 22 - 56)
+    paste(c, moon, 170 - moon.width // 2, 22 - moon.height // 2)
+    star = tint(load('fx_star.png'), WHITE, 0.8)
+    for (sx, sy) in [(118, 8), (204, 8), (104, 40), (140, 30), (236, 14), (8, 6), (66, 4), (250, 34)]:
+        paste(c, star, sx, sy)
 
-    # Parallax: the far peaks hazy and lighter than the sky, the graveyard a shade darker (as BackgroundView).
-    mountains = tint(load('bg_mountains.png'), lerp(SKY, WHITE, 0.14))
-    paste(c, mountains, -120, -14)
-    near = tint(load('bg_graveyard.png'), tuple(round(v * 0.72) for v in SKY))
-    paste(c, near, -40, GROUND - near.height + 6)
+    # Parallax: far peaks a little lighter than the sky, the graveyard hill darker (as BackgroundView).
+    paste(c, tint(load('bg_mountains.png'), lerp(HORIZON, WHITE, 0.1)), -150, 44)
+    near = tint(load('bg_graveyard.png'), shade(HORIZON, 0.62))
+    paste(c, near, -60, GROUND - near.height + 8)
 
-    # The ground: top tiles and fill, a shade darker again.
-    ground_col = tuple(round(v * 0.5) for v in SKY)
-    tile_row(c, tint(load('ground_top.png'), ground_col), GROUND - 2, 7)
-    fill = tint(load('ground_fill.png'), tuple(round(v * 0.42) for v in SKY))
+    # The ground: top tiles and fill, darker again.
+    tile_row(c, tint(load('ground_top.png'), shade(HORIZON, 0.5)), GROUND - 2, 7)
+    fill = tint(load('ground_fill.png'), shade(HORIZON, 0.36))
     for y in range(GROUND + 8, H, fill.height):
         tile_row(c, fill, y, 7)
 
-    # Graves of earlier runs, each with its ghost on the way past.
-    grave = tint(load('grave.png'), tuple(round(v * 0.62) for v in SKY))
-    for gx in (100, 146, 176):
+    # Graves of the runs the ghosts came from.
+    grave = tint(load('grave.png'), shade(HORIZON, 0.75))
+    for gx in (90, 108):
         paste(c, grave, gx, GROUND - grave.height + 2)
 
-    # A spike to jump, and the runner over it with a pack of ghosts behind: every failed run comes back.
-    spike = tint(load('spike.png') if os.path.exists(os.path.join(ART, 'spike.png')) else load('block.png'),
-                 lerp(SKY, WHITE, 0.25))
-    spike = spike.resize((12, 12), Image.NEAREST)
-    paste(c, spike, 222, GROUND - 11)
+    # One jump, played four times over: the ghosts of earlier runs follow its arc, oldest and faintest first.
+    def foot(x):
+        # The arc's height above the ground at the figure's left edge (the runner is at the top, x = 204).
+        return max(0, round(14 - 14 * ((x - 204) / 60) ** 2))
 
     ghosts = [
-        ('char_knight_ghost_1.png', 92, 0, CYAN, 0.4),
-        ('char_wizard_ghost_2.png', 118, 0, CYAN, 0.55),
-        ('char_cat_ghost_jump.png', 146, -10, CYAN, 0.7),
-        ('char_princess_ghost_jump.png', 178, -22, RED, 0.9),   # the Nemesis
+        ('char_wizard_ghost_jump.png', 132, CYAN, 0.45),
+        ('char_cat_ghost_jump.png', 156, CYAN, 0.75),
+        ('char_knight_ghost_jump.png', 180, RED, 1.0),    # the Nemesis
     ]
-    for name, gx, lift, col, a in ghosts:
+    for name, gx, col, a in ghosts:
         g = tint(char(name), col, a)
-        paste(c, g, gx, GROUND - g.height + 2 + lift)
+        gy = GROUND - g.height - foot(gx)
+        paste(c, g, gx, gy)
         if col == RED:
-            horns = tint(load('nemesis_horns.png'), RED, a)
-            paste(c, horns, gx + 4, GROUND - g.height + 2 + lift - 5)
+            horns = load('nemesis_horns.png')
+            horns = tint(horns.resize((horns.width * 2, horns.height * 2), Image.NEAREST), RED, a)
+            left, top, right, _ = g.getbbox()
+            paste(c, horns, gx + (left + right - horns.width) // 2, gy + top - horns.height + 2)
     runner = char('char_hooded_jump.png')
-    paste(c, runner, 214, GROUND - runner.height - 28)
+    paste(c, runner, 204, GROUND - runner.height - foot(202))
 
-    # The logo, echoing itself as on the title screen, and the tagline.
-    logo = ImageFont.truetype(os.path.join(FONTS, 'PressStart2P-Regular.ttf'), 24)
-    for e, a in ((2, 0.2), (1, 0.45)):
-        text(c, 'ECHO', logo, 12 - 3 * e, 22 - 3 * e, CYAN + (round(255 * a),))
-    text(c, 'ECHO', logo, 12, 22, WHITE + (255,), (8, 30, 36, 255))
+    # The logo, echoing itself as on the title screen.
+    logo = ImageFont.truetype(os.path.join(FONTS, 'PressStart2P-Regular.ttf'), 32)
+    for e, a in ((3, 0.18), (2, 0.35), (1, 0.6)):
+        text(c, 'ECHO', logo, 10 - 2 * e, 22 - 2 * e, CYAN + (round(255 * a),))
+    text(c, 'ECHO', logo, 10, 22, WHITE + (255,), INK + (255,), 2)
 
     # The tagline at full resolution: Pixelify Sans only sits on its pixel grid at larger sizes.
     out = c.resize((W * SCALE, H * SCALE), Image.NEAREST)
     tag = ImageFont.truetype(os.path.join(FONTS, 'PixelifySans-Regular.ttf'), 40)
-    text(out, 'Your past is trying to kill you.', tag, 52, 200, (230, 250, 252, 255), None)
+    text(out, 'Your past is', tag, 40, 252, (236, 250, 252, 255), INK + (255,), 4)
+    text(out, 'trying to kill you.', tag, 40, 300, (236, 250, 252, 255), INK + (255,), 4)
     out = out.convert('RGB')
     assert out.size == (1024, 500)
     os.makedirs(OUT, exist_ok=True)

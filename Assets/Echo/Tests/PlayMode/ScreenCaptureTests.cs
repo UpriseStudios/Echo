@@ -335,14 +335,16 @@ namespace Echo.Tests.PlayMode
             yield return new WaitForSecondsRealtime(0.3f);
         }
 
-        internal static IEnumerator Capture(string name)
+        /// <summary>Captures the screen at width x height. With <paramref name="outside"/>, also lists every visible
+        /// button and text that doesn't fit on that screen.</summary>
+        internal static IEnumerator Capture(string name, int width = Width, int height = Height, List<string> outside = null)
         {
             yield return null;
             var cam = Camera.main;
 
             // The world: through the pixel-perfect camera (288 px across, stretched to the target). HDR so URP
             // keeps colours above 1 for bloom, as it does when rendering to the screen.
-            var worldRt = new RenderTexture(Width, Height, 24, RenderTextureFormat.DefaultHDR);
+            var worldRt = new RenderTexture(width, height, 24, RenderTextureFormat.DefaultHDR);
             var previousTarget = cam.targetTexture;
             cam.targetTexture = worldRt;
             Object.FindAnyObjectByType<Echo.Game.Views.CameraRig>()?.Follow(cam.transform.position.x - Echo.Game.Views.CameraRig.WidthUnits * 0.25f);
@@ -360,12 +362,17 @@ namespace Echo.Tests.PlayMode
             uiCam.cullingMask = 1 << canvas.gameObject.layer;
             uiCam.orthographic = true;
             uiCam.enabled = false;
+            var uiRt = new RenderTexture(width, height, 24, RenderTextureFormat.DefaultHDR);
+            uiCam.targetTexture = uiRt;
             canvas.renderMode = RenderMode.ScreenSpaceCamera;
             canvas.worldCamera = uiCam;
             canvas.planeDistance = 5f;
+            // The scaler sizes the canvas for this target, as it would for a screen of this shape.
+            var scaler = canvas.GetComponent<UnityEngine.UI.CanvasScaler>();
+            scaler.enabled = false;
+            scaler.enabled = true;
             Canvas.ForceUpdateCanvases();
-            var uiRt = new RenderTexture(Width, Height, 24, RenderTextureFormat.DefaultHDR);
-            uiCam.targetTexture = uiRt;
+            if (outside != null) outside.AddRange(Outside(canvas).Select(o => $"{name}: {o}"));
             uiCam.backgroundColor = Color.black;
             uiCam.Render();
             Color[] overBlack = Read(uiRt);
@@ -374,6 +381,8 @@ namespace Echo.Tests.PlayMode
             Color[] overWhite = Read(uiRt);
             uiCam.targetTexture = null;
             canvas.renderMode = mode;
+            scaler.enabled = false;
+            scaler.enabled = true;
             Object.Destroy(uiCamGo);
 
             // The UI was drawn over black and over white; the difference is how much background shows through,
@@ -386,7 +395,7 @@ namespace Echo.Tests.PlayMode
                 Color c = new Color(overBlack[i].r, overBlack[i].g, overBlack[i].b) + world[i] * through;
                 pixels[i] = new Color(c.r, c.g, c.b, 1f).gamma;
             }
-            var tex = new Texture2D(Width, Height, TextureFormat.RGB24, false);
+            var tex = new Texture2D(width, height, TextureFormat.RGB24, false);
             tex.SetPixels(pixels);
             tex.Apply();
             worldRt.Release();
@@ -400,6 +409,48 @@ namespace Echo.Tests.PlayMode
             var distinct = new HashSet<Color32>(tex.GetPixels32());
             Object.Destroy(tex);
             Assert.Greater(distinct.Count, 8, $"{name} looks blank ({distinct.Count} colours)");
+        }
+
+        // Visible buttons (by their rect) and non-empty texts (by their letters) that leave the canvas. Lists that scroll (under a mask) are
+        // left out: their rows are meant to run past the viewport.
+        static IEnumerable<string> Outside(Canvas canvas)
+        {
+            var root = (RectTransform)canvas.transform;
+            Rect bounds = root.rect;
+            var corners = new Vector3[4];
+            foreach (var rt in root.GetComponentsInChildren<RectTransform>())
+            {
+                var text = rt.GetComponent<TMPro.TMP_Text>();
+                bool shown = rt.GetComponent<UnityEngine.UI.Button>() != null || (text != null && text.enabled && !string.IsNullOrWhiteSpace(text.text));
+                if (!shown || rt.GetComponentInParent<UnityEngine.UI.RectMask2D>() != null || rt.GetComponentInParent<UnityEngine.UI.Mask>() != null) continue;
+                if (rt.GetComponentsInParent<CanvasGroup>().Any(g => g.alpha < 0.01f)) continue;
+                if (rt.rect.width < 1f || rt.rect.height < 1f) continue;
+                Vector2 min, max;
+                if (rt.GetComponent<UnityEngine.UI.Button>() == null)
+                {
+                    // A text by the letters it draws: a box may be wider than its words.
+                    text.ForceMeshUpdate();
+                    Bounds drawn = text.textBounds;
+                    min = root.InverseTransformPoint(rt.TransformPoint(drawn.min));
+                    max = root.InverseTransformPoint(rt.TransformPoint(drawn.max));
+                }
+                else
+                {
+                    rt.GetWorldCorners(corners);
+                    min = root.InverseTransformPoint(corners[0]);
+                    max = root.InverseTransformPoint(corners[2]);
+                }
+                const float slack = 2f;
+                if (min.x < bounds.xMin - slack || min.y < bounds.yMin - slack || max.x > bounds.xMax + slack || max.y > bounds.yMax + slack)
+                    yield return $"{PathOf(rt, root)} spans x {min.x:0}..{max.x:0}, y {min.y:0}..{max.y:0} of {bounds.xMin:0}..{bounds.xMax:0}, {bounds.yMin:0}..{bounds.yMax:0}";
+            }
+        }
+
+        static string PathOf(Transform t, Transform root)
+        {
+            string path = t.name;
+            for (t = t.parent; t != null && t != root; t = t.parent) path = t.name + "/" + path;
+            return path;
         }
 
         // Linear colour from an HDR render texture.

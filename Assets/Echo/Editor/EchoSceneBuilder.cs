@@ -153,6 +153,10 @@ namespace Echo.Editor
                     PlayerSettings.SetApplicationIdentifier(target, ApplicationId);
             }
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7 | AndroidArchitecture.ARM64;
+            // Play's Level Up guidelines: no letterboxing from 3:4 to 9:21, split-screen and foldables. A resizable
+            // activity is never letterboxed for its aspect ratio (the aspect ratio mode stays Native); the camera and
+            // the UI follow the window every frame.
+            PlayerSettings.Android.resizeableActivity = true;
             // Native debug symbols (function names only) inside the bundle, so Play Console can read native crashes and
             // ANRs without a separate symbols upload.
             UnityEditor.Android.UserBuildSettings.DebugSymbols.level = Unity.Android.Types.DebugSymbolLevel.SymbolTable;
@@ -341,8 +345,10 @@ namespace Echo.Editor
             var scaler = canvasGo.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1080, 1920);
-            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-            scaler.matchWidthOrHeight = 0.5f;
+            // Expand: the whole 1080 x 1920 layout fits on every screen, tall phones (9:21) and tablets (3:4) alike, with
+            // the extra space round it (Play's Level Up guidelines: fill every aspect ratio; a user report of lobby lines
+            // running off a 1080 x 2340 screen).
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
             canvasGo.AddComponent<GraphicRaycaster>();
 
             // Labels pinned to world positions (gravestone epitaphs), drawn under every screen at full resolution.
