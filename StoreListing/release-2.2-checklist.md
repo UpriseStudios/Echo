@@ -121,7 +121,16 @@ Play Games Services v2 ships in 2.2 switched off by its own setup: until the ste
 - [ ] Screens: the activity is now resizable and the UI fits 3:4 to 9:21. In Play Console > Device catalog, check
       tablets and foldables aren't excluded; on a tablet, the game fills the screen.
 
-## 10. What's new (Play Console > release notes, under 500 characters)
+## 10. Google Play Games on PC
+
+- [ ] Play Console > Test and release > Advanced settings > Form factors > Add form factor > Google Play Games on PC;
+      accept the terms and opt the release in (the same App Bundle).
+- [ ] Install the Google Play Games on PC Developer Emulator (Windows) and play the build: click and Space jump, Escape
+      is Back, every "tap" reads "click", purchases and Play Games sign-in work, cloud save offers a phone's progress.
+- [ ] Submit for review ("Playable": stable, 30 fps or more, mouse and keyboard). A native x86-64 build is optional;
+      add it only after every SDK runs in the emulator.
+
+## 11. What's new (Play Console > release notes, under 500 characters)
 
 ```
 Welcome to Ghost Town: Echo's online hub, home of the Daily Haunt and live events like the Community Graveyard,

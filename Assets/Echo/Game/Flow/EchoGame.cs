@@ -281,6 +281,8 @@ namespace Echo.Game.Flow
         {
             if (_serviceConfig == null) _serviceConfig = EchoServiceConfig.Load();
             _services.AdoptShare(RealServices.CreateShare(_serviceConfig));
+            // Google Play Games on PC: "click", not "tap", on every text.
+            PcWording.InstallIfPc();
             ApplyCosmetics();
             LogSeasonalEquip();   // what's worn at startup is the baseline, not an equip
             ApplySettings();
