@@ -117,7 +117,7 @@ namespace Echo.Tests.PlayMode
             Click("Title/Settings");
             yield return new WaitForSecondsRealtime(0.3f);
             yield return Capture("07_settings");
-            Click("Settings/Privacy");
+            Click("Settings/Scroll/Viewport/Content/Privacy");
             yield return new WaitForSecondsRealtime(0.3f);
             yield return Capture("08_consent");
             Click("Consent/EssentialOnly");
@@ -372,7 +372,13 @@ namespace Echo.Tests.PlayMode
             scaler.enabled = false;
             scaler.enabled = true;
             Canvas.ForceUpdateCanvases();
-            if (outside != null) outside.AddRange(Outside(canvas).Select(o => $"{name}: {o}"));
+            foreach (var frame in Object.FindObjectsByType<Echo.Game.UI.DesignFrame>(FindObjectsSortMode.None)) frame.Refit();
+            Canvas.ForceUpdateCanvases();
+            if (outside != null)
+            {
+                outside.AddRange(Outside(canvas).Select(o => $"{name}: {o}"));
+                outside.AddRange(Overlaps(canvas).Select(o => $"{name}: {o}"));
+            }
             uiCam.backgroundColor = Color.black;
             uiCam.Render();
             Color[] overBlack = Read(uiRt);
@@ -445,6 +451,52 @@ namespace Echo.Tests.PlayMode
                     yield return $"{PathOf(rt, root)} spans x {min.x:0}..{max.x:0}, y {min.y:0}..{max.y:0} of {bounds.xMin:0}..{bounds.xMax:0}, {bounds.yMin:0}..{bounds.yMax:0}";
             }
         }
+
+        // Visible buttons that overlap one another, and scrolling lists (masked viewports) that overlap a button outside
+        // them: a user report of lists scrolling over buttons on tall phones.
+        static IEnumerable<string> Overlaps(Canvas canvas)
+        {
+            var root = (RectTransform)canvas.transform;
+            var buttons = new List<(RectTransform Rt, Rect Box)>();
+            foreach (var button in root.GetComponentsInChildren<UnityEngine.UI.Button>())
+            {
+                var rt = (RectTransform)button.transform;
+                if (button.GetComponentInParent<UnityEngine.UI.RectMask2D>() != null) continue;
+                if (rt.GetComponentsInParent<CanvasGroup>().Any(g => g.alpha < 0.01f)) continue;
+                if (button.GetComponent<UnityEngine.UI.Graphic>() == null && button.targetGraphic == null) continue;
+                if (rt.rect.width < 1f || rt.rect.height < 1f) continue;
+                buttons.Add((rt, BoxOf(rt, root)));
+            }
+            const float slack = 2f;
+            for (int i = 0; i < buttons.Count; i++)
+                for (int j = i + 1; j < buttons.Count; j++)
+                {
+                    var (a, ra) = buttons[i];
+                    var (b, rb) = buttons[j];
+                    if (a.IsChildOf(b) || b.IsChildOf(a)) continue;
+                    if (Shrink(ra, slack).Overlaps(Shrink(rb, slack)))
+                        yield return $"{PathOf(a, root)} overlaps {PathOf(b, root)}";
+                }
+            foreach (var mask in root.GetComponentsInChildren<UnityEngine.UI.RectMask2D>())
+            {
+                var view = (RectTransform)mask.transform;
+                if (view.parent != null && view.parent.GetComponentInParent<UnityEngine.UI.RectMask2D>() != null) continue;   // clipped by its list
+                Rect viewBox = Shrink(BoxOf(view, root), slack);
+                foreach (var (rt, box) in buttons)
+                    if (!rt.IsChildOf(view) && !view.IsChildOf(rt) && viewBox.Overlaps(box))
+                        yield return $"list {PathOf(view, root)} overlaps {PathOf(rt, root)}";
+            }
+        }
+
+        static Rect BoxOf(RectTransform rt, RectTransform root)
+        {
+            var corners = new Vector3[4];
+            rt.GetWorldCorners(corners);
+            Vector2 min = root.InverseTransformPoint(corners[0]), max = root.InverseTransformPoint(corners[2]);
+            return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+        }
+
+        static Rect Shrink(Rect r, float by) => Rect.MinMaxRect(r.xMin + by, r.yMin + by, r.xMax - by, r.yMax - by);
 
         static string PathOf(Transform t, Transform root)
         {

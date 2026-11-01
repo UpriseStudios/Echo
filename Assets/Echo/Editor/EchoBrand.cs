@@ -25,6 +25,11 @@ namespace Echo.Editor
         static readonly Color Scrim = new Color(0.02f, 0.05f, 0.07f, 0.5f);
         static readonly Color MenuTint = new Color(0.04f, 0.08f, 0.10f, 1f);
         static readonly Color SecondaryButton = new Color(1f, 1f, 1f, 0.14f);
+        // Secondary buttons over the game world (title, death screen): dark glass that reads on any world, where the
+        // light menu grey washed out against the floor.
+        static readonly Color Glass = new Color(0.03f, 0.07f, 0.09f, 0.62f);
+        // Settings rows and other list rows: a step up from the menu background, quieter than a button.
+        static readonly Color RowSurface = new Color(1f, 1f, 1f, 0.07f);
 
         // ---- type ----
         const string FontDir = "Assets/Echo/Content/Fonts";

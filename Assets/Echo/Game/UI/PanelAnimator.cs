@@ -31,7 +31,9 @@ namespace Echo.Game.UI
         {
             if (_group == null) _group = GetComponent<CanvasGroup>();
             _group.alpha = k;
-            transform.localScale = Vector3.one * Mathf.Lerp(StartScale, 1f, k);
+            // A menu on the design frame keeps the frame's own scale underneath the pop-in.
+            float frame = TryGetComponent(out DesignFrame f) ? f.Scale : 1f;
+            transform.localScale = Vector3.one * (Mathf.Lerp(StartScale, 1f, k) * frame);
         }
     }
 }

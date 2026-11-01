@@ -138,12 +138,15 @@ namespace Echo.Editor
             var reels = MakeButton(root, "Reels", "Reels", new Vector2(130, -740), new Vector2(240, 112), ButtonStyle.Secondary);
             var settings = MakeButton(root, "Settings", "Settings", new Vector2(390, -740), new Vector2(240, 112), ButtonStyle.Secondary);
             Wire(view, "_reels", reels);
+            LabelRow(root, "Menu", 32, skins, stats, reels, settings);
+            foreach (var b in new[] { skins, stats, reels, settings }) b.GetComponent<Image>().color = Glass;
             // Exit (a user revision): top left, out of the way of the logo; shown on Android only.
             var exit = MakeButton(root, "Exit", "Exit", Vector2.zero, new Vector2(200, 96), ButtonStyle.Secondary);
             var exitRt = (RectTransform)exit.transform;
             exitRt.anchorMin = exitRt.anchorMax = new Vector2(0f, 1f);
             exitRt.pivot = new Vector2(0f, 1f);
             exitRt.anchoredPosition = new Vector2(36, -36);
+            exit.GetComponent<Image>().color = Glass;
             Wire(view, "_exit", exit);
             // Development-server builds: a tag top right, so one is never mistaken for the store build.
             var devServer = MakeText(root, "DevServer", "DEV SERVER", 30, _black, new Vector2(1f, 1f), new Vector2(-190, -60), new Vector2(320, 60));
@@ -151,13 +154,15 @@ namespace Echo.Editor
             devServer.gameObject.SetActive(false);
             Wire(view, "_devServer", devServer.gameObject);
             // Version 2.0: the Daily Haunt, above Tap to run, with its countdown.
-            var daily = MakeButton(root, "Daily", "Daily Haunt", new Vector2(-120, -350), new Vector2(620, 104), ButtonStyle.Secondary);
+            var daily = MakeButton(root, "Daily", "Daily Haunt", new Vector2(-120, -196), new Vector2(620, 104), ButtonStyle.Secondary);
             daily.GetComponent<Image>().color = new Color(Accent.r, Accent.g, Accent.b, 0.85f);
             daily.GetComponentInChildren<TMP_Text>().color = Ink;
             Wire(view, "_daily", daily);
             // Modes doc: the Modes screen, beside the Daily Haunt.
-            var modes = MakeButton(root, "Modes", "Modes", new Vector2(330, -350), new Vector2(240, 104), ButtonStyle.Secondary);
+            var modes = MakeButton(root, "Modes", "Modes", new Vector2(330, -196), new Vector2(240, 104), ButtonStyle.Secondary);
             Wire(view, "_modes", modes);
+            LabelRow(root, "Play", 32, daily, modes);
+            modes.GetComponent<Image>().color = Glass;
             // Weekly Twists banner (value-adds doc): this week's twist, tap to switch to Classic and back.
             var twist = MakeButton(root, "Twist", "THIS WEEK: TWIST", new Vector2(0, 165), new Vector2(820, 120), ButtonStyle.Secondary);
             // Power-ups (a user revision): earned with rewarded ads before a run.
@@ -167,6 +172,17 @@ namespace Echo.Editor
             Wire(view, "_powerUps", powerUps);
             twist.GetComponentInChildren<TMP_Text>().fontSizeMax = 30;
             twist.gameObject.SetActive(false);
+
+            // The camera keeps the floor at 30% of the screen's height (CameraRig.FloorFromBottom), so the buttons around
+            // it are placed from the floor, not from the centre: on tall phones they stayed put while the floor rose,
+            // and the Daily Haunt button sat on the runner. Positions are as laid out on 16:9, where the floor is 384
+            // below the centre.
+            foreach (Component c in new Component[] { daily, modes, tap, powerUps, skins, stats, reels, settings })
+            {
+                var rt = (RectTransform)c.transform;
+                rt.anchorMin = rt.anchorMax = new Vector2(0.5f, Echo.Game.Views.CameraRig.FloorFromBottom);
+                rt.anchoredPosition += new Vector2(0, 1920 * (0.5f - Echo.Game.Views.CameraRig.FloorFromBottom));
+            }
 
             Wire(view, "_root", root.gameObject);
             Wire(view, "_best", best);
@@ -228,10 +244,13 @@ namespace Echo.Editor
             Wire(view, "_saveReel", saveReel);
             {
                 var so = new UnityEditor.SerializedObject(view);
-                so.FindProperty("_saveReelColor").colorValue = SecondaryButton;
+                so.FindProperty("_saveReelColor").colorValue = Glass;
                 so.ApplyModifiedPropertiesWithoutUndo();
             }
             var menu = MakeButton(root, "Menu", "Menu", new Vector2(375, -625), new Vector2(230, 100), ButtonStyle.Secondary);
+            LabelRow(root, "Offers", 34, cont, powerUps);
+            LabelRow(root, "Actions", 28, share, challenge, saveReel, menu);
+            foreach (var b in new[] { share, saveReel, menu }) b.GetComponent<Image>().color = Glass;
 
             var retry = MakeText(root, "TapToRetry", "TAP TO RETRY", 50, _black, new Vector2(0.5f, 0.5f), new Vector2(0, -760), new Vector2(1000, 110));
             retry.gameObject.AddComponent<Pulse>();
@@ -363,6 +382,10 @@ namespace Echo.Editor
                 replace[i].GetComponentInChildren<TMP_Text>().color = Color.white;
                 replace[i].gameObject.SetActive(false);
             }
+            // Every slot's buttons share one label size, so the cupboard's rows match.
+            var slotButtons = new System.Collections.Generic.List<Button>();
+            for (int i = 0; i < slots; i++) slotButtons.AddRange(new[] { watch[i], clip[i], challenge[i], delete[i] });
+            LabelRow(root, "Slots", 28, slotButtons.ToArray());
             var close = MakeButton(root, "Close", "Back", new Vector2(0, -830), new Vector2(500, 120), ButtonStyle.Primary);
             Wire(view, "_root", root.gameObject);
             Wire(view, "_heading", root.Find("Heading").GetComponent<TMP_Text>());
@@ -547,6 +570,8 @@ namespace Echo.Editor
                 label.margin = new Vector4(40, 0, 40, 0);
                 label.enableAutoSizing = false;
                 label.fontSize = 40;
+                label.lineSpacing = 22;
+                label.overflowMode = TextOverflowModes.Ellipsis;
             }
             var status = MakeText(root, "Status", "", 32, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -620), new Vector2(980, 110));
             status.color = Soft;
@@ -827,11 +852,20 @@ namespace Echo.Editor
             return view;
         }
 
+        // A menu on the 1080 x 1920 design frame (DesignFrame): everything in it keeps its place relative to everything
+        // else on any screen. The background is a child reaching far past the frame, so it still fills the screen and
+        // blocks taps to what's behind.
         static RectTransform MenuPanel(RectTransform parent, string name, string heading)
         {
-            RectTransform root = Stretch(NewRect(name, parent));
+            RectTransform root = NewRect(name, parent);
+            root.anchorMin = root.anchorMax = root.pivot = new Vector2(0.5f, 0.5f);
+            root.sizeDelta = DesignFrame.Size;
+            root.gameObject.AddComponent<DesignFrame>();
             Animate(root);
-            var bg = root.gameObject.AddComponent<Image>();
+            RectTransform backdrop = Stretch(NewRect("Backdrop", root));
+            backdrop.offsetMin = new Vector2(-4000, -4000);
+            backdrop.offsetMax = new Vector2(4000, 4000);
+            var bg = backdrop.gameObject.AddComponent<Image>();
             bg.color = MenuTint;
             var title = MakeText(root, "Heading", heading.ToUpperInvariant(), 64, _black, new Vector2(0.5f, 1f), new Vector2(0, -70), new Vector2(1000, 130));
             return root;
@@ -841,13 +875,13 @@ namespace Echo.Editor
         {
             RectTransform root = MenuPanel(parent, "Stats", "Stats");
             var view = root.gameObject.AddComponent<StatsView>();
-            Pill(root, "SummaryCard", new Vector2(0, 545), new Vector2(940, 360), Card);
-            var summary = MakeText(root, "Summary", "", 40, _bold, new Vector2(0.5f, 1f), new Vector2(0, -255), new Vector2(840, 340));
+            Pill(root, "SummaryCard", new Vector2(0, 515), new Vector2(940, 360), Card);
+            var summary = MakeText(root, "Summary", "", 40, _bold, new Vector2(0.5f, 1f), new Vector2(0, -285), new Vector2(840, 340));
             summary.alignment = TextAlignmentOptions.TopLeft;
             summary.lineSpacing = 8;
             var header = MakeText(root, "AchievementsHeader", "ACHIEVEMENTS", 30, _black, new Vector2(0.5f, 1f), new Vector2(0, -660), new Vector2(980, 60));
             // Modes doc (a user decision): the online profile at the top, between the heading and the summary.
-            var profile = MakeText(root, "Profile", "", 30, _medium, new Vector2(0.5f, 1f), new Vector2(0, -185), new Vector2(980, 80));
+            var profile = MakeText(root, "Profile", "", 30, _medium, new Vector2(0.5f, 1f), new Vector2(0, -192), new Vector2(980, 70));
             Wire(view, "_profile", profile);
             header.alignment = TextAlignmentOptions.Left;
 
@@ -923,6 +957,7 @@ namespace Echo.Editor
             var paste = MakeButton(root, "Paste", "Paste challenge", new Vector2(245, -700), new Vector2(470, 100), ButtonStyle.Secondary);
             Wire(view, "_challenge", challengeBest);
             Wire(view, "_paste", paste);
+            LabelRow(root, "Challenges", 30, challengeBest, paste);
             Wire(view, "_root", root.gameObject);
             Wire(view, "_summary", summary);
             Wire(view, "_header", header);
@@ -934,81 +969,185 @@ namespace Echo.Editor
             return view;
         }
 
+        // Settings (a user revision: it looked cluttered): one scrolling list of sections, each row a name on the left and
+        // its value or an ON/OFF switch on the right, with Back fixed below the list. Rows that don't apply (Play Games
+        // off Android, the developer tools in release builds) are hidden and the list closes up.
         static SettingsView BuildSettings(RectTransform parent)
         {
             RectTransform root = MenuPanel(parent, "Settings", "Settings");
             var view = root.gameObject.AddComponent<SettingsView>();
-            var music = MakeButton(root, "Music", "Music: On", new Vector2(0, 520), new Vector2(760, 112), ButtonStyle.Secondary);
-            var sfx = MakeButton(root, "Sfx", "Sound effects: On", new Vector2(0, 390), new Vector2(760, 112), ButtonStyle.Secondary);
-            var haptics = MakeButton(root, "Haptics", "Haptics: On", new Vector2(0, 260), new Vector2(760, 112), ButtonStyle.Secondary);
-            // Glow and, a user revision (worlds), whether seasons' looks show over your world, side by side.
-            var glow = MakeButton(root, "Glow", "Glow: On", new Vector2(-194, 130), new Vector2(372, 112), ButtonStyle.Secondary);
-            var seasonal = MakeButton(root, "SeasonalLooks", "Seasons: On", new Vector2(194, 130), new Vector2(372, 112), ButtonStyle.Secondary);
-            Wire(view, "_seasonalLooks", seasonal);
-            foreach (var toggle in new[] { music, sfx, haptics, glow, seasonal })
-            {
-                var label = toggle.GetComponentInChildren<TMP_Text>();
-                label.alignment = TextAlignmentOptions.MidlineLeft;
-                label.margin = new Vector4(36, 0, 36, 0);
-            }
+            RectTransform list = ScrollList(root, "Scroll", top: 230, bottom: 220, spacing: 14);
+
+            SectionHeader(list, "SoundHeader", "Sound and feel");
+            var music = SettingRow(list, "Music", "Music", toggle: true);
+            var sfx = SettingRow(list, "Sfx", "Sound effects", toggle: true);
+            var haptics = SettingRow(list, "Haptics", "Haptics", toggle: true);
+            var glow = SettingRow(list, "Glow", "Glow", toggle: true);
+            // A user revision (worlds): whether seasons' looks show over your world.
+            var seasonal = SettingRow(list, "SeasonalLooks", "Seasonal looks", toggle: true);
+
+            SectionHeader(list, "GameHeader", "Game");
             // The name friends see on Ghost Challenges.
-            var name = MakeButton(root, "Name", "Name", new Vector2(0, 0), new Vector2(760, 112), ButtonStyle.Secondary);
-            var nameLabel = name.GetComponentInChildren<TMP_Text>();
-            nameLabel.alignment = TextAlignmentOptions.MidlineLeft;
-            nameLabel.margin = new Vector4(36, 0, 36, 0);
+            var name = SettingRow(list, "Name", "Challenge name", toggle: false);
             // How to play (a user revision): the tutorial clips again.
-            var howTo = MakeButton(root, "HowToPlay", "How to play", new Vector2(0, -130), new Vector2(760, 112), ButtonStyle.Secondary);
-            Wire(view, "_howToPlay", howTo);
-            // Google Play Games (Android, once set up): shares the row, shown by SettingsView.SetPlayGames.
-            var playGames = MakeButton(root, "PlayGames", "Play Games", new Vector2(194, -130), new Vector2(372, 112), ButtonStyle.Secondary);
-            Wire(view, "_playGames", playGames);
+            var howTo = SettingRow(list, "HowToPlay", "How to play", toggle: false, opens: true);
+            // Google Play Games (Android, once set up), shown by SettingsView.SetPlayGames.
+            var playGames = SettingRow(list, "PlayGames", "Google Play Games", toggle: false);
             playGames.gameObject.SetActive(false);
-            var privacy = MakeButton(root, "Privacy", "Privacy choices", new Vector2(0, -260), new Vector2(760, 112), ButtonStyle.Secondary);
+
+            SectionHeader(list, "PrivacyHeader", "Privacy and data");
+            var privacy = SettingRow(list, "Privacy", "Privacy choices", toggle: false, opens: true);
             // Privacy policy (2.0): the Daily Haunt runs, board entry and challenges kept on the server, deleted on request.
-            var deleteOnline = MakeButton(root, "DeleteOnline", "Delete online data", new Vector2(0, -390), new Vector2(760, 112), ButtonStyle.Secondary);
-            Wire(view, "_deleteOnline", deleteOnline);
-            var devAds = MakeButton(root, "DevAdFailure", "Dev: ads succeed", new Vector2(-375, -530), new Vector2(240, 100), ButtonStyle.Secondary);
-            // Version 2.0, development builds: the newest reel replayed on the server, and the Daily Haunt's date.
-            var serverCheck = MakeButton(root, "ServerCheck", "Dev: server check", new Vector2(-125, -530), new Vector2(240, 100), ButtonStyle.Secondary);
-            var dailyDate = MakeButton(root, "DailyDate", "Dev: daily today", new Vector2(125, -530), new Vector2(240, 100), ButtonStyle.Secondary);
+            var deleteOnline = SettingRow(list, "DeleteOnline", "Delete online data", toggle: false, opens: true);
+
+            // Development builds (and release builds after five taps on the heading): tools and the services status.
+            var devHeader = SectionHeader(list, "DevHeader", "Developer");
+            var devAds = SettingRow(list, "DevAdFailure", "Dev: ads succeed", toggle: false);
+            // Version 2.0: the newest reel replayed on the server, and the Daily Haunt's date.
+            var serverCheck = SettingRow(list, "ServerCheck", "Dev: server check", toggle: false);
+            var dailyDate = SettingRow(list, "DailyDate", "Dev: daily today", toggle: false);
             // Modes doc: every competitive mode forced open (the date is the Daily Haunt's).
-            var devModes = MakeButton(root, "DevModes", "Dev: modes live", new Vector2(375, -530), new Vector2(240, 100), ButtonStyle.Secondary);
-            Wire(view, "_serverCheck", serverCheck);
-            Wire(view, "_dailyDate", dailyDate);
-            Wire(view, "_devModes", devModes);
+            var devModes = SettingRow(list, "DevModes", "Dev: modes live", toggle: false);
+            // Seasons doc: force any season (development builds and the recording APK).
+            var season = SettingRow(list, "Season", "Dev: season auto", toggle: false);
+            // Marketing content plan: recording mode for screen recordings.
+            var recording = SettingRow(list, "Recording", "Recording: off", toggle: false);
+            var recordingHud = SettingRow(list, "RecordingHud", "HUD: shown", toggle: false);
+            var status = MakeText(list, "ServicesStatus", "", 24, _medium, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(940, 60));
+            status.alignment = TextAlignmentOptions.TopLeft;
+            status.margin = new Vector4(12, 8, 12, 8);
+            status.color = Soft;
+            foreach (var row in new Component[] { devHeader, devAds, serverCheck, dailyDate, devModes, season, recording, recordingHud, status })
+                row.gameObject.SetActive(false);
+
             var close = MakeButton(root, "Close", "Back", new Vector2(0, -830), new Vector2(500, 120), ButtonStyle.Primary);
+            // Development builds: ads and store status, readable on a test phone. Five taps on the heading show it in
+            // release builds too.
+            var heading = root.Find("Heading").gameObject;
+            heading.GetComponent<TMP_Text>().raycastTarget = true;
+            Wire(view, "_heading", heading.AddComponent<Button>());
+
             Wire(view, "_root", root.gameObject);
             Wire(view, "_music", music);
             Wire(view, "_sfx", sfx);
             Wire(view, "_haptics", haptics);
             Wire(view, "_glow", glow);
-            Wire(view, "_privacy", privacy);
+            Wire(view, "_seasonalLooks", seasonal);
             Wire(view, "_name", name);
-            // Development builds: ads and store status, readable on a test phone.
-            // Five taps on the heading show it in release builds too.
-            var heading = root.Find("Heading").gameObject;
-            heading.GetComponent<TMP_Text>().raycastTarget = true;
-            Wire(view, "_heading", heading.AddComponent<Button>());
-            // Marketing content plan: recording mode for screen recordings (development builds, or five taps on the heading).
-            var recording = MakeButton(root, "Recording", "Recording: off", new Vector2(-265, -635), new Vector2(250, 90), ButtonStyle.Secondary);
-            var recordingHud = MakeButton(root, "RecordingHud", "HUD: shown", new Vector2(0, -635), new Vector2(250, 90), ButtonStyle.Secondary);
-            // Seasons doc: force any season (development builds and the recording APK).
-            var season = MakeButton(root, "Season", "Dev: season auto", new Vector2(265, -635), new Vector2(250, 90), ButtonStyle.Secondary);
+            Wire(view, "_howToPlay", howTo);
+            Wire(view, "_playGames", playGames);
+            Wire(view, "_privacy", privacy);
+            Wire(view, "_deleteOnline", deleteOnline);
+            Wire(view, "_devHeader", devHeader.gameObject);
+            Wire(view, "_devAdFailure", devAds);
+            Wire(view, "_serverCheck", serverCheck);
+            Wire(view, "_dailyDate", dailyDate);
+            Wire(view, "_devModes", devModes);
             Wire(view, "_season", season);
-            season.gameObject.SetActive(false);
             Wire(view, "_recording", recording);
             Wire(view, "_recordingHud", recordingHud);
-            recording.gameObject.SetActive(false);
-            recordingHud.gameObject.SetActive(false);
-            var status = MakeText(root, "ServicesStatus", "", 22, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -730), new Vector2(980, 70));
-            status.alignment = TextAlignmentOptions.TopLeft;
-            status.color = Soft;
-            status.gameObject.SetActive(false);
             Wire(view, "_status", status);
-            Wire(view, "_devAdFailure", devAds);
             Wire(view, "_close", close);
             root.gameObject.SetActive(false);
             return view;
+        }
+
+        // A vertical list that scrolls between the heading and the buttons fixed below it (top and bottom are distances
+        // from the design frame's edges). Rows size themselves (LayoutElement); hidden rows take no space.
+        static RectTransform ScrollList(RectTransform root, string name, float top, float bottom, float spacing)
+        {
+            RectTransform scrollRt = NewRect(name, root);
+            scrollRt.anchorMin = Vector2.zero;
+            scrollRt.anchorMax = Vector2.one;
+            scrollRt.offsetMin = new Vector2(70, bottom);
+            scrollRt.offsetMax = new Vector2(-70, -top);
+            scrollRt.gameObject.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0f);
+            var scroll = scrollRt.gameObject.AddComponent<ScrollRect>();
+            scroll.horizontal = false;
+            scroll.movementType = ScrollRect.MovementType.Clamped;
+            scroll.scrollSensitivity = 40f;
+            RectTransform viewport = Stretch(NewRect("Viewport", scrollRt));
+            viewport.gameObject.AddComponent<RectMask2D>();
+            RectTransform content = NewRect("Content", viewport);
+            content.anchorMin = new Vector2(0f, 1f);
+            content.anchorMax = new Vector2(1f, 1f);
+            content.pivot = new Vector2(0.5f, 1f);
+            content.anchoredPosition = Vector2.zero;
+            content.sizeDelta = Vector2.zero;
+            var column = content.gameObject.AddComponent<VerticalLayoutGroup>();
+            column.spacing = spacing;
+            column.padding = new RectOffset(0, 0, 0, 24);
+            column.childControlWidth = true;
+            column.childControlHeight = true;
+            column.childForceExpandWidth = true;
+            column.childForceExpandHeight = false;
+            content.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            scroll.viewport = viewport;
+            scroll.content = content;
+            return content;
+        }
+
+        static TextMeshProUGUI SectionHeader(RectTransform list, string name, string text)
+        {
+            var header = MakeText(list, name, text.ToUpperInvariant(), 24, _black, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(940, 72));
+            header.alignment = TextAlignmentOptions.BottomLeft;
+            header.margin = new Vector4(8, 0, 8, 6);
+            header.color = Accent;
+            header.gameObject.AddComponent<LayoutElement>().preferredHeight = 72;
+            return header;
+        }
+
+        // A settings row: the name on the left; on the right its value (Value) or, for a toggle, an ON/OFF switch
+        // (Switch, with Value inside). SettingsView fills them in.
+        static Button SettingRow(RectTransform list, string name, string label, bool toggle, bool opens = false)
+        {
+            RectTransform rt = NewRect(name, list);
+            rt.sizeDelta = new Vector2(940, 104);
+            rt.gameObject.AddComponent<LayoutElement>().preferredHeight = 104;
+            var image = rt.gameObject.AddComponent<Image>();
+            image.sprite = Frame;
+            image.type = Image.Type.Sliced;
+            image.pixelsPerUnitMultiplier = FramePixelScale;
+            image.color = RowSurface;
+            var button = rt.gameObject.AddComponent<Button>();
+            rt.gameObject.AddComponent<ButtonFeedback>();
+            button.targetGraphic = image;
+            var colors = button.colors;
+            colors.pressedColor = new Color(0.8f, 0.8f, 0.8f, 1f);
+            button.colors = colors;
+
+            var text = MakeText(rt, "Label", label, 30, _black, new Vector2(0f, 0.5f), new Vector2(36, 0), new Vector2(toggle ? 680 : 560, 80));
+            text.rectTransform.pivot = new Vector2(0f, 0.5f);
+            text.alignment = TextAlignmentOptions.MidlineLeft;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
+            text.fontSizeMin = 18;
+
+            TextMeshProUGUI value;
+            if (toggle)
+            {
+                RectTransform sw = NewRect("Switch", rt);
+                sw.anchorMin = sw.anchorMax = sw.pivot = new Vector2(1f, 0.5f);
+                sw.anchoredPosition = new Vector2(-24, 0);
+                sw.sizeDelta = new Vector2(150, 64);
+                var swImage = sw.gameObject.AddComponent<Image>();
+                swImage.sprite = Frame;
+                swImage.type = Image.Type.Sliced;
+                swImage.pixelsPerUnitMultiplier = FramePixelScale;
+                swImage.color = Accent;
+                swImage.raycastTarget = false;
+                value = MakeText(sw, "Value", "ON", 26, _black, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(150, 64));
+                value.color = Ink;
+            }
+            else
+            {
+                value = MakeText(rt, "Value", opens ? ">" : "", 26, _black, new Vector2(1f, 0.5f), new Vector2(-36, 0), new Vector2(320, 80));
+                value.rectTransform.pivot = new Vector2(1f, 0.5f);
+                value.alignment = TextAlignmentOptions.MidlineRight;
+                value.overflowMode = TextOverflowModes.Ellipsis;
+                value.color = Accent;
+            }
+            value.textWrappingMode = TextWrappingModes.NoWrap;
+            return button;
         }
 
         static SkinsView BuildSkins(RectTransform parent)
@@ -1032,11 +1171,8 @@ namespace Echo.Editor
             for (int i = 0; i < tabs.Length; i++)
             {
                 tabs[i] = MakeButton(tabBar, tabNames[i], tabNames[i], Vector2.zero, new Vector2(160, 94), ButtonStyle.Secondary);
-                var label = tabs[i].GetComponentInChildren<TMP_Text>();
-                label.enableAutoSizing = true;
-                label.fontSizeMin = 12;
-                label.fontSizeMax = 22;
             }
+            LabelRow(root, "Tabs", 24, tabs);
 
             // One scrolling list between the tabs and the footer; SkinsView fills it from templates.
             RectTransform scrollRt = NewRect("Scroll", root);
@@ -1095,10 +1231,10 @@ namespace Echo.Editor
             characterLabel.sizeDelta = new Vector2(-24, 146); // the card's width: name, then up to two lines of how to unlock
             // A user revision: a skin pack's four characters in one row.
             RectTransform packGrid = Grid(root, "PackGridTemplate", new Vector2(235, 400), 4);
-            ((TMP_Text)characterLabel.GetComponent<TMP_Text>()).fontSizeMax = 26;
+            CardLabel(characterLabel.GetComponent<TMP_Text>(), 26);
 
             var item = MakeButton(root, "ItemTemplate", "Item", Vector2.zero, new Vector2(490, 120), ButtonStyle.Secondary);
-            item.GetComponentInChildren<TMP_Text>().fontSizeMax = 26;
+            CardLabel(item.GetComponentInChildren<TMP_Text>(), 26);
 
             // A world's card: a little picture (sky, far layer, near layer) over its name and price.
             RectTransform worldGrid = Grid(root, "WorldGridTemplate", new Vector2(490, 340), 2);
@@ -1125,14 +1261,15 @@ namespace Echo.Editor
             worldLabel.pivot = new Vector2(0.5f, 0f);
             worldLabel.anchoredPosition = new Vector2(0, 12);
             worldLabel.sizeDelta = new Vector2(466, 112);
-            ((TMP_Text)worldLabel.GetComponent<TMP_Text>()).fontSizeMax = 26;
+            CardLabel(worldLabel.GetComponent<TMP_Text>(), 26);
 
             var product = MakeButton(root, "ProductTemplate", "Pack", Vector2.zero, new Vector2(1000, 116), ButtonStyle.Primary);
             product.gameObject.AddComponent<LayoutElement>().preferredHeight = 116;
-            product.GetComponentInChildren<TMP_Text>().fontSizeMax = 30;
+            CardLabel(product.GetComponentInChildren<TMP_Text>(), 30);
 
             var restore = MakeButton(root, "Restore", "Restore", new Vector2(-260, -850), new Vector2(460, 110), ButtonStyle.Secondary);
             var close = MakeButton(root, "Close", "Back", new Vector2(260, -850), new Vector2(460, 110), ButtonStyle.Secondary);
+            LabelRow(root, "Footer", 34, restore, close);
 
             foreach (Component template in new Component[] { header, characterGrid, itemGrid, character, item, product, worldGrid, world, packGrid })
                 template.gameObject.SetActive(false);
@@ -1320,9 +1457,32 @@ namespace Echo.Editor
             colors.pressedColor = new Color(0.8f, 0.8f, 0.8f, 1f);
             colors.disabledColor = new Color(1f, 1f, 1f, 0.45f);
             button.colors = colors;
-            var text = MakeText(rt, "Label", label, 34, _black, new Vector2(0.5f, 0.5f), Vector2.zero, size - new Vector2(28, 10));
+            var text = MakeText(rt, "Label", label, 34, _black, new Vector2(0.5f, 0.5f), Vector2.zero, size - new Vector2(40, 16));
             text.color = style == ButtonStyle.Primary ? Ink : Color.white;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
+            text.fontSizeMin = 16;
             return button;
+        }
+
+        // A card's text: a name over a line or two about it, wrapping within the card, with room between the lines.
+        static void CardLabel(TMP_Text label, float maxSize)
+        {
+            label.textWrappingMode = TextWrappingModes.Normal;
+            label.fontSizeMax = maxSize;
+            label.fontSizeMin = 14;
+            label.lineSpacing = 18;
+        }
+
+        // A row of buttons whose labels share one size (LabelGroup): the largest that fits all of them on one line.
+        static void LabelRow(RectTransform parent, string name, float maxSize, params Button[] buttons)
+        {
+            var group = NewRect("Labels" + name, parent).gameObject.AddComponent<LabelGroup>();
+            var labels = new Object[buttons.Length];
+            for (int i = 0; i < buttons.Length; i++) labels[i] = buttons[i].GetComponentInChildren<TMP_Text>(true);
+            WireArray(group, "_labels", labels);
+            var so = new UnityEditor.SerializedObject(group);
+            so.FindProperty("_maxSize").floatValue = maxSize;
+            so.ApplyModifiedPropertiesWithoutUndo();
         }
     }
 }

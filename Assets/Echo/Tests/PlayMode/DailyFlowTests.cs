@@ -190,7 +190,7 @@ namespace Echo.Tests.PlayMode
             // Settings › Delete online data: asked first, then gone, with nothing of the old ID left to send.
             game.CurrentSave.Daily.Pending.Add(new PendingDailyRun { Date = "2026-10-14", LeaderVersion = "x", Packet = "x" });
             Click("Title/Settings");
-            Click("Settings/DeleteOnline");
+            Click("Settings/Scroll/Viewport/Content/DeleteOnline");
             StringAssert.Contains("DELETE ONLINE DATA", Text("Challenge/Title"));
             Click("Challenge/Primary");
             yield return null;

@@ -106,7 +106,7 @@ namespace Echo.Tests.PlayMode
 
             // Settings › How to play: the clips again, and back to Settings at the end.
             Click("Title/Settings");
-            Click("Settings/HowToPlay");
+            Click("Settings/Scroll/Viewport/Content/HowToPlay");
             yield return UntilClips(game);
             for (int i = 0; i < 20 && game.HowToPlaying; i++) game.TickFrame(Dt, true);
             yield return null;

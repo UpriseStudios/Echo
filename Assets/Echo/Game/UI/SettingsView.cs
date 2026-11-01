@@ -8,7 +8,8 @@ namespace Echo.Game.UI
 {
     /// <summary>
     /// Settings (tech spec 14): music, sound effects, haptics, privacy choices. Development builds also get
-    /// a toggle that makes the mock rewarded ad fail (tech spec 15).
+    /// a toggle that makes the mock rewarded ad fail (tech spec 15). A user revision: one list of sections, each row a
+    /// Label on the left and a Value (or an ON/OFF Switch) on the right.
     /// </summary>
     public sealed class SettingsView : MonoBehaviour
     {
@@ -22,12 +23,14 @@ namespace Echo.Game.UI
         [SerializeField] Button _privacy;
         [SerializeField] Button _deleteOnline;
         [SerializeField] Button _howToPlay;
-        // Google Play Games (Play's Level Up guidelines): sign in, or the achievements, beside How to play.
+        // Google Play Games (Play's Level Up guidelines): sign in, or the achievements.
         [SerializeField] Button _playGames;
         public event Action PlayGamesClicked;
         [SerializeField] Button _recording;
         [SerializeField] Button _recordingHud;
         [SerializeField] Button _devAdFailure;
+        [Tooltip("The Developer section's header, shown while any of its rows is.")]
+        [SerializeField] GameObject _devHeader;
         // Version 2.0, development builds: replay the newest reel on the server and compare.
         [SerializeField] Button _serverCheck;
         public event System.Action ServerCheckClicked;
@@ -103,15 +106,12 @@ namespace Echo.Game.UI
             if (_heading != null) _heading.onClick.AddListener(OnHeadingTapped);
         }
 
-        /// <summary>The Play Games button, sharing How to play's row; hidden where Play Games isn't available.</summary>
-        public void SetPlayGames(bool visible, string label)
+        /// <summary>The Play Games row and its value ("Sign in", "Achievements"); hidden where Play Games isn't available.</summary>
+        public void SetPlayGames(bool visible, string value)
         {
-            if (_playGames == null || _howToPlay == null) return;
+            if (_playGames == null) return;
             _playGames.gameObject.SetActive(visible);
-            if (visible) SetLabel(_playGames, label);
-            var row = (RectTransform)_howToPlay.transform;
-            row.sizeDelta = new Vector2(visible ? 372 : 760, row.sizeDelta.y);
-            row.anchoredPosition = new Vector2(visible ? -194 : 0, row.anchoredPosition.y);
+            if (visible) SetValue(_playGames, value);
         }
 
         /// <summary>The forced-season button and its label.</summary>
@@ -120,6 +120,7 @@ namespace Echo.Game.UI
             if (_season == null) return;
             _season.gameObject.SetActive(visible);
             if (visible) SetLabel(_season, label);
+            RefreshDevHeader();
         }
 
         /// <summary>Recording mode's two buttons (development builds, or after five taps on the heading).</summary>
@@ -130,6 +131,7 @@ namespace Echo.Game.UI
             _recordingHud.gameObject.SetActive(visible && on);
             _recording.GetComponentInChildren<TMP_Text>().text = on ? "Recording: on" : "Recording: off";
             _recordingHud.GetComponentInChildren<TMP_Text>().text = hideHud ? "HUD: hidden" : "HUD: shown";
+            RefreshDevHeader();
         }
 
         public void Show(SettingsSaveData settings, bool showDevToggle, bool showServerCheck = false)
@@ -141,6 +143,7 @@ namespace Echo.Game.UI
             if (_dailyDate != null) _dailyDate.gameObject.SetActive(showServerCheck);
             if (_devModes != null) _devModes.gameObject.SetActive(showServerCheck);
             Refresh();
+            RefreshDevHeader();
         }
 
         public void Hide() => _root.SetActive(false);
@@ -151,6 +154,16 @@ namespace Echo.Game.UI
             if (_status == null) return;
             _status.gameObject.SetActive(!string.IsNullOrEmpty(text));
             if (!string.IsNullOrEmpty(text)) _status.text = text;
+            RefreshDevHeader();
+        }
+
+        void RefreshDevHeader()
+        {
+            if (_devHeader == null) return;
+            bool any = false;
+            foreach (Component c in new Component[] { _devAdFailure, _serverCheck, _dailyDate, _devModes, _season, _recording, _recordingHud, _status })
+                any |= c != null && c.gameObject.activeSelf;
+            _devHeader.SetActive(any);
         }
 
         void OnHeadingTapped()
@@ -177,19 +190,37 @@ namespace Echo.Game.UI
 
         void Refresh()
         {
-            SetLabel(_music, Toggle("Music", _settings.Music));
-            SetLabel(_sfx, Toggle("Sound effects", _settings.Sfx));
-            SetLabel(_haptics, Toggle("Haptics", _settings.Haptics));
-            SetLabel(_glow, Toggle("Glow", _settings.Glow, 72));
-            if (_seasonalLooks != null) SetLabel(_seasonalLooks, Toggle("Seasons", _settings.SeasonalLooks, 72));
-            if (_name != null)
-                SetLabel(_name, $"Name<pos=60%><color=#FFC94A>{(string.IsNullOrEmpty(_settings.PlayerName) ? "not set" : _settings.PlayerName)}</color>");
+            SetSwitch(_music, _settings.Music);
+            SetSwitch(_sfx, _settings.Sfx);
+            SetSwitch(_haptics, _settings.Haptics);
+            SetSwitch(_glow, _settings.Glow);
+            if (_seasonalLooks != null) SetSwitch(_seasonalLooks, _settings.SeasonalLooks);
+            if (_name != null) SetValue(_name, string.IsNullOrEmpty(_settings.PlayerName) ? "not set" : _settings.PlayerName);
         }
 
-        // Name on the left, state on the right: amber ON, dim OFF.
-        static string Toggle(string name, bool on, int at = 80) =>
-            $"{name}<pos={at}%>{(on ? "<color=#FFC94A>ON</color>" : "<color=#FFFFFF66>OFF</color>")}";
+        static readonly Color SwitchOn = new Color(1f, 0.79f, 0.29f);
+        static readonly Color SwitchOff = new Color(1f, 1f, 1f, 0.12f);
+        static readonly Color InkOn = new Color(0.06f, 0.16f, 0.19f);
+        static readonly Color InkOff = new Color(1f, 1f, 1f, 0.55f);
 
+        // A toggle row's switch: amber ON, dim OFF.
+        static void SetSwitch(Button row, bool on)
+        {
+            Transform sw = row.transform.Find("Switch");
+            if (sw == null) return;
+            sw.GetComponent<Image>().color = on ? SwitchOn : SwitchOff;
+            var value = sw.Find("Value").GetComponent<TMP_Text>();
+            value.text = on ? "ON" : "OFF";
+            value.color = on ? InkOn : InkOff;
+        }
+
+        static void SetValue(Button row, string value)
+        {
+            Transform t = row.transform.Find("Value");
+            if (t != null) t.GetComponent<TMP_Text>().text = value;
+        }
+
+        // The row's name (a developer row's whole line).
         static void SetLabel(Button b, string text) => b.GetComponentInChildren<TMP_Text>().text = text;
     }
 }

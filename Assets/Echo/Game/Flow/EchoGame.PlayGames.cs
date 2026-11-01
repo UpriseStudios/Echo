@@ -153,7 +153,7 @@ namespace Echo.Game.Flow
         }
 
         void RefreshPlayGamesButton() =>
-            _settings.SetPlayGames(PlayGames.Available, PlayGames.SignedIn ? "Achievements" : "Play Games");
+            _settings.SetPlayGames(PlayGames.Available, PlayGames.SignedIn ? "Achievements" : "Sign in");
 
         void OnPlayGamesClicked()
         {

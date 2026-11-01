@@ -17,7 +17,7 @@ namespace Echo.Game.Views
         public const int PixelsPerUnit = 32;
         public const int PixelsAcross = (int)(WidthUnits * PixelsPerUnit);
         const float PlayerFromLeft = 0.25f;
-        const float FloorFromBottom = 0.3f;
+        public const float FloorFromBottom = 0.3f;
 
         Camera _camera;
         bool _mirror;

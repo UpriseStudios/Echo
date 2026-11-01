@@ -173,15 +173,15 @@ namespace Echo.Tests.PlayMode
             Assert.IsFalse(_play.SignedIn);
             Click("Title/Settings");
             yield return null;
-            var button = GameObject.Find("Canvas/SafeArea/Settings/PlayGames");
+            var button = GameObject.Find("Canvas/SafeArea/Settings/Scroll/Viewport/Content/PlayGames");
             Assert.IsNotNull(button, "shown where Play Games is available");
-            Assert.AreEqual("Play Games", button.GetComponentInChildren<TMPro.TMP_Text>().text);
+            Assert.AreEqual("Sign in", button.transform.Find("Value").GetComponent<TMPro.TMP_Text>().text);
             _play.SignInWorks = true;
-            Click("Settings/PlayGames");
+            Click("Settings/Scroll/Viewport/Content/PlayGames");
             yield return null;
             Assert.IsTrue(_play.SignedIn, "signs in when asked");
-            Assert.AreEqual("Achievements", button.GetComponentInChildren<TMPro.TMP_Text>().text);
-            Click("Settings/PlayGames");
+            Assert.AreEqual("Achievements", button.transform.Find("Value").GetComponent<TMPro.TMP_Text>().text);
+            Click("Settings/Scroll/Viewport/Content/PlayGames");
             Assert.AreEqual(1, _play.AchievementsShown);
         }
     }

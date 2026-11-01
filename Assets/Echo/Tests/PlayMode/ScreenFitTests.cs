@@ -58,7 +58,7 @@ namespace Echo.Tests.PlayMode
             }
 
             yield return All("title");
-            foreach (var (open, screen, close) in new[] { ("Title/Stats", "stats", "Stats/Close"), ("Title/Settings", "settings", "Settings/Close"), ("Title/Modes", "modes", "Modes/Back") })
+            foreach (var (open, screen, close) in new[] { ("Title/Stats", "stats", "Stats/Close"), ("Title/Settings", "settings", "Settings/Close"), ("Title/Modes", "modes", "Modes/Back"), ("Title/Reels", "reels", "Reels/Close"), ("Title/Daily", "daily", "DailyLobby/Back") })
             {
                 if (!Exists(open)) continue;
                 Click(open);

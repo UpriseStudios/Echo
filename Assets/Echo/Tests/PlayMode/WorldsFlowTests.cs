@@ -118,8 +118,8 @@ namespace Echo.Tests.PlayMode
             game.ForceSeason(SeasonIds.Halloween);
             Click("Title/Settings");
             yield return null;
-            StringAssert.Contains("Seasons", Find("Settings/SeasonalLooks").GetComponentInChildren<TMP_Text>().text);
-            Click("Settings/SeasonalLooks");
+            StringAssert.Contains("Seasonal", Find("Settings/Scroll/Viewport/Content/SeasonalLooks").GetComponentInChildren<TMP_Text>().text);
+            Click("Settings/Scroll/Viewport/Content/SeasonalLooks");
             Assert.IsFalse(game.CurrentSave.Settings.SeasonalLooks);
             Click("Settings/Close");
             yield return null;

@@ -64,7 +64,8 @@ namespace Echo.Game.UI
                 if (!on) continue;
                 Card c = cards[i];
                 _cards[i].GetComponentInChildren<TMP_Text>().text =
-                    $"{c.Title}{(c.Dot ? "  <color=#FFC94A>●</color>" : "")}\n<size=70%><color=#9FB8C0>{c.Detail}</color></size>";
+                    // The detail in the card's own text colour, dimmed, so it reads on the gold card and the grey ones alike.
+                    $"{c.Title}{(c.Dot ? "  <color=#FFC94A>●</color>" : "")}\n<size=66%><alpha=#B8>{c.Detail}</size>";
             }
         }
 
