@@ -56,6 +56,7 @@ namespace Echo.Editor
             EnsurePostProcessing(pipeline);
             Material material = EnsureSpriteMaterial();
             EchoArt.Generate();
+            _badges = BadgeSprites.Build();
             ConfigurePlayer();
             SetAppIcon();
             PlaceholderAudio.EnsureAll();

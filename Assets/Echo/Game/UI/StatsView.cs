@@ -34,7 +34,10 @@ namespace Echo.Game.UI
         {
             public string Name = "";
             public string Team = "";
+            /// <summary>Each badge's icon and name, for Stats.</summary>
             public System.Collections.Generic.List<string> Badges = new System.Collections.Generic.List<string>();
+            /// <summary>Just the icons, for the compact lines (Ghost Town).</summary>
+            public System.Collections.Generic.List<string> Icons = new System.Collections.Generic.List<string>();
         }
 
         public bool IsOpen => _root.activeSelf;

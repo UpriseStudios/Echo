@@ -41,6 +41,7 @@ POINTS = {
     'getting_started': 5, 'going_somewhere': 25, 'long_way_from_home': 50, 'untouchable': 30,
     'bad_decisions': 20, 'i_can_fix_this': 15, 'just_one_more': 20,
     'haunted_by_strangers': 25, 'passing_through': 15, 'top_ten': 40, 'daily_grind': 20,
+    'performance_enhanced': 30,
     'twelve_days': 30, 'lead_the_way': 30, 'snowed_under': 30, 'first_footer': 15, 'trick_or_treat': 15,
     'its_complicated': 15, 'egg_hunt': 20,
 }
@@ -178,6 +179,8 @@ def achievement_icons():
         'passing_through': Icon(violet).ghost('char_princess', 22, 50, (255, 230, 140), 0.8).char('char_hooded', 42, 46),
         'top_ten': Icon(gold).char('char_king', 32, 52).sprite('fx_star.png', 48, 22, WHITE, k=2).sprite('fx_star.png', 16, 28, WHITE, k=2),
         'daily_grind': Icon(violet).sprite('fx_full_moon.png', 32, 40).char('char_gravekeeper', 32, 58),
+        'performance_enhanced': Icon((40, 128, 140)).sprite('ui_power_shield.png', 16, 30).sprite('ui_power_phase.png', 32, 26)
+            .sprite('ui_power_lantern.png', 48, 30).char('char_hooded', 32, 58, frame='1'),
         'twelve_days': Icon((150, 36, 48)).char('char_santa', 32, 52),
         'lead_the_way': Icon((40, 96, 64)).char('char_rudolph', 32, 52),
         'snowed_under': Icon((60, 110, 160)).sprite('Seasons/christmas_grave.png', 32, 52, k=2),
@@ -233,6 +236,9 @@ def main():
             z.writestr(png, buf.getvalue())
         z.writestr('AchievementsMetadata.csv', csv_text(meta))
         z.writestr('AchievementsIconsMappings.csv', csv_text(mapping))
+
+    single = os.path.join(OUT, 'performance_enhanced.png')
+    icons['performance_enhanced'].image().save(single, optimize=True)
 
     # Game Stats: one event a finished run (main game, Daily Haunt and modes), and the progression stat.
     events = [['Event Name', 'Property Name', 'Property Type'],

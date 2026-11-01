@@ -75,7 +75,7 @@ namespace Echo.Game.Flow
         void ShowModeCards()
         {
             StatsView.Profile p = ProfileNow();
-            string badges = p.Badges.Count > 0 ? "  <color=#73F2FF>" + string.Join("  ", p.Badges.ConvertAll(b => "[" + b + "]")) + "</color>" : "";
+            string badges = p.Icons.Count > 0 ? "  " + string.Join(" ", p.Icons) : "";
             _modesView.SetProfile(string.IsNullOrEmpty(p.Name) && p.Badges.Count == 0 && string.IsNullOrEmpty(p.Team)
                 ? "<color=#9FB8C0>Run the Daily Haunt to join the town</color>"
                 : (string.IsNullOrEmpty(p.Name) ? "You" : p.Name) + (string.IsNullOrEmpty(p.Team) ? "" : $"  <color=#FFE9A0>{p.Team}</color>") + badges);

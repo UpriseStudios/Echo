@@ -50,6 +50,9 @@ namespace Echo.Core.Achievements
             new AchievementDef(TopTen, "Top Ten", "Finish a day in the Daily Haunt's top 10", online: true),
             new AchievementDef(DailyGrind, "Daily Grind", "Play the Daily Haunt 3 days in a row", 3, online: true),
 
+            // A user revision: a bonus extra, outside the Elementals' 30 (power-ups come from rewarded ads).
+            new AchievementDef(PerformanceEnhanced, "Performance Enhanced", "Use 100 power-ups", 100, bonus: true),
+
             // Version 2.1, seasonal events: each only during its event, and kept once earned.
             new AchievementDef(TwelveDays, "Twelve Days", "Play the Daily Haunt on 12 different days in December", 12, online: true, season: Christmas),
             new AchievementDef(LeadTheWay, "Lead the Way", "Pass 25 leader ghosts in the Daily Haunt during December", 25, online: true, season: Christmas),
@@ -73,7 +76,7 @@ namespace Echo.Core.Achievements
             get
             {
                 int n = 0;
-                foreach (AchievementDef def in All) if (!def.Online && !def.Seasonal) n++;
+                foreach (AchievementDef def in All) if (def.Core) n++;
                 return n;
             }
         }
@@ -85,7 +88,7 @@ namespace Echo.Core.Achievements
             foreach (string id in earned)
             {
                 AchievementDef def = Find(id);
-                if (def != null && !def.Online && !def.Seasonal) n++;
+                if (def != null && def.Core) n++;
             }
             return n;
         }

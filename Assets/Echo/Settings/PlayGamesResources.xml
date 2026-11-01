@@ -87,4 +87,6 @@
   <string name="achievement_its_complicated" translatable="false">CgkIo6HI5-MDEAIQBA</string>
   <!--achievement Egg Hunt-->
   <string name="achievement_egg_hunt" translatable="false">CgkIo6HI5-MDEAIQHQ</string>
+  <!--achievement Performance Enhanced-->
+  <string name="achievement_performance_enhanced" translatable="false">CgkIo6HI5-MDEAIQLg</string>
 </resources>

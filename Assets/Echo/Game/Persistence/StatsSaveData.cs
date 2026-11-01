@@ -14,5 +14,7 @@ namespace Echo.Game.Persistence
         [JsonProperty("maxDistance")] public int MaxDistance;
         [JsonProperty("maxGhostsAtStart")] public int MaxGhostsAtStart;
         [JsonProperty("maxGhostsCleared")] public int MaxGhostsCleared;
+        // Schema 5 (2.1, unreleased): power-ups used, for Performance Enhanced. Older saves read 0.
+        [JsonProperty("powerUpsUsed")] public int PowerUpsUsed;
     }
 }

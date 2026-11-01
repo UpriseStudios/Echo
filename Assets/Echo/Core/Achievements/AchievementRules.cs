@@ -17,6 +17,19 @@ namespace Echo.Core.Achievements
         public const int SoCloseMetres = 10;
         public const int GraveyardWaiting = 3;
 
+        /// <summary>
+        /// A run's power-ups, counted when it ends (a user revision: Performance Enhanced, 100 used). Returns the newly
+        /// unlocked ids.
+        /// </summary>
+        public static List<string> OnPowerUpsUsed(Progress p, int used)
+        {
+            var earned = new List<string>();
+            if (used <= 0) return earned;
+            p.Stats.PowerUpsUsed += used;
+            Report(p, AchievementIds.PerformanceEnhanced, p.Stats.PowerUpsUsed, earned);
+            return earned;
+        }
+
         /// <summary>A committed run. Returns the newly unlocked ids in display order.</summary>
         public static List<string> OnRunEnded(RunSimulation run, CommitResult result, Progress p, int sessionRuns)
         {

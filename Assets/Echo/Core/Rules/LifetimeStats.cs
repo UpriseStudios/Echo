@@ -16,5 +16,7 @@ namespace Echo.Core.Rules
         public int MaxGhostsAtStart;
         /// <summary>Most ghosts one new best has cleared.</summary>
         public int MaxGhostsCleared;
+        /// <summary>Power-ups used, every one (Performance Enhanced).</summary>
+        public int PowerUpsUsed;
     }
 }

@@ -857,8 +857,14 @@ namespace Echo.Game.Flow
         void SettlePowerUps()
         {
             if (_powerUpsUsed == 0) return;
+            int used = 0;
             foreach (PowerUp p in PowerUpRules.All)
-                if ((_powerUpsUsed & (1 << (int)p)) != 0) Log(AnalyticsEvents.PowerUpUsed, ("powerUp", p.ToString()), ("distance", _run.Distance));
+                if ((_powerUpsUsed & (1 << (int)p)) != 0)
+                {
+                    used++;
+                    Log(AnalyticsEvents.PowerUpUsed, ("powerUp", p.ToString()), ("distance", _run.Distance));
+                }
+            foreach (string id in AchievementRules.OnPowerUpsUsed(_progress, used)) ToastAchievement(id);
             Save();
         }
 

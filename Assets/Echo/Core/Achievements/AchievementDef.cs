@@ -20,9 +20,19 @@ namespace Echo.Core.Achievements
 
         public bool Seasonal => Season != null;
 
+        /// <summary>
+        /// A bonus extra (a user decision): shown and counted in Stats and on Play Games, but never one of the 30 the
+        /// Elementals need, because it rests on rewarded ads.
+        /// </summary>
+        public readonly bool Bonus;
+
+        /// <summary>One of the 30 single-player achievements the Elementals need.</summary>
+        public bool Core => !Online && !Seasonal && !Bonus;
+
         public AchievementDef(string id, string title, string description, int target = 1, bool hidden = false, bool online = false,
-                              string season = null)
+                              string season = null, bool bonus = false)
         {
+            Bonus = bonus;
             Online = online;
             Season = season;
             Id = id;

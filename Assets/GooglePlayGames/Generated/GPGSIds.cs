@@ -39,6 +39,7 @@ public static class GPGSIds
         public const string achievement_absolutely_smashed_it = "CgkIo6HI5-MDEAIQJQ"; // <GPGSID>
         public const string achievement_close_one = "CgkIo6HI5-MDEAIQEQ"; // <GPGSID>
         public const string achievement_hello_again = "CgkIo6HI5-MDEAIQCA"; // <GPGSID>
+        public const string achievement_performance_enhanced = "CgkIo6HI5-MDEAIQLg"; // <GPGSID>
         public const string achievement_fresh_start = "CgkIo6HI5-MDEAIQKA"; // <GPGSID>
         public const string achievement_long_way_from_home = "CgkIo6HI5-MDEAIQIg"; // <GPGSID>
         public const string achievement_bad_decisions = "CgkIo6HI5-MDEAIQFQ"; // <GPGSID>

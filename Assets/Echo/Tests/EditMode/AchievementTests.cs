@@ -37,10 +37,12 @@ namespace Echo.Tests.EditMode
             TestCourses.FlatTier1), 1);
 
         [Test]
-        public void Catalog_HasThirtySinglePlayerAchievements_ThreeHidden_PlusFourOnlineExtras_AndSevenSeasonal()
+        public void Catalog_HasThirtySinglePlayerAchievements_ThreeHidden_PlusFourOnlineExtras_ABonus_AndSevenSeasonal()
         {
-            Assert.AreEqual(41, AchievementCatalog.All.Length);
-            Assert.AreEqual(41, AchievementCatalog.All.Select(d => d.Id).Distinct().Count());
+            Assert.AreEqual(42, AchievementCatalog.All.Length);
+            Assert.AreEqual(42, AchievementCatalog.All.Select(d => d.Id).Distinct().Count());
+            CollectionAssert.AreEquivalent(new[] { AchievementIds.PerformanceEnhanced }, AchievementCatalog.All.Where(d => d.Bonus).Select(d => d.Id),
+                "a user decision: outside the Elementals' 30, since power-ups come from rewarded ads");
             Assert.AreEqual(30, AchievementCatalog.SinglePlayerCount, "the Elementals need these 30");
             CollectionAssert.AreEquivalent(
                 new[] { AchievementIds.HauntedByStrangers, AchievementIds.PassingThrough, AchievementIds.TopTen, AchievementIds.DailyGrind },
@@ -174,6 +176,20 @@ namespace Echo.Tests.EditMode
         {
             Assert.IsEmpty(AchievementRules.OnSessionStarted(WithGhosts(2)));
             CollectionAssert.AreEqual(new[] { AchievementIds.UnfinishedBusiness }, AchievementRules.OnSessionStarted(WithGhosts(3)));
+        }
+
+        // A user revision: Performance Enhanced, 100 power-ups used, counted at each run's end, across runs.
+        [Test]
+        public void AHundredPowerUps_IsPerformanceEnhanced_AndNotAnElementalsOne()
+        {
+            var p = new Progress();
+            Assert.IsEmpty(AchievementRules.OnPowerUpsUsed(p, 0));
+            for (int i = 0; i < 33; i++) Assert.IsEmpty(AchievementRules.OnPowerUpsUsed(p, 3));
+            Assert.AreEqual(99, p.Stats.PowerUpsUsed);
+            Assert.AreEqual(99, AchievementRules.ProgressOf(p, AchievementIds.PerformanceEnhanced));
+            CollectionAssert.AreEqual(new[] { AchievementIds.PerformanceEnhanced }, AchievementRules.OnPowerUpsUsed(p, 2));
+            Assert.IsEmpty(AchievementRules.OnPowerUpsUsed(p, 1), "only once");
+            Assert.AreEqual(0, AchievementCatalog.SinglePlayerEarned(p.Achievements));
         }
     }
 }

@@ -34,6 +34,8 @@ namespace Echo.Editor
         // ---- type ----
         const string FontDir = "Assets/Echo/Content/Fonts";
         static TMP_FontAsset _black, _bold, _medium;
+        // Badge icons drawn inline (BadgeSprites): boards and profile lines use them.
+        static TMP_SpriteAsset _badges;
 
         // Static atlas: every glyph the game can show, baked at build time so nothing is generated mid-run.
         const string Glyphs = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~£€×•…–—’“”éàèêçÉ";

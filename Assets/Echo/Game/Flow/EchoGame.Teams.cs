@@ -186,13 +186,17 @@ namespace Echo.Game.Flow
         {
             long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var badges = new List<string>();
+            var icons = new List<string>();
             foreach (BadgeSaveData b in _save.Modes.Badges)
-                if (b.Until > now) badges.Add(BadgeNames.Name(b.Id));
+                if (b.Until > now) icons.Add(BadgeNames.Icon(b.Id));
+            foreach (BadgeSaveData b in _save.Modes.Badges)
+                if (b.Until > now) badges.Add($"{BadgeNames.Icon(b.Id)} {BadgeNames.Name(b.Id)}");
             return new StatsView.Profile
             {
                 Name = _save.Modes.PlayerName,
                 Team = string.IsNullOrEmpty(_save.Modes.Team) ? "" : $"Team {Side(_save.Modes.Team)}",
                 Badges = badges,
+                Icons = icons,
             };
         }
 

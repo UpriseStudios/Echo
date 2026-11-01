@@ -2,29 +2,35 @@ namespace Echo.Game.UI
 {
     /// <summary>
     /// Badges the server grants (modes doc; a user decision: beside names on boards, and in Stats' profile). Ids look
-    /// like "team_nice_2026".
+    /// like "team_nice_2026". A user revision: each shows as a little icon (the Badges sprite asset, Editor/BadgeSprites)
+    /// rather than a [LABEL]; Stats' profile names them beside their icons.
     /// </summary>
     public static class BadgeNames
     {
-        /// <summary>The short tag before a name on a board, or "".</summary>
-        public static string Tag(string id) =>
-            id.StartsWith("team_nice_") ? "<color=#FFE9A0>[NICE]</color> "
-            : id.StartsWith("team_naughty_") ? "<color=#FF7A6A>[NAUGHTY]</color> "
-            : id.StartsWith("onelife_") ? "<color=#73F2FF>[ONE LIFE]</color> "
-            : id.StartsWith("gravekeeper_") ? "<color=#B8C8B0>[GRAVEKEEPER]</color> "
-            : id.StartsWith("duel_") ? DuelTag(id)
-            : "";
-
-        // Ghost Duels' final tier for a season, e.g. duel_gold_s1: [GOLD S1] in the tier's colour.
-        static string DuelTag(string id)
+        /// <summary>The icon's sprite name for a badge id, or null for one this version doesn't know.</summary>
+        public static string Sprite(string id)
         {
+            if (id.StartsWith("team_nice_")) return "nice";
+            if (id.StartsWith("team_naughty_")) return "naughty";
+            if (id.StartsWith("onelife_")) return "onelife";
+            if (id.StartsWith("gravekeeper_")) return "gravekeeper";
             string[] parts = id.Split('_');
-            if (parts.Length != 3) return "";
-            string colour = parts[1] switch
-            {
-                "bronze" => "#D8925A", "silver" => "#D8E0E8", "gold" => "#FFD24A", "phantom" => "#B08AFF", "wraith" => "#73F2FF", _ => "#FFFFFF",
-            };
-            return $"<color={colour}>[{parts[1].ToUpperInvariant()} {parts[2].ToUpperInvariant()}]</color> ";
+            if (parts.Length == 3 && parts[0] == "duel" && parts[1] is "bronze" or "silver" or "gold" or "phantom" or "wraith") return "duel_" + parts[1];
+            return null;
+        }
+
+        /// <summary>The icon inline in text, or "".</summary>
+        public static string Icon(string id)
+        {
+            string sprite = Sprite(id);
+            return sprite == null ? "" : $"<sprite name=\"{sprite}\">";
+        }
+
+        /// <summary>The icon before a name on a board, with a space, or "".</summary>
+        public static string Tag(string id)
+        {
+            string icon = Icon(id);
+            return icon == "" ? "" : icon + " ";
         }
 
         /// <summary>Its name in the profile, e.g. "Team Nice 2026".</summary>

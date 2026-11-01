@@ -88,13 +88,22 @@ the simulation and changes nothing about a run.
       every ghost are the Banana, with the toast once; your own skin is back with the season off.
 - [ ] Store: Easter Chick is earned only (Egg Hunt), never sold.
 
-## 8. Google Play Games, the store listing and Play's quality bar
+## 8. Ghost Town, badges and Performance Enhanced
+
+- [ ] Ghost Town is the Modes screen renamed (a user decision): the title button, the store listing and any marketing
+      copy say Ghost Town. Its live numbers need the production module deployed (`GetModes` returns them).
+- [ ] Badges show as icons on boards, Ghost Town and Stats; nothing to set up.
+- [ ] Performance Enhanced (use 100 power-ups) is a bonus achievement, not one the Elementals need. On Play Games it is
+      in the published configuration (added 1 November 2026).
+
+## 9. Google Play Games, the store listing and Play's quality bar
 
 Play Games Services v2 ships in 2.2 switched off by its own setup: until the steps in
 `StoreListing/PlayGames/README.md` are done, nothing starts and nothing is sent.
 
 - [ ] Play Console: create the Play Games Services project, both Android credentials (app signing and upload SHA-1)
-      and the Game server credential; import `StoreListing/PlayGames/achievements.zip` (41, 920 points); turn on Saved
+      and the Game server credential; import `StoreListing/PlayGames/achievements.zip` (42, 950 points: Performance
+      Enhanced was added by hand on 1 November 2026, icon `performance_enhanced.png`); turn on Saved
       Games; upload `game_stats_events.csv` and `game_stats.zip`; add yourself as a tester; publish the configuration;
       turn on Sidekick.
 - [ ] Save Achievements > Get resources (Android XML) as `Assets/Echo/Settings/PlayGamesResources.xml`, put the Game
@@ -111,3 +120,12 @@ Play Games Services v2 ships in 2.2 switched off by its own setup: until the ste
 - [ ] Store listing: upload `StoreListing/feature_graphic_1024x500.png` (redrawn).
 - [ ] Screens: the activity is now resizable and the UI fits 3:4 to 9:21. In Play Console > Device catalog, check
       tablets and foldables aren't excluded; on a tablet, the game fills the screen.
+
+## 10. What's new (Play Console > release notes, under 500 characters)
+
+```
+Welcome to Ghost Town: Echo's online hub, home of the Daily Haunt and live events like the Community Graveyard,
+One Life and Ranked Ghost Duels, with live counts of who's running.
+New: Google Play Games sign-in, achievements and cloud save, so your progress follows you to a new phone.
+Also: a cleaner look on every screen and tablet, badges as icons, and a new achievement for power-up fans.
+```

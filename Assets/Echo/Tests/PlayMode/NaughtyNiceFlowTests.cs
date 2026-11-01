@@ -108,7 +108,7 @@ namespace Echo.Tests.PlayMode
             Assert.IsTrue(Showing("DailyLobby/Tally"));
             StringAssert.Contains("NICE 0 m", Find("DailyLobby/Tally/Text").GetComponent<TMP_Text>().text);
             StringAssert.Contains("You: Team Nice", Find("DailyLobby/Tally/Text").GetComponent<TMP_Text>().text);
-            StringAssert.Contains("[NICE]", Text("DailyLobby/Row0"), "the leader's badge beside their name");
+            StringAssert.Contains("<sprite name=\"nice\">", Text("DailyLobby/Row0"), "the leader's badge icon beside their name");
 
             // A run that improves today's best counts for the team.
             game.ScriptedTaps = t => false;

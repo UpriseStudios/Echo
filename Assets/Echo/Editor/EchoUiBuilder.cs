@@ -576,6 +576,7 @@ namespace Echo.Editor
 
             Pill(root, "ProfileCard", new Vector2(0, 664), new Vector2(940, 92), Card);
             var profile = MakeText(root, "Profile", "", 30, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, 664), new Vector2(880, 84));
+            profile.spriteAsset = _badges;
             profile.textWrappingMode = TextWrappingModes.NoWrap;
             profile.enableAutoSizing = true;
             profile.fontSizeMin = 18;
@@ -729,6 +730,7 @@ namespace Echo.Editor
             for (int i = 0; i < rows.Length; i++)
             {
                 rows[i] = MakeText(root, "Row" + i, "", 38, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, 520 - i * 78), new Vector2(900, 70));
+                rows[i].spriteAsset = _badges;
                 rows[i].alignment = TextAlignmentOptions.MidlineLeft;
                 FitOneLine(rows[i], 18);
                 rows[i].raycastTarget = true;
@@ -1003,6 +1005,7 @@ namespace Echo.Editor
             var header = MakeText(root, "AchievementsHeader", "ACHIEVEMENTS", 30, _black, new Vector2(0.5f, 1f), new Vector2(0, -660), new Vector2(980, 60));
             // Modes doc (a user decision): the online profile at the top, between the heading and the summary.
             var profile = MakeText(root, "Profile", "", 30, _medium, new Vector2(0.5f, 1f), new Vector2(0, -192), new Vector2(980, 70));
+            profile.spriteAsset = _badges;
             Wire(view, "_profile", profile);
             header.alignment = TextAlignmentOptions.Left;
 

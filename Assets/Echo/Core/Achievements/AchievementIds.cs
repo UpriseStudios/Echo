@@ -53,6 +53,9 @@ namespace Echo.Core.Achievements
         public const string TopTen = "top_ten";
         public const string DailyGrind = "daily_grind";
 
+        // A user revision: a bonus extra, outside the 30 the Elementals need (power-ups come from rewarded ads).
+        public const string PerformanceEnhanced = "performance_enhanced";
+
         // Seasonal (seasons doc, version 2.1): only during their event, never towards the 30
         public const string TwelveDays = "twelve_days";
         public const string LeadTheWay = "lead_the_way";

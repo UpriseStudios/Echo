@@ -33,6 +33,7 @@ namespace Echo.Game.Persistence
             p.Stats.MaxDistance = Math.Max(0, st.MaxDistance);
             p.Stats.MaxGhostsAtStart = Math.Max(0, st.MaxGhostsAtStart);
             p.Stats.MaxGhostsCleared = Math.Max(0, st.MaxGhostsCleared);
+            p.Stats.PowerUpsUsed = Math.Max(0, st.PowerUpsUsed);
             if (s.Achievements != null)
                 foreach (string saved in s.Achievements)
                 {
@@ -144,6 +145,7 @@ namespace Echo.Game.Persistence
             s.Stats.MaxDistance = p.Stats.MaxDistance;
             s.Stats.MaxGhostsAtStart = p.Stats.MaxGhostsAtStart;
             s.Stats.MaxGhostsCleared = p.Stats.MaxGhostsCleared;
+            s.Stats.PowerUpsUsed = p.Stats.PowerUpsUsed;
 
             s.Achievements = new System.Collections.Generic.List<string>(p.Achievements);
             s.AchievementProgress = new System.Collections.Generic.Dictionary<string, int>(p.AchievementProgress);
