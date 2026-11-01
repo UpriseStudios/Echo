@@ -457,6 +457,14 @@ namespace Echo.Server.Tools
             JsonElement forced = await Call(http, projectId, token, "GetModes", new { forceAll = true });
             int forcedCount = forced.GetProperty("modes").GetArrayLength();
             Console.WriteLine($"Forced: {forcedCount} modes open");
+            // Ghost Town's live numbers: each mode's players (-1 unknown) and the Daily Haunt's pulse.
+            foreach (JsonElement m in forced.GetProperty("modes").EnumerateArray())
+                Console.WriteLine($"  {m.GetProperty("id").GetString()}: {m.GetProperty("players").GetInt32()} players");
+            if (forced.TryGetProperty("daily", out JsonElement daily) && daily.ValueKind == JsonValueKind.Object)
+                Console.WriteLine($"  Daily Haunt: {daily.GetProperty("runners").GetInt32()} runners, leader {daily.GetProperty("leaderName").GetString()} "
+                                  + $"{daily.GetProperty("leaderDistance").GetInt32()} m, your rank {daily.GetProperty("rank").GetInt32()}");
+            else
+                Console.WriteLine("  Daily Haunt: no pulse (switched off, or it couldn't be read)");
             JsonElement december = await Call(http, projectId, token, "GetModes", new { dateOverride = "2026-12-10" });
             var open = new System.Collections.Generic.List<string>();
             foreach (JsonElement m in december.GetProperty("modes").EnumerateArray())
