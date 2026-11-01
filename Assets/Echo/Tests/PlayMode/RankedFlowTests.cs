@@ -126,26 +126,21 @@ namespace Echo.Tests.PlayMode
             yield return ToTheLobby();
             yield return Frames(2);
 
-            // The note from while you were away, once.
-            StringAssert.Contains("beat 3 challengers", Card());
-            Click("Challenge/Primary");
-            yield return null;
+            // The note from while you were away, in the lobby (no card to dismiss).
+            Assert.IsFalse(Showing("Challenge"), "nothing to dismiss");
+            StringAssert.Contains("beat 3 challengers", Find("DailyLobby/Yesterday").GetComponent<TMP_Text>().text);
             StringAssert.Contains("Rating 1,000 · SILVER", Find("DailyLobby/You").GetComponent<TMP_Text>().text);
             StringAssert.Contains("10 ranked duels left today", Find("DailyLobby/Status").GetComponent<TMP_Text>().text);
             StringAssert.Contains("Practice", Text("DailyLobby/BoardToggle"));
 
-            // A ranked duel is asked first, then shows the opponent by name and tier, never their distance.
+            // A user revision: one press starts a ranked duel (the lobby says it counts), and the opponent is named as it
+            // starts, by name and tier, never their distance.
+            StringAssert.Contains("counts once it starts", Find("DailyLobby/Status").GetComponent<TMP_Text>().text);
             Click("DailyLobby/Play");
-            yield return null;
-            StringAssert.Contains("counts", Card());
-            Click("Challenge/Primary");
             yield return Frames(3);
-            string card = Card();
-            StringAssert.Contains("RivalGhost#2024", card);
-            StringAssert.Contains("SILVER", card);
-            StringAssert.DoesNotContain(" m", card.Replace("Their ghost runs", ""), "never their distance");
-            Click("Challenge/Primary");
-            yield return Frames(2);
+            StringAssert.Contains("RivalGhost#2024", game.DuelIntro);
+            StringAssert.Contains("SILVER", game.DuelIntro);
+            StringAssert.DoesNotContain(" m", game.DuelIntro, "never their distance");
 
             Assert.AreEqual(GameState.Running, game.State);
             Assert.IsTrue(game.Run.Options.Ranked);
@@ -168,7 +163,7 @@ namespace Echo.Tests.PlayMode
             yield return Frames(4);
             Assert.AreNotEqual(GameState.Running, game.State);
             Assert.AreEqual("Ranked Ghost Duels", Find("DailyLobby/Heading").GetComponent<TMP_Text>().text);
-            Assert.IsFalse(Showing("Challenge"), "the away note showed once");
+            StringAssert.DoesNotContain("while you were away", Find("DailyLobby/Yesterday").GetComponent<TMP_Text>().text.ToLowerInvariant(), "the away note showed once");
         }
 
         [UnityTest, Timeout(300000)]
@@ -181,9 +176,7 @@ namespace Echo.Tests.PlayMode
             yield return ToTheLobby();
             Click("DailyLobby/BoardToggle");
             yield return Frames(3);
-            StringAssert.Contains("PRACTICE", Card());
-            Click("Challenge/Primary");
-            yield return Frames(2);
+            StringAssert.Contains("PRACTICE", game.DuelIntro);
             Assert.IsTrue(game.Run.Options.Ranked);
             yield return RunToDeath(game);
             Assert.IsFalse(game.LastDuelResult.Ranked);

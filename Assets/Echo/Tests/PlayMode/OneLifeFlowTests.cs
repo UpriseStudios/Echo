@@ -103,11 +103,11 @@ namespace Echo.Tests.PlayMode
             Assert.AreEqual("One Life", Find("DailyLobby/Heading").GetComponent<TMP_Text>().text);
             StringAssert.Contains("BraveGhost#1111", Text("DailyLobby/Row0"));
             Assert.IsTrue(Showing("DailyLobby/WatchHint"), "a user revision: One Life's runs can be watched");
+            // A user revision: the warning is in the lobby, and its button starts the run.
+            StringAssert.Contains("No retries", Find("DailyLobby/You").GetComponent<TMP_Text>().text);
+            StringAssert.Contains("Closing the game ends your run", Find("DailyLobby/Status").GetComponent<TMP_Text>().text);
             StringAssert.Contains("Start your one run", Text("DailyLobby/Play"));
             Click("DailyLobby/Play");
-            yield return null;
-            StringAssert.Contains("No retries", Find("Challenge").GetComponentsInChildren<TMP_Text>().Select(t => t.text).Aggregate((a, b) => a + b));
-            Click("Challenge/Primary");
             yield return Frames(2);
         }
 

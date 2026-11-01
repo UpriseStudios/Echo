@@ -50,11 +50,13 @@ namespace Echo.Game.Flow
             });
         }
 
+        // A user revision (too many presses): the lobby's button starts the mode at once. One Life's and a ranked
+        // duel's warnings are in the lobby, above the button, instead of a card after it.
         void OnLobbyPlay()
         {
-            if (_lobbyOneLife) AskOneLife();
+            if (_lobbyOneLife) PlayOneLife();
             else if (_lobbyGraveyard) PlayGraveyard();
-            else if (_lobbyRanked) AskRanked();
+            else if (_lobbyRanked) _ = BeginDuel(true);
             else PlayDaily();
         }
 
@@ -95,10 +97,12 @@ namespace Echo.Game.Flow
             var board = new List<DailyLobbyView.Line>();
             foreach (DailyBoardRow row in o.Board)
                 board.Add(new DailyLobbyView.Line { Rank = row.Rank, Name = row.Name, Distance = row.Distance, IsYou = row.IsYou, Badges = BadgeNames.Tags(row.Badges) });
-            string you = !o.Played ? "One run. No retries. You haven't had yours today."
+            // Modes doc: a clear warning before the run.
+            string you = !o.Played ? "One run. No retries, no 1-UPs."
                 : o.Finished ? $"Your run today: {o.Distance} m" + (o.Rank > 0 ? $" · #{o.Rank}" : "")
                 : "Your run is on its way to the board.";
-            _dailyLobby.SetDay(you, board, "", o.Board.Count > 0 ? "Today's top runs are the ghosts you'll meet." : "Nobody has had their run yet: set the pace.");
+            string warning = o.Played ? "" : "Closing the game ends your run. ";
+            _dailyLobby.SetDay(you, board, "", warning + (o.Board.Count > 0 ? "Today's top runs are the ghosts you'll meet." : "Nobody has had their run yet: set the pace."));
             _dailyLobby.SetWatchable(o.Board.Count > 0);
             _dailyLobby.SetPlay(!o.Played, "Start your one run");
             TickOneLifeLabels();
@@ -110,11 +114,6 @@ namespace Echo.Game.Flow
             long left = Math.Max(0, _oneLife.SecondsLeft - (long)(Time.realtimeSinceStartup - _oneLifeFetchedAt));
             _dailyLobby.SetCountdown($"{_oneLife.Date} · ends in {left / 3600}h {left / 60 % 60:00}m {left % 60:00}s");
         }
-
-        // Modes doc: a clear warning first.
-        void AskOneLife() =>
-            Ask("ONE LIFE", "One run. No retries. Closing the game ends your run.\nToday's top runs are the ghosts you'll meet, and there are no 1-UPs.",
-                "Start", "Not now", PlayOneLife, null);
 
         async void PlayOneLife()
         {

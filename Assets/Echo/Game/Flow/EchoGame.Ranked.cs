@@ -82,11 +82,6 @@ namespace Echo.Game.Flow
                 return;
             }
             ShowRanked();
-            // Modes doc: "Your ghost beat 3 challengers while you were away."
-            if (info.AwayWins + info.AwayLosses > 0 && !ChallengeCardOpen)
-                Ask("WHILE YOU WERE AWAY",
-                    $"Your ghost beat {info.AwayWins} {(info.AwayWins == 1 ? "challenger" : "challengers")}"
-                    + (info.AwayLosses > 0 ? $" and lost to {info.AwayLosses}" : "") + $".\nRating {Signed(info.AwayChange)}.", "OK", null, null, null);
         }
 
         static string Signed(int n) => n > 0 ? "+" + n : n.ToString(CultureInfo.InvariantCulture);
@@ -102,14 +97,18 @@ namespace Echo.Game.Flow
                     board.Add(new DailyLobbyView.Line { Rank = row.Rank, Name = row.Name, Distance = row.Distance, IsYou = row.IsYou,
                         Badges = BadgeNames.Tags(row.Badges), Unit = "" });
             string you = $"Rating {r.Rating:N0} · {TierName(r.Tier)}" + (r.Rank > 0 ? $" · #{r.Rank}" : "");
-            string last = r.Recent.Count == 0 ? "Your first duel is waiting."
+            // Modes doc: "Your ghost beat 3 challengers while you were away", in the lobby rather than a card to dismiss.
+            string last = r.AwayWins + r.AwayLosses > 0
+                    ? $"While you were away your ghost beat {r.AwayWins} {(r.AwayWins == 1 ? "challenger" : "challengers")}"
+                      + (r.AwayLosses > 0 ? $" and lost to {r.AwayLosses}" : "") + $" · {Signed(r.AwayChange)}"
+                : r.Recent.Count == 0 ? "Your first duel is waiting."
                 : $"Last: {r.Recent[0].Outcome} vs {r.Recent[0].Opponent} · {Signed(r.Recent[0].Change)}";
             string status = r.DuelsLeftToday > 0
-                ? $"{r.DuelsLeftToday} ranked {(r.DuelsLeftToday == 1 ? "duel" : "duels")} left today. Practice is unlimited."
+                ? $"{r.DuelsLeftToday} ranked {(r.DuelsLeftToday == 1 ? "duel" : "duels")} left today. A ranked duel counts once it starts."
                 : "No ranked duels left today. Practice is unlimited.";
             _dailyLobby.SetDay(you, board, last, status);
             _dailyLobby.SetWatchable(false);
-            _dailyLobby.SetPlay(r.DuelsLeftToday > 0, "Ranked duel");
+            _dailyLobby.SetPlay(r.DuelsLeftToday > 0, "Start ranked duel");
             _dailyLobby.SetBoardToggle("Practice duel · unranked");
             TickRankedLabels();
         }
@@ -121,10 +120,8 @@ namespace Echo.Game.Flow
             _dailyLobby.SetCountdown($"Season {_ranked.Season} · {ModeNames.Countdown(true, left)}");
         }
 
-        // A ranked duel counts once started (closing the game or starting another counts as a loss), so it's asked first.
-        void AskRanked() =>
-            Ask("RANKED DUEL", "One attempt against a stranger's ghost near your rating. Go further than their run to win.\n"
-                + "Once it starts it counts, even if you leave.", "Start", "Not now", () => _ = BeginDuel(true), null);
+        /// <summary>Tests: the opponent line shown as the last duel started.</summary>
+        public string DuelIntro { get; private set; }
 
         async Task BeginDuel(bool ranked)
         {
@@ -152,11 +149,11 @@ namespace Echo.Game.Flow
                     Save();
                 }
                 Log(AnalyticsEvents.DuelStarted, ("ranked", ranked), ("arena", start.Arena), ("opponentTier", start.OpponentTier));
-                // Modes doc: their name, skin and tier, never their distance.
-                GhostRecord run = rival.Run;
-                Ask(ranked ? $"RANKED · ARENA {start.Arena}" : $"PRACTICE · ARENA {start.Arena}",
-                    $"vs {start.OpponentName}\n{TierName(start.OpponentTier)} · {start.OpponentRating:N0}\n"
-                    + "Their ghost runs beside you and can't hurt you.", "Race", null, () => StartDuelRun(start, run), null);
+                // Modes doc: their name, skin and tier, never their distance. Shown as the run starts (a user revision:
+                // a card to dismiss was one press too many); their ghost carries their name.
+                DuelIntro = $"{(ranked ? "RANKED" : "PRACTICE")} · VS {start.OpponentName} · {TierName(start.OpponentTier)} {start.OpponentRating:N0}";
+                StartDuelRun(start, rival.Run);
+                _hud.QueueToast(DuelIntro);
             }
             finally
             {
