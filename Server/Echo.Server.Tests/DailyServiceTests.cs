@@ -435,5 +435,50 @@ namespace Echo.Server.Tests
             int next = DailyRules.NextToBeat(leaderDistances, r.Distance);
             Assert.AreEqual(next < 0 ? 0 : next, r.NextLeaderDistance);
         }
+
+        // Ghost Town (a user decision): the hub's Daily Haunt card. Runners on the board, the leader from the same checked
+        // board the lobby shows, and the player's own place.
+        [Test]
+        public async System.Threading.Tasks.Task ThePulse_CountsRunners_AndNamesTheLeader()
+        {
+            DailyPulse empty = await _daily.PulseAsync("p1");
+            Assert.AreEqual(0, empty.Runners);
+            Assert.AreEqual("", empty.LeaderName);
+            Assert.AreEqual(0, empty.Rank);
+            Assert.Greater(empty.SecondsLeft, 0);
+
+            SubmitDailyResponse mine = await PlayAndSubmit("p1", 7);
+            Assert.IsTrue(mine.Ok, mine.Error);
+            Overtake("p1", "p2", mine.Distance + 100);
+            DailyPulse pulse = await _daily.PulseAsync("p1");
+            Assert.AreEqual(2, pulse.Runners);
+            Assert.AreEqual("P2#1", pulse.LeaderName);
+            Assert.AreEqual(mine.Distance + 100, pulse.LeaderDistance);
+            Assert.AreEqual(2, pulse.Rank);
+            Assert.AreEqual(mine.Distance, pulse.BestDistance);
+        }
+
+        [Test]
+        public async System.Threading.Tasks.Task TheHub_KeepsItsCounts_WhenOneFails()
+        {
+            var response = new GetModesResponse
+            {
+                Ok = true,
+                Modes = { new ModeStatus { Id = "one_life", Open = true }, new ModeStatus { Id = "graveyard", Open = true }, new ModeStatus { Id = "ranked" } },
+            };
+            var counts = new Dictionary<string, Func<System.Threading.Tasks.Task<int>>>
+            {
+                ["one_life"] = () => System.Threading.Tasks.Task.FromResult(312),
+                ["graveyard"] = () => throw new InvalidOperationException("board unavailable"),
+            };
+            await CommunityPulse.FillAsync(response, () => System.Threading.Tasks.Task.FromResult(new DailyPulse { Runners = 9 }), counts);
+            Assert.AreEqual(312, response.Modes[0].Players);
+            Assert.AreEqual(-1, response.Modes[1].Players, "a failed count is unknown");
+            Assert.AreEqual(-1, response.Modes[2].Players, "a mode without a count is unknown");
+            Assert.AreEqual(9, response.Daily.Runners);
+
+            await CommunityPulse.FillAsync(response, () => throw new InvalidOperationException("no daily"), counts);
+            Assert.IsNull(response.Daily, "the hub still answers without the Daily Haunt card");
+        }
     }
 }

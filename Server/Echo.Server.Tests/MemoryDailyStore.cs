@@ -30,6 +30,7 @@ namespace Echo.Server.Tests
             board.OrderByDescending(kv => kv.Value).ThenBy(kv => kv.Key, StringComparer.Ordinal)
                 .Select((kv, i) => new LeaderboardRow { Rank = i + 1, PlayerId = kv.Key, Name = kv.Key.ToUpperInvariant() + "#1", Distance = kv.Value }).ToList();
 
+        public Task<int> CountAsync() => Task.FromResult(Today.Count);
         public Task<List<LeaderboardRow>> TopAsync(int count) => Task.FromResult(Rows(Today).Take(count).ToList());
         public Task<LeaderboardRow> PlayerAsync(string id) => Task.FromResult(Rows(Today).FirstOrDefault(r => r.PlayerId == id));
         public Task<LeaderboardRow> YesterdaysWinnerAsync() => Task.FromResult(Rows(Yesterday).FirstOrDefault());

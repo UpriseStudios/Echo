@@ -170,10 +170,13 @@ namespace Echo.Services.Mocks
         /// <summary>The modes on show (tests set them); forcing shows every mode open.</summary>
         public readonly List<ModeState> Modes = new List<ModeState>();
 
+        /// <summary>Tests: Ghost Town's Daily Haunt card.</summary>
+        public DailyPulseInfo Pulse;
+
         public Task<ModesResult> GetModesAsync(string dateOverride, bool forceAll)
         {
             if (Offline) return Task.FromResult(ModesResult.Failed("offline"));
-            var result = new ModesResult { Ok = true, Now = DateTimeOffset.UtcNow.ToUnixTimeSeconds() };
+            var result = new ModesResult { Ok = true, Now = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), Daily = Pulse };
             if (forceAll)
                 foreach (string id in Echo.Core.Modes.ModeIds.All) result.Modes.Add(new ModeState { Id = id, Open = true, SecondsLeft = 3600 });
             else

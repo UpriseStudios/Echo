@@ -14,6 +14,9 @@ namespace Echo.Services.Backend
         public long Now;
         public List<ModeState> Modes = new List<ModeState>();
 
+        /// <summary>Ghost Town's Daily Haunt card; null when the server couldn't read it.</summary>
+        public DailyPulseInfo Daily;
+
         public static ModesResult Failed(string error) => new ModesResult { Error = error };
     }
 }

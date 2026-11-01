@@ -19,6 +19,9 @@ namespace EchoCloud
         /// </summary>
         Task SubmitAsync(string playerId, int distance);
 
+        /// <summary>Ghost Town's live numbers: how many players are on the board now.</summary>
+        Task<int> CountAsync();
+
         /// <summary>Today's top <paramref name="count"/>, best first.</summary>
         Task<List<LeaderboardRow>> TopAsync(int count);
 

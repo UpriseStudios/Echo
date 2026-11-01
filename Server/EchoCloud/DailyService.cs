@@ -120,6 +120,33 @@ namespace EchoCloud
             return dateOverride.Length <= 10 ? at.Date + now.TimeOfDay : at;
         }
 
+        /// <summary>Ghost Town's Daily Haunt card: runners today, the leader (from the same checked board the lobby shows), your place.</summary>
+        public async Task<DailyPulse> PulseAsync(string playerId, string dateOverride = null)
+        {
+            DateTime now = Now(dateOverride);
+            string date = DateKey(now);
+            Task<List<LeaderboardRow>> board = BoardFor(date);
+            Task<int> runners = _store.CountAsync();
+            Task<PlayerDay> day = ReadDay(playerId, date);
+            await Task.WhenAll(board, runners, day);
+            LeaderboardRow leader = board.Result.FirstOrDefault();
+            var pulse = new DailyPulse
+            {
+                Runners = runners.Result,
+                LeaderName = leader?.Name ?? "",
+                LeaderDistance = leader?.Distance ?? 0,
+                BestDistance = day.Result.BestDistance,
+                Rank = board.Result.FirstOrDefault(r => r.PlayerId == playerId)?.Rank ?? 0,
+                SecondsLeft = (long)(now.Date.AddDays(1) - now).TotalSeconds,
+            };
+            if (pulse.Rank == 0 && pulse.BestDistance > 0)
+            {
+                LeaderboardRow mine = await _store.PlayerAsync(playerId);
+                if (mine != null && mine.Distance <= pulse.BestDistance) pulse.Rank = mine.Rank;
+            }
+            return pulse;
+        }
+
         public async Task<GetDailyResponse> GetDailyAsync(string playerId, string dateOverride = null)
         {
             DateTime now = Now(dateOverride);

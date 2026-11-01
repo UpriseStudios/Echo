@@ -8,5 +8,8 @@ namespace Echo.Services.Backend
 
         /// <summary>Open: until it closes. Closed: until it opens again, or -1 if it won't.</summary>
         public long SecondsLeft;
+
+        /// <summary>Ghost Town: how many are playing it (today, this week or this season by mode); -1 unknown.</summary>
+        public int Players = -1;
     }
 }

@@ -58,6 +58,12 @@ namespace EchoCloud
             _api.Leaderboards.AddLeaderboardPlayerScoreAsync(_context, _context.ServiceToken, _project, _board, playerId,
                 new AddLeaderboardScore(distance));
 
+        public async Task<int> CountAsync()
+        {
+            var page = await _api.Leaderboards.GetLeaderboardScoresAsync(_context, _context.ServiceToken, _project, _board, false, 0, 1);
+            return page.Data.Total;
+        }
+
         public async Task<List<LeaderboardRow>> TopAsync(int count)
         {
             var page = await _api.Leaderboards.GetLeaderboardScoresAsync(_context, _context.ServiceToken, _project, _board, false, 0, count);

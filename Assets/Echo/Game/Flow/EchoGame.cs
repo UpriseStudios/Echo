@@ -265,7 +265,7 @@ namespace Echo.Game.Flow
             _title.ModesClicked += OpenModes;
             if (_modesView != null)
             {
-                _modesView.CardClicked += OnModeCard;
+                _modesView.ModeClicked += OnModeCard;
                 _modesView.BackClicked += CloseMenu;
             }
             _settings.SeasonClicked += CycleSeason;

@@ -96,8 +96,8 @@ namespace Echo.Tests.PlayMode
         {
             Click("Title/Modes");
             yield return Frames(2);
-            StringAssert.StartsWith("Ranked Ghost Duels", Text("Modes/Card2"));
-            Click("Modes/Card2");
+            StringAssert.StartsWith("Ranked Ghost Duels", Text("Modes/Events/Event0"));
+            Click("Modes/Events/Event0");
             yield return Frames(3);
             Assert.AreEqual("Ranked Ghost Duels", Find("DailyLobby/Heading").GetComponent<TMP_Text>().text);
         }

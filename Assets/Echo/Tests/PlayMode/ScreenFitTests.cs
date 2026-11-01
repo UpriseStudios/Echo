@@ -50,6 +50,14 @@ namespace Echo.Tests.PlayMode
             while (game.State != GameState.Title) yield return null;
             for (int i = 0; i < 10; i++) yield return null;
 
+            // Ghost Town with live events and the community's numbers, as on a busy day.
+            var backend = (Echo.Services.Mocks.MockBackendService)game.Services.Backend;
+            backend.Modes.Add(new Echo.Services.Backend.ModeState { Id = Echo.Core.Modes.ModeIds.Ranked, Open = true, SecondsLeft = 9 * 86400, Players = 2310 });
+            backend.Modes.Add(new Echo.Services.Backend.ModeState { Id = Echo.Core.Modes.ModeIds.Graveyard, Open = true, SecondsLeft = 3 * 86400, Players = 418 });
+            backend.Modes.Add(new Echo.Services.Backend.ModeState { Id = Echo.Core.Modes.ModeIds.OneLife, Open = false, SecondsLeft = 5 * 3600, Players = -1 });
+            backend.Modes.Add(new Echo.Services.Backend.ModeState { Id = Echo.Core.Modes.ModeIds.NaughtyNice, Open = false, SecondsLeft = 30 * 86400, Players = -1 });
+            backend.Pulse = new Echo.Services.Backend.DailyPulseInfo { Runners = 1204, LeaderName = "TessTheBrave#4512", LeaderDistance = 2318, Rank = 37, BestDistance = 1150, SecondsLeft = 11 * 3600 };
+
             var outside = new List<string>();
             IEnumerator All(string screen)
             {

@@ -159,7 +159,8 @@ namespace Echo.Editor
             daily.GetComponentInChildren<TMP_Text>().color = Ink;
             Wire(view, "_daily", daily);
             // Modes doc: the Modes screen, beside the Daily Haunt.
-            var modes = MakeButton(root, "Modes", "Modes", new Vector2(330, -196), new Vector2(240, 104), ButtonStyle.Secondary);
+            // Ghost Town (a user decision): the online hub; "Modes" in code.
+            var modes = MakeButton(root, "Modes", "Ghost Town", new Vector2(330, -196), new Vector2(240, 104), ButtonStyle.Secondary);
             Wire(view, "_modes", modes);
             LabelRow(root, "Play", 32, daily, modes);
             modes.GetComponent<Image>().color = Glass;
@@ -556,38 +557,158 @@ namespace Echo.Editor
             return view;
         }
 
-        /// <summary>The Modes screen (modes doc): up to six cards (the main game, the Daily Haunt, live modes), a status line and Back.</summary>
+        /// <summary>
+        /// Ghost Town (a user decision: the online hub, "Modes" in code): its name with the logo's echo, your profile line,
+        /// the Daily Haunt as a gold hero card, then up to four event cards (LIVE NOW, then COMING UP), the status line and
+        /// Back. Laid out from the top of the design frame.
+        /// </summary>
         static ModesView BuildModes(RectTransform parent)
         {
-            RectTransform root = MenuPanel(parent, "Modes", "Modes");
+            RectTransform root = MenuPanel(parent, "Modes", "Ghost Town");
             var view = root.gameObject.AddComponent<ModesView>();
-            var cards = new Button[6];
-            for (int i = 0; i < cards.Length; i++)
+            var heading = root.Find("Heading").GetComponent<TMP_Text>();
+            // The name echoes itself, as the logo does on the title.
+            var echo = MakeText(root, "HeadingEcho", heading.text, 64, _black, new Vector2(0.5f, 1f), new Vector2(-10, -80), new Vector2(1000, 130));
+            echo.color = new Color(GhostCyan.r, GhostCyan.g, GhostCyan.b, 0.45f);
+            echo.transform.SetSiblingIndex(heading.transform.GetSiblingIndex());
+            var tagline = MakeText(root, "Tagline", "Where every runner's ghost ends up", 30, _medium, new Vector2(0.5f, 1f), new Vector2(0, -196), new Vector2(980, 48));
+            tagline.color = Soft;
+
+            Pill(root, "ProfileCard", new Vector2(0, 664), new Vector2(940, 92), Card);
+            var profile = MakeText(root, "Profile", "", 30, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, 664), new Vector2(880, 84));
+            profile.textWrappingMode = TextWrappingModes.NoWrap;
+            profile.enableAutoSizing = true;
+            profile.fontSizeMin = 18;
+            profile.fontSizeMax = 30;
+
+            // The Daily Haunt: the hero card, gold, its lines in ink.
+            var hero = MakeButton(root, "Hero", "", new Vector2(0, 418), new Vector2(940, 360), ButtonStyle.Primary);
+            var heroRt = (RectTransform)hero.transform;
+            Object.DestroyImmediate(hero.GetComponentInChildren<TMP_Text>().gameObject);
+            TMP_Text HeroLine(string name, float y, float size, TMP_FontAsset font, float alpha)
             {
-                cards[i] = MakeButton(root, "Card" + i, "", new Vector2(0, 620 - i * 200), new Vector2(940, 176), i == 0 ? ButtonStyle.Primary : ButtonStyle.Secondary);
-                var label = cards[i].GetComponentInChildren<TMP_Text>();
-                label.alignment = TextAlignmentOptions.MidlineLeft;
-                label.margin = new Vector4(40, 0, 40, 0);
-                label.enableAutoSizing = false;
-                label.fontSize = 40;
-                label.lineSpacing = 22;
-                label.overflowMode = TextOverflowModes.Ellipsis;
+                var t = MakeText(heroRt, name, "", size, font, new Vector2(0f, 1f), new Vector2(44, y), new Vector2(852, size * 1.6f));
+                t.rectTransform.pivot = new Vector2(0f, 1f);
+                t.alignment = TextAlignmentOptions.TopLeft;
+                t.textWrappingMode = TextWrappingModes.NoWrap;
+                t.overflowMode = TextOverflowModes.Ellipsis;
+                t.color = new Color(Ink.r, Ink.g, Ink.b, alpha);
+                return t;
             }
-            var status = MakeText(root, "Status", "", 32, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -620), new Vector2(980, 110));
+            var heroTitle = HeroLine("Title", -34, 44, _black, 1f);
+            heroTitle.text = "DAILY HAUNT";
+            var heroRunners = HeroLine("Runners", -104, 30, _bold, 0.85f);
+            var heroLeader = HeroLine("Leader", -158, 30, _bold, 0.85f);
+            var heroYou = HeroLine("You", -212, 30, _bold, 0.85f);
+            var heroCountdown = HeroLine("Countdown", -282, 26, _medium, 0.7f);
+            var enter = MakeText(heroRt, "Enter", "ENTER >", 30, _black, new Vector2(1f, 0f), new Vector2(-44, 36), new Vector2(300, 50));
+            enter.rectTransform.pivot = new Vector2(1f, 0f);
+            enter.alignment = TextAlignmentOptions.BottomRight;
+            enter.color = Ink;
+            RectTransform dot = NewRect("Dot", heroRt);
+            dot.anchorMin = dot.anchorMax = dot.pivot = new Vector2(1f, 1f);
+            dot.anchoredPosition = new Vector2(-44, -40);
+            dot.sizeDelta = new Vector2(30, 30);
+            var dotImage = dot.gameObject.AddComponent<Image>();
+            dotImage.sprite = Frame;
+            dotImage.type = Image.Type.Sliced;
+            dotImage.pixelsPerUnitMultiplier = FramePixelScale * 3f;
+            dotImage.color = NemesisRed;
+            dotImage.raycastTarget = false;
+
+            // The events, in a column under the hero card: section headers and cards, reordered by ModesView.
+            RectTransform list = NewRect("Events", root);
+            list.anchorMin = list.anchorMax = new Vector2(0.5f, 0.5f);
+            list.pivot = new Vector2(0.5f, 1f);
+            list.anchoredPosition = new Vector2(0, 210);
+            list.sizeDelta = new Vector2(940, 900);
+            var column = list.gameObject.AddComponent<VerticalLayoutGroup>();
+            column.spacing = 12;
+            column.childControlWidth = column.childControlHeight = true;
+            column.childForceExpandWidth = true;
+            column.childForceExpandHeight = false;
+            var liveHeader = SectionHeader(list, "LiveHeader", "Live now");
+            var soonHeader = SectionHeader(list, "SoonHeader", "Coming up");
+            var events = new Button[4];
+            for (int i = 0; i < events.Length; i++) events[i] = EventCard(list, "Event" + i);
+
+            var status = MakeText(root, "Status", "", 30, _medium, new Vector2(0.5f, 0.5f), new Vector2(0, -712), new Vector2(980, 60));
             status.color = Soft;
             var back = MakeButton(root, "Back", "Back", new Vector2(0, -830), new Vector2(500, 120), ButtonStyle.Secondary);
+
             Wire(view, "_root", root.gameObject);
-            WireArray(view, "_cards", cards);
+            Wire(view, "_profile", profile);
+            Wire(view, "_hero", hero);
+            Wire(view, "_heroRunners", heroRunners);
+            Wire(view, "_heroLeader", heroLeader);
+            Wire(view, "_heroYou", heroYou);
+            Wire(view, "_heroCountdown", heroCountdown);
+            Wire(view, "_heroDot", dot.gameObject);
+            Wire(view, "_liveHeader", liveHeader.gameObject);
+            Wire(view, "_soonHeader", soonHeader.gameObject);
+            WireArray(view, "_events", events);
             Wire(view, "_status", status);
             Wire(view, "_back", back);
             root.gameObject.SetActive(false);
             return view;
         }
 
-        /// <summary>
-        /// The Daily Haunt lobby (version 2.0): today's date and countdown, your best and rank, the top 10, yesterday's
-        /// winner, Play and Back.
-        /// </summary>
+        // A Ghost Town event card: a stripe in the event's colour, its name and a LIVE/SOON chip, the pitch, and its live
+        // numbers with the countdown along the bottom. ModesView fills it.
+        static Button EventCard(RectTransform list, string name)
+        {
+            RectTransform rt = NewRect(name, list);
+            rt.sizeDelta = new Vector2(940, 168);
+            rt.gameObject.AddComponent<LayoutElement>().preferredHeight = 168;
+            var image = rt.gameObject.AddComponent<Image>();
+            image.sprite = Frame;
+            image.type = Image.Type.Sliced;
+            image.pixelsPerUnitMultiplier = FramePixelScale;
+            image.color = RowSurface;
+            var button = rt.gameObject.AddComponent<Button>();
+            rt.gameObject.AddComponent<ButtonFeedback>();
+            button.targetGraphic = image;
+
+            RectTransform stripe = NewRect("Stripe", rt);
+            stripe.anchorMin = new Vector2(0f, 0f);
+            stripe.anchorMax = new Vector2(0f, 1f);
+            stripe.pivot = new Vector2(0f, 0.5f);
+            stripe.offsetMin = new Vector2(10, 14);
+            stripe.offsetMax = new Vector2(22, -14);
+            var stripeImage = stripe.gameObject.AddComponent<Image>();
+            stripeImage.raycastTarget = false;
+
+            TMP_Text Line(string n, Vector2 anchor, Vector2 at, Vector2 box, float size, TMP_FontAsset font, TextAlignmentOptions align)
+            {
+                var t = MakeText(rt, n, "", size, font, anchor, at, box);
+                t.rectTransform.pivot = anchor;
+                t.alignment = align;
+                t.textWrappingMode = TextWrappingModes.NoWrap;
+                t.overflowMode = TextOverflowModes.Ellipsis;
+                return t;
+            }
+            Line("Name", new Vector2(0f, 1f), new Vector2(48, -20), new Vector2(640, 52), 34, _black, TextAlignmentOptions.TopLeft);
+            var pitch = Line("Pitch", new Vector2(0f, 1f), new Vector2(48, -76), new Vector2(860, 40), 28, _medium, TextAlignmentOptions.TopLeft);
+            pitch.color = Soft;
+            Line("Players", new Vector2(0f, 0f), new Vector2(48, 16), new Vector2(520, 40), 28, _bold, TextAlignmentOptions.BottomLeft);
+            var countdown = Line("Countdown", new Vector2(1f, 0f), new Vector2(-28, 16), new Vector2(340, 40), 26, _medium, TextAlignmentOptions.BottomRight);
+            countdown.color = Soft;
+
+            RectTransform chip = NewRect("Chip", rt);
+            chip.anchorMin = chip.anchorMax = chip.pivot = new Vector2(1f, 1f);
+            chip.anchoredPosition = new Vector2(-24, -18);
+            chip.sizeDelta = new Vector2(150, 52);
+            var chipImage = chip.gameObject.AddComponent<Image>();
+            chipImage.sprite = Frame;
+            chipImage.type = Image.Type.Sliced;
+            chipImage.pixelsPerUnitMultiplier = FramePixelScale;
+            chipImage.raycastTarget = false;
+            var chipLabel = MakeText(chip, "Label", "LIVE", 22, _black, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(150, 52));
+            chipLabel.color = Ink;
+            rt.gameObject.SetActive(false);
+            return button;
+        }
+
         static DailyLobbyView BuildDailyLobby(RectTransform parent)
         {
             RectTransform root = MenuPanel(parent, "DailyLobby", "Daily Haunt");

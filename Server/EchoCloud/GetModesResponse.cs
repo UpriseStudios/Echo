@@ -11,5 +11,7 @@ namespace EchoCloud
         /// <summary>The server's time, seconds since 1970 UTC.</summary>
         public long Now { get; set; }
         public List<ModeStatus> Modes { get; set; } = new List<ModeStatus>();
+        /// <summary>Ghost Town's Daily Haunt card; null when it couldn't be read.</summary>
+        public DailyPulse Daily { get; set; }
     }
 }

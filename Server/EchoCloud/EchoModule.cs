@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Echo.Core.Modes;
 using Echo.Server;
 using Unity.Services.CloudCode.Apis;
 using Unity.Services.CloudCode.Core;
@@ -82,7 +85,25 @@ namespace EchoCloud
             long now = ModeSchedule.Now(DevelopmentOnly(context, dateOverride));
             // Privacy policy retention: past events' team data goes on ordinary traffic.
             await TeamService.SweepAsync(new CloudDayStore(api, context), switches.Modes, ModeSchedule.Now(null));
-            return ModeService.Describe(switches.Modes, now, forceAll && context.EnvironmentName == Development);
+            bool forced = forceAll && context.EnvironmentName == Development;
+            GetModesResponse response = ModeService.Describe(switches.Modes, now, forced);
+            // Ghost Town (a user decision): the community's live numbers, each read at once and allowed to fail alone.
+            RankedSeason season = RankedSchedule.Current(switches.RankedSeasons, now) ?? (forced ? switches.RankedSeasons.LastOrDefault() : null);
+            var counts = new Dictionary<string, Func<Task<int>>>
+            {
+                [ModeIds.OneLife] = () => OneLifeBoard(context, api).CountAsync(),
+                [ModeIds.Graveyard] = () => GraveyardBoard(context, api, CloudDailyStore.GraveyardWeeklyBoard).CountAsync(),
+                [ModeIds.NaughtyNice] = async () =>
+                {
+                    TeamEventResponse team = await Teams(context, api, switches, dateOverride, forced).GetAsync(context.PlayerId);
+                    return team.Ok ? team.NaughtyMembers + team.NiceMembers : -1;
+                },
+            };
+            if (season != null) counts[ModeIds.Ranked] = () => DuelBoard(context, api, season).CountAsync();
+            await CommunityPulse.FillAsync(response,
+                async () => switches.Daily ? await (await Daily(context, api)).PulseAsync(context.PlayerId, DevelopmentOnly(context, dateOverride)) : null,
+                counts);
+            return response;
         }
 
         // Naughty vs Nice (modes doc): the tally, your side and, once it's over, the result and your rewards.

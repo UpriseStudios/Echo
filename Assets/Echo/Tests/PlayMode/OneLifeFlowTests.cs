@@ -97,8 +97,8 @@ namespace Echo.Tests.PlayMode
         {
             Click("Title/Modes");
             yield return Frames(2);
-            StringAssert.StartsWith("One Life", Text("Modes/Card2"));
-            Click("Modes/Card2");
+            StringAssert.StartsWith("One Life", Text("Modes/Events/Event0"));
+            Click("Modes/Events/Event0");
             yield return Frames(3);
             Assert.AreEqual("One Life", Find("DailyLobby/Heading").GetComponent<TMP_Text>().text);
             StringAssert.Contains("BraveGhost#1111", Text("DailyLobby/Row0"));

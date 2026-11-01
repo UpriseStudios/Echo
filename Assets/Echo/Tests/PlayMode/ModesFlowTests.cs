@@ -53,8 +53,10 @@ namespace Echo.Tests.PlayMode
 
         static string Text(string path) => Find(path).GetComponentInChildren<TMP_Text>().text;
 
+        static string Line(string path) => Find(path).GetComponent<TMP_Text>().text;
+
         [UnityTest]
-        public IEnumerator TheModesScreen_ListsTheGame_TheDaily_AndLiveModes()
+        public IEnumerator GhostTown_ShowsTheDaily_TheLiveNumbers_AndTheEvents()
         {
             var cfg = SimConfig.Default;
             var library = ChunkLibrary.FromJson(Directory.GetFiles(Path.Combine(Application.dataPath, "Echo", "Content", "Chunks"), "*.json")
@@ -74,21 +76,42 @@ namespace Echo.Tests.PlayMode
             while (game.State != GameState.Title) yield return null;
             var backend = (MockBackendService)game.Services.Backend;
             backend.Flags = new BackendFlags(true, true);
-            backend.Modes.Add(new ModeState { Id = ModeIds.NaughtyNice, Open = true, SecondsLeft = 3 * 86400 + 4 * 3600 });
+            backend.Modes.Add(new ModeState { Id = ModeIds.NaughtyNice, Open = true, SecondsLeft = 3 * 86400 + 4 * 3600, Players = 1204 });
+            backend.Modes.Add(new ModeState { Id = ModeIds.OneLife, Open = false, SecondsLeft = 2 * 3600, Players = -1 });
+            backend.Pulse = new DailyPulseInfo { Runners = 87, LeaderName = "Tess#1234", LeaderDistance = 1204, Rank = 12, BestDistance = 880, SecondsLeft = 5 * 3600 };
 
+            // Ghost Town (a user decision): the title's button, the Daily Haunt's card with the community's live numbers,
+            // then the events, live first.
+            StringAssert.Contains("Ghost Town", Text("Title/Modes"));
             Click("Title/Modes");
             yield return null;
             Assert.AreEqual(GameState.Menu, game.State);
-            StringAssert.StartsWith("Echo", Text("Modes/Card0"));
-            StringAssert.Contains("best 321", Text("Modes/Card0"));
-            StringAssert.StartsWith("Daily Haunt", Text("Modes/Card1"));
-            StringAssert.Contains("●", Text("Modes/Card1"), "not played today");
-            StringAssert.StartsWith("Naughty vs Nice", Text("Modes/Card2"));
-            StringAssert.Contains("Ends in 3d 4h", Text("Modes/Card2"));
-            Assert.IsFalse(Showing("Modes/Card3"));
+            Assert.AreEqual("GHOST TOWN", Find("Modes/Heading").GetComponent<TMP_Text>().text);
+            StringAssert.Contains("87 runners today", Line("Modes/Hero/Runners"));
+            StringAssert.Contains("Tess#1234", Line("Modes/Hero/Leader"));
+            StringAssert.Contains("1,204 m", Line("Modes/Hero/Leader"));
+            StringAssert.Contains("#12", Line("Modes/Hero/You"));
+            StringAssert.Contains("5h", Line("Modes/Hero/Countdown"));
+            Assert.IsTrue(Showing("Modes/Hero/Dot"), "not played today");
+            Assert.IsTrue(Showing("Modes/Events/LiveHeader"));
+            Assert.AreEqual("Naughty vs Nice", Line("Modes/Events/Event0/Name"));
+            StringAssert.Contains("1,204 on the teams", Line("Modes/Events/Event0/Players"));
+            StringAssert.Contains("Ends in 3d 4h", Line("Modes/Events/Event0/Countdown"));
+            Assert.AreEqual("LIVE", Line("Modes/Events/Event0/Chip/Label"));
+            Assert.IsTrue(Showing("Modes/Events/SoonHeader"));
+            Assert.AreEqual("One Life", Line("Modes/Events/Event1/Name"));
+            Assert.AreEqual("SOON", Line("Modes/Events/Event1/Chip/Label"));
+            Assert.AreEqual("", Line("Modes/Events/Event1/Players"), "an unknown count shows nothing");
+            Assert.IsFalse(Showing("Modes/Events/Event2"));
+
+            // An event that hasn't opened says when it does, and stays here.
+            Click("Modes/Events/Event1");
+            yield return null;
+            StringAssert.Contains("Opens in", Find("Modes/Status").GetComponent<TMP_Text>().text);
+            Assert.IsTrue(Showing("Modes"));
 
             // The Daily Haunt card opens its lobby; Back returns to the title.
-            Click("Modes/Card1");
+            Click("Modes/Hero");
             yield return null;
             Assert.IsTrue(Showing("DailyLobby"));
             Click("DailyLobby/Back");
@@ -99,8 +122,8 @@ namespace Echo.Tests.PlayMode
             Click("Title/Modes");
             yield return null;
             StringAssert.Contains("need a connection", Find("Modes/Status").GetComponent<TMP_Text>().text);
-            Assert.IsTrue(Showing("Modes/Card1"));
-            Assert.IsFalse(Showing("Modes/Card2"));
+            Assert.IsTrue(Showing("Modes/Hero"));
+            Assert.IsFalse(Showing("Modes/Events/Event0"));
             Click("Modes/Back");
             backend.Offline = false;
 
@@ -109,13 +132,9 @@ namespace Echo.Tests.PlayMode
             Click("Title/Modes");
             yield return null;
             Assert.AreEqual(ModeIds.All.Length, game.LastModes.Modes.Count);
-            Assert.IsTrue(Enumerable.Range(2, 4).Any(i => Text($"Modes/Card{i}").StartsWith("Ranked Ghost Duels")));
-
-            // The Echo card starts a run.
-            Click("Modes/Card0");
-            game.TickFrame(Dt, false);
-            Assert.AreEqual(GameState.Running, game.State);
-            Assert.IsFalse(Showing("Modes"));
+            Assert.IsTrue(Enumerable.Range(0, 4).Any(i => Line($"Modes/Events/Event{i}/Name") == "Ranked Ghost Duels"));
+            Click("Modes/Back");
+            Assert.AreEqual(GameState.Title, game.State);
         }
     }
 }

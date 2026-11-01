@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Echo.Core.Modes;
 using Echo.Game.UI;
 using Echo.Services.Analytics;
 using Echo.Services.Backend;
@@ -9,8 +10,8 @@ using UnityEngine;
 namespace Echo.Game.Flow
 {
     /// <summary>
-    /// The Modes screen (modes doc, the mode framework): the main game, the Daily Haunt and the live event modes as
-    /// cards. Which modes are live comes from the server (GetModes reads the "modes" Remote Config key, the same switch
+    /// Ghost Town (a user decision; "Modes" in code; the modes doc's mode framework): the online hub, with the Daily Haunt
+    /// and the event modes as cards and the community's live numbers. Which modes are live comes from the server (GetModes reads the "modes" Remote Config key, the same switch
     /// and dates every mode endpoint checks), so the game and the server never disagree. Opening it signs in, like the
     /// Daily Haunt. Development builds can force every mode open (Settings › Dev: modes).
     /// </summary>
@@ -18,11 +19,9 @@ namespace Echo.Game.Flow
     {
         [SerializeField] ModesView _modesView;
 
-        const int MainCard = 0, DailyCard = 1;
-
         ModesResult _modes;
         float _modesFetchedAt, _modesLabelIn;
-        readonly List<ModesView.Card> _modeCards = new List<ModesView.Card>();
+        readonly List<ModesView.Event> _modeEvents = new List<ModesView.Event>();
 
         /// <summary>Development builds: every mode open, whatever the schedule says (the server honours it in development only).</summary>
         public bool ForceModes { get; set; }
@@ -71,34 +70,48 @@ namespace Echo.Game.Flow
             ShowModeCards();
         }
 
-        // The main game and the Daily Haunt always; then each mode on show, with its countdown by the server's clock.
+        // Ghost Town: your profile, the Daily Haunt's card (the server's pulse when it has one: runners today, the leader,
+        // your place) and a card per event on show, live first, each with the live number of players.
         void ShowModeCards()
         {
-            _modeCards.Clear();
-            _modeCards.Add(new ModesView.Card { Title = "Echo", Detail = $"The main game · best {_progress.Best}" });
-            TimeSpan left = DateTime.UtcNow.Date.AddDays(1) - DateTime.UtcNow;
-            _modeCards.Add(new ModesView.Card
-            {
-                Title = "Daily Haunt",
-                Detail = _dailyEnabled ? $"New course in {(int)left.TotalHours}h {left.Minutes:00}m" : "Back soon",
-                Dot = _dailyEnabled && _save.Daily.LastPlayedDate != TodayUtc(),
-            });
+            StatsView.Profile p = ProfileNow();
+            string badges = p.Badges.Count > 0 ? "  <color=#73F2FF>" + string.Join("  ", p.Badges.ConvertAll(b => "[" + b + "]")) + "</color>" : "";
+            _modesView.SetProfile(string.IsNullOrEmpty(p.Name) && p.Badges.Count == 0 && string.IsNullOrEmpty(p.Team)
+                ? "<color=#9FB8C0>Run the Daily Haunt to join the town</color>"
+                : (string.IsNullOrEmpty(p.Name) ? "You" : p.Name) + (string.IsNullOrEmpty(p.Team) ? "" : $"  <color=#FFE9A0>{p.Team}</color>") + badges);
+
+            long elapsed = _modes != null ? (long)(Time.realtimeSinceStartup - _modesFetchedAt) : 0;
+            DailyPulseInfo pulse = _modes != null && _modes.Ok ? _modes.Daily : null;
+            TimeSpan untilMidnight = DateTime.UtcNow.Date.AddDays(1) - DateTime.UtcNow;
+            long left = pulse != null ? Math.Max(0, pulse.SecondsLeft - elapsed) : (long)untilMidnight.TotalSeconds;
+            bool playedToday = _save.Daily.LastPlayedDate == TodayUtc();
+            _modesView.SetHero(
+                !_dailyEnabled ? "Back soon" : pulse == null ? "One course for everyone, every day" : ModeNames.Players(ModesView.DailyId, pulse.Runners),
+                pulse == null || string.IsNullOrEmpty(pulse.LeaderName) ? (pulse == null ? "" : "No leader yet: set the pace")
+                    : $"Leader: {pulse.LeaderName} · {pulse.LeaderDistance:N0} m",
+                pulse != null && pulse.Rank > 0 ? $"You: #{pulse.Rank} · {pulse.BestDistance:N0} m"
+                    : playedToday ? "You've run today" : "You haven't run today",
+                _dailyEnabled ? $"New course in {left / 3600}h {left / 60 % 60:00}m" : "",
+                dot: _dailyEnabled && !playedToday, enabled: _dailyEnabled);
+
+            _modeEvents.Clear();
             if (_modes != null && _modes.Ok)
-            {
-                long elapsed = (long)(Time.realtimeSinceStartup - _modesFetchedAt);
                 foreach (ModeState m in _modes.Modes)
                 {
-                    if (_modeCards.Count == _modesView.Capacity) break;
                     long seconds = m.SecondsLeft < 0 ? -1 : Math.Max(0, m.SecondsLeft - elapsed);
-                    string side = m.Id == Echo.Core.Modes.ModeIds.NaughtyNice && !string.IsNullOrEmpty(_save.Modes.Team) ? $" · Team {Side(_save.Modes.Team)}" : "";
-                    _modeCards.Add(new ModesView.Card
+                    string side = m.Id == ModeIds.NaughtyNice && !string.IsNullOrEmpty(_save.Modes.Team) ? $" · Team {Side(_save.Modes.Team)}" : "";
+                    _modeEvents.Add(new ModesView.Event
                     {
-                        Title = ModeNames.Name(m.Id),
-                        Detail = $"{ModeNames.Pitch(m.Id)}\n{ModeNames.Countdown(m.Open, seconds)}{side}",
+                        Id = m.Id,
+                        Name = ModeNames.Name(m.Id),
+                        Pitch = ModeNames.Pitch(m.Id),
+                        Players = ModeNames.Players(m.Id, m.Players) + side,
+                        Countdown = ModeNames.Countdown(m.Open, seconds),
+                        Live = m.Open,
+                        Colour = ModeNames.Colour(m.Id),
                     });
                 }
-            }
-            _modesView.SetCards(_modeCards);
+            _modesView.SetEvents(_modeEvents);
         }
 
         void TickModeLabels(float dt)
@@ -108,52 +121,32 @@ namespace Echo.Game.Flow
             ShowModeCards();
         }
 
-        void OnModeCard(int index)
+        void OnModeCard(string id)
         {
             if (!ModesOpen) return;
-            if (index == MainCard)
-            {
-                CloseMenu();
-                StartRunning();
-                return;
-            }
-            if (index == DailyCard)
+            if (id == ModesView.DailyId)
             {
                 CloseMenu();
                 OpenDailyLobby();
                 return;
             }
-            int m = index - 2;
-            if (_modes == null || m < 0 || m >= _modes.Modes.Count) return;
-            ModeState mode = _modes.Modes[m];
+            ModeState mode = _modes?.Modes.Find(m => m.Id == id);
+            if (mode == null) return;
             Log(AnalyticsEvents.ModeOpened, ("mode", mode.Id));
-            // Naughty vs Nice is the Daily Haunt with a team: its lobby holds the tally and the side picker.
-            if (mode.Id == Echo.Core.Modes.ModeIds.NaughtyNice)
+            if (!mode.Open)
             {
-                CloseMenu();
-                OpenDailyLobby();
+                _modesView.SetStatus($"{ModeNames.Name(mode.Id)}: {ModeNames.Countdown(false, mode.SecondsLeft)}");
                 return;
             }
-            if (mode.Id == Echo.Core.Modes.ModeIds.OneLife)
+            CloseMenu();
+            switch (mode.Id)
             {
-                CloseMenu();
-                OpenOneLifeLobby();
-                return;
+                // Naughty vs Nice is the Daily Haunt with a team: its lobby holds the tally and the side picker.
+                case ModeIds.NaughtyNice: OpenDailyLobby(); break;
+                case ModeIds.OneLife: OpenOneLifeLobby(); break;
+                case ModeIds.Graveyard: OpenGraveyardLobby(); break;
+                case ModeIds.Ranked: OpenRankedLobby(); break;
             }
-            if (mode.Id == Echo.Core.Modes.ModeIds.Graveyard)
-            {
-                CloseMenu();
-                OpenGraveyardLobby();
-                return;
-            }
-            if (mode.Id == Echo.Core.Modes.ModeIds.Ranked)
-            {
-                CloseMenu();
-                OpenRankedLobby();
-                return;
-            }
-            // Modes doc phase 1 is the framework: each mode's own screen comes with its phase.
-            _modesView.SetStatus(mode.Open ? $"{ModeNames.Name(mode.Id)} is coming in this update." : $"{ModeNames.Name(mode.Id)}: {ModeNames.Countdown(false, mode.SecondsLeft)}");
         }
 
         /// <summary>Development builds: the Settings button forcing every mode open, and back.</summary>
