@@ -37,6 +37,13 @@ The files here are made by `python StoreListing/PlayGames/make_play_games.py` fr
 7. **Testers**: add your Google account so you can sign in before the configuration is published.
 8. **Publish** the Play Games Services configuration (Review and publish).
 9. **Sidekick**: Grow users > Play Games Services > Sidekick: turn it on (App Bundles need no code).
+10. **Google Cloud > Google Auth Platform** (the project whose number starts the client IDs): fill in **Branding**
+    (app name, support email, home page `https://echo.uprisestudios.co.uk`, privacy policy, developer contact),
+    then **Audience > Publish app**. Echo asks only for non-sensitive scopes (`games_lite`, `drive.appdata` for Saved
+    Games), so there's no Google review. Until then, sign-in fails: silently with `ApiException: 10`
+    (DEVELOPER_ERROR) at launch, and from Settings with `NEED_REMOTE_CONSENT` and no consent screen; that was the
+    last thing missing when Echo was first set up (1 November 2026). Each OAuth client (Android and web) must be in
+    this same project.
 
 ## 2. The game
 
