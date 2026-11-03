@@ -50,6 +50,7 @@ namespace Echo.Editor.Art
         public static string FullMoonPath => $"{Dir}/fx_full_moon.png";
         public static string BatPath(int frame) => $"{Dir}/fx_bat_{frame}.png";
         public static string GlowPath => $"{Dir}/fx_glow.png";
+        public static string WhitePath => $"{Dir}/fx_white.png";
         public static string BeamPath => $"{Dir}/fx_beam.png";
         public static string FireflyPath => $"{Dir}/fx_firefly.png";
         public static string SparklePath => $"{Dir}/fx_sparkle.png";
@@ -130,6 +131,7 @@ namespace Echo.Editor.Art
             Write(BatPath(0), PixelWorld.Bat(0));
             Write(BatPath(1), PixelWorld.Bat(1));
             Write(GlowPath, PixelWorld.Glow());
+            Write(WhitePath, White());
             Write(BeamPath, PixelWorld.Beam());
             Write(FireflyPath, PixelWorld.Dot(0xD8FF6A));
             Write(SparklePath, PixelWorld.Dot(0xFFE070));
@@ -184,6 +186,7 @@ namespace Echo.Editor.Art
                          FireflyPath, SparklePath, WispPath, RainPath, FogPath, PetalPath, BoltPath, ShimmerPath, EmberPath, FrostPath, GlintPath })
                 ImportSprite(fx, WorldPpu, new Vector2(0.5f, 0.5f));
             ImportSprite(BeamPath, WorldPpu, new Vector2(0f, 0.5f));
+            ImportSprite(WhitePath, 4f, new Vector2(0.5f, 0.5f));
             // Bottom-left pivots, so these sit on scenery pixels exactly (the Elementals' per-biome touches).
             foreach (string fx in new[] { FrostCapPath, TorchPath })
                 ImportSprite(fx, WorldPpu, Vector2.zero);
@@ -196,6 +199,14 @@ namespace Echo.Editor.Art
             ImportIcon(AdaptiveBackgroundPath);
             ImportIcon(AdaptiveForegroundPath);
             SeasonArt.Generate();
+        }
+
+        // 4 x 4 white: one unit square, tinted and stretched for flashes.
+        static PixelCanvas White()
+        {
+            var c = new PixelCanvas(4, 4);
+            c.Rect(0, 0, 3, 3, new Color32(255, 255, 255, 255));
+            return c;
         }
 
         internal static void EnsureFolder(string path)

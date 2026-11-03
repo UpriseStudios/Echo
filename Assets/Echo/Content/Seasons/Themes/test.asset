@@ -63,3 +63,5 @@ MonoBehaviour:
   DeathLineNemesisOnly: 0
   Stinger: {fileID: 8300000, guid: cfb613ba3f753de4ca2b5a780976b21e, type: 3}
   MusicStems: []
+  Eras: []
+  EraLabel: 

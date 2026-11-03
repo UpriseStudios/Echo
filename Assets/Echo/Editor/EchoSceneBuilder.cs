@@ -275,6 +275,17 @@ namespace Echo.Editor
             // Seasons doc: the season's effects layer, sorted behind the floor and everything on it.
             var seasonEffects = Child<SeasonEffectsView>(world, "SeasonEffects");
             Wire(seasonEffects, "_material", material);
+            // World: Time Run: the time rift between eras, in front of the scenery, behind the floor and everything on it.
+            var timeRift = Child<TimeRiftView>(world, "TimeRift");
+            foreach (var (part, sprite) in new[] { ("_flash", EchoArt.WhitePath), ("_ripple", EchoArt.GlowPath) })
+            {
+                var sr = new GameObject(part.TrimStart('_')).AddComponent<SpriteRenderer>();
+                sr.transform.SetParent(timeRift.transform, false);
+                sr.sprite = LoadSprite(sprite);
+                sr.sharedMaterial = material;
+                sr.sortingOrder = TimeRiftView.SortingOrder;
+                Wire(timeRift, part, sr);
+            }
             // Seasons doc, Easter: the egg hunt's eggs.
             var eggHunt = Child<EggHuntView>(world, "EggHunt");
             Wire(eggHunt, "_material", material);
@@ -334,6 +345,7 @@ namespace Echo.Editor
             Wire(sfx, "_graveThud", Clip(PlaceholderAudio.Thud));
             Wire(sfx, "_chisel", Clip(PlaceholderAudio.Chisel));
             Wire(sfx, "_howl", Clip(PlaceholderAudio.Howl));
+            Wire(sfx, "_timeRift", Clip(PlaceholderAudio.TimeRift));
 
             // UI
             var eventSystem = new GameObject("EventSystem");
@@ -435,6 +447,7 @@ namespace Echo.Editor
             Wire(game, "_copycatView", copycat);
             Wire(game, "_ambient", ambient);
             Wire(game, "_seasonEffects", seasonEffects);
+            Wire(game, "_timeRift", timeRift);
             Wire(game, "_eggHunt", eggHunt);
             WireArray(game, "_seasonThemes", SeasonThemes.Build());
             Wire(game, "_seasonSchedule", AssetDatabase.LoadAssetAtPath<TextAsset>(SeasonThemes.SchedulePath)

@@ -26,6 +26,7 @@ namespace Echo.Editor
                 SunkenRuins(), AutumnWoods(),
                 Beach(), DesertDunes(), VolcanicWaste(), ToyTown(), Test(),
             };
+            themes.AddRange(TimeRun(themes));
             foreach (SeasonTheme t in themes) EditorUtility.SetDirty(t);
             return themes.ToArray();
         }
@@ -167,6 +168,61 @@ namespace Echo.Editor
             t.HazardColour = hazard;
         }
 
+        // ---- World: Time Run (World Time Run doc): four eras by distance (TimeEras) ----
+
+        // Phase 1, the era system: each era dressed in the game's own art (the volcano for Dino Land, the castle for
+        // Medieval, the neon city for Today, the moon for the Far Future); phase 3 gives each era its own art style.
+        static IEnumerable<SeasonTheme> TimeRun(List<SeasonTheme> built)
+        {
+            SeasonTheme Built(string id) => built.Find(t => t.Id == id);
+            SeasonTheme Era(string id, string title, string label, SeasonTheme like)
+            {
+                SeasonTheme e = Plain(Load(id), title);
+                e.EraLabel = label;
+                if (like != null)
+                {
+                    e.PaletteStops = like.PaletteStops;
+                    e.PaletteBlend = like.PaletteBlend;
+                    e.FarLayer = like.FarLayer;
+                    e.NearLayer = like.NearLayer;
+                    Colours(e, like.FarTint, like.NearTint, like.FloorColour, like.HazardColour);
+                    e.Effect = like.Effect;
+                    e.EffectSprites = like.EffectSprites;
+                    e.EffectColours = like.EffectColours;
+                    e.EffectCount = like.EffectCount;
+                    e.EffectFall = like.EffectFall;
+                    e.EffectSway = like.EffectSway;
+                    e.EffectBand = like.EffectBand;
+                    e.EffectParallax = like.EffectParallax;
+                    e.Flyer = like.Flyer;
+                    e.FlyerColour = like.FlyerColour;
+                    e.FlyerEvery = like.FlyerEvery;
+                    e.FlyerSpeed = like.FlyerSpeed;
+                }
+                return e;
+            }
+
+            SeasonTheme dino = Era(SeasonIds.EraDino, "Dino Land", "65,000,000 BC", Built(SeasonIds.VolcanicWaste));
+            SeasonTheme medieval = Era(SeasonIds.EraMedieval, "Medieval", "1200 AD", null);
+            medieval.PaletteStops = new[] { Hex(0x5A6A9A), Hex(0x7A6A8A), Hex(0x4A4A6A) };
+            medieval.PaletteBlend = 0.85f;
+            medieval.FarLayer = Load<Sprite>(Art.EchoArt.MountainsPath);
+            medieval.NearLayer = Load<Sprite>(Art.EchoArt.CastlePath);
+            Colours(medieval, Hex(0x8A94B8), Hex(0x2A2A44), Hex(0x6A6070), Hex(0xFFD24A));
+            SeasonTheme today = Era(SeasonIds.EraToday, "Today", "2026", Built(SeasonIds.NeonNight));
+            SeasonTheme future = Era(SeasonIds.EraFuture, "Far Future", "3026", null);
+            future.PaletteStops = new[] { Hex(0x0A1A3A), Hex(0x1A0A3A), Hex(0x0A2A4A) };
+            future.PaletteBlend = 0.9f;
+            future.FarLayer = Load<Sprite>(Art.EchoArt.MountainsPath);
+            future.NearLayer = Load<Sprite>(Art.EchoArt.MoonSurfacePath);
+            Colours(future, Hex(0x2A6A9A), Hex(0x1A2A4A), Hex(0x3A5A7A), Hex(0x4AFFE0));
+
+            SeasonTheme world = Plain(Load(SeasonIds.TimeRun), "Time Run");
+            world.Eras = new[] { dino, medieval, today, future };
+            foreach (SeasonTheme t in new[] { dino, medieval, today, future, world }) EditorUtility.SetDirty(t);
+            return new[] { dino, medieval, today, future, world };
+        }
+
         // ---- four more (a user revision), painted in their own colours: white tints show them as drawn ----
 
         static SeasonTheme Beach()
@@ -296,6 +352,8 @@ namespace Echo.Editor
             t.MusicStems = new AudioClip[0];
             t.ForceCharacter = "";
             t.RunToast = "";
+            t.Eras = new SeasonTheme[0];
+            t.EraLabel = "";
             return t;
         }
 

@@ -19,7 +19,7 @@ namespace Echo.Editor
 
         public static readonly string[] StemNames = { "stem0_bass", "stem1_kick", "stem2_hats", "stem3_pad", "stem4_arp", "stem5_lead" };
         public const string Jump = "sfx_jump", NearMiss = "sfx_near_miss", Death = "sfx_death", Clear = "sfx_ghost_clear", Sting = "sfx_nemesis_sting",
-            Thud = "sfx_grave_thud", Chisel = "sfx_chisel", Howl = "sfx_howl";
+            Thud = "sfx_grave_thud", Chisel = "sfx_chisel", Howl = "sfx_howl", TimeRift = "sfx_time_rift";
 
         /// <summary>Seasons doc: the test theme's music stinger (placeholder).</summary>
         public const string TestSeasonStinger = "season_test_stinger";
@@ -51,6 +51,9 @@ namespace Echo.Editor
             // The Werewolf's howl at moonrise: a voice gliding up then falling away, with a little vibrato.
             Write(Howl, Sfx(1.4, (t, d) => Math.Sin(2 * Math.PI * (Lerp(330, 520, Math.Min(1, t / 0.35)) - Math.Max(0, t - 0.6) * 140) * t
                 + Math.Sin(2 * Math.PI * 5.5 * t) * 0.6) * 0.5 * Env(t, d, 0.15)));
+            // Time Run's rift: a rushing sweep of air rising in pitch, with a soft tone under it.
+            Write(TimeRift, Sfx(0.45, (t, d) => (Noise(t) * 0.5 + Math.Sin(2 * Math.PI * Lerp(180, 1400, t / d) * t) * 0.25)
+                * Math.Sin(Math.PI * t / d)));
             Write(Chisel, Sfx(0.045, (t, d) => (Noise(t) * 0.5 + Square(2400, t) * 0.25) * Math.Exp(-t * 90)));
             Write(TestSeasonStinger, Sfx(1.0, (t, d) => Arpeggio(t, new[] { 659.25, 783.99, 987.77, 1318.51 }, 0.11) * Env(t, d, 0.01)));
             // Sleigh bells: bright jingles over a little rising tune.

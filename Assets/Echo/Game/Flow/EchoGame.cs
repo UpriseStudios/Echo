@@ -269,6 +269,7 @@ namespace Echo.Game.Flow
                 _modesView.BackClicked += CloseMenu;
             }
             _settings.SeasonClicked += CycleSeason;
+            _settings.TimeRunClicked += CycleTimeRun;
             _skins.BuyClicked += Buy;
             _skins.WatchAdClicked += WatchUnlockAd;
             _skins.TrialAdClicked += WatchTrialAd;
@@ -497,6 +498,7 @@ namespace Echo.Game.Flow
             // A user revision: a world (or season, or mode) with its own scenery is the whole run, so the Castle, Space
             // and nightfall never come over it.
             EnvironmentState env = OwnScenery ? Biomes.At(0f) : Biomes.At(metres);
+            UpdateEra();
             if (State == GameState.Running && _activeChallenge != null && !_passedTheirGrave && _run.Distance > _activeChallenge.Distance)
             {
                 _passedTheirGrave = true;
@@ -513,6 +515,7 @@ namespace Echo.Game.Flow
             float viewW = _cameraRig.Right - _cameraRig.Left;
             if (_background != null) _background.Render(_cameraRig.transform.position.x, viewW, _cameraRig.Bottom, _cameraRig.Height, background, env);
             RenderSeasonEffects();
+            RenderTimeRift();
             if (_eggHunt != null) _eggHunt.Render(Time.time);
             // Obstacles keep their contrast at night: against a dark sky they turn pale instead of dark. A world can set
             // its own hazard and floor colours (a user revision). A world's hazard colour is chosen to stand out from its
@@ -1628,6 +1631,7 @@ namespace Echo.Game.Flow
         {
             _settings.Show(_save.Settings, Debug.isDebugBuild && _services.UsingMockAds, DevTools);
             _settings.SetSeason(SeasonDevSetting, SeasonLabel());
+            _settings.SetTimeRun(SeasonDevSetting, TimeRunLabel());
             RefreshPlayGamesButton();
             // Development builds only: what the ad and store SDKs are doing, readable on the phone itself.
             _settings.SetStatus(Debug.isDebugBuild ? _services.StatusReport : null);

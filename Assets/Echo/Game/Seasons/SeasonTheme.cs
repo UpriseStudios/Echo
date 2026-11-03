@@ -102,5 +102,11 @@ namespace Echo.Game.Seasons
         public AudioClip Stinger;
         [Tooltip("A user revision: the season's own music, six stems like the main tune's; empty keeps the main tune.")]
         public AudioClip[] MusicStems = new AudioClip[0];
+
+        [Header("Time Run")]
+        [Tooltip("A world that travels through eras by distance (World Time Run doc): one theme per era, in order (TimeEras).")]
+        public SeasonTheme[] Eras = new SeasonTheme[0];
+        [Tooltip("An era's label, shown in the corner as a run reaches it (\"65,000,000 BC\").")]
+        public string EraLabel = "";
     }
 }

@@ -132,6 +132,9 @@ namespace Echo.Game.Flow
             bool seasonal = _save == null || _save.Settings.SeasonalLooks;
             SeasonTheme details = mode ?? (seasonal ? season : null);
             SeasonTheme backdrop = mode ?? (seasonal && HasBackdrop(season) ? season : WornWorld());
+            // World: Time Run: the era at the run's distance, its details too.
+            backdrop = EraOf(backdrop);
+            if (_timeRun != null) details = backdrop;
             if (_seasonApplied && details == _season && backdrop == _backdrop) return;
             ApplySeason(details, backdrop);
         }
@@ -143,6 +146,7 @@ namespace Echo.Game.Flow
         /// <summary>The world the player wears, if it's owned and isn't the normal one.</summary>
         SeasonTheme WornWorld()
         {
+            if (PreviewTimeRun) return PreviewedTimeRun();
             if (_catalog == null || _save == null || _progress == null) return null;
             CosmeticItem world = _catalog.Resolve(_save.Cosmetics.Equipped.World, CosmeticType.World);
             return world != null && world.World != null && CosmeticUnlocks.IsOwned(world, _progress.Best, _save.Cosmetics.Owned) ? world.World : null;
@@ -298,7 +302,7 @@ namespace Echo.Game.Flow
         // season_active: once a session for each season shown, after the session has started (so after consent).
         void LogSeasonActive()
         {
-            if (!_sessionLive || _season == null || _seasonLogged == _season.Id || _season.Id == SeasonIds.Graveyard) return;
+            if (!_sessionLive || _season == null || _seasonLogged == _season.Id || _season.Id == SeasonIds.Graveyard || _timeRun != null) return;
             _seasonLogged = _season.Id;
             Log(AnalyticsEvents.SeasonActive, ("season", _season.Id), ("forced", ForcedSeason != null));
         }

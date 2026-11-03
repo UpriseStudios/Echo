@@ -56,6 +56,12 @@ namespace Echo.Editor
             var nearMiss = MakeText(root, "NearMiss", "CLOSE +5", 44, _black, new Vector2(0.5f, 1f), new Vector2(0, -200), new Vector2(600, 80));
             nearMiss.color = Accent;
             var toast = MakeText(root, "Toast", "", 42, _bold, new Vector2(0.5f, 1f), new Vector2(0, -300), new Vector2(1000, 80));
+            // World: Time Run: the era's label in the corner as a run reaches it.
+            var era = MakeText(root, "Era", "", 30, _black, new Vector2(0f, 1f), new Vector2(44, -160), new Vector2(600, 56));
+            era.rectTransform.pivot = new Vector2(0f, 1f);
+            era.alignment = TextAlignmentOptions.TopLeft;
+            era.color = GhostCyan;
+            era.gameObject.SetActive(false);
             var tapHint = MakeText(root, "TapHint", "TAP TO JUMP", 50, _black, new Vector2(0.5f, 0.5f), new Vector2(0, -420), new Vector2(1000, 110));
             tapHint.gameObject.AddComponent<Pulse>();
             var countdown = MakeText(root, "Countdown", "3", 200, _black, new Vector2(0.5f, 0.5f), new Vector2(0, 200), new Vector2(400, 320));
@@ -72,6 +78,7 @@ namespace Echo.Editor
             Wire(view, "_nearMiss", nearMiss);
             Wire(view, "_tapHint", tapHint);
             Wire(view, "_toast", toast);
+            Wire(view, "_era", era);
             Wire(view, "_life", life.gameObject);
 
             // Power-ups (a user revision): Shield, Phase and Lantern along the floor, bottom left, tapped to use.
@@ -124,6 +131,8 @@ namespace Echo.Editor
 
             var bestPill = Pill(root, "BestPill", new Vector2(0, 296), new Vector2(380, 92));
             var best = MakeText(root, "Best", "BEST 0", 36, _black, new Vector2(0.5f, 0.5f), new Vector2(0, 296), new Vector2(380, 92));
+            // A best of six digits wrapped onto two lines in its pill: one line, shrinking to fit.
+            FitOneLine(best, 20);
             // The main game's speed, once a new best has raised it (a user revision).
             var speed = MakeText(root, "Speed", "SPEED 100%", 26, _black, new Vector2(0.5f, 0.5f), new Vector2(0, 222), new Vector2(500, 44));
             speed.color = Soft;
@@ -1134,6 +1143,8 @@ namespace Echo.Editor
             var devModes = SettingRow(list, "DevModes", "Dev: modes live", toggle: false);
             // Seasons doc: force any season (development builds and the recording APK).
             var season = SettingRow(list, "Season", "Dev: season auto", toggle: false);
+            // World: Time Run: wear it this session, by distance or one era.
+            var timeRun = SettingRow(list, "TimeRun", "Dev: Time Run off", toggle: false);
             // Marketing content plan: recording mode for screen recordings.
             var recording = SettingRow(list, "Recording", "Recording: off", toggle: false);
             var recordingHud = SettingRow(list, "RecordingHud", "HUD: shown", toggle: false);
@@ -1141,7 +1152,7 @@ namespace Echo.Editor
             status.alignment = TextAlignmentOptions.TopLeft;
             status.margin = new Vector4(12, 8, 12, 8);
             status.color = Soft;
-            foreach (var row in new Component[] { devHeader, devAds, serverCheck, dailyDate, devModes, season, recording, recordingHud, status })
+            foreach (var row in new Component[] { devHeader, devAds, serverCheck, dailyDate, devModes, season, timeRun, recording, recordingHud, status })
                 row.gameObject.SetActive(false);
 
             var close = MakeButton(root, "Close", "Back", new Vector2(0, -830), new Vector2(500, 120), ButtonStyle.Primary);
@@ -1168,6 +1179,7 @@ namespace Echo.Editor
             Wire(view, "_dailyDate", dailyDate);
             Wire(view, "_devModes", devModes);
             Wire(view, "_season", season);
+            Wire(view, "_timeRun", timeRun);
             Wire(view, "_recording", recording);
             Wire(view, "_recordingHud", recordingHud);
             Wire(view, "_status", status);

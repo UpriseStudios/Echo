@@ -26,6 +26,16 @@ namespace Echo.Game.Seasons
         public const string VolcanicWaste = "world_volcano";
         public const string ToyTown = "world_toytown";
 
+        /// <summary>
+        /// World: Time Run (Assets/Docs/World Time Run.md): a world travelling through eras by distance, one theme per era
+        /// (TimeEras). Never scheduled.
+        /// </summary>
+        public const string TimeRun = "world_timerun";
+        public const string EraDino = "timerun_dino";
+        public const string EraMedieval = "timerun_medieval";
+        public const string EraToday = "timerun_today";
+        public const string EraFuture = "timerun_future";
+
         /// <summary>Seasons phase 1: a theme that exercises every override. Never scheduled; only forced.</summary>
         public const string Test = "test";
     }

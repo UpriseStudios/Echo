@@ -40,6 +40,9 @@ namespace Echo.Game.UI
         // Seasons doc: development builds (and the recording APK) can force any season.
         [SerializeField] Button _season;
         public event Func<string> SeasonClicked;
+        // World: Time Run, development builds: wear it, by distance or one era.
+        [SerializeField] Button _timeRun;
+        public event Func<string> TimeRunClicked;
         // Modes doc: development builds can force every competitive mode open.
         [SerializeField] Button _devModes;
         public event Func<string> DevModesClicked;
@@ -96,6 +99,11 @@ namespace Echo.Game.UI
                 string label = DevModesClicked?.Invoke();
                 if (label != null) SetLabel(_devModes, label);
             });
+            if (_timeRun != null) _timeRun.onClick.AddListener(() =>
+            {
+                string label = TimeRunClicked?.Invoke();
+                if (label != null) SetLabel(_timeRun, label);
+            });
             if (_season != null) _season.onClick.AddListener(() =>
             {
                 string label = SeasonClicked?.Invoke();
@@ -112,6 +120,15 @@ namespace Echo.Game.UI
             if (_playGames == null) return;
             _playGames.gameObject.SetActive(visible);
             if (visible) SetValue(_playGames, value);
+        }
+
+        /// <summary>The Time Run development row and its label.</summary>
+        public void SetTimeRun(bool visible, string label)
+        {
+            if (_timeRun == null) return;
+            _timeRun.gameObject.SetActive(visible);
+            if (visible) SetLabel(_timeRun, label);
+            RefreshDevHeader();
         }
 
         /// <summary>The forced-season button and its label.</summary>
@@ -161,7 +178,7 @@ namespace Echo.Game.UI
         {
             if (_devHeader == null) return;
             bool any = false;
-            foreach (Component c in new Component[] { _devAdFailure, _serverCheck, _dailyDate, _devModes, _season, _recording, _recordingHud, _status })
+            foreach (Component c in new Component[] { _devAdFailure, _serverCheck, _dailyDate, _devModes, _season, _timeRun, _recording, _recordingHud, _status })
                 any |= c != null && c.gameObject.activeSelf;
             _devHeader.SetActive(any);
         }

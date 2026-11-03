@@ -14,6 +14,8 @@ namespace Echo.Game.Audio
         [SerializeField] AudioClip _graveThud;
         [SerializeField] AudioClip _chisel;
         [SerializeField] AudioClip _howl;
+        [Tooltip("Time Run: the whoosh of a time rift between eras.")]
+        [SerializeField] AudioClip _timeRift;
 
         AudioSource _source;
         bool _enabled = true;
@@ -30,6 +32,7 @@ namespace Echo.Game.Audio
         public void GraveThud() => Play(_graveThud, 0.8f);
         public void Chisel() => Play(_chisel, 0.35f);
         public void Howl() => Play(_howl, 0.7f);
+        public void TimeRift() => Play(_timeRift, 0.7f);
 
         void Play(AudioClip clip, float volume)
         {

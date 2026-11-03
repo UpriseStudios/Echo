@@ -54,3 +54,5 @@ MonoBehaviour:
   DeathLineNemesisOnly: 1
   Stinger: {fileID: 0}
   MusicStems: []
+  Eras: []
+  EraLabel: 
