@@ -34,7 +34,27 @@ namespace Echo.Services.PlayGames
         public bool SignedIn => PlayGamesPlatform.Instance.IsAuthenticated();
         public string Status => _status;
 
-        public Task<bool> SignInAsync(bool interactive)
+        // Signed in on this device before: from then on, each launch signs in again.
+        const string SignedInBeforeKey = "echo_play_games_signed_in";
+
+        // A user report: after the first sign-in, every launch still needed Settings > Play Games. Echo starts the SDK
+        // only after the privacy choice (PlayGamesManifest removes its launch-time provider), and that provider is what
+        // runs Play Games' own automatic sign-in, so the quiet check finds no one signed in. Once a player has signed in
+        // here, a failed quiet check is followed by a real sign-in, which for an account that has already agreed
+        // completes by itself (Play's welcome banner only); a player who never signed in still chooses to in Settings.
+        public async Task<bool> SignInAsync(bool interactive)
+        {
+            bool ok = await AuthenticateAsync(interactive);
+            if (!ok && !interactive && PlayerPrefs.GetInt(SignedInBeforeKey, 0) == 1) ok = await AuthenticateAsync(true);
+            if (ok)
+            {
+                PlayerPrefs.SetInt(SignedInBeforeKey, 1);
+                PlayerPrefs.Save();
+            }
+            return ok;
+        }
+
+        Task<bool> AuthenticateAsync(bool interactive)
         {
             var done = new TaskCompletionSource<bool>();
             Action<SignInStatus> signedIn = status =>
