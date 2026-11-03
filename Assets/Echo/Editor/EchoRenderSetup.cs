@@ -66,6 +66,38 @@ namespace Echo.Editor
             return profile;
         }
 
+        const string FuturePostProfilePath = SettingsDir + "/EchoPostFuture.asset";
+
+        // World Time Run doc, phase 3: the Far Future's light bloom, weighted in by the game there with full effects. A lower
+        // threshold than the glow's, so the neon and the moons bloom softly too.
+        static Volume AddFutureVolume()
+        {
+            var profile = AssetDatabase.LoadAssetAtPath<VolumeProfile>(FuturePostProfilePath);
+            if (profile == null)
+            {
+                profile = ScriptableObject.CreateInstance<VolumeProfile>();
+                AssetDatabase.CreateAsset(profile, FuturePostProfilePath);
+            }
+            if (!profile.TryGet(out Bloom bloom))
+            {
+                bloom = profile.Add<Bloom>(true);
+                AssetDatabase.AddObjectToAsset(bloom, profile);
+            }
+            bloom.threshold.Override(0.8f);
+            bloom.intensity.Override(1.2f);
+            bloom.scatter.Override(0.7f);
+            bloom.highQualityFiltering.Override(false);
+            EditorUtility.SetDirty(profile);
+
+            var go = new GameObject("FutureFX");
+            var volume = go.AddComponent<Volume>();
+            volume.isGlobal = true;
+            volume.priority = 1f;
+            volume.weight = 0f;
+            volume.sharedProfile = profile;
+            return volume;
+        }
+
         static void AddPostVolume(VolumeProfile profile)
         {
             var go = new GameObject("PostFX");

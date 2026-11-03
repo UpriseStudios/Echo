@@ -9,6 +9,7 @@ using Echo.Core.Ghosts;
 using Echo.Core.Sim;
 using Echo.Game.Flow;
 using Echo.Game.Persistence;
+using Echo.Game.Dev;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using UnityEngine;
@@ -73,7 +74,13 @@ namespace Echo.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator SixtySecondRun_With30Ghosts_AllocatesNothingPerFrame()
+        public IEnumerator SixtySecondRun_With30Ghosts_AllocatesNothingPerFrame() => Run(farFuture: false);
+
+        /// <summary>World Time Run doc, phase 3: the Far Future in HD with full effects (lights, glow, trails) allocates nothing either.</summary>
+        [UnityTest]
+        public IEnumerator SixtySecondRun_InTheFarFuture_AllocatesNothingPerFrame() => Run(farFuture: true);
+
+        IEnumerator Run(bool farFuture)
         {
             var cfg = SimConfig.Default;
             var library = ChunkLibrary.FromJson(Directory.GetFiles(Path.Combine(Application.dataPath, "Echo", "Content", "Chunks"), "*.json")
@@ -120,6 +127,12 @@ namespace Echo.Tests.PlayMode
             var game = Object.FindAnyObjectByType<EchoGame>();
             while (game.State != GameState.Title) yield return null;
             game.enabled = false;
+            if (farFuture)
+            {
+                game.PreviewTimeRun = true;
+                game.ForceEra = 3;
+                game.WeakDeviceOverride = false;
+            }
             game.ScriptedTaps = player.TapAt;
             game.ScriptedHeld = player.HeldAt;
 
@@ -127,6 +140,7 @@ namespace Echo.Tests.PlayMode
             game.TickFrame(dt, tapped: true);
             Assert.AreEqual(GameState.Running, game.State);
             Assert.AreEqual(Ghosts, game.Run.GhostsAtStart);
+            if (farFuture) Assert.IsTrue(game.HighDefinitionShown && game.FullEffects, "measured in HD with full effects");
             for (int f = 0; f < WarmupFrames; f++) game.TickFrame(dt, false);
 
             // The editor and test runner allocate a little every frame on their own, so a whole-frame counter cannot

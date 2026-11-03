@@ -1115,7 +1115,8 @@ namespace Echo.Editor
             var music = SettingRow(list, "Music", "Music", toggle: true);
             var sfx = SettingRow(list, "Sfx", "Sound effects", toggle: true);
             var haptics = SettingRow(list, "Haptics", "Haptics", toggle: true);
-            var glow = SettingRow(list, "Glow", "Glow", toggle: true);
+            // World Time Run doc, phase 3: bloom and the Far Future's lights, decided by the phone until chosen.
+            var glow = SettingRow(list, "Glow", "Full effects (auto)", toggle: true);
             // A user revision (worlds): whether seasons' looks show over your world.
             var seasonal = SettingRow(list, "SeasonalLooks", "Seasonal looks", toggle: true);
 
@@ -1145,6 +1146,8 @@ namespace Echo.Editor
             var season = SettingRow(list, "Season", "Dev: season auto", toggle: false);
             // World: Time Run: wear it this session, by distance or one era.
             var timeRun = SettingRow(list, "TimeRun", "Dev: Time Run off", toggle: false);
+            // World Time Run doc, phase 3: the frame rate in each era with 30 ghosts.
+            var benchmark = SettingRow(list, "Benchmark", "Dev: Time Run benchmark", toggle: false);
             // Marketing content plan: recording mode for screen recordings.
             var recording = SettingRow(list, "Recording", "Recording: off", toggle: false);
             var recordingHud = SettingRow(list, "RecordingHud", "HUD: shown", toggle: false);
@@ -1180,6 +1183,7 @@ namespace Echo.Editor
             Wire(view, "_devModes", devModes);
             Wire(view, "_season", season);
             Wire(view, "_timeRun", timeRun);
+            Wire(view, "_benchmark", benchmark);
             Wire(view, "_recording", recording);
             Wire(view, "_recordingHud", recordingHud);
             Wire(view, "_status", status);

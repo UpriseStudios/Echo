@@ -224,7 +224,8 @@ namespace Echo.Editor.Art
             Object.DestroyImmediate(tex);
         }
 
-        internal static void ImportSprite(string path, float ppu, Vector2 pivot, Vector4 border = default, TextureWrapMode wrap = TextureWrapMode.Clamp)
+        internal static void ImportSprite(string path, float ppu, Vector2 pivot, Vector4 border = default, TextureWrapMode wrap = TextureWrapMode.Clamp,
+            FilterMode filter = FilterMode.Point)
         {
             var importer = (TextureImporter)AssetImporter.GetAtPath(path);
             importer.textureType = TextureImporterType.Sprite;
@@ -233,7 +234,8 @@ namespace Echo.Editor.Art
             importer.alphaIsTransparency = true;
             importer.mipmapEnabled = false;
             importer.wrapMode = wrap;
-            importer.filterMode = FilterMode.Point;
+            // Pixel art is point filtered; the Far Future's HD art (World Time Run doc, phase 3) is smooth.
+            importer.filterMode = filter;
             importer.textureCompression = TextureImporterCompression.Uncompressed;
             var settings = new TextureImporterSettings();
             importer.ReadTextureSettings(settings);

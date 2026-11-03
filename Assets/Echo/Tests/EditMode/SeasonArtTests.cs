@@ -42,9 +42,18 @@ namespace Echo.Tests.EditMode
             return px;
         }
 
-        static void SameBox(string theme, string what, Sprite reskin, Sprite original)
+        static void SameBox(string theme, string what, Sprite reskin, Sprite original, bool highDefinition = false)
         {
             if (reskin == null) return;
+            if (highDefinition)
+            {
+                // World Time Run doc, phase 3: the Far Future's full-resolution art covers the same world box, smoothly filtered.
+                Assert.AreEqual(original.bounds.size, reskin.bounds.size, $"{theme} {what}: world size");
+                Assert.AreEqual(original.pivot / original.rect.size, reskin.pivot / reskin.rect.size, $"{theme} {what}: pivot");
+                Assert.AreEqual(original.texture.wrapMode, reskin.texture.wrapMode, $"{theme} {what}: wrap");
+                Assert.AreEqual(FilterMode.Bilinear, reskin.texture.filterMode, $"{theme} {what}: smooth");
+                return;
+            }
             string at = $"{theme} {what}";
             Assert.AreEqual(original.rect.size, reskin.rect.size, at + ": size");
             Assert.AreEqual(original.pixelsPerUnit, reskin.pixelsPerUnit, at + ": pixels per unit");
@@ -76,8 +85,8 @@ namespace Echo.Tests.EditMode
                 SameBox(t.Id, "spike", t.Spike, Original("spike.png"));
                 SameBox(t.Id, "block", t.Block, Original("block.png"));
                 SameBox(t.Id, "ground top", t.GroundTop, Original("ground_top.png"));
-                SameBox(t.Id, "far layer", t.FarLayer, Original("bg_mountains.png"));
-                SameBox(t.Id, "near layer", t.NearLayer, Original("bg_graveyard.png"));
+                SameBox(t.Id, "far layer", t.FarLayer, Original("bg_mountains.png"), t.HighDefinition);
+                SameBox(t.Id, "near layer", t.NearLayer, Original("bg_graveyard.png"), t.HighDefinition);
                 SameBox(t.Id, "grave", t.Grave, Original("grave.png"));
                 SameBox(t.Id, "headstone", t.Headstone, Original("ui_headstone.png"));
 

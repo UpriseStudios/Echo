@@ -19,5 +19,12 @@ namespace Echo.Game.Persistence
         /// always shows (off). Seasonal achievements count either way.
         /// </summary>
         [JsonProperty("seasonalLooks")] public bool SeasonalLooks = true;
+
+        /// <summary>
+        /// World Time Run doc, phase 3: Full effects (bloom, the Far Future's lights) follows Glow once the player has
+        /// chosen; until then the game decides: reduced on weaker phones, or once the Far Future ran slow (EffectsReduced).
+        /// </summary>
+        [JsonProperty("effectsChosen")] public bool EffectsChosen;
+        [JsonProperty("effectsReduced")] public bool EffectsReduced;
     }
 }

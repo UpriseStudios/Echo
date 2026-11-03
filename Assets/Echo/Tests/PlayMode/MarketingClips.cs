@@ -10,6 +10,7 @@ using Echo.Core.Sim;
 using Echo.Game.Clips;
 using Echo.Game.Flow;
 using Echo.Game.Persistence;
+using Echo.Game.Dev;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using UnityEngine;
@@ -111,51 +112,22 @@ namespace Echo.Tests.PlayMode
         }
 
         // Genuine failed runs on the course, each lasting a little longer than the last so the graves spread out.
-        internal static List<GhostRecord> Ghosts(MarketingClipSpec spec, ChunkLibrary library, in SimConfig cfg, int speed, Random rng)
-        {
-            var records = new List<GhostRecord>();
-            for (int i = 1; i <= spec.Ghosts; i++)
-            {
-                var course = new Course(library, spec.Seed);
-                int survive = 90 + i * 1800 / Math.Max(1, spec.Ghosts) + rng.Next(60);
-                Schedule s = SurvivingSchedule.Build(new Course(library, spec.Seed), speed, survive, rng, cfg);
-                var run = new RunSimulation(course, new GhostSet(), i, 100, cfg);
-                for (int t = 0; t < 20000 && !run.IsDead; t++) run.Step(s.TapAt(t), s.HeldAt(t));
-                GhostRecord g = run.ToGhostRecord();
-                g.SkinId = spec.GhostSkins.Length > 0 ? spec.GhostSkins[(i - 1) % spec.GhostSkins.Length] : "";
-                records.Add(g);
-            }
-            if (spec.NemesisKills > 0 && records.Count > 0)
-            {
-                GhostRecord nemesis = records[records.Count - 1];
-                nemesis.Kills = spec.NemesisKills;
-                nemesis.LastKillRun = spec.Ghosts;
-            }
-            return records;
-        }
+        internal static List<GhostRecord> Ghosts(MarketingClipSpec spec, ChunkLibrary library, in SimConfig cfg, int speed, Random rng) =>
+            CrowdRun.Ghosts(library, cfg, spec.Seed, spec.Ghosts, speed, rng, spec.GhostSkins, spec.NemesisKills);
 
         // The bot avoids every lethal ghost and hazard with ordinary jumps for a while, then stops jumping. For a Nemesis
         // ending it stops just before the Nemesis is met.
         internal static Schedule PlayerRun(MarketingClipSpec spec, List<GhostRecord> records, ChunkLibrary library, in SimConfig cfg, int speed, Random rng)
         {
-            var course = new Course(library, spec.Seed);
-            var manager = new GhostManager();
-            manager.Begin(records, cfg, course, speed);
             int ticks = spec.SurviveSeconds * 60;
             if (spec.Ending == "nemesis")
             {
+                var manager = new GhostManager();
+                manager.Begin(records, cfg, new Course(library, spec.Seed), speed);
                 int n = records.Count - 1;
                 if (n >= 0 && !manager.ReplayAt(n).Harmless) ticks = Math.Max(60, manager.ReplayAt(n).MeetTick - 25);
             }
-            SimConfig c = cfg;   // lambdas can't use an in parameter
-            var boxes = new List<Aabb?[]>();
-            for (int t = 0; t < ticks + 1; t++)
-            {
-                manager.Step(course, t, c);
-                boxes.Add(Enumerable.Range(0, records.Count).Select(i => manager.IsLethal(i) ? Runner.GhostBox(manager.ReplayAt(i).State, c) : (Aabb?)null).ToArray());
-            }
-            return SurvivingSchedule.Build(new Course(library, spec.Seed), speed, ticks, rng, cfg,
-                (tick, p) => tick >= c.GhostGraceTicks && tick < boxes.Count && boxes[tick].Any(b => b.HasValue && Runner.PlayerBox(p, c).Overlaps(b.Value)));
+            return CrowdRun.PlayerRun(records, library, cfg, spec.Seed, speed, ticks, rng);
         }
 
         IEnumerator Play(MarketingClipSpec spec, ChunkLibrary library, SimConfig cfg, List<GhostRecord> ghosts, Schedule player)

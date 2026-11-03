@@ -169,8 +169,21 @@ namespace Echo.Editor.Art
             (Game.Seasons.SeasonIds.EraFuture, PixelTimeRun.EnergySpike, PixelTimeRun.HoverBlock, PixelTimeRun.VoidGap, PixelTimeRun.HoloGrave, PixelTimeRun.DataChip),
         };
 
+        public const string Sky = "sky", Moons = "moons", Back = "back", Mid = "mid", Floor = "floor";
+
         static void WriteEras()
         {
+            // Phase 3, art styles: 8-bit Dino Land, Today's 32-bit layers and the Far Future in HD.
+            string dino = Game.Seasons.SeasonIds.EraDino, today = Game.Seasons.SeasonIds.EraToday, future = Game.Seasons.SeasonIds.EraFuture;
+            WriteWorld(dino, PixelDino.Far(), PixelDino.Near(), PixelDino.Pterodactyl(), PixelDino.Ember());
+            EchoArt.Write(PathFor(today, Back), PixelToday.BackSkyline());
+            EchoArt.Write(PathFor(today, Mid), PixelToday.MidCity());
+            WriteWorld(future, HdFuture.Far(), HdFuture.Near(), HdFuture.FlyingCar(), HdFuture.Rain());
+            EchoArt.Write(PathFor(future, Sky), HdFuture.Sky());
+            EchoArt.Write(PathFor(future, Back), HdFuture.Back());
+            EchoArt.Write(PathFor(future, Moons), HdFuture.Moons());
+            EchoArt.Write(PathFor(future, Floor), HdFuture.GridFloor());
+
             foreach (var e in Eras)
             {
                 if (e.Spike != null) EchoArt.Write(PathFor(e.Era, Spike), e.Spike());
@@ -185,6 +198,23 @@ namespace Echo.Editor.Art
         /// <summary>Called after the refresh: each era's art with the original it stands in for's import settings.</summary>
         static void ImportEras()
         {
+            string dino = Game.Seasons.SeasonIds.EraDino, today = Game.Seasons.SeasonIds.EraToday, future = Game.Seasons.SeasonIds.EraFuture;
+            EchoArt.ImportSprite(PathFor(dino, Far), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(PathFor(dino, Near), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(FlyerPath(dino), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
+            EchoArt.ImportSprite(EffectPath(dino, 0), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
+            EchoArt.ImportSprite(PathFor(today, Back), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(PathFor(today, Mid), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
+            const FilterMode smooth = FilterMode.Bilinear;
+            EchoArt.ImportSprite(PathFor(future, Far), HdFuture.Ppu, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
+            EchoArt.ImportSprite(PathFor(future, Near), HdFuture.Ppu, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
+            EchoArt.ImportSprite(PathFor(future, Back), HdFuture.Ppu, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
+            EchoArt.ImportSprite(PathFor(future, Moons), HdFuture.Ppu, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
+            EchoArt.ImportSprite(PathFor(future, Sky), 32f, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
+            EchoArt.ImportSprite(PathFor(future, Floor), 128f, new Vector2(0f, 1f), default, TextureWrapMode.Repeat, smooth);
+            EchoArt.ImportSprite(FlyerPath(future), HdFuture.Ppu, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, smooth);
+            EchoArt.ImportSprite(EffectPath(future, 0), HdFuture.Ppu, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, smooth);
+
             foreach (var e in Eras)
             {
                 if (e.Spike != null) EchoArt.ImportSprite(PathFor(e.Era, Spike), 16f, Vector2.zero);

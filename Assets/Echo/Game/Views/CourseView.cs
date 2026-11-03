@@ -65,6 +65,9 @@ namespace Echo.Game.Views
         /// <summary>The block drawn at x.</summary>
         public Sprite BlockAt(float x) => EraAt(x) is SeasonTheme e && e.Block != null ? e.Block : _block;
 
+        /// <summary>The floor drawn from x: an era's own (the Far Future's neon grid), else the bricks.</summary>
+        public Sprite FloorAt(float x) => EraAt(x) is SeasonTheme e && e.Floor != null ? e.Floor : _groundFill;
+
         /// <summary>The pit drawn in a gap starting at x (null: the plain hole).</summary>
         public Sprite GapAt(float x) => EraAt(x) is SeasonTheme e ? e.Gap : null;
 
@@ -144,7 +147,9 @@ namespace Echo.Game.Views
         {
             if (to <= from) return;
             // The bricks hang from just under the lip; both tile from the segment's left edge.
-            Tiled(_groundFill, from, -GroundTopDrop, to - from, FloorDepth, floor, 0);
+            // Time Run (phase 3): an era's floor is in its own colours.
+            Sprite fill = FloorAt(from);
+            Tiled(fill, from, -GroundTopDrop, to - from, FloorDepth, fill == _groundFill ? floor : Color.white, 0);
             Tiled(_groundTop, from, 0f, to - from, GroundTopHeight, lip, 1);
         }
 

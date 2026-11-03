@@ -8,6 +8,7 @@ using Echo.Game.Flow;
 using Echo.Game.Persistence;
 using Echo.Game.Seasons;
 using Echo.Game.Views;
+using Echo.Game.Dev;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using TMPro;
@@ -23,7 +24,8 @@ namespace Echo.Tests.PlayMode
     /// World: Time Run, phase 1 (World Time Run doc): a run past 750 m watched back in Time Run goes through all four eras
     /// by distance, each later one through a time rift with its label, and replays exactly as it was played without Time
     /// Run; the development setting shows any era. Phase 2: hazards, graves and ghosts take the era they stand in, and the
-    /// Nemesis stays red and horned in every era.
+    /// Nemesis stays red and horned in every era. Phase 3: each era's art style (8-bit, 16-bit, 32-bit, HD), full and
+    /// reduced effects, and the benchmark's frame-rate report.
     /// </summary>
     public class TimeRunTests
     {
@@ -206,6 +208,101 @@ namespace Echo.Tests.PlayMode
             Assert.AreSame(grave, graves.GraveAt(100));
             Assert.AreEqual(ghost, ghosts.BodyAt(900, false));
             Assert.IsNull(course.GapAt(900));
+        }
+
+        [UnityTest]
+        public IEnumerator EachEraHasItsArtStyle_AndTheFarFutureBreaksOutOfPixelArt()
+        {
+            yield return Title();
+            var game = Object.FindAnyObjectByType<EchoGame>();
+            var background = Object.FindAnyObjectByType<BackgroundView>();
+            var runner = Object.FindAnyObjectByType<RunnerView>();
+            var course = Object.FindAnyObjectByType<CourseView>();
+            var lights = Object.FindAnyObjectByType<FutureLightsView>();
+            var rig = Object.FindAnyObjectByType<CameraRig>();
+            game.PreviewTimeRun = true;
+
+            // 8-bit Dino Land: its own chunky scenery, still on the pixel grid.
+            game.ForceEra = 0;
+            game.TickFrame(Dt, false);
+            Assert.IsTrue(Era(game.ActiveBackdrop.FarLayer, SeasonIds.EraDino));
+            Assert.IsFalse(game.HighDefinitionShown);
+            Assert.IsTrue(rig.PixelPerfect, "pixel-perfect");
+            Assert.AreEqual(0, background.ExtraLayersShown);
+
+            // 32-bit Today: the neon city with two extra parallax layers.
+            game.ForceEra = 2;
+            game.TickFrame(Dt, false);
+            Assert.AreEqual(2, background.ExtraLayersShown, "a distant skyline and a mid-distance block");
+            Assert.IsFalse(game.HighDefinitionShown);
+
+            // The Far Future in HD: full resolution, lit, bloom and lights, the runner's glow and trail, the neon grid floor.
+            game.ForceEra = 3;
+            game.TickFrame(Dt, false);
+            Assert.IsTrue(game.HighDefinitionShown);
+            Assert.IsFalse(rig.PixelPerfect, "the pixel-perfect camera steps aside");
+            Assert.IsTrue(background.Lit, "the HD backdrop takes the 2D lights");
+            Assert.AreEqual(3, background.ExtraLayersShown, "its sky, its moons and a distant skyline");
+            Assert.IsTrue(runner.Future, "glow, rim light and afterimages");
+            Assert.IsTrue(Era(course.FloorAt(900), SeasonIds.EraFuture), "the neon grid floor");
+            Assert.Greater(SimUnits.SnapPerUnit, CameraRig.PixelsPerUnit, "things glide rather than step");
+            Assert.IsTrue(game.FullEffects);
+            Assert.AreEqual(6, lights.LightsOn, "a global light and five neon pools");
+            Assert.IsTrue(rig.GlowOn, "bloom");
+
+            // Reduced effects (a weaker phone): no bloom, one light, the same world.
+            game.WeakDeviceOverride = true;
+            Assert.IsFalse(game.FullEffects);
+            Assert.AreEqual(1, lights.LightsOn);
+            Assert.IsFalse(rig.GlowOn);
+            Assert.IsTrue(game.HighDefinitionShown, "still HD");
+            yield return ScreenCaptureTests.Capture("timerun_era4_reduced");
+            game.WeakDeviceOverride = false;
+            Assert.AreEqual(6, lights.LightsOn);
+
+            // Back to pixel art, and out of Time Run.
+            game.ForceEra = 1;
+            game.TickFrame(Dt, false);
+            Assert.IsFalse(game.HighDefinitionShown);
+            Assert.IsTrue(rig.PixelPerfect);
+            Assert.AreEqual(0, lights.LightsOn);
+            Assert.IsFalse(runner.Future);
+            Assert.AreEqual(CameraRig.PixelsPerUnit, SimUnits.SnapPerUnit);
+            game.ForceEra = null;
+            game.PreviewTimeRun = false;
+            game.TickFrame(Dt, false);
+            Assert.IsFalse(game.HighDefinitionShown);
+            Assert.AreEqual(0, background.ExtraLayersShown);
+        }
+
+        [UnityTest, Timeout(600000)]
+        public IEnumerator TheBenchmark_ReportsTheFrameRateInEachEra()
+        {
+            yield return Title();
+            var game = Object.FindAnyObjectByType<EchoGame>();
+            Click("Title/Settings");
+            Assert.AreEqual(GameState.Menu, game.State);
+            var row = GameObject.Find("Canvas/SafeArea/Settings").GetComponentsInChildren<UnityEngine.UI.Button>(true).First(b => b.name == "Benchmark");
+            Assert.IsTrue(row.gameObject.activeInHierarchy, "a development row");
+            row.onClick.Invoke();
+            Assert.IsTrue(game.BenchmarkRunning);
+            float give = Time.realtimeSinceStartup + 500f;
+            bool sawFuture = false;
+            while (game.BenchmarkRunning && Time.realtimeSinceStartup < give)
+            {
+                sawFuture |= game.HighDefinitionShown && game.State == GameState.Replay;
+                yield return null;
+            }
+            Assert.IsFalse(game.BenchmarkRunning, "the benchmark finished");
+            Assert.IsTrue(sawFuture, "the Far Future was measured in HD");
+            string report = game.BenchmarkReport;
+            Debug.Log("[Benchmark] editor report:\n" + report);
+            StringAssert.Contains("30 ghosts in the graveyard", report);
+            foreach (string era in new[] { "Dino Land (8-bit)", "Medieval (16-bit)", "Today (32-bit)", "Far Future (HD)", "Far Future (HD, reduced effects)" })
+                StringAssert.IsMatch(System.Text.RegularExpressions.Regex.Escape(era) + @": \d+ fps, 1% low \d+", report);
+            Assert.IsTrue(Showing("Challenge"), "the report shows on a card");
+            Assert.IsFalse(game.PreviewTimeRun, "the world is put back");
+            Assert.IsTrue(game.FullEffects, "and its effects");
         }
 
         [UnityTest]

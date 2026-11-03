@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 
-namespace Echo.Tests.PlayMode
+namespace Echo.Game.Dev
 {
-    /// <summary>A scripted finger: a tap and whether the finger is down on each tick. Test support only.</summary>
-    internal sealed class Schedule
+    /// <summary>A scripted finger: a tap and whether the finger is down on each tick. Development tools and tests only.</summary>
+    public sealed class Schedule
     {
         public readonly bool[] Taps, Held;
 

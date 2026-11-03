@@ -1,3 +1,4 @@
+using Echo.Game.Seasons;
 using Echo.Game.World;
 using UnityEngine;
 
@@ -10,10 +11,15 @@ namespace Echo.Game.Views
     /// Themed Biomes (value-adds doc): the near layer crossfades Graveyard, Castle and Space as the run goes on,
     /// the far mountains fade out in Space where a planet hangs in the sky instead, and the Castle can fly the
     /// royal banners (a character flourish).
+    /// World Time Run doc, phase 3: a backdrop can bring extra layers in their own colours (Today's skyline and window
+    /// light, the Far Future's sky), and in high definition every layer is lit by the Far Future's 2D lights.
+    /// Sorting: sky -30, stars -24, moon and planet -23, extra -22, far -21, extra -20, near -19, extra and banners -18.
     /// </summary>
     public sealed class BackgroundView : MonoBehaviour
     {
         [SerializeField] Material _material;
+        [Tooltip("Sprite-Lit-Default: the high-definition backdrop takes the Far Future's lights.")]
+        [SerializeField] Material _litMaterial;
         [SerializeField] Sprite _far;
         [SerializeField] Sprite _near;
         [SerializeField] Sprite _castle;
@@ -26,6 +32,10 @@ namespace Echo.Game.Views
         [SerializeField] float _nearScale = 1f;
 
         SpriteRenderer _farLayer, _nearLayer, _castleLayer, _bannerLayer, _spaceLayer, _planetSprite;
+        const int MaxExtraLayers = 4;
+        readonly SpriteRenderer[] _extra = new SpriteRenderer[MaxExtraLayers];
+        ExtraLayer[] _extraLayers;
+        bool _highDefinition;
         Sprite _baseFar, _baseNear;
         bool _banners;
 
@@ -37,13 +47,53 @@ namespace Echo.Game.Views
         {
             _baseFar = _far;
             _baseNear = _near;
-            _planetSprite = Layer("Planet", _planet, -21, false);
-            _farLayer = Layer("Far", _far, -20);
+            _planetSprite = Layer("Planet", _planet, -23, false);
+            _farLayer = Layer("Far", _far, -21);
             _nearLayer = Layer("Near", _near, -19);
             _castleLayer = Layer("Castle", _castle, -19);
             _spaceLayer = Layer("Space", _space, -19);
             _bannerLayer = Layer("CastleBanners", _castleBanners, -18);
+            for (int i = 0; i < MaxExtraLayers; i++) _extra[i] = Layer("Extra" + i, null, -22);
         }
+
+        /// <summary>A backdrop's extra layers (null or empty: none).</summary>
+        public void SetExtraLayers(ExtraLayer[] layers)
+        {
+            _extraLayers = layers;
+            for (int i = 0; i < MaxExtraLayers; i++)
+            {
+                if (_extra[i] == null) continue;
+                ExtraLayer l = layers != null && i < layers.Length ? layers[i] : null;
+                _extra[i].sprite = l != null ? l.Sprite : null;
+                _extra[i].sortingOrder = l != null ? l.Order : -22;
+                _extra[i].enabled = l != null && l.Sprite != null;
+            }
+        }
+
+        /// <summary>The extra layers drawn now (tests).</summary>
+        public int ExtraLayersShown
+        {
+            get
+            {
+                int n = 0;
+                foreach (SpriteRenderer sr in _extra) if (sr != null && sr.enabled) n++;
+                return n;
+            }
+        }
+
+        /// <summary>High definition (the Far Future): every layer takes the 2D lights.</summary>
+        public void SetHighDefinition(bool on)
+        {
+            _highDefinition = on;
+            Material m = on && _litMaterial != null ? _litMaterial : _material;
+            foreach (SpriteRenderer sr in new[] { _farLayer, _nearLayer })
+                if (sr != null) sr.sharedMaterial = m;
+            foreach (SpriteRenderer sr in _extra)
+                if (sr != null) sr.sharedMaterial = m;
+        }
+
+        /// <summary>The layers are lit (tests).</summary>
+        public bool Lit => _highDefinition && _litMaterial != null && _farLayer != null && _farLayer.sharedMaterial == _litMaterial;
 
         SpriteRenderer Layer(string name, Sprite sprite, int order, bool tiled = true)
         {
@@ -101,6 +151,13 @@ namespace Echo.Game.Views
             Color bannerTint = Color.Lerp(Color.white, new Color(0.75f, 0.7f, 0.65f), env.Night * 0.5f);
             bannerTint.a = banners * (0.92f + 0.08f * Mathf.Sin(Time.time * 11f));
             Place(_bannerLayer, _castleBanners, cameraX, viewWidth, _nearParallax, _nearScale, bannerTint);
+
+            if (_extraLayers != null)
+                for (int i = 0; i < MaxExtraLayers && i < _extraLayers.Length; i++)
+                {
+                    ExtraLayer l = _extraLayers[i];
+                    if (l != null && l.Sprite != null) Place(_extra[i], l.Sprite, cameraX, viewWidth, l.Parallax, 1f, l.Tint);
+                }
 
             if (_planetSprite != null && _planet != null)
             {

@@ -43,6 +43,10 @@ namespace Echo.Game.UI
         // World: Time Run, development builds: wear it, by distance or one era.
         [SerializeField] Button _timeRun;
         public event Func<string> TimeRunClicked;
+        /// <summary>World Time Run doc, phase 3: whether full effects are on now, chosen or decided by the game.</summary>
+        public Func<bool> FullEffects;
+        [SerializeField] Button _benchmark;
+        public event Action BenchmarkClicked;
         // Modes doc: development builds can force every competitive mode open.
         [SerializeField] Button _devModes;
         public event Func<string> DevModesClicked;
@@ -75,7 +79,11 @@ namespace Echo.Game.UI
             _music.onClick.AddListener(() => Toggle(() => _settings.Music = !_settings.Music));
             _sfx.onClick.AddListener(() => Toggle(() => _settings.Sfx = !_settings.Sfx));
             _haptics.onClick.AddListener(() => Toggle(() => _settings.Haptics = !_settings.Haptics));
-            _glow.onClick.AddListener(() => Toggle(() => _settings.Glow = !_settings.Glow));
+            _glow.onClick.AddListener(() => Toggle(() =>
+            {
+                _settings.Glow = !(FullEffects?.Invoke() ?? _settings.Glow);
+                _settings.EffectsChosen = true;
+            }));
             if (_seasonalLooks != null) _seasonalLooks.onClick.AddListener(() => Toggle(() => _settings.SeasonalLooks = !_settings.SeasonalLooks));
             _privacy.onClick.AddListener(() => PrivacyClicked?.Invoke());
             if (_deleteOnline != null) _deleteOnline.onClick.AddListener(() => DeleteOnlineClicked?.Invoke());
@@ -99,6 +107,7 @@ namespace Echo.Game.UI
                 string label = DevModesClicked?.Invoke();
                 if (label != null) SetLabel(_devModes, label);
             });
+            if (_benchmark != null) _benchmark.onClick.AddListener(() => BenchmarkClicked?.Invoke());
             if (_timeRun != null) _timeRun.onClick.AddListener(() =>
             {
                 string label = TimeRunClicked?.Invoke();
@@ -128,6 +137,7 @@ namespace Echo.Game.UI
             if (_timeRun == null) return;
             _timeRun.gameObject.SetActive(visible);
             if (visible) SetLabel(_timeRun, label);
+            if (_benchmark != null) _benchmark.gameObject.SetActive(visible);
             RefreshDevHeader();
         }
 
@@ -178,7 +188,7 @@ namespace Echo.Game.UI
         {
             if (_devHeader == null) return;
             bool any = false;
-            foreach (Component c in new Component[] { _devAdFailure, _serverCheck, _dailyDate, _devModes, _season, _timeRun, _recording, _recordingHud, _status })
+            foreach (Component c in new Component[] { _devAdFailure, _serverCheck, _dailyDate, _devModes, _season, _timeRun, _benchmark, _recording, _recordingHud, _status })
                 any |= c != null && c.gameObject.activeSelf;
             _devHeader.SetActive(any);
         }
@@ -210,7 +220,8 @@ namespace Echo.Game.UI
             SetSwitch(_music, _settings.Music);
             SetSwitch(_sfx, _settings.Sfx);
             SetSwitch(_haptics, _settings.Haptics);
-            SetSwitch(_glow, _settings.Glow);
+            SetSwitch(_glow, FullEffects?.Invoke() ?? _settings.Glow);
+            SetLabel(_glow, _settings.EffectsChosen ? "Full effects" : "Full effects (auto)");
             if (_seasonalLooks != null) SetSwitch(_seasonalLooks, _settings.SeasonalLooks);
             if (_name != null) SetValue(_name, string.IsNullOrEmpty(_settings.PlayerName) ? "not set" : _settings.PlayerName);
         }

@@ -152,7 +152,7 @@ namespace Echo.Game.Views
                 {
                     float hx = Hash(i, 1), hy = Hash(i, 2);
                     float twinkle = 0.55f + 0.45f * Mathf.Sin(t * (1.5f + hx * 2f) + i);
-                    Put(_star, new Vector2(left + hx * w, bottom + height * (0.5f + 0.47f * hy)), new Color(1f, 1f, 1f, env.Night * twinkle), -22);
+                    Put(_star, new Vector2(left + hx * w, bottom + height * (0.5f + 0.47f * hy)), new Color(1f, 1f, 1f, env.Night * twinkle), -24);
                 }
                 // A shooting star every five seconds, streaking down-left for 0.6 s.
                 float cycle = Mathf.Floor(t / 5f), p = (t - cycle * 5f) / 0.6f;
@@ -184,7 +184,7 @@ namespace Echo.Game.Views
         {
             if (env.Night <= 0f) return;
             // It rises as night falls.
-            Put(_fullMoon, new Vector2(left + w * 0.7f, bottom + height * (0.66f + 0.2f * env.Night)), new Color(1f, 1f, 1f, env.Night), -21);
+            Put(_fullMoon, new Vector2(left + w * 0.7f, bottom + height * (0.66f + 0.2f * env.Night)), new Color(1f, 1f, 1f, env.Night), -23);
             if (!_howled && env.Night >= 0.6f)
             {
                 _howled = true;
@@ -378,7 +378,7 @@ namespace Echo.Game.Views
                     var at = new Vector2(left + Hash(i, 23) * w, Mathf.Lerp(low, high, Hash(i, 24)));
                     // Steady, not twinkling; every few seconds one catches the light.
                     float catchLight = Mathf.Clamp01(1f - Mathf.Abs((t * 0.5f + Hash(i, 25) * 6f) % 6f - 0.3f) / 0.3f);
-                    Put(_star, at, new Color(0.9f, 0.97f, 1f, sky), -22);
+                    Put(_star, at, new Color(0.9f, 0.97f, 1f, sky), -24);
                     Put(_glint, at, new Color(1f, 1f, 1f, sky * (0.35f + 0.65f * catchLight)), -22, 1f + 0.4f * catchLight);
                 }
 

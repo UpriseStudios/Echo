@@ -170,8 +170,8 @@ namespace Echo.Editor
 
         // ---- World: Time Run (World Time Run doc): four eras by distance (TimeEras) ----
 
-        // Phase 1, the era system: each era dressed in the game's own art (the volcano for Dino Land, the castle for
-        // Medieval, the neon city for Today, the moon for the Far Future); phase 3 gives each era its own art style.
+        // Phase 1, the era system: each era dressed in the game's own art (the castle for Medieval, the neon city for
+        // Today). Phase 3, art styles: 8-bit Dino Land, 16-bit Medieval, 32-bit Today and the Far Future in HD.
         static IEnumerable<SeasonTheme> TimeRun(List<SeasonTheme> built)
         {
             SeasonTheme Built(string id) => built.Find(t => t.Id == id);
@@ -235,6 +235,59 @@ namespace Echo.Editor
             future.GhostTint = Hex(0x4AF0FF);            // cyan holograms
             future.NemesisTint = Hex(0xFF4A5A);          // a red hologram
             future.GhostHologram = true;
+
+            // Phase 3: Dino Land in 8-bit, its own scenery in five colours under a flat sky (three equal stops: no gradient).
+            Color dinoSky = Hex(PixelDino.Sky);
+            dino.PaletteStops = new[] { dinoSky, dinoSky, dinoSky };
+            dino.PaletteBlend = 1f;
+            dino.FarLayer = Sprite(SeasonIds.EraDino, SeasonArt.Far);
+            dino.NearLayer = Sprite(SeasonIds.EraDino, SeasonArt.Near);
+            Colours(dino, Color.white, Color.white, Hex(0x5A3428), Color.white);   // pale stone shards on the orange sky
+            dino.Effect = SeasonEffect.Falling;
+            dino.EffectSprites = new[] { Load<Sprite>(SeasonArt.EffectPath(SeasonIds.EraDino, 0)) };
+            dino.EffectColours = new Color[] { PixelDino.Sun, PixelDino.Lava, PixelDino.Night };
+            dino.EffectCount = 40;
+            dino.EffectFall = 0.6f;
+            dino.EffectSway = 0.3f;
+            dino.EffectBand = 1f;
+            dino.EffectParallax = 0.3f;
+            dino.Flyer = Load<Sprite>(SeasonArt.FlyerPath(SeasonIds.EraDino));
+            dino.FlyerColour = Color.white;
+            dino.FlyerEvery = 18f;
+            dino.FlyerSpeed = 3f;
+
+            // Today in 32-bit: the neon city with a distant skyline behind and a mid-distance block in front of its towers.
+            today.ExtraLayers = new[]
+            {
+                new ExtraLayer { Sprite = Sprite(SeasonIds.EraToday, SeasonArt.Back), Parallax = 0.07f, Order = -22 },
+                new ExtraLayer { Sprite = Sprite(SeasonIds.EraToday, SeasonArt.Mid), Parallax = 0.27f, Order = -20 },
+            };
+
+            // The Far Future in HD: its own sky, moons, chrome towers, wet street, neon grid floor, rain and flying car.
+            future.HighDefinition = true;
+            future.FarLayer = Sprite(SeasonIds.EraFuture, SeasonArt.Far);
+            future.NearLayer = Sprite(SeasonIds.EraFuture, SeasonArt.Near);
+            Colours(future, Color.white, Color.white, Hex(0x3A5A7A), Hex(0x4AFFE0));
+            future.ExtraLayers = new[]
+            {
+                new ExtraLayer { Sprite = Sprite(SeasonIds.EraFuture, SeasonArt.Sky), Parallax = 0f, Order = -30 },
+                new ExtraLayer { Sprite = Sprite(SeasonIds.EraFuture, SeasonArt.Moons), Parallax = 0f, Order = -26 },
+                new ExtraLayer { Sprite = Sprite(SeasonIds.EraFuture, SeasonArt.Back), Parallax = 0.05f, Order = -22 },
+            };
+            future.Floor = Sprite(SeasonIds.EraFuture, SeasonArt.Floor);
+            future.Effect = SeasonEffect.Falling;
+            future.EffectSprites = new[] { Load<Sprite>(SeasonArt.EffectPath(SeasonIds.EraFuture, 0)) };
+            future.EffectColours = new[] { new Color(0.7f, 0.95f, 1f, 0.35f), new Color(1f, 0.6f, 0.95f, 0.25f) };
+            future.EffectCount = 60;
+            future.EffectFall = 9f;
+            future.EffectSway = 0f;
+            future.EffectBand = 1f;
+            future.EffectParallax = 0.2f;
+            future.Flyer = Load<Sprite>(SeasonArt.FlyerPath(SeasonIds.EraFuture));
+            future.FlyerColour = Color.white;
+            future.FlyerEvery = 14f;
+            future.FlyerSpeed = 5f;
+            future.GhostGlow = true;                     // holograms glow too
 
             SeasonTheme world = Plain(Load(SeasonIds.TimeRun), "Time Run");
             world.Eras = new[] { dino, medieval, today, future };
@@ -376,6 +429,9 @@ namespace Echo.Editor
             t.Gap = t.Coin = null;
             t.GhostTint = t.NemesisTint = Color.clear;
             t.GhostGlow = t.GhostHologram = false;
+            t.ExtraLayers = new ExtraLayer[0];
+            t.Floor = null;
+            t.HighDefinition = false;
             return t;
         }
 

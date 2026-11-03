@@ -120,5 +120,11 @@ namespace Echo.Game.Seasons
         public bool GhostGlow;
         [Tooltip("An era's ghosts flicker and glitch like holograms, the Nemesis's horns too (the Far Future).")]
         public bool GhostHologram;
+        [Tooltip("Extra parallax layers in their own colours (Today's skyline and window light, the Far Future's sky and moons).")]
+        public ExtraLayer[] ExtraLayers = new ExtraLayer[0];
+        [Tooltip("An era's floor: a tile in its own colours down the floor (the Far Future's neon grid); null keeps the bricks.")]
+        public Sprite Floor;
+        [Tooltip("The Far Future breaks out of pixel art: full resolution, 2D lights, bloom, and glow and trails on the pixel sprites.")]
+        public bool HighDefinition;
     }
 }

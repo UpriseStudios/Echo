@@ -183,6 +183,7 @@ namespace Echo.Game.Flow
             _ghostViews.SetSeason(theme != null ? theme.GhostAccessory : null, theme != null ? theme.NemesisAccessory : null);
             _deathScreen.SetHeadstoneSprite(theme != null ? theme.Headstone : null);
             if (_seasonEffects != null) _seasonEffects.SetTheme(backdrop);
+            ApplyArtStyle(backdrop);
             if (_catalog != null && _save != null && _progress != null) ApplyCosmetics();
             if (theme != null && theme.Stinger != null && _stingersPlayed.Add(theme.Id) && _music != null) _music.PlayStinger(theme.Stinger);
             Debug.Log($"[Seasons] {(theme != null ? theme.Id : "no season")}{(ForcedSeason != null ? " (forced)" : "")}");

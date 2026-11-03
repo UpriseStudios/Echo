@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using Echo.Core.Courses;
 using Echo.Core.Sim;
 
-namespace Echo.Tests.PlayMode
+namespace Echo.Game.Dev
 {
     /// <summary>
     /// Builds a schedule that survives a given number of ticks on a course: random taps held for a random time,
-    /// and on a death a memoised search (with hops, JumpInputs) rewrites the last stretch. Test support only.
+    /// and on a death a memoised search (with hops, JumpInputs) rewrites the last stretch. Development tools (the Time Run
+    /// benchmark) and tests only.
     /// </summary>
-    internal static class SurvivingSchedule
+    public static class SurvivingSchedule
     {
         static readonly int[] RewindTicks = { 60, 120, 240, 480 };
 

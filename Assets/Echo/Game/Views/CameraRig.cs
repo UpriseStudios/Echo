@@ -22,6 +22,21 @@ namespace Echo.Game.Views
         Camera _camera;
         bool _mirror;
         PixelPerfectCamera _pixel;
+        bool _highDefinition;
+
+        /// <summary>
+        /// World Time Run doc, phase 3: the Far Future breaks out of pixel art. The pixel-perfect camera steps aside so
+        /// the world renders at the screen's resolution, framed exactly as before (9 units across, the same rows).
+        /// </summary>
+        public bool HighDefinition
+        {
+            get => _highDefinition;
+            set
+            {
+                _highDefinition = value;
+                if (_pixel != null) _pixel.enabled = !value;
+            }
+        }
 
         // Zoom towards a spot, eased in over _focusSeconds after _focusDelay; 1 = following the player.
         Vector2 _focusAt;
@@ -94,6 +109,7 @@ namespace Echo.Game.Views
                 if (_pixel.refResolutionY != rows) _pixel.refResolutionY = rows;
                 if (_pixel.assetsPPU != ppu) _pixel.assetsPPU = ppu;
                 height = rows / (float)ppu;
+                if (_highDefinition) _camera.orthographicSize = height / 2f;
             }
 
             float x = Mathf.Lerp(playerX + WidthUnits * (0.5f - PlayerFromLeft), _focusAt.x, e);
@@ -106,7 +122,8 @@ namespace Echo.Game.Views
                 shake = Random.insideUnitCircle * (_shakeStrength * t * t);
             }
             // Snapped to whole pixels so the scenery never shimmers between them.
-            transform.position = new Vector3(Snap(x + shake.x, ppu), Snap(y + shake.y, ppu), -10f);
+            int grid = _highDefinition ? ppu * HdGrid : ppu;
+            transform.position = new Vector3(Snap(x + shake.x, grid), Snap(y + shake.y, grid), -10f);
             Left = x - width / 2f;
             Right = x + width / 2f;
             Bottom = y - height / 2f;
@@ -121,6 +138,9 @@ namespace Echo.Game.Views
         }
 
         static float Snap(float v, int ppu) => Mathf.Round(v * ppu) / ppu;
+
+        /// <summary>How much finer than the art's pixels things snap at full resolution.</summary>
+        public const int HdGrid = 8;
 
         // The screen, or the texture the camera renders into (screenshots).
         float TargetAspect()
@@ -157,6 +177,12 @@ namespace Echo.Game.Views
             var data = GetComponent<UniversalAdditionalCameraData>();
             if (data != null) data.renderPostProcessing = on;
         }
+
+        /// <summary>Post effects (bloom) are on (tests).</summary>
+        public bool GlowOn => GetComponent<UniversalAdditionalCameraData>() is UniversalAdditionalCameraData d && d.renderPostProcessing;
+
+        /// <summary>The world renders through the pixel-perfect camera (tests).</summary>
+        public bool PixelPerfect => _pixel != null && _pixel.enabled;
 
         public Color Background
         {

@@ -68,3 +68,14 @@ MonoBehaviour:
   NemesisTint: {r: 0, g: 0, b: 0, a: 0}
   GhostGlow: 1
   GhostHologram: 0
+  ExtraLayers:
+  - Sprite: {fileID: 21300000, guid: 5f8d2ff290c37b049b91976128be1403, type: 3}
+    Parallax: 0.07
+    Order: -22
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  - Sprite: {fileID: 21300000, guid: 0e3ec9c971a5bdf45897ef1807392775, type: 3}
+    Parallax: 0.27
+    Order: -20
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+  Floor: {fileID: 0}
+  HighDefinition: 0

@@ -23,6 +23,8 @@ namespace Echo.Game.Views
         [SerializeField] Color _scarfColor = new Color(1f, 0.78f, 0.28f);
         [SerializeField] float _scarfWidth = 0.09f;
         [SerializeField] Vector2 _scarfAnchor = new Vector2(-0.03f, 0.53f);
+        [Tooltip("World Time Run doc, phase 3: the soft glow behind the runner in the Far Future.")]
+        [SerializeField] Sprite _glow;
 
         SpriteRenderer _body;
         LineRenderer _scarf;
@@ -31,6 +33,49 @@ namespace Echo.Game.Views
         Vector2 _deform = Vector2.one;
 
         public Vector2 Position { get; private set; }
+
+        // World Time Run doc, phase 3: in the Far Future the pixel runner isn't redrawn but gets modern treatment: a soft
+        // glow, rim light from the neon on both edges (a magenta and a cyan copy a pixel either side, behind the body) and a
+        // smooth motion trail of fading afterimages. All made with the body, so nothing is created mid-run.
+        const int Afterimages = 4;
+        const float AfterimageEvery = 1f / 30f;
+        const float GlowUnits = 1.5f;
+        static readonly Color RimTrailing = new Color(1f, 0.25f, 0.85f, 0.9f);
+        static readonly Color RimLeading = new Color(0.3f, 0.95f, 1f, 0.9f);
+        static readonly Color AfterimageColour = new Color(0.35f, 0.9f, 1f, 1f);
+        bool _future;
+        float _afterClock;
+        SpriteRenderer _futureGlow, _rimTrailing, _rimLeading;
+        readonly SpriteRenderer[] _after = new SpriteRenderer[Afterimages];
+        readonly Vector3[] _afterAt = new Vector3[Afterimages];
+        readonly Sprite[] _afterSprite = new Sprite[Afterimages];
+
+        /// <summary>The Far Future's treatment on or off.</summary>
+        public void SetFuture(bool on)
+        {
+            _ = Body;
+            _future = on;
+            _futureGlow.enabled = _rimTrailing.enabled = _rimLeading.enabled = on;
+            for (int i = 0; i < Afterimages; i++)
+            {
+                _after[i].enabled = false;
+                _afterSprite[i] = null;
+            }
+        }
+
+        /// <summary>The Far Future's treatment is on (tests).</summary>
+        public bool Future => _future;
+
+        SpriteRenderer Extra(string name, int order)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(transform, false);
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sharedMaterial = _material;
+            sr.sortingOrder = order;
+            sr.enabled = false;
+            return sr;
+        }
 
         // Modes doc (a user decision): an accessory worn on the head, e.g. the Halo, moving and blinking with the body.
         SpriteRenderer _accessory;
@@ -63,6 +108,11 @@ namespace Echo.Game.Views
                 _body.sharedMaterial = _material;
                 _body.sortingOrder = 10;
                 _body.sprite = _runFrames.Length > 0 ? _runFrames[0] : BoxSprite.Get();
+                _futureGlow = Extra("FutureGlow", 7);
+                _futureGlow.sprite = _glow;
+                _rimTrailing = Extra("RimTrailing", 8);
+                _rimLeading = Extra("RimLeading", 8);
+                for (int i = 0; i < Afterimages; i++) _after[i] = Extra("Afterimage" + i, 7);
                 return _body;
             }
         }
@@ -124,6 +174,58 @@ namespace Echo.Game.Views
             }
 
             UpdateScarf(Position + new Vector2(_scarfAnchor.x * _deform.x, _scarfAnchor.y * _deform.y), current.Alive, dt);
+            if (_future) RenderFuture(body, dt);
+        }
+
+        void RenderFuture(SpriteRenderer body, float dt)
+        {
+            Vector3 at = body.transform.localPosition, scale = body.transform.localScale;
+            float px = 1f / CameraRig.PixelsPerUnit;
+            Rim(_rimTrailing, body, at + new Vector3(-px, 0f, 0f), scale, RimTrailing);
+            Rim(_rimLeading, body, at + new Vector3(px, 0f, 0f), scale, RimLeading);
+            if (_glow != null)
+            {
+                Vector2 g = _glow.bounds.size;
+                _futureGlow.enabled = body.enabled;
+                _futureGlow.transform.localPosition = at + new Vector3(0f, body.bounds.size.y * 0.5f, 0f);
+                _futureGlow.transform.localScale = new Vector3(GlowUnits / g.x, GlowUnits / g.y, 1f);
+                _futureGlow.color = new Color(0.45f, 0.85f, 1f, 0.3f);
+            }
+
+            // The trail: where the body was, every 1/30 s, oldest faintest.
+            _afterClock += dt;
+            if (_afterClock >= AfterimageEvery)
+            {
+                _afterClock = 0f;
+                for (int i = Afterimages - 1; i > 0; i--)
+                {
+                    _afterAt[i] = _afterAt[i - 1];
+                    _afterSprite[i] = _afterSprite[i - 1];
+                }
+                _afterAt[0] = at;
+                _afterSprite[0] = body.enabled ? body.sprite : null;
+            }
+            for (int i = 0; i < Afterimages; i++)
+            {
+                SpriteRenderer a = _after[i];
+                a.enabled = _afterSprite[i] != null && body.enabled;
+                if (!a.enabled) continue;
+                a.sprite = _afterSprite[i];
+                a.transform.localPosition = _afterAt[i];
+                a.transform.localScale = scale;
+                Color c = AfterimageColour;
+                c.a = 0.32f * (1f - i / (float)Afterimages);
+                a.color = c;
+            }
+        }
+
+        static void Rim(SpriteRenderer rim, SpriteRenderer body, Vector3 at, Vector3 scale, Color colour)
+        {
+            rim.enabled = body.enabled;
+            rim.sprite = body.sprite;
+            rim.transform.localPosition = at;
+            rim.transform.localScale = scale;
+            rim.color = colour;
         }
 
         Sprite Frame(bool grounded, float x)

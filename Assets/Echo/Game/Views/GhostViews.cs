@@ -143,6 +143,20 @@ namespace Echo.Game.Views
             if (_nemesisLabel != null) _nemesisLabel.gameObject.SetActive(false);
         }
 
+        /// <summary>Ghost figures drawn between two world x positions (the benchmark's ghosts on screen).</summary>
+        public int Visible(float left, float right)
+        {
+            int n = 0;
+            for (int i = 0; i < PoolSize; i++)
+            {
+                SpriteRenderer b = _boxes[i];
+                if (b == null || !b.enabled) continue;
+                float x = b.transform.localPosition.x;
+                if (x >= left && x <= right) n++;
+            }
+            return n;
+        }
+
         /// <summary>Time Run's eras, or null.</summary>
         public void SetEras(SeasonTheme[] eras) => _eras = eras != null && eras.Length > 0 ? eras : null;
 

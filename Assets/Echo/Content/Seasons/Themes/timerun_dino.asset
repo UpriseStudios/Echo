@@ -15,25 +15,25 @@ MonoBehaviour:
   Id: timerun_dino
   Title: Dino Land
   PaletteStops:
-  - {r: 0.3529412, g: 0.16470589, b: 0.13333334, a: 1}
-  - {r: 0.22745098, g: 0.11764706, b: 0.11764706, a: 1}
-  - {r: 0.16470589, g: 0.078431375, b: 0.078431375, a: 1}
-  PaletteBlend: 0.9
-  FarLayer: {fileID: 21300000, guid: d30c47cb549ef0f4ab5e099bc36f100b, type: 3}
-  NearLayer: {fileID: 21300000, guid: a4dc7937706a49f409c3c8e84934fdba, type: 3}
+  - {r: 0.9490196, g: 0.6039216, b: 0.2901961, a: 1}
+  - {r: 0.9490196, g: 0.6039216, b: 0.2901961, a: 1}
+  - {r: 0.9490196, g: 0.6039216, b: 0.2901961, a: 1}
+  PaletteBlend: 1
+  FarLayer: {fileID: 21300000, guid: 20126a85160f790498c374de92487ab6, type: 3}
+  NearLayer: {fileID: 21300000, guid: d676196ba0fc52f45a544d0065578103, type: 3}
   FarTint: {r: 1, g: 1, b: 1, a: 1}
   NearTint: {r: 1, g: 1, b: 1, a: 1}
-  FloorColour: {r: 0.47843137, g: 0.4392157, b: 0.4392157, a: 1}
-  HazardColour: {r: 1, g: 0.8784314, b: 0.4392157, a: 1}
+  FloorColour: {r: 0.3529412, g: 0.20392157, b: 0.15686275, a: 1}
+  HazardColour: {r: 1, g: 1, b: 1, a: 1}
   Effect: 1
   EffectSprites:
-  - {fileID: 21300000, guid: 0d08ada0359579f40b3de423617d7f48, type: 3}
-  - {fileID: 21300000, guid: aea1fe385b8446740ba0e1ca6fa95f75, type: 3}
+  - {fileID: 21300000, guid: 163178c80f9281a4cbf7c16d607f9a83, type: 3}
   EffectColours:
-  - {r: 0.62, g: 0.6, b: 0.6, a: 0.8}
-  - {r: 1, g: 0.5411765, b: 0.16470589, a: 1}
-  EffectCount: 50
-  EffectFall: 0.5
+  - {r: 0.9647059, g: 0.7647059, b: 0.3529412, a: 1}
+  - {r: 0.8862745, g: 0.38431373, b: 0.17254902, a: 1}
+  - {r: 0.16862746, g: 0.105882354, b: 0.18039216, a: 1}
+  EffectCount: 40
+  EffectFall: 0.6
   EffectSway: 0.3
   EffectBand: 1
   EffectParallax: 0.3
@@ -43,10 +43,10 @@ MonoBehaviour:
   FireworksPerMinute: 6
   ResetShowSeconds: 0
   ResetShowToast: 
-  Flyer: {fileID: 21300000, guid: d89ee2fc9dec98e4284a9d8e4f66da5a, type: 3}
-  FlyerColour: {r: 1, g: 0.5411765, b: 0.16470589, a: 1}
-  FlyerEvery: 20
-  FlyerSpeed: 4
+  Flyer: {fileID: 21300000, guid: 337a46a45dee29543a747ad6ab49f75d, type: 3}
+  FlyerColour: {r: 1, g: 1, b: 1, a: 1}
+  FlyerEvery: 18
+  FlyerSpeed: 3
   Spike: {fileID: 21300000, guid: d798d8a560d13ac4ba6f0459ea900651, type: 3}
   Block: {fileID: 21300000, guid: ccbfc8ba8c8e09a4f948c905dc3fac55, type: 3}
   GroundTop: {fileID: 0}
@@ -69,3 +69,6 @@ MonoBehaviour:
   NemesisTint: {r: 1, g: 0.41568628, b: 0.3529412, a: 1}
   GhostGlow: 0
   GhostHologram: 0
+  ExtraLayers: []
+  Floor: {fileID: 0}
+  HighDefinition: 0

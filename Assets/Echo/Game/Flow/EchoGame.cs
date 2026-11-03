@@ -270,6 +270,8 @@ namespace Echo.Game.Flow
             }
             _settings.SeasonClicked += CycleSeason;
             _settings.TimeRunClicked += CycleTimeRun;
+            _settings.FullEffects = () => FullEffects;
+            _settings.BenchmarkClicked += StartBenchmark;
             _skins.BuyClicked += Buy;
             _skins.WatchAdClicked += WatchUnlockAd;
             _skins.TrialAdClicked += WatchTrialAd;
@@ -516,6 +518,8 @@ namespace Echo.Game.Flow
             if (_background != null) _background.Render(_cameraRig.transform.position.x, viewW, _cameraRig.Bottom, _cameraRig.Height, background, env);
             RenderSeasonEffects();
             RenderTimeRift();
+            RenderFuture();
+            TickBenchmark();
             if (_eggHunt != null) _eggHunt.Render(Time.time);
             // Obstacles keep their contrast at night: against a dark sky they turn pale instead of dark. A world can set
             // its own hazard and floor colours (a user revision). A world's hazard colour is chosen to stand out from its
@@ -1291,7 +1295,7 @@ namespace Echo.Game.Flow
 
         void ApplySettings()
         {
-            _cameraRig.SetGlow(_save.Settings.Glow);
+            ApplyEffects();
             _music.SetEnabled(_save.Settings.Music);
             _sfx.SetEnabled(_save.Settings.Sfx);
         }

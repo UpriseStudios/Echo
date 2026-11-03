@@ -36,6 +36,7 @@ namespace Echo.Editor
         const string PipelinePath = SettingsDir + "/EchoURP.asset";
         const string MaterialDir = "Assets/Echo/Content/Materials";
         const string MaterialPath = MaterialDir + "/SpriteUnlit.mat";
+        const string LitMaterialPath = MaterialDir + "/SpriteLit.mat";
         const string ChunkDir = "Assets/Echo/Content/Chunks";
         // In a Resources folder so the game can always load it, even if the scene's reference is lost (device
         // testing: a build shipped with no config, and so ran on mocks).
@@ -113,6 +114,19 @@ namespace Echo.Editor
             if (shader == null) throw new InvalidOperationException("URP 2D unlit sprite shader not found");
             material = new Material(shader) { name = "SpriteUnlit" };
             AssetDatabase.CreateAsset(material, MaterialPath);
+            return material;
+        }
+
+        // World Time Run doc, phase 3: the Far Future's HD backdrop takes 2D lights.
+        static Material EnsureLitSpriteMaterial()
+        {
+            var material = AssetDatabase.LoadAssetAtPath<Material>(LitMaterialPath);
+            if (material != null) return material;
+            EnsureFolder(MaterialDir);
+            var shader = Shader.Find("Universal Render Pipeline/2D/Sprite-Lit-Default");
+            if (shader == null) throw new InvalidOperationException("URP 2D lit sprite shader not found");
+            material = new Material(shader) { name = "SpriteLit" };
+            AssetDatabase.CreateAsset(material, LitMaterialPath);
             return material;
         }
 
@@ -219,6 +233,7 @@ namespace Echo.Editor
             var world = new GameObject("World");
             var background = Child<BackgroundView>(world, "Background");
             Wire(background, "_material", material);
+            Wire(background, "_litMaterial", EnsureLitSpriteMaterial());
             Wire(background, "_far", LoadSprite(EchoArt.MountainsPath));
             // Themed Biomes: the Graveyard is the near layer at the start, then the Castle, then Space.
             Wire(background, "_near", LoadSprite(EchoArt.GraveyardPath));
@@ -286,6 +301,30 @@ namespace Echo.Editor
                 sr.sortingOrder = TimeRiftView.SortingOrder;
                 Wire(timeRift, part, sr);
             }
+            // World Time Run doc, phase 3: the Far Future's lights, a dim global light and five neon pools, off elsewhere.
+            var futureLights = Child<FutureLightsView>(world, "FutureLights");
+            var globalLight = new GameObject("Global").AddComponent<UnityEngine.Rendering.Universal.Light2D>();
+            globalLight.transform.SetParent(futureLights.transform, false);
+            globalLight.lightType = UnityEngine.Rendering.Universal.Light2D.LightType.Global;
+            globalLight.color = Color.white;   // linear lighting: any tint here would darken the art
+            globalLight.intensity = FutureLightsView.FullGlobal;
+            globalLight.enabled = false;
+            Wire(futureLights, "_global", globalLight);
+            var neonColours = new[] { new Color(1f, 0.3f, 0.85f), new Color(0.3f, 0.95f, 1f), new Color(1f, 0.72f, 0.3f), new Color(0.3f, 0.95f, 1f), new Color(1f, 0.3f, 0.85f) };
+            var neon = new UnityEngine.Rendering.Universal.Light2D[neonColours.Length];
+            for (int i = 0; i < neon.Length; i++)
+            {
+                neon[i] = new GameObject("Neon" + i).AddComponent<UnityEngine.Rendering.Universal.Light2D>();
+                neon[i].transform.SetParent(futureLights.transform, false);
+                neon[i].lightType = UnityEngine.Rendering.Universal.Light2D.LightType.Point;
+                neon[i].color = neonColours[i];
+                neon[i].pointLightInnerRadius = 0.4f;
+                neon[i].pointLightOuterRadius = 3.6f;
+                neon[i].falloffIntensity = 0.6f;
+                neon[i].intensity = 0.9f;
+                neon[i].enabled = false;
+            }
+            WireArray(futureLights, "_neon", neon);
             // Seasons doc, Easter: the egg hunt's eggs.
             var eggHunt = Child<EggHuntView>(world, "EggHunt");
             Wire(eggHunt, "_material", material);
@@ -314,6 +353,7 @@ namespace Echo.Editor
             var runnerView = Child<RunnerView>(world, "Player");
             Wire(runnerView, "_material", material);
             Wire(runnerView, "_scarfMaterial", scarfGlow);
+            Wire(runnerView, "_glow", LoadSprite(EchoArt.GlowPath));
             WireArray(runnerView, "_runFrames", RunnerFrames(PixelCharacters.Hooded));
             Wire(runnerView, "_jumpFrame", LoadSprite(EchoArt.CharacterJumpPath(PixelCharacters.Hooded)));
 
@@ -449,6 +489,8 @@ namespace Echo.Editor
             Wire(game, "_ambient", ambient);
             Wire(game, "_seasonEffects", seasonEffects);
             Wire(game, "_timeRift", timeRift);
+            Wire(game, "_futureLights", futureLights);
+            Wire(game, "_futureVolume", AddFutureVolume());
             Wire(game, "_eggHunt", eggHunt);
             WireArray(game, "_seasonThemes", SeasonThemes.Build());
             Wire(game, "_seasonSchedule", AssetDatabase.LoadAssetAtPath<TextAsset>(SeasonThemes.SchedulePath)
