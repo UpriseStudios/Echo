@@ -43,11 +43,11 @@ MonoBehaviour:
   FlyerColour: {r: 0, g: 0, b: 0, a: 1}
   FlyerEvery: 45
   FlyerSpeed: 2.4
-  Spike: {fileID: 0}
-  Block: {fileID: 0}
+  Spike: {fileID: 21300000, guid: 18ea64205d8b533428e617662b469994, type: 3}
+  Block: {fileID: 21300000, guid: 3e178ce80fd0f0243b83ace6d1bf392a, type: 3}
   GroundTop: {fileID: 0}
-  Grave: {fileID: 0}
-  GraveInColour: 0
+  Grave: {fileID: 21300000, guid: a3486aea1f723cb4888c7b494d0d9c24, type: 3}
+  GraveInColour: 1
   Headstone: {fileID: 0}
   GhostAccessory: {fileID: 0}
   NemesisAccessory: {fileID: 0}
@@ -59,3 +59,9 @@ MonoBehaviour:
   MusicStems: []
   Eras: []
   EraLabel: 3026
+  Gap: {fileID: 21300000, guid: f582466ba7bd0444eaa824ee96ae8951, type: 3}
+  Coin: {fileID: 21300000, guid: ba21abf085e2d6647ac7e871e1807a2f, type: 3}
+  GhostTint: {r: 0.2901961, g: 0.9411765, b: 1, a: 1}
+  NemesisTint: {r: 1, g: 0.2901961, b: 0.3529412, a: 1}
+  GhostGlow: 0
+  GhostHologram: 1

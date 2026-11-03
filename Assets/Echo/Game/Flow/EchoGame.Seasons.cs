@@ -132,9 +132,11 @@ namespace Echo.Game.Flow
             bool seasonal = _save == null || _save.Settings.SeasonalLooks;
             SeasonTheme details = mode ?? (seasonal ? season : null);
             SeasonTheme backdrop = mode ?? (seasonal && HasBackdrop(season) ? season : WornWorld());
-            // World: Time Run: the era at the run's distance, its details too.
+            // World: Time Run: the era at the run's distance; its gameplay layer goes by each thing's own position
+            // (ApplyEraViews), so no season's details mix in.
             backdrop = EraOf(backdrop);
-            if (_timeRun != null) details = backdrop;
+            if (_timeRun != null) details = null;
+            ApplyEraViews();
             if (_seasonApplied && details == _season && backdrop == _backdrop) return;
             ApplySeason(details, backdrop);
         }

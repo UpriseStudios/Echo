@@ -4,6 +4,8 @@ using Echo.Core.Ghosts;
 using Echo.Core.Rules;
 using Echo.Core.Sim;
 using Echo.Game.Cosmetics;
+using Echo.Game.Seasons;
+using Echo.Game.World;
 using TMPro;
 using UnityEngine;
 
@@ -44,10 +46,17 @@ namespace Echo.Game.Views
         [SerializeField] Sprite _jumpFrame;
         [SerializeField] Sprite _horns;
         [SerializeField] Sprite _bountyIcon;
+        [Tooltip("Time Run's Today era: the soft glow behind each ghost.")]
+        [SerializeField] Sprite _glow;
 
         const float StrideUnits = 0.42f;
 
         SpriteRenderer[] _boxes;
+        // World: Time Run (phase 2): a ghost looks like the era it stands in (fossil, standard, phone glow, hologram) and
+        // keeps its skin's shape; the Nemesis is always red and horned. Null outside Time Run.
+        SeasonTheme[] _eras;
+        SpriteRenderer[] _glows;
+        const float GlowUnits = 1.6f;
         SpriteRenderer _hornsRenderer;
         // Seasons doc: every ghost but the Nemesis can wear the season's accessory; the Nemesis's replaces its horns.
         SpriteRenderer[] _accessories;
@@ -76,8 +85,17 @@ namespace Echo.Game.Views
             _boxes = new SpriteRenderer[PoolSize];
             _trails = new LineRenderer[PoolSize];
             _accessories = new SpriteRenderer[PoolSize];
+            _glows = new SpriteRenderer[PoolSize];
             for (int i = 0; i < PoolSize; i++)
             {
+                var glowGo = new GameObject("Glow" + i);
+                glowGo.transform.SetParent(transform, false);
+                _glows[i] = glowGo.AddComponent<SpriteRenderer>();
+                _glows[i].sharedMaterial = _material;
+                _glows[i].sprite = _glow;
+                _glows[i].sortingOrder = 4;
+                _glows[i].enabled = false;
+
                 var accessoryGo = new GameObject("Accessory" + i);
                 accessoryGo.transform.SetParent(transform, false);
                 _accessories[i] = accessoryGo.AddComponent<SpriteRenderer>();
@@ -124,6 +142,24 @@ namespace Echo.Game.Views
             }
             if (_nemesisLabel != null) _nemesisLabel.gameObject.SetActive(false);
         }
+
+        /// <summary>Time Run's eras, or null.</summary>
+        public void SetEras(SeasonTheme[] eras) => _eras = eras != null && eras.Length > 0 ? eras : null;
+
+        SeasonTheme EraAt(float x) => _eras != null ? _eras[TimeEras.At(Mathf.FloorToInt(x), _eras.Length)] : null;
+
+        /// <summary>A ghost's body colour at x (tests and the render loop): the era's, else the ghost colour.</summary>
+        public Color BodyAt(float x, bool nemesis)
+        {
+            SeasonTheme era = EraAt(x);
+            if (era != null && nemesis && era.NemesisTint.a > 0f) return era.NemesisTint;
+            if (era != null && era.GhostTint.a > 0f) return era.GhostTint;
+            return _color;
+        }
+
+        /// <summary>The Nemesis's horns at x: an era's own (the fossil skull), else the horns or the season's accessory.</summary>
+        public Sprite HornsAt(float x) =>
+            EraAt(x) is SeasonTheme e ? (e.NemesisAccessory != null ? e.NemesisAccessory : _horns) : _hornsRenderer != null ? _hornsRenderer.sprite : _horns;
 
         /// <summary>A season's ghost and Nemesis accessories (seasons doc); null keeps plain ghosts and the horns.</summary>
         public void SetSeason(Sprite ghostAccessory, Sprite nemesisAccessory)
@@ -265,6 +301,7 @@ namespace Echo.Game.Views
                     box.enabled = false;
                     trail.enabled = false;
                     _accessories[i].enabled = false;
+                    _glows[i].enabled = false;
                     continue;
                 }
 
@@ -310,6 +347,17 @@ namespace Echo.Game.Views
                     if (ahead > 0f) a *= Mathf.Clamp01(1f - (ahead - ShadowFullUnits) / ShadowFadeUnits);
                 }
 
+                // Time Run: the era at the ghost's own position.
+                SeasonTheme era = EraAt(pos.x);
+                float glitch = 0f;
+                if (era != null && era.GhostHologram)
+                {
+                    // A hologram: a quick flicker, and now and then a one-pixel glitch sideways.
+                    a *= 0.78f + 0.22f * Mathf.Sin(Time.time * 37f + i * 1.7f);
+                    if ((Time.time * 3.1f + i * 0.37f) % 1f < 0.06f) glitch = 1f / CameraRig.PixelsPerUnit;
+                }
+                pos.x += glitch;
+
                 float bw = w * scale, bh = h * scale;
                 if (runFrames.Length > 0)
                 {
@@ -323,8 +371,17 @@ namespace Echo.Game.Views
                 {
                     BoxSprite.PlaceSliced(box, pos.x - bw / 2f, pos.y + lift, bw, bh);
                 }
-                Color baseColor = _color;
+                Color baseColor = BodyAt(pos.x - glitch, isNemesis);
                 box.color = new Color(baseColor.r, baseColor.g, baseColor.b, a);
+                SpriteRenderer glow = _glows[i];
+                glow.enabled = era != null && era.GhostGlow && _glow != null;
+                if (glow.enabled)
+                {
+                    Vector2 g = _glow.bounds.size;
+                    glow.transform.localPosition = new Vector3(pos.x, pos.y + lift + headTop * scale * 0.5f, 0f);
+                    glow.transform.localScale = new Vector3(GlowUnits * scale / g.x, GlowUnits * scale / g.y, 1f);
+                    glow.color = new Color(0.75f, 0.9f, 1f, 0.2f * a);
+                }
                 box.sortingOrder = isNemesis ? 6 : 5;
                 box.enabled = true;
 
@@ -345,7 +402,11 @@ namespace Echo.Game.Views
                 {
                     bountyShown = true;
                     _bountyRenderer.transform.localPosition = new Vector3(SimUnits.Pixel(pos.x), SimUnits.Pixel(pos.y + lift + headTop * scale + 0.15f), 0f);
-                    _bountyRenderer.color = new Color(BountyColor.r, BountyColor.g, BountyColor.b, Mathf.Max(a, 0.6f));
+                    // Time Run: the era's coin (amber, a data chip) in its own colours.
+                    bool eraCoin = era != null && era.Coin != null;
+                    _bountyRenderer.sprite = eraCoin ? era.Coin : _bountyIcon;
+                    _bountyRenderer.color = eraCoin ? new Color(1f, 1f, 1f, Mathf.Max(a, 0.6f))
+                        : new Color(BountyColor.r, BountyColor.g, BountyColor.b, Mathf.Max(a, 0.6f));
                 }
 
                 bool tagged = _nameTag != null && (_nameTagRun < 0 ? i == 0 : record.RunIndex == _nameTagRun)
@@ -356,8 +417,11 @@ namespace Echo.Game.Views
                     float top = headTop * scale;
                     if (isNemesis && _hornsRenderer != null)
                     {
+                        // Time Run: the fossil's horned skull; a hologram's horns glitch with it. Always red, always horned.
+                        bool eraHorns = era != null && era.NemesisAccessory != null;
+                        if (era != null) _hornsRenderer.sprite = HornsAt(pos.x - glitch);
                         _hornsRenderer.transform.localPosition = new Vector3(SimUnits.Pixel(pos.x), SimUnits.Pixel(pos.y + lift + top), 0f);
-                        _hornsRenderer.color = _nemesisAccessory ? new Color(1f, 1f, 1f, a) : new Color(NemesisColor.r, NemesisColor.g, NemesisColor.b, a);
+                        _hornsRenderer.color = _nemesisAccessory || eraHorns ? new Color(1f, 1f, 1f, a) : new Color(NemesisColor.r, NemesisColor.g, NemesisColor.b, a);
                     }
                     if (_nemesisLabel != null)
                     {

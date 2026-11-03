@@ -66,3 +66,9 @@ MonoBehaviour:
   MusicStems: []
   Eras: []
   EraLabel: 
+  Gap: {fileID: 0}
+  Coin: {fileID: 0}
+  GhostTint: {r: 0, g: 0, b: 0, a: 0}
+  NemesisTint: {r: 0, g: 0, b: 0, a: 0}
+  GhostGlow: 0
+  GhostHologram: 0

@@ -308,6 +308,7 @@ namespace Echo.Editor
             Wire(ghostViews, "_jumpFrame", LoadSprite(EchoArt.GhostJumpPath(PixelCharacters.Hooded)));
             Wire(ghostViews, "_horns", LoadSprite(EchoArt.HornsPath));
             Wire(ghostViews, "_bountyIcon", LoadSprite(EchoArt.CoinPath));
+            Wire(ghostViews, "_glow", LoadSprite(EchoArt.GlowPath));
             Wire(ghostViews, "_nemesisLabel", NemesisLabel(world));
 
             var runnerView = Child<RunnerView>(world, "Player");

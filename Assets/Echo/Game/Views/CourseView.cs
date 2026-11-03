@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Echo.Core.Courses;
+using Echo.Game.Seasons;
+using Echo.Game.World;
 using UnityEngine;
 
 namespace Echo.Game.Views
@@ -49,6 +51,23 @@ namespace Echo.Game.Views
             _groundTop = groundTop != null ? groundTop : _baseGroundTop;
         }
 
+        // World: Time Run (phase 2): each spike, block and gap drawn as the era it stands in (by its own position, so a
+        // boundary changes in place rather than all at once). Null outside Time Run.
+        SeasonTheme[] _eras;
+
+        public void SetEras(SeasonTheme[] eras) => _eras = eras != null && eras.Length > 0 ? eras : null;
+
+        SeasonTheme EraAt(float x) => _eras == null ? null : _eras[TimeEras.At(Mathf.FloorToInt(x), _eras.Length)];
+
+        /// <summary>The spike drawn at x (tests and the render loop).</summary>
+        public Sprite SpikeAt(float x) => EraAt(x) is SeasonTheme e && e.Spike != null ? e.Spike : _spike;
+
+        /// <summary>The block drawn at x.</summary>
+        public Sprite BlockAt(float x) => EraAt(x) is SeasonTheme e && e.Block != null ? e.Block : _block;
+
+        /// <summary>The pit drawn in a gap starting at x (null: the plain hole).</summary>
+        public Sprite GapAt(float x) => EraAt(x) is SeasonTheme e ? e.Gap : null;
+
         readonly List<SpriteRenderer> _pool = new List<SpriteRenderer>(PrewarmPieces);
         int _used;
 
@@ -85,6 +104,9 @@ namespace Echo.Game.Views
                     float gapStart = x0 + SimUnits.ToWorld(g.X);
                     Floor(segmentStart, gapStart, floor, lip);
                     segmentStart = gapStart + SimUnits.ToWorld(g.W);
+                    // Time Run: the era's pit (lava, a moat, a void), in its own colours; the hole itself is unchanged.
+                    if (GapAt(gapStart) is Sprite pit)
+                        Tiled(pit, gapStart, -GroundTopDrop, segmentStart - gapStart, FloorDepth, Color.white, 0);
                 }
                 Floor(segmentStart, x0 + SimUnits.ToWorld(c.Length), floor, lip);
 
@@ -92,8 +114,9 @@ namespace Echo.Game.Views
                 {
                     float sx = x0 + SimUnits.ToWorld(s.X), sw = SimUnits.ToWorld(s.W), sh = SimUnits.ToWorld(s.H);
                     int teeth = Mathf.Max(1, Mathf.RoundToInt(sw / SpikeTargetWidth));
+                    Sprite spike = SpikeAt(sx);
                     for (int t = 0; t < teeth; t++)
-                        Piece(_spike, sx + sw * t / teeth, 0f, sw / teeth, sh, hazard, 2, false);
+                        Piece(spike, sx + sw * t / teeth, 0f, sw / teeth, sh, hazard, 2, false);
                 }
 
                 foreach (var cl in c.Ceilings)
@@ -101,8 +124,9 @@ namespace Echo.Game.Views
                     float cx = x0 + SimUnits.ToWorld(cl.X), cw = SimUnits.ToWorld(cl.W), cy = SimUnits.ToWorld(cl.Y);
                     Tiled(_groundFill, cx, cy + ToothHeight + CeilingHeight, cw, CeilingHeight, block, 2);
                     int teeth = Mathf.Max(1, Mathf.RoundToInt(cw / ToothWidth));
+                    Sprite tooth = SpikeAt(cx);
                     for (int t = 0; t < teeth; t++)
-                        Piece(_spike, cx + cw * t / teeth, cy, cw / teeth, ToothHeight, hazard, 2, true);
+                        Piece(tooth, cx + cw * t / teeth, cy, cw / teeth, ToothHeight, hazard, 2, true);
                 }
 
                 foreach (var m in c.Movers)
@@ -167,13 +191,14 @@ namespace Echo.Game.Views
 
         void Block(float x, float y, float w, float h, Color color, int order)
         {
-            if (_block == null)
+            Sprite block = BlockAt(x);
+            if (block == null)
             {
                 Piece(null, x, y, w, h, color, order, false);
                 return;
             }
             SpriteRenderer sr = Next(order);
-            sr.sprite = _block;
+            sr.sprite = block;
             sr.drawMode = SpriteDrawMode.Sliced;
             sr.color = color;
             var t = sr.transform;

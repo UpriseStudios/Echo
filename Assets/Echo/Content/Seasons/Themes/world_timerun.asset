@@ -60,3 +60,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 975061ab820b5bd4b848a3cb69f1cb57, type: 2}
   - {fileID: 11400000, guid: cf809fc7a3dc2e5478ec9f95781a7519, type: 2}
   EraLabel: 
+  Gap: {fileID: 0}
+  Coin: {fileID: 0}
+  GhostTint: {r: 0, g: 0, b: 0, a: 0}
+  NemesisTint: {r: 0, g: 0, b: 0, a: 0}
+  GhostGlow: 0
+  GhostHologram: 0

@@ -89,6 +89,53 @@ namespace Echo.Tests.EditMode
             }
         }
 
+        /// <summary>
+        /// World: Time Run, phase 2: each era's pit tiles down the gap like the floor fill, its coin lands where the gold
+        /// coin did, and the fossil Nemesis's skull sits on the head like the horns and is red (the Nemesis is always red
+        /// and horned). The eras' spikes, blocks and graves are checked with every other reskin above.
+        /// </summary>
+        [Test]
+        public void TimeRunEras_PitsCoinsAndTheFossilSkull()
+        {
+            SeasonTheme world = Themes().Find(x => x.Id == SeasonIds.TimeRun);
+            Assert.IsNotNull(world);
+            Assert.AreEqual(4, world.Eras.Length);
+            Sprite fill = Original("ground_fill.png"), coin = Original("bounty_coin.png"), horns = Original("nemesis_horns.png");
+            foreach (SeasonTheme era in world.Eras)
+            {
+                Assert.IsNotNull(era.Gap, era.Id + ": a pit");
+                Assert.AreEqual(fill.pixelsPerUnit, era.Gap.pixelsPerUnit, era.Id);
+                Assert.AreEqual(new Vector2(0f, era.Gap.rect.height), era.Gap.pivot, era.Id + ": hangs from its top-left, like the fill");
+                Assert.AreEqual(TextureWrapMode.Repeat, era.Gap.texture.wrapMode, era.Id + ": tiles down the pit");
+                if (era.Coin != null)
+                {
+                    Assert.AreEqual(coin.pixelsPerUnit, era.Coin.pixelsPerUnit, era.Id);
+                    Assert.AreEqual(coin.pivot / coin.rect.size, era.Coin.pivot / era.Coin.rect.size, era.Id + ": the coin's pivot");
+                }
+                if (era.Grave != null) Assert.IsTrue(era.GraveInColour || IsGrey(era.Grave), era.Id + ": a stone grave takes the tint");
+            }
+
+            Sprite skull = world.Eras[0].NemesisAccessory;
+            Assert.IsNotNull(skull, "the fossil Nemesis");
+            Assert.AreEqual(horns.pixelsPerUnit, skull.pixelsPerUnit);
+            int red = 0, opaque = 0;
+            foreach (Color32 p in Pixels(skull))
+            {
+                if (p.a == 0) continue;
+                opaque++;
+                if (p.r > p.g + 40 && p.r > p.b + 40) red++;
+            }
+            Assert.Greater(red * 2, opaque, "the skull is mostly red");
+            for (int i = 1; i < 4; i++) Assert.IsNull(world.Eras[i].NemesisAccessory, "the red horns in the other eras");
+        }
+
+        static bool IsGrey(Sprite s)
+        {
+            foreach (Color32 p in Pixels(s))
+                if (p.a > 0 && (p.r != p.g || p.g != p.b)) return false;
+            return true;
+        }
+
         [Test]
         public void Effects_AreSetUpToShow()
         {

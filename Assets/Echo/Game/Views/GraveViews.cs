@@ -78,6 +78,17 @@ namespace Echo.Game.Views
             }
         }
 
+        // World: Time Run (phase 2): each grave as the era it stands in (a slab, a tombstone, a modern stone, a memorial).
+        Echo.Game.Seasons.SeasonTheme[] _eras;
+
+        /// <summary>Time Run's eras, or null; a gravestone the player chose keeps winning (EchoGame passes null then).</summary>
+        public void SetEras(Echo.Game.Seasons.SeasonTheme[] eras) => _eras = eras != null && eras.Length > 0 ? eras : null;
+
+        Echo.Game.Seasons.SeasonTheme EraAt(float x) => _eras == null ? null : _eras[Echo.Game.World.TimeEras.At(Mathf.FloorToInt(x), _eras.Length)];
+
+        /// <summary>The gravestone a grave at x wears (tests and the render loop).</summary>
+        public Sprite GraveAt(float x) => EraAt(x) is Echo.Game.Seasons.SeasonTheme e ? (e.Grave != null ? e.Grave : _baseGrave) : _grave;
+
         /// <summary>The gravestone graves wear now (tests).</summary>
         public Sprite Current => _grave;
 
@@ -202,8 +213,14 @@ namespace Echo.Game.Views
                 float s = _scale[i];
                 sr.transform.localScale = new Vector3(s, s * rise, 1f);
 
+                bool inColour = _graveInColour;
+                if (EraAt(_x[i]) is Echo.Game.Seasons.SeasonTheme era)
+                {
+                    sr.sprite = GraveAt(_x[i]);
+                    inColour = era.Grave != null && era.GraveInColour;
+                }
                 Color tint = _nemesis[i] ? NemesisRed : GhostCyan;
-                Color c = _graveInColour ? Color.white : Color.Lerp(stone, tint, Mathf.Lerp(0.22f, 0.45f, _age[i]));
+                Color c = inColour ? Color.white : Color.Lerp(stone, tint, Mathf.Lerp(0.22f, 0.45f, _age[i]));
                 c.a = Mathf.Lerp(0.75f, 1f, _age[i]);
                 sr.color = c;
 

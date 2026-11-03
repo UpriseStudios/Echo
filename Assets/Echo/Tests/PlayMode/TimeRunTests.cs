@@ -7,6 +7,7 @@ using Echo.Core.Sim;
 using Echo.Game.Flow;
 using Echo.Game.Persistence;
 using Echo.Game.Seasons;
+using Echo.Game.Views;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using TMPro;
@@ -21,7 +22,8 @@ namespace Echo.Tests.PlayMode
     /// <summary>
     /// World: Time Run, phase 1 (World Time Run doc): a run past 750 m watched back in Time Run goes through all four eras
     /// by distance, each later one through a time rift with its label, and replays exactly as it was played without Time
-    /// Run; the development setting shows any era.
+    /// Run; the development setting shows any era. Phase 2: hazards, graves and ghosts take the era they stand in, and the
+    /// Nemesis stays red and horned in every era.
     /// </summary>
     public class TimeRunTests
     {
@@ -144,6 +146,66 @@ namespace Echo.Tests.PlayMode
             Assert.AreEqual(played, Print(game.CurrentReplay.Run), "Time Run is looks only: the run replays exactly as it was played");
             Click(Showing("Replay/Exit") ? "Replay/Exit" : "Replay/Back");
             if (Showing("Reels")) Click("Reels/Close");
+        }
+
+        static bool Era(Sprite s, string era) => s != null && s.name.StartsWith(era + "_");
+
+        [UnityTest]
+        public IEnumerator EachThingTakesTheEraItStandsIn_AndTheNemesisStaysRedAndHorned()
+        {
+            yield return Title();
+            var game = Object.FindAnyObjectByType<EchoGame>();
+            var course = Object.FindAnyObjectByType<CourseView>();
+            var graves = Object.FindAnyObjectByType<GraveViews>();
+            var ghosts = Object.FindAnyObjectByType<GhostViews>();
+            Sprite spike = course.SpikeAt(100), block = course.BlockAt(100), grave = graves.GraveAt(100), horns = ghosts.HornsAt(100);
+            Color ghost = ghosts.BodyAt(100, false);
+            Assert.IsNull(course.GapAt(100), "outside Time Run a gap is a plain hole");
+
+            game.PreviewTimeRun = true;
+            game.TickFrame(Dt, false);
+            // Each era by position: 0-249 m Dino Land, then Medieval, Today and the Far Future.
+            Assert.IsTrue(Era(course.SpikeAt(100), SeasonIds.EraDino), "a rock spike");
+            Assert.IsTrue(Era(course.BlockAt(100), SeasonIds.EraDino), "a cliff");
+            Assert.IsTrue(Era(course.GapAt(100), SeasonIds.EraDino), "lava");
+            Assert.AreSame(spike, course.SpikeAt(300), "Medieval keeps the spike");
+            Assert.IsTrue(Era(course.BlockAt(300), SeasonIds.EraMedieval), "a portcullis");
+            Assert.IsTrue(Era(course.GapAt(300), SeasonIds.EraMedieval), "a moat");
+            Assert.IsTrue(Era(course.SpikeAt(600), SeasonIds.EraToday), "a traffic cone");
+            Assert.IsTrue(Era(course.GapAt(600), SeasonIds.EraToday), "between rooftops");
+            Assert.IsTrue(Era(course.SpikeAt(900), SeasonIds.EraFuture), "an energy spike");
+            Assert.IsTrue(Era(course.BlockAt(900), SeasonIds.EraFuture), "a hover block");
+            Assert.IsTrue(Era(course.SpikeAt(249), SeasonIds.EraDino), "the boundary is at 250 m");
+            Assert.IsFalse(Era(course.SpikeAt(250), SeasonIds.EraDino));
+
+            Assert.IsTrue(Era(graves.GraveAt(100), SeasonIds.EraDino), "a stone slab");
+            Assert.AreSame(grave, graves.GraveAt(300), "Medieval keeps the tombstone");
+            Assert.IsTrue(Era(graves.GraveAt(600), SeasonIds.EraToday));
+            Assert.IsTrue(Era(graves.GraveAt(900), SeasonIds.EraFuture), "a holographic memorial");
+
+            Assert.AreNotEqual(ghost, ghosts.BodyAt(100, false), "fossil ghosts");
+            Assert.AreEqual(ghost, ghosts.BodyAt(300, false), "standard ghosts in Medieval");
+            Assert.AreNotEqual(ghost, ghosts.BodyAt(900, false), "hologram ghosts");
+            // The Nemesis is always red and horned: the fossil's skull is red art (SeasonArtTests), otherwise the red horns.
+            Assert.IsTrue(Era(ghosts.HornsAt(100), SeasonIds.EraDino), "the fossil Nemesis's horned skull");
+            foreach (int x in new[] { 300, 600, 900 }) Assert.AreSame(horns, ghosts.HornsAt(x), $"horns at {x} m");
+            foreach (int x in new[] { 100, 900 })
+            {
+                Color n = ghosts.BodyAt(x, true);
+                Assert.Greater(n.r, Mathf.Max(n.g, n.b) + 0.3f, $"a red Nemesis at {x} m");
+            }
+
+            // A forced era shows everywhere; off again, everything is as it was.
+            game.ForceEra = 3;
+            Assert.IsTrue(Era(course.SpikeAt(100), SeasonIds.EraFuture));
+            Assert.IsTrue(Era(graves.GraveAt(100), SeasonIds.EraFuture));
+            game.ForceEra = null;
+            game.PreviewTimeRun = false;
+            Assert.AreSame(spike, course.SpikeAt(100));
+            Assert.AreSame(block, course.BlockAt(100));
+            Assert.AreSame(grave, graves.GraveAt(100));
+            Assert.AreEqual(ghost, ghosts.BodyAt(900, false));
+            Assert.IsNull(course.GapAt(900));
         }
 
         [UnityTest]

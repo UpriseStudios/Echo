@@ -105,6 +105,9 @@ namespace Echo.Editor.Art
             EchoArt.Write(EffectPath(ea, 0), PixelEaster.Petal(0));
             EchoArt.Write(EffectPath(ea, 1), PixelEaster.Petal(1));
             EchoArt.Write(EggPath, PixelEaster.Egg());
+            // World: Time Run's eras (phase 2): each era's hazards, gap, grave and coin, and the fossil Nemesis.
+            WriteEras();
+
             // Halloween (switched off until next year).
             const string h = Game.Seasons.SeasonIds.Halloween;
             EchoArt.Write(PathFor(h, Grave), PixelSeasons.PumpkinGrave());
@@ -147,11 +150,51 @@ namespace Echo.Editor.Art
             foreach (string fx in new[] { EffectPath(ea, 0), EffectPath(ea, 1), EggPath })
                 EchoArt.ImportSprite(fx, EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
 
+            ImportEras();
             ImportAs(t);
             EchoArt.ImportSprite(PathFor(t, GhostAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 1f / 10f));
             EchoArt.ImportSprite(PathFor(t, NemesisAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 1f / 9f));
             EchoArt.ImportSprite(EffectPath(t, 0), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
             EchoArt.ImportSprite(EffectPath(t, 1), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
+        }
+
+        public const string Gap = "gap", Coin = "coin";
+
+        static readonly (string Era, System.Func<PixelCanvas> Spike, System.Func<PixelCanvas> Block, System.Func<PixelCanvas> Gap,
+            System.Func<PixelCanvas> Grave, System.Func<PixelCanvas> Coin)[] Eras =
+        {
+            (Game.Seasons.SeasonIds.EraDino, PixelTimeRun.RockSpike, PixelTimeRun.CliffBlock, PixelTimeRun.LavaGap, PixelTimeRun.SlabGrave, PixelTimeRun.AmberCoin),
+            (Game.Seasons.SeasonIds.EraMedieval, null, PixelTimeRun.PortcullisBlock, PixelTimeRun.MoatGap, null, null),
+            (Game.Seasons.SeasonIds.EraToday, PixelTimeRun.ConeSpike, PixelTimeRun.BillboardBlock, PixelTimeRun.RooftopGap, PixelTimeRun.ModernGrave, null),
+            (Game.Seasons.SeasonIds.EraFuture, PixelTimeRun.EnergySpike, PixelTimeRun.HoverBlock, PixelTimeRun.VoidGap, PixelTimeRun.HoloGrave, PixelTimeRun.DataChip),
+        };
+
+        static void WriteEras()
+        {
+            foreach (var e in Eras)
+            {
+                if (e.Spike != null) EchoArt.Write(PathFor(e.Era, Spike), e.Spike());
+                if (e.Block != null) EchoArt.Write(PathFor(e.Era, Block), e.Block());
+                if (e.Gap != null) EchoArt.Write(PathFor(e.Era, Gap), e.Gap());
+                if (e.Grave != null) EchoArt.Write(PathFor(e.Era, Grave), e.Grave());
+                if (e.Coin != null) EchoArt.Write(PathFor(e.Era, Coin), e.Coin());
+            }
+            EchoArt.Write(PathFor(Game.Seasons.SeasonIds.EraDino, NemesisAccessory), PixelTimeRun.DinoSkull());
+        }
+
+        /// <summary>Called after the refresh: each era's art with the original it stands in for's import settings.</summary>
+        static void ImportEras()
+        {
+            foreach (var e in Eras)
+            {
+                if (e.Spike != null) EchoArt.ImportSprite(PathFor(e.Era, Spike), 16f, Vector2.zero);
+                if (e.Block != null) EchoArt.ImportSprite(PathFor(e.Era, Block), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f), new Vector4(4, 4, 4, 4));
+                if (e.Gap != null) EchoArt.ImportSprite(PathFor(e.Era, Gap), EchoArt.WorldPpu, new Vector2(0f, 1f), default, TextureWrapMode.Repeat);
+                if (e.Grave != null) EchoArt.ImportSprite(PathFor(e.Era, Grave), EchoArt.WorldPpu, new Vector2(0.5f, 2f / 16f));
+                if (e.Coin != null) EchoArt.ImportSprite(PathFor(e.Era, Coin), EchoArt.WorldPpu, new Vector2(0.5f, 0f));
+            }
+            // Like the horns: its base row over the top of the head.
+            EchoArt.ImportSprite(PathFor(Game.Seasons.SeasonIds.EraDino, NemesisAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 1f / 9f));
         }
 
         static void WriteWorld(string id, PixelCanvas far, PixelCanvas near, PixelCanvas flyer, params PixelCanvas[] effects)

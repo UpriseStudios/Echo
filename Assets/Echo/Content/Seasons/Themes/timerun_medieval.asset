@@ -44,7 +44,7 @@ MonoBehaviour:
   FlyerEvery: 45
   FlyerSpeed: 2.4
   Spike: {fileID: 0}
-  Block: {fileID: 0}
+  Block: {fileID: 21300000, guid: d8ca1bf8823c22a46aaf98bfa39c4a73, type: 3}
   GroundTop: {fileID: 0}
   Grave: {fileID: 0}
   GraveInColour: 0
@@ -59,3 +59,9 @@ MonoBehaviour:
   MusicStems: []
   Eras: []
   EraLabel: 1200 AD
+  Gap: {fileID: 21300000, guid: 5b796bb333f4f284da6f74b9fd7249dc, type: 3}
+  Coin: {fileID: 0}
+  GhostTint: {r: 0, g: 0, b: 0, a: 0}
+  NemesisTint: {r: 0, g: 0, b: 0, a: 0}
+  GhostGlow: 0
+  GhostHologram: 0

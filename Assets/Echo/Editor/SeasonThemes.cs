@@ -217,6 +217,25 @@ namespace Echo.Editor
             future.NearLayer = Load<Sprite>(Art.EchoArt.MoonSurfacePath);
             Colours(future, Hex(0x2A6A9A), Hex(0x1A2A4A), Hex(0x3A5A7A), Hex(0x4AFFE0));
 
+            // Phase 2: each era's hazards, gap, grave, coin and ghosts (the look follows each thing's own position).
+            foreach (SeasonTheme e in new[] { dino, medieval, today, future })
+            {
+                e.Spike = Optional(e.Id, SeasonArt.Spike);
+                e.Block = Optional(e.Id, SeasonArt.Block);
+                e.Gap = Optional(e.Id, SeasonArt.Gap);
+                e.Grave = Optional(e.Id, SeasonArt.Grave);
+                e.Coin = Optional(e.Id, SeasonArt.Coin);
+            }
+            dino.GhostTint = Hex(0xEDE4CC);              // bone-white fossils
+            dino.NemesisTint = Hex(0xFF6A5A);
+            dino.NemesisAccessory = Sprite(SeasonIds.EraDino, SeasonArt.NemesisAccessory);
+            today.GraveInColour = true;                  // flowers and polished stone
+            today.GhostGlow = true;                      // a faint phone-screen glow
+            future.GraveInColour = true;                 // the memorial is light
+            future.GhostTint = Hex(0x4AF0FF);            // cyan holograms
+            future.NemesisTint = Hex(0xFF4A5A);          // a red hologram
+            future.GhostHologram = true;
+
             SeasonTheme world = Plain(Load(SeasonIds.TimeRun), "Time Run");
             world.Eras = new[] { dino, medieval, today, future };
             foreach (SeasonTheme t in new[] { dino, medieval, today, future, world }) EditorUtility.SetDirty(t);
@@ -354,6 +373,9 @@ namespace Echo.Editor
             t.RunToast = "";
             t.Eras = new SeasonTheme[0];
             t.EraLabel = "";
+            t.Gap = t.Coin = null;
+            t.GhostTint = t.NemesisTint = Color.clear;
+            t.GhostGlow = t.GhostHologram = false;
             return t;
         }
 
@@ -443,6 +465,9 @@ namespace Echo.Editor
         static AudioClip[] Carol(CarolMusic carol) => Array.ConvertAll(carol.StemNames, n => Load<AudioClip>(PlaceholderAudio.PathFor(n)));
 
         static Sprite Sprite(string season, string part) => Load<Sprite>(SeasonArt.PathFor(season, part));
+
+        // An era keeps the original where it has no art of its own (Medieval keeps the spike, grave and coin).
+        static Sprite Optional(string season, string part) => AssetDatabase.LoadAssetAtPath<Sprite>(SeasonArt.PathFor(season, part));
 
         static T Load<T>(string path) where T : UnityEngine.Object =>
             AssetDatabase.LoadAssetAtPath<T>(path) ?? throw new InvalidOperationException($"missing: {path}");

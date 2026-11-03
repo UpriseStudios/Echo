@@ -20,12 +20,17 @@ namespace Echo.Game.Flow
 
         int? _forceEra;
         bool _previewTimeRun;
+        readonly SeasonTheme[] _oneEra = new SeasonTheme[1];
 
-        /// <summary>Development builds and tests: show this era whatever the distance (null: by distance).</summary>
+        /// <summary>Development builds and tests: show this era whatever the distance (null: by distance), everywhere.</summary>
         public int? ForceEra
         {
             get => _forceEra;
-            set => _forceEra = value;
+            set
+            {
+                _forceEra = value;
+                if (_seasonThemes != null) ApplyEraViews();
+            }
         }
 
         /// <summary>Development builds and tests: wear Time Run this session, owned or not (applied at once).</summary>
@@ -46,14 +51,29 @@ namespace Echo.Game.Flow
         /// <summary>The time rift is playing (tests).</summary>
         public bool TimeRiftPlaying => _timeRift != null && _timeRift.Playing;
 
-        // A backdrop with eras stands in for the era at the run's distance, as details too: Time Run's eras bring their own
-        // obstacles, graves and ghosts (later phases), so a season's never mix in.
+        // A backdrop with eras stands in for the era at the run's distance. Its obstacles, graves and ghosts follow each
+        // thing's own position instead (ApplyEraViews), and a season's never mix in.
         SeasonTheme EraOf(SeasonTheme backdrop)
         {
             _timeRun = backdrop != null && backdrop.Eras.Length > 0 ? backdrop : null;
             if (_timeRun == null) return backdrop;
             _eraShown = ForceEra ?? TimeEras.At(_run != null ? _run.Distance : 0, _timeRun.Eras.Length);
             return _timeRun.Eras[Mathf.Clamp(_eraShown, 0, _timeRun.Eras.Length - 1)];
+        }
+
+        // Phase 2: the gameplay layer takes each thing's era from its own position (a forced era shows everywhere). A
+        // gravestone the player chose keeps winning, as it does over a season's.
+        void ApplyEraViews()
+        {
+            SeasonTheme[] eras = _timeRun != null ? _timeRun.Eras : null;
+            if (eras != null && _forceEra is int forced)
+            {
+                _oneEra[0] = eras[Mathf.Clamp(forced, 0, eras.Length - 1)];
+                eras = _oneEra;
+            }
+            _courseView.SetEras(eras);
+            _ghostViews.SetEras(eras);
+            if (_graves != null) _graves.SetEras(_equippedGrave != null && !_equippedGrave.Tintable && _equippedGrave.Sprite != null ? null : eras);
         }
 
         // Each frame: the era by the simulation's distance; a later one arrives through a time rift.
@@ -65,7 +85,7 @@ namespace Echo.Game.Flow
             bool later = era > _eraShown;
             _eraShown = era;
             SeasonTheme theme = _timeRun.Eras[era];
-            ApplySeason(theme, theme);
+            ApplySeason(null, theme);
             if (!later || (State != GameState.Running && State != GameState.Replay)) return;
             if (_timeRift != null) _timeRift.Play();
             _sfx.TimeRift();

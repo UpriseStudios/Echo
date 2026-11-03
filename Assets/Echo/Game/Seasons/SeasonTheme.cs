@@ -108,5 +108,17 @@ namespace Echo.Game.Seasons
         public SeasonTheme[] Eras = new SeasonTheme[0];
         [Tooltip("An era's label, shown in the corner as a run reaches it (\"65,000,000 BC\").")]
         public string EraLabel = "";
+        [Tooltip("An era's gap: a tile drawn down the pit, in its own colours (lava, a moat, a void).")]
+        public Sprite Gap;
+        [Tooltip("An era's bounty coin, in its own colours (amber, a data chip); null keeps the gold coin.")]
+        public Sprite Coin;
+        [Tooltip("An era's ghosts: their colour (bone-white fossils, cyan holograms); clear keeps ghost cyan.")]
+        public Color GhostTint = Color.clear;
+        [Tooltip("An era's Nemesis colour, always a red; clear keeps the ghost colour.")]
+        public Color NemesisTint = Color.clear;
+        [Tooltip("An era's ghosts glow faintly, like a phone screen (Today).")]
+        public bool GhostGlow;
+        [Tooltip("An era's ghosts flicker and glitch like holograms, the Nemesis's horns too (the Far Future).")]
+        public bool GhostHologram;
     }
 }

@@ -93,6 +93,47 @@ namespace Echo.Tests.PlayMode
             yield return Shoot("season30crowd", library, cfg, ghosts, player, new[] { shot }, most);
         }
 
+        /// <summary>
+        /// World: Time Run, phase 2: the same crowd in each era (forced, so the whole screen is that era): its hazards,
+        /// graves and ghosts (fossils, standard, phone glow, holograms) and the Nemesis, to timerun30crowd_era*.png.
+        /// </summary>
+        [UnityTest, Timeout(900000)]
+        public IEnumerator TimeRun_EveryEraWithACrowdOfGhosts()
+        {
+            var cfg = SimConfig.Default;
+            ChunkLibrary library = Library();
+            var rng = new Random((int)Seed);
+            List<GhostRecord> ghosts = MarketingClips.Ghosts(Graveyard, library, cfg, 100, rng);
+            Schedule player = MarketingClips.PlayerRun(Graveyard, ghosts, library, cfg, 100, rng);
+            int shot = 0, most = -1;
+            yield return Measure(library, cfg, ghosts, player, (tick, seen, end) =>
+            {
+                if (seen <= most) return;
+                most = seen;
+                shot = tick;
+            });
+            for (int era = 0; era < 4; era++)
+            {
+                yield return Load(library, cfg, ghosts);
+                var game = Object.FindAnyObjectByType<EchoGame>();
+                game.PreviewTimeRun = true;
+                game.ForceEra = era;
+                Start(game, player, EchoGame.NoSeason);
+                while (game.State == GameState.Running && game.Run.Tick < shot)
+                {
+                    game.TickFrame(Dt, false);
+                    if (game.Run.Tick % 60 == 0) yield return null;
+                }
+                Assert.AreEqual(GameState.Running, game.State, $"era {era + 1}: the run is the same in every era");
+                Assert.AreEqual(era, game.EraShown);
+                for (int f = 0; f < 3; f++) yield return null;
+                // A hologram's one-pixel glitch can nudge a ghost standing on the screen's edge just out of the count.
+                int seen = GhostsInView();
+                Assert.That(seen, Is.InRange(era == 3 ? most - 3 : most, most), $"era {era + 1}: the same ghosts on screen");
+                yield return ScreenCaptureTests.Capture($"timerun30crowd_era{era + 1}");
+            }
+        }
+
         static ChunkLibrary Library() =>
             ChunkLibrary.FromJson(Directory.GetFiles(Path.Combine(Application.dataPath, "Echo", "Content", "Chunks"), "*.json").Select(File.ReadAllText));
 
