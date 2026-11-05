@@ -35,6 +35,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 56d129a890a28c64baedd3e3d7a837b0, type: 3}
     - {fileID: 21300000, guid: e4595414696048d4596d92273a8c899e, type: 3}
@@ -75,6 +76,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 718cb62db66a3294f9d9b54320eb90ab, type: 3}
     - {fileID: 21300000, guid: 03f9ddf837620fa418bcdb02ed7ed655, type: 3}
@@ -115,6 +117,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 44d72f8de1076074f91c7dec6d3be2a8, type: 3}
     - {fileID: 21300000, guid: a0740d88df6917e419571dae554269c7, type: 3}
@@ -155,6 +158,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: f85f76cc94362214fa726460a63efdae, type: 3}
     - {fileID: 21300000, guid: a2750983fabad024abf491ef60544141, type: 3}
@@ -195,6 +199,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: d30dccb9c751aaf4686f9ca7a6959f62, type: 3}
     - {fileID: 21300000, guid: da627c300f61d6b42b8bc8500c444607, type: 3}
@@ -235,6 +240,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 88591383521720c4494f971215a1a8e1, type: 3}
     - {fileID: 21300000, guid: 4cc709790b85929459e7d91331f04658, type: 3}
@@ -275,6 +281,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 55e334e707ccc3f489a3d3e5434aa3ea, type: 3}
     - {fileID: 21300000, guid: 2e6d9891fab8df444ac5d2589c4a6297, type: 3}
@@ -315,6 +322,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 9232a8ea7c257f844984e13528630475, type: 3}
     - {fileID: 21300000, guid: 898479aa8fd400f45bddc63ad76c6c91, type: 3}
@@ -355,6 +363,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: fcf28950187b15746a5553085a10e2b2, type: 3}
     - {fileID: 21300000, guid: 4f970280a64262341a9a4323d0ea7efc, type: 3}
@@ -395,6 +404,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Watch 5 ads
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: db3478d3c0e7f054ab156a352489dabe, type: 3}
     - {fileID: 21300000, guid: 298c3e050a7e89a43899d5294c9b386a, type: 3}
@@ -435,6 +445,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Have 15 ghosts active
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: d9f7b540ef9a4fa489be82762fb531fb, type: 3}
     - {fileID: 21300000, guid: 91ab232ec685ce448b2011dede2932ca, type: 3}
@@ -475,6 +486,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Reach 1,000 m
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: e62bd7295c35b254da5c40e8412beacf, type: 3}
     - {fileID: 21300000, guid: 89867985d43ff1f47a88cc10e32ed078, type: 3}
@@ -515,6 +527,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Clear 15+ ghosts with a new best
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: af9366b112979f747baed7ac07b8fc5e, type: 3}
     - {fileID: 21300000, guid: 62db2d45ec8bdb0498c8711dd4214ef5, type: 3}
@@ -555,6 +568,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Clear 20+ ghosts at once
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 3efed7e430f93c448a0e0cbe5bf845dd, type: 3}
     - {fileID: 21300000, guid: 97f199891f9fdc44db7ecd6ca74445d6, type: 3}
@@ -595,6 +609,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Die 250 times
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: f46b195ea99f11d4f8a5c9e04e99b06c, type: 3}
     - {fileID: 21300000, guid: e236f52f378fa074196b559ebae1e71e, type: 3}
@@ -635,6 +650,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Undead Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: b5ac5b2339ef41b4091e409eacb5af0f, type: 3}
     - {fileID: 21300000, guid: b23107f83e9ad744b9a01274b7403cda, type: 3}
@@ -675,6 +691,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Undead Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: e26a4b892cab40845b3c65a47d9405e2, type: 3}
     - {fileID: 21300000, guid: f55d8bd1c01d8ae46a9fa4c484b8394a, type: 3}
@@ -715,6 +732,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Undead Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 4cc58596614d9e44a87553a22a4b77ff, type: 3}
     - {fileID: 21300000, guid: d0ea2892cad01774e94c96b4dcf8dfc3, type: 3}
@@ -755,6 +773,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Undead Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: ece67dae4ba9a734ea88fb63bbf12084, type: 3}
     - {fileID: 21300000, guid: 5a4591e66958937418a375ca79f89255, type: 3}
@@ -795,6 +814,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Dungeon Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: b85013075159c6f4eb663cdfe9a0a1bf, type: 3}
     - {fileID: 21300000, guid: 0a71b04223e83b746890ef5c0b5d1704, type: 3}
@@ -835,6 +855,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Dungeon Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 94834e16c36b9e74b9e5b6b473bbf3fc, type: 3}
     - {fileID: 21300000, guid: b8eb3649524644741b54940805d26e80, type: 3}
@@ -875,6 +896,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Dungeon Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 4650b13872aa09e4c9c6a39c06b2b341, type: 3}
     - {fileID: 21300000, guid: 3083928919516d242ae90382b5af1ed1, type: 3}
@@ -915,6 +937,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Dungeon Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 1750d841d56aae74cb8632765acbcfc9, type: 3}
     - {fileID: 21300000, guid: 319d29246d8bb5d4d960c9461fdcff46, type: 3}
@@ -955,6 +978,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Critters Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: df985dd567aa84f45ba4f34cb12079e2, type: 3}
     - {fileID: 21300000, guid: 26b5ddeadba2bc840bb561761dd6d124, type: 3}
@@ -995,6 +1019,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Critters Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 9c315307273581d4ab8e5fa302d24b22, type: 3}
     - {fileID: 21300000, guid: a21c9222df9576c439a93224617c91c2, type: 3}
@@ -1035,6 +1060,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Critters Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 4baca91ff8a1ff948aeb057be6682649, type: 3}
     - {fileID: 21300000, guid: c866a02460f0b694e848a66b9af2f1ce, type: 3}
@@ -1075,6 +1101,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Critters Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: ff3a6bda0b8031449bd6866cd93d49c1, type: 3}
     - {fileID: 21300000, guid: a6c048eccc13834459bf688740850cbb, type: 3}
@@ -1115,6 +1142,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Space Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: d8d61810a77cce344b70ee9eb7277ff5, type: 3}
     - {fileID: 21300000, guid: 8236e22248ee6b1439ea4793757db47e, type: 3}
@@ -1155,6 +1183,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Space Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: d5ff5f4890183df4a9a9b608c0b8340b, type: 3}
     - {fileID: 21300000, guid: a89277dda0a56404987951d54421b6f8, type: 3}
@@ -1195,6 +1224,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Space Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 3b9fabb5a7123ba408963da2ad8c01e7, type: 3}
     - {fileID: 21300000, guid: dd29d838797f98d4d9cabf25ec491d2a, type: 3}
@@ -1235,6 +1265,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Space Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 5bf9ea5fbadfffd4586b5e6b1a412bf7, type: 3}
     - {fileID: 21300000, guid: a799cb4a3d3ae4f4ebec047260c9f40b, type: 3}
@@ -1275,6 +1306,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Retro Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 4588cb555b575804f81d5e334718f4bc, type: 3}
     - {fileID: 21300000, guid: 0e928ba25b4c1e74fb7519e7353f67f7, type: 3}
@@ -1315,6 +1347,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Retro Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 6f0a95fa48fc80049a6275cba8406fa1, type: 3}
     - {fileID: 21300000, guid: bfd05c723c073b349a0f434ddc1f5fa2, type: 3}
@@ -1355,6 +1388,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Retro Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 1ca6c63da6892004e82ffe4683045a8f, type: 3}
     - {fileID: 21300000, guid: 7caa32b14f6f9854f89dd8eb54138046, type: 3}
@@ -1395,6 +1429,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Retro Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 63299a67bd64e804aa5013b8fe9ad61b, type: 3}
     - {fileID: 21300000, guid: 73204ee9352a799428b158d800378640, type: 3}
@@ -1435,6 +1470,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Royal Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 2a5d50153a3e4284aa5d01336b3df134, type: 3}
     - {fileID: 21300000, guid: e1f46f00439edf740b4673c76e5d040d, type: 3}
@@ -1475,6 +1511,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Royal Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 4a9905c4ac506d144903d474d62d2be0, type: 3}
     - {fileID: 21300000, guid: fc749c0529a2f7f418ea6598d8162467, type: 3}
@@ -1515,6 +1552,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Royal Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: c3da504169100a847a24d0b3432b5f2c, type: 3}
     - {fileID: 21300000, guid: 93f784c8c2a62dc4f9b45d72e8bd2d00, type: 3}
@@ -1555,6 +1593,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Royal Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: dd0e9a82d07324a49ac92172a667602e, type: 3}
     - {fileID: 21300000, guid: c433664ed54bee741b1b16f8ca739d19, type: 3}
@@ -1595,6 +1634,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Monsters Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 4377e57c5dfb74a4cb4519b06c604897, type: 3}
     - {fileID: 21300000, guid: 4f485d507aa477d4b881a5e071fcf914, type: 3}
@@ -1635,6 +1675,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Monsters Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: c26bbbb45c5559c4c924be09627173d0, type: 3}
     - {fileID: 21300000, guid: e76b5e87c3e4b574bab7c4bd00622078, type: 3}
@@ -1675,6 +1716,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Monsters Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: d09492417ce8d234393199e237ef295a, type: 3}
     - {fileID: 21300000, guid: 4aad9d987c0b2e646be4772272bdf53e, type: 3}
@@ -1715,6 +1757,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Monsters Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: a581994fe518b2246a1f2a76030771b8, type: 3}
     - {fileID: 21300000, guid: 4f99fc02d25e91340b3c95886f78a289, type: 3}
@@ -1755,6 +1798,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Oddballs Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: a806b8314eccb4946a12733f87931a9a, type: 3}
     - {fileID: 21300000, guid: f0a1cf6312ecaaf488ed5993de22269e, type: 3}
@@ -1795,6 +1839,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Oddballs Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 8eab1af787edc424c912b0e7f078ce67, type: 3}
     - {fileID: 21300000, guid: 6de84c4567991fb44ab2194fe6b36a8e, type: 3}
@@ -1835,6 +1880,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Oddballs Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: e9b4e82221704864fbc676591bc23b1e, type: 3}
     - {fileID: 21300000, guid: b28663209a5942d4ca34d834abf1979e, type: 3}
@@ -1875,6 +1921,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Oddballs Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 54bfa757d755eca4b93b2aa32095a8ab, type: 3}
     - {fileID: 21300000, guid: 803847c1eafd62c4484040f8abe9bf5d, type: 3}
@@ -1915,6 +1962,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Earn all 30 achievements
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 80c512d539248df468364c6066d67c6a, type: 3}
     - {fileID: 21300000, guid: f261650f10e82b344a0fd40e97f84e8b, type: 3}
@@ -1955,6 +2003,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Earn all 30 achievements
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: bbb7a44d3a83bc74890942339787514f, type: 3}
     - {fileID: 21300000, guid: 1ba07b09d539c7c4c88479d15e4b98a4, type: 3}
@@ -1995,6 +2044,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Earn all 30 achievements
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: cfef60058736d334dac5b1f6da885424, type: 3}
     - {fileID: 21300000, guid: 13fbcfee1d4f2d64e945a37fdaff4fd5, type: 3}
@@ -2035,6 +2085,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Earn all 30 achievements
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 7826268c5a2a60f49a2a9e39fa9f7d06, type: 3}
     - {fileID: 21300000, guid: eaf51d8537da8204e8c6bf92f65e4568, type: 3}
@@ -2075,6 +2126,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 'Christmas: Twelve Days'
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: f43f0d34e43958d40a7e2136fafc754f, type: 3}
     - {fileID: 21300000, guid: 9c16b91bd11a1c8428e878e5e1230d2d, type: 3}
@@ -2115,6 +2167,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 'Christmas: Lead the Way'
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 8902a0372ffa2344c86f596df3c0487f, type: 3}
     - {fileID: 21300000, guid: 957003a88070b41488143538dccfd160, type: 3}
@@ -2155,6 +2208,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 'Easter: Egg Hunt'
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 47c4298ae4d25b546845dbb032196c24, type: 3}
     - {fileID: 21300000, guid: 617c2294243a3c148a88f2e00991b939, type: 3}
@@ -2195,6 +2249,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Christmas Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 2227ff90893a2d74e8d92cc7d88f9c12, type: 3}
     - {fileID: 21300000, guid: b60562d7072929140a50f88d394c3a30, type: 3}
@@ -2235,6 +2290,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Christmas Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 17b0d6d89d168324ca1c67e264465329, type: 3}
     - {fileID: 21300000, guid: eefa2d21d85863c48980162c7b60f73d, type: 3}
@@ -2275,6 +2331,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Christmas Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 7393527e4ecd7fa4eb83991cf4a5995e, type: 3}
     - {fileID: 21300000, guid: 84abf4a926d788e498a86b73919ce62d, type: 3}
@@ -2315,6 +2372,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Christmas Pack
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 03cfc7e6a61fccc42a16dbbe48caad56, type: 3}
     - {fileID: 21300000, guid: f9b48fc832e9cb847b75f04c669b9011, type: 3}
@@ -2355,6 +2413,7 @@ MonoBehaviour:
     ServerReward: 1
     UnlockText: 'Community Graveyard: play all 7 days, 4 weeks'
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: 472ce41492efe3140b25df1e92cf4ca1, type: 3}
     - {fileID: 21300000, guid: 1c124975a27508b49b5e0d8153fd32ed, type: 3}
@@ -2395,6 +2454,7 @@ MonoBehaviour:
     ServerReward: 1
     UnlockText: 'Ghost Duels: finish a season in the top 100'
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames:
     - {fileID: 21300000, guid: d1fbb8d4dbc259a418d77011446de0d7, type: 3}
     - {fileID: 21300000, guid: 856311e02f3bab94184eba3f6087863f, type: 3}
@@ -2410,6 +2470,88 @@ MonoBehaviour:
     Tintable: 0
     ScarfColor: {r: 0, g: 0, b: 0, a: 0}
     ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_caveman
+    DisplayName: Caveman
+    Type: 3
+    Color: {r: 0.6039216, g: 0.41568628, b: 0.20392157, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    TrailAnimated: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: time_traveller
+    ServerReward: 0
+    UnlockText: 'Time Run: Time Traveller'
+    World: {fileID: 0}
+    TrialRuns: 0
+    RunFrames:
+    - {fileID: 21300000, guid: eeaa1088c53515346bef97f16171c670, type: 3}
+    - {fileID: 21300000, guid: f01b0ba8f161556458ad15074fb1b4eb, type: 3}
+    - {fileID: 21300000, guid: fc5f8f95a0d5ca4449cd72f5aff7ec2b, type: 3}
+    - {fileID: 21300000, guid: 7d0e0cd386cef2e4bb29979c090fb155, type: 3}
+    JumpFrame: {fileID: 21300000, guid: 6296eedba0d0abb45b197f17a5300df6, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: e3b63b12c530da941a1325e4792c4d9a, type: 3}
+    - {fileID: 21300000, guid: 8e4c7b93216c56f45849c8c7c1396496, type: 3}
+    - {fileID: 21300000, guid: d9539c198aad6a846a4a85f66c24b66c, type: 3}
+    - {fileID: 21300000, guid: 1e127461a7821f24091aa94e559138db, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 79c76396c3ab2074a9644017b420d50c, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0, g: 0, b: 0, a: 0}
+    ScarfWidth: 0
+    ScarfAnchor: {x: -0.03125, y: 0.53125}
+    Reaction: 0
+    HeadTop: 0.875
+  - Id: char_chrono
+    DisplayName: Chrono Android
+    Type: 3
+    Color: {r: 0.78431374, g: 0.8156863, b: 0.8627451, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    TrailAnimated: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: year_3026
+    ServerReward: 0
+    UnlockText: 'Time Run: Year 3026'
+    World: {fileID: 0}
+    TrialRuns: 0
+    RunFrames:
+    - {fileID: 21300000, guid: a92d977b090f83e45ad7f83a0852fe60, type: 3}
+    - {fileID: 21300000, guid: 70142fa20a3a76c4ca4ee6dc712b9d6c, type: 3}
+    - {fileID: 21300000, guid: 304a2525e12fdd34ba5bc1c561095cd6, type: 3}
+    - {fileID: 21300000, guid: 6d46227acaa12b44b83ce1348a2f9bcb, type: 3}
+    JumpFrame: {fileID: 21300000, guid: f2e064b3a343f814bbd3fa5bd8f99c2e, type: 3}
+    GhostFrames:
+    - {fileID: 21300000, guid: 960d0afb6bd910f46a0240ef9586ae05, type: 3}
+    - {fileID: 21300000, guid: e490920b594d5f141b77b97c3304057d, type: 3}
+    - {fileID: 21300000, guid: 19e964690cc5ffa4db2a56a67c7a3b2f, type: 3}
+    - {fileID: 21300000, guid: 29cfd7610fb02a241a96fe4a699f5b5d, type: 3}
+    GhostJumpFrame: {fileID: 21300000, guid: 00009878e02910c438ffddc0cc21727b, type: 3}
+    Tintable: 0
+    ScarfColor: {r: 0.22745098, g: 0.9411765, b: 1, a: 1}
+    ScarfWidth: 0.05
     ScarfAnchor: {x: -0.03125, y: 0.53125}
     Reaction: 0
     HeadTop: 0.875
@@ -2435,6 +2577,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2467,6 +2610,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2499,6 +2643,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2531,6 +2676,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2563,6 +2709,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2595,6 +2742,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2627,6 +2775,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2659,6 +2808,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Meet your first ghost
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2691,6 +2841,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Die 50 times
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2723,6 +2874,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Reach 500 m
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2755,6 +2907,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2787,6 +2940,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2819,6 +2973,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2857,6 +3012,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 'Christmas: Snowed Under'
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2894,6 +3050,46 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 'New Year: First Footer'
     World: {fileID: 0}
+    TrialRuns: 0
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: trail_amber
+    DisplayName: Amber
+    Type: 1
+    Color: {r: 1, g: 0.66, b: 0.2, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops:
+    - {r: 0.5411765, g: 0.2901961, b: 0.0627451, a: 1}
+    - {r: 0.9098039, g: 0.5647059, b: 0.11764706, a: 1}
+    - {r: 1, g: 0.7607843, b: 0.2901961, a: 1}
+    - {r: 1, g: 0.8784314, b: 0.5411765, a: 1}
+    - {r: 0.9098039, g: 0.5647059, b: 0.11764706, a: 1}
+    - {r: 0.5411765, g: 0.2901961, b: 0.0627451, a: 1}
+    TrailStriped: 0
+    TrailAnimated: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: fossil_record
+    ServerReward: 0
+    UnlockText: 'Time Run: Fossil Record'
+    World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2926,6 +3122,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2958,6 +3155,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 11400000, guid: 32f96631d9abc2a4fb6dc5337198cc22, type: 2}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -2990,6 +3188,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 11400000, guid: afd1391ce9a54a64c870733c04e4f250, type: 2}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3022,6 +3221,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 11400000, guid: f58f09e462a63e848b5ce3f0e793792d, type: 2}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3054,6 +3254,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 11400000, guid: 9d5a261f48c37a24c8a97663491cbd57, type: 2}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3086,6 +3287,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 11400000, guid: bbd25ae78d683fe4ab5220543b48c50c, type: 2}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3118,6 +3320,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 11400000, guid: 0c887d1fb4e9ce24a9d47212737131a5, type: 2}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3150,6 +3353,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 11400000, guid: 938422f5156e568498df6857245492a5, type: 2}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3182,6 +3386,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 11400000, guid: 3e57a846657d58247af5237df3e5a25b, type: 2}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3214,6 +3419,40 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 11400000, guid: 013a0791b9cd6ac428e36db20b09ad0d, type: 2}
+    TrialRuns: 0
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: world_timerun
+    DisplayName: Time Run
+    Type: 6
+    Color: {r: 0.9490196, g: 0.6039216, b: 0.2901961, a: 1}
+    Sprite: {fileID: 0}
+    TrailStops: []
+    TrailStriped: 0
+    TrailAnimated: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: echo.world.timerun
+    BundleProductId: 
+    PurchaseOnly: 1
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: 
+    ServerReward: 0
+    UnlockText: 
+    World: {fileID: 11400000, guid: defdf57f3bfff8e46869becf31c874e8, type: 2}
+    TrialRuns: 3
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3246,6 +3485,7 @@ MonoBehaviour:
     ServerReward: 1
     UnlockText: 'Community Graveyard: finish a week in the top 10'
     World: {fileID: 11400000, guid: fa21ff342a850b3439fb67770f745657, type: 2}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3278,6 +3518,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3310,6 +3551,7 @@ MonoBehaviour:
     ServerReward: 1
     UnlockText: 'Naughty vs Nice: win as Nice'
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3348,6 +3590,7 @@ MonoBehaviour:
     ServerReward: 1
     UnlockText: 'Naughty vs Nice: win as Naughty'
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3383,6 +3626,7 @@ MonoBehaviour:
     ServerReward: 1
     UnlockText: 'Ghost Duels: finish a season Bronze'
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3418,6 +3662,7 @@ MonoBehaviour:
     ServerReward: 1
     UnlockText: 'Ghost Duels: finish a season Silver'
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3453,6 +3698,7 @@ MonoBehaviour:
     ServerReward: 1
     UnlockText: 'Ghost Duels: finish a season Gold'
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3491,6 +3737,7 @@ MonoBehaviour:
     ServerReward: 1
     UnlockText: 'Ghost Duels: finish a season Phantom or Wraith'
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3523,6 +3770,7 @@ MonoBehaviour:
     ServerReward: 1
     UnlockText: 'One Life: finish your run on Christmas Day 2026'
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3555,6 +3803,7 @@ MonoBehaviour:
     ServerReward: 1
     UnlockText: 'One Life: top 3 on Christmas Day 2026'
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3587,6 +3836,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3619,6 +3869,40 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 'Valentine''s: It''s Complicated'
     World: {fileID: 0}
+    TrialRuns: 0
+    RunFrames: []
+    JumpFrame: {fileID: 0}
+    GhostFrames: []
+    GhostJumpFrame: {fileID: 0}
+    Tintable: 0
+    ScarfColor: {r: 1, g: 1, b: 1, a: 1}
+    ScarfWidth: 0
+    ScarfAnchor: {x: 0, y: 0}
+    Reaction: 0
+    HeadTop: 0.85
+  - Id: grave_fossil
+    DisplayName: Fossil
+    Type: 4
+    Color: {r: 0.84705883, g: 0.7372549, b: 0.53333336, a: 1}
+    Sprite: {fileID: 21300000, guid: 3bf6c8ea12a345247a18ea55403f8e1f, type: 3}
+    TrailStops: []
+    TrailStriped: 0
+    TrailAnimated: 0
+    PaletteStops: []
+    UnlockScore: 0
+    ProductId: 
+    BundleProductId: 
+    PurchaseOnly: 0
+    AdsToUnlock: 0
+    AllAchievements: 0
+    AdPack: 
+    UnlockStat: 0
+    UnlockTarget: 0
+    UnlockAchievement: extinct
+    ServerReward: 0
+    UnlockText: 'Time Run: Extinct'
+    World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3654,6 +3938,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3689,6 +3974,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3724,6 +4010,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: Reach 100 m
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []
@@ -3759,6 +4046,7 @@ MonoBehaviour:
     ServerReward: 0
     UnlockText: 
     World: {fileID: 0}
+    TrialRuns: 0
     RunFrames: []
     JumpFrame: {fileID: 0}
     GhostFrames: []

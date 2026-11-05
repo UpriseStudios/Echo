@@ -37,12 +37,12 @@ namespace Echo.Tests.EditMode
             TestCourses.FlatTier1), 1);
 
         [Test]
-        public void Catalog_HasThirtySinglePlayerAchievements_ThreeHidden_PlusFourOnlineExtras_ABonus_AndSevenSeasonal()
+        public void Catalog_HasThirtySinglePlayerAchievements_ThreeHidden_PlusFourOnlineExtras_SixBonus_AndSevenSeasonal()
         {
-            Assert.AreEqual(42, AchievementCatalog.All.Length);
-            Assert.AreEqual(42, AchievementCatalog.All.Select(d => d.Id).Distinct().Count());
-            CollectionAssert.AreEquivalent(new[] { AchievementIds.PerformanceEnhanced }, AchievementCatalog.All.Where(d => d.Bonus).Select(d => d.Id),
-                "a user decision: outside the Elementals' 30, since power-ups come from rewarded ads");
+            Assert.AreEqual(47, AchievementCatalog.All.Length);
+            Assert.AreEqual(47, AchievementCatalog.All.Select(d => d.Id).Distinct().Count());
+            CollectionAssert.AreEquivalent(new[] { AchievementIds.PerformanceEnhanced }.Concat(AchievementCatalog.TimeRun), AchievementCatalog.All.Where(d => d.Bonus).Select(d => d.Id),
+                "user decisions: outside the Elementals' 30, since power-ups come from rewarded ads and Time Run is sold");
             Assert.AreEqual(30, AchievementCatalog.SinglePlayerCount, "the Elementals need these 30");
             CollectionAssert.AreEquivalent(
                 new[] { AchievementIds.HauntedByStrangers, AchievementIds.PassingThrough, AchievementIds.TopTen, AchievementIds.DailyGrind },

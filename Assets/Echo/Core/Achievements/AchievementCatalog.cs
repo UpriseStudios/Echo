@@ -53,6 +53,13 @@ namespace Echo.Core.Achievements
             // A user revision: a bonus extra, outside the Elementals' 30 (power-ups come from rewarded ads).
             new AchievementDef(PerformanceEnhanced, "Performance Enhanced", "Use 100 power-ups", 100, bonus: true),
 
+            // World: Time Run: bonus extras too (a user decision), since the world is sold.
+            new AchievementDef(TimeTraveller, "Time Traveller", "Reach the Far Future in a single Time Run", bonus: true),
+            new AchievementDef(Year3026, "Year 3026", "Reach 1,500 m in Time Run", bonus: true),
+            new AchievementDef(Extinct, "Extinct", "Die in Dino Land 25 times", 25, bonus: true),
+            new AchievementDef(FossilRecord, "Fossil Record", "Have 10 ghosts on screen at once in Dino Land", bonus: true),
+            new AchievementDef(Paradox, "Paradox", "Get killed by your own ghost in the Far Future", bonus: true),
+
             // Version 2.1, seasonal events: each only during its event, and kept once earned.
             new AchievementDef(TwelveDays, "Twelve Days", "Play the Daily Haunt on 12 different days in December", 12, online: true, season: Christmas),
             new AchievementDef(LeadTheWay, "Lead the Way", "Pass 25 leader ghosts in the Daily Haunt during December", 25, online: true, season: Christmas),
@@ -69,6 +76,9 @@ namespace Echo.Core.Achievements
         public const string Halloween = "halloween";
         public const string Valentines = "valentines";
         public const string Easter = "easter";
+
+        /// <summary>The Time Run world's five, earned only while wearing it.</summary>
+        public static readonly string[] TimeRun = { TimeTraveller, Year3026, Extinct, FossilRecord, Paradox };
 
         /// <summary>The single-player set (all but the online extras): the Elementals need every one of these.</summary>
         public static int SinglePlayerCount

@@ -42,6 +42,7 @@ POINTS = {
     'bad_decisions': 20, 'i_can_fix_this': 15, 'just_one_more': 20,
     'haunted_by_strangers': 25, 'passing_through': 15, 'top_ten': 40, 'daily_grind': 20,
     'performance_enhanced': 30,
+    'time_traveller': 10, 'year_3026': 15, 'extinct': 10, 'fossil_record': 10, 'paradox': 5,
     'twelve_days': 30, 'lead_the_way': 30, 'snowed_under': 30, 'first_footer': 15, 'trick_or_treat': 15,
     'its_complicated': 15, 'egg_hunt': 20,
 }
@@ -181,6 +182,11 @@ def achievement_icons():
         'daily_grind': Icon(violet).sprite('fx_full_moon.png', 32, 40).char('char_gravekeeper', 32, 58),
         'performance_enhanced': Icon((40, 128, 140)).sprite('ui_power_shield.png', 16, 30).sprite('ui_power_phase.png', 32, 26)
             .sprite('ui_power_lantern.png', 48, 30).char('char_hooded', 32, 58, frame='1'),
+        'time_traveller': Icon((190, 110, 50)).sprite('Seasons/timerun_dino_spike.png', 48, 54, (236, 228, 204)).char('char_caveman', 28, 52),
+        'year_3026': Icon((24, 34, 80)).sprite('fx_glow.png', 32, 40, CYAN, 0.6, 1).char('char_chrono', 32, 52),
+        'extinct': Icon((150, 70, 40)).sprite('Seasons/grave_fossil.png', 32, 52, k=2),
+        'fossil_record': Icon((190, 110, 50)).crowd(10, (237, 228, 204)),
+        'paradox': Icon((24, 34, 80)).ghost('char_hooded', 22, 50, (74, 240, 255), 0.9).char('char_hooded', 42, 52),
         'twelve_days': Icon((150, 36, 48)).char('char_santa', 32, 52),
         'lead_the_way': Icon((40, 96, 64)).char('char_rudolph', 32, 52),
         'snowed_under': Icon((60, 110, 160)).sprite('Seasons/christmas_grave.png', 32, 52, k=2),

@@ -59,6 +59,9 @@ namespace Echo.Editor
                     true, Hex(0xE8283A), Hex(0xFFFFFF), Hex(0xE8283A), Hex(0xFFFFFF), Hex(0xE8283A), Hex(0xFFFFFF)),
                 Seasonal(Trail("trail_fireworks", "Fireworks", 0, "", 1f, 0.86f, 0.45f), AchievementIds.FirstFooter, "New Year: First Footer",
                     false, Hex(0xFFD24A), Hex(0xFF5A8A), Hex(0x8A6AFF), Hex(0x4AD8FF), Hex(0x8AFF6A)),
+                // World Time Run doc, phase 4: Fossil Record's amber coin trail.
+                Seasonal(Trail("trail_amber", "Amber", 0, "", 1f, 0.66f, 0.2f), AchievementIds.FossilRecord, "Time Run: Fossil Record",
+                    false, Hex(0x8A4A10), Hex(0xE8901E), Hex(0xFFC24A), Hex(0xFFE08A), Hex(0xE8901E), Hex(0x8A4A10)),
 
                 // A user revision: worlds. The normal one is everyone's; Christmas Town is sold (and free to see every
                 // December); the Haunted Graveyard is the Community Graveyard's reward, never sold.
@@ -72,6 +75,8 @@ namespace Echo.Editor
                 StoreWorld("world_desert", "Desert Dunes", 0xF0B868, ProductIds.WorldDesert, SeasonIds.DesertDunes),
                 StoreWorld("world_volcano", "Volcanic Waste", 0x5A2A22, ProductIds.WorldVolcano, SeasonIds.VolcanicWaste),
                 StoreWorld("world_toytown", "Toy Town", 0xFF8AC8, ProductIds.WorldToyTown, SeasonIds.ToyTown),
+                // World Time Run doc, phase 4: the top price point on its own (never in the Worlds Bundle), 3 free runs first.
+                TimeRunWorld(),
                 new CosmeticItem { Id = "world_graveyard", DisplayName = "Haunted Graveyard", Type = CosmeticType.World, Color = Hex(0x4A6450),
                     ServerReward = true, UnlockText = "Community Graveyard: finish a week in the top 10",
                     World = AssetDatabase.LoadAssetAtPath<SeasonTheme>(SeasonThemes.Dir + "/" + SeasonIds.Graveyard + ".asset") },
@@ -105,6 +110,10 @@ namespace Echo.Editor
                 new CosmeticItem { Id = "grave_heart", DisplayName = "Heart", Type = CosmeticType.Grave, Color = Hex(0xF2607A),
                     UnlockAchievement = AchievementIds.ItsComplicated, UnlockText = "Valentine's: It's Complicated",
                     Sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SeasonArt.HeartGravePath) },
+                // World Time Run doc, phase 4: Extinct's Fossil gravestone, usable in any world.
+                new CosmeticItem { Id = "grave_fossil", DisplayName = "Fossil", Type = CosmeticType.Grave, Color = Hex(0xD8BC88),
+                    UnlockAchievement = AchievementIds.Extinct, UnlockText = "Time Run: Extinct",
+                    Sprite = AssetDatabase.LoadAssetAtPath<Sprite>(SeasonArt.FossilGravePath) },
 
                 Palette("palette_default", "Teal to Red", 0, "", Hex(0x297380), Hex(0x5B3C8C), Hex(0x8C2E3A)),
                 Ads(Palette("palette_mono", "Monochrome", 300, "", Hex(0x5A5A5A), Hex(0x3D3D3D), Hex(0x222222)), "Mono", MonoAds),
@@ -203,6 +212,14 @@ namespace Echo.Editor
         }
 
         // A user revision: a world sold in the store, on its own and in the Worlds Bundle; never won in a mode.
+        static CosmeticItem TimeRunWorld()
+        {
+            CosmeticItem t = StoreWorld(SeasonIds.TimeRun, "Time Run", 0xF29A4A, ProductIds.WorldTimeRun, SeasonIds.TimeRun);
+            t.BundleProductId = "";
+            t.TrialRuns = 3;
+            return t;
+        }
+
         static CosmeticItem StoreWorld(string id, string name, int swatch, string productId, string themeId) => new CosmeticItem
         {
             Id = id, DisplayName = name, Type = CosmeticType.World, Color = Hex(swatch), PurchaseOnly = true,

@@ -1,5 +1,9 @@
+using Echo.Core.Achievements;
+using Echo.Core.Rules;
+using Echo.Game.Cosmetics;
 using Echo.Game.Seasons;
 using Echo.Game.Views;
+using Echo.Services.Analytics;
 using Echo.Game.World;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -105,11 +109,76 @@ namespace Echo.Game.Flow
             if (_graves != null) _graves.SetEras(_equippedGrave != null && !_equippedGrave.Tintable && _equippedGrave.Sprite != null ? null : eras);
         }
 
+        // ---- phase 4: the free trial, the achievements and the analytics, for runs that wear the world (not previews) ----
+
+        bool _timeRunWorn;
+        int _eraReached, _eraLogged, _dinoGhostsMost;
+
+        /// <summary>The worn world is Time Run itself (not the development preview or a forced era).</summary>
+        bool WearingTimeRun => _timeRun != null && !PreviewTimeRun && _forceEra == null;
+
+        CosmeticItem WornWorldItem() => _catalog != null && _save != null ? _catalog.Resolve(_save.Cosmetics.Equipped.World, CosmeticType.World) : null;
+
+        // A fresh run: a free run used if Time Run is worn on trial, and the run's counters reset.
+        void StartTimeRun()
+        {
+            _timeRunWorn = WearingTimeRun;
+            _eraReached = _eraLogged = 0;
+            _dinoGhostsMost = 0;
+            if (!_timeRunWorn) return;
+            CosmeticItem world = WornWorldItem();
+            if (world == null || world.World != _timeRun || !WorldTrial.OnTrial(world, _progress.Best, _save.Cosmetics)) return;
+            int run = WorldTrial.UseRun(_save.Cosmetics);
+            Log(AnalyticsEvents.TimeRunTrialStarted, ("run", run), ("left", WorldTrial.Left(world, _save.Cosmetics)));
+            Save();
+        }
+
+        // Each running frame in Time Run: the furthest era, and the most ghosts on screen in Dino Land (no allocation).
+        void TrackTimeRun(int era)
+        {
+            if (!_timeRunWorn || State != GameState.Running) return;
+            if (era > _eraReached) _eraReached = era;
+            if (era == 0)
+            {
+                int seen = _ghostViews.Visible(_cameraRig.Left, _cameraRig.Right);
+                if (seen > _dinoGhostsMost) _dinoGhostsMost = seen;
+            }
+        }
+
+        // A death in Time Run: the eras reached (logged now rather than mid-run, so nothing allocates while running) and
+        // the achievements, whose rewards (the Caveman, the Chrono Android, the Fossil gravestone, the Amber trail) unlock.
+        void SettleTimeRun()
+        {
+            if (!_timeRunWorn || _run == null) return;
+            // Each era once a run, even if a Continue carries it on.
+            for (int e = _eraLogged + 1; e <= _eraReached; e++)
+                Log(AnalyticsEvents.EraReached, ("era", _timeRun.Eras[e].Title), ("index", e));
+            _eraLogged = _eraReached;
+            int fell = TimeEras.At(_run.Player.X / Echo.Core.Scoring.ScoreRules.SubUnitsPerMetre, _timeRun.Eras.Length);
+            var death = new TimeRunDeath
+            {
+                Distance = _run.Distance,
+                InDinoLand = fell == 0,
+                InFarFuture = fell == _timeRun.Eras.Length - 1,
+                ByOwnGhost = _run.Cause == DeathCause.Ghost && _run.Killer != null && !_run.Killer.Leader,
+                MostGhostsOnScreenInDinoLand = _dinoGhostsMost,
+            };
+            bool any = false;
+            foreach (string id in AchievementRules.OnTimeRunDeath(_progress, death))
+            {
+                ToastAchievement(id);
+                any = true;
+            }
+            if (any) GrantAchievementRewards();
+            Save();
+        }
+
         // Each frame: the era by the simulation's distance; a later one arrives through a time rift.
         void UpdateEra()
         {
             if (_timeRun == null || _run == null) return;
             int era = Mathf.Clamp(ForceEra ?? TimeEras.At(_run.Distance, _timeRun.Eras.Length), 0, _timeRun.Eras.Length - 1);
+            TrackTimeRun(era);
             if (era == _eraShown) return;
             bool later = era > _eraShown;
             _eraShown = era;

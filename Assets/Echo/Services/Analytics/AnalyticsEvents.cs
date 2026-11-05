@@ -39,6 +39,9 @@ namespace Echo.Services.Analytics
         public const string SeasonalAchievement = "seasonal_achievement";
         public const string SeasonalSkinEquipped = "seasonal_skin_equipped";
         public const string WorldEquipped = "world_equipped";           // a user revision: worlds
+        public const string TimeRunTrialStarted = "timerun_trial_started"; // World Time Run doc, phase 4
+        public const string TimeRunPurchased = "timerun_purchased";
+        public const string EraReached = "era_reached";
         public const string IapPurchase = "iap_purchase";
         public const string UnlockAdWatched = "unlock_ad_watched";   // addition: ad-unlocked characters
         // Value-adds doc.

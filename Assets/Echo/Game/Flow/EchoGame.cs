@@ -635,6 +635,7 @@ namespace Echo.Game.Flow
             if (freshRun) _run.AccessoryId = EquippedAccessoryId();
             // An Elementals trial counts down by run; this run keeps the character even if it was the last one.
             if (freshRun) ElementalTrial.UseRun(_save.Cosmetics);
+            if (freshRun) StartTimeRun();
             if (freshRun)
             {
                 _announcedBiome = Biome.Graveyard;
@@ -671,6 +672,7 @@ namespace Echo.Game.Flow
         {
             LogBountyClaim();
             SettlePowerUps();
+            SettleTimeRun();
             SnapshotPrevious();
             SetState(GameState.Dying);
             _diedAt = Time.unscaledTime;
@@ -1655,6 +1657,8 @@ namespace Echo.Game.Flow
             _services.Iap.Purchase(productId, ok =>
             {
                 if (ok) Log(AnalyticsEvents.IapPurchase, ("productId", productId));
+                if (ok && productId == Echo.Services.Iap.ProductIds.WorldTimeRun)
+                    Log(AnalyticsEvents.TimeRunPurchased, ("trialRunsUsed", _save.Cosmetics.WorldTrialUsed));
                 _skins.Refresh();
             });
         }

@@ -151,7 +151,8 @@ namespace Echo.Game.Flow
             if (PreviewTimeRun) return PreviewedTimeRun();
             if (_catalog == null || _save == null || _progress == null) return null;
             CosmeticItem world = _catalog.Resolve(_save.Cosmetics.Equipped.World, CosmeticType.World);
-            return world != null && world.World != null && CosmeticUnlocks.IsOwned(world, _progress.Best, _save.Cosmetics.Owned) ? world.World : null;
+            // Time Run's free runs (phase 4) let it be worn before it is bought.
+            return world != null && world.World != null && WorldTrial.Available(world, _progress.Best, _save.Cosmetics) ? world.World : null;
         }
 
         /// <summary>Whether the backdrop brings its own scenery, and so stands for the whole run.</summary>

@@ -73,6 +73,9 @@ namespace Echo.Game.Cosmetics
         [Tooltip("World only: the look whose backdrop it wears (sky, layers, effects, flyer); null for the normal world.")]
         public Echo.Game.Seasons.SeasonTheme World;
 
+        /// <summary>World Time Run doc, phase 4: free runs before it must be bought (WorldTrial); 0 for none.</summary>
+        public int TrialRuns;
+
         [Header("Character")]
         public Sprite[] RunFrames = new Sprite[0];
         public Sprite JumpFrame;

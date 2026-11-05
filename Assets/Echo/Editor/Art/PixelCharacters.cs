@@ -39,13 +39,13 @@ namespace Echo.Editor.Art
         };
 
         /// <summary>
-        /// Everyone: the base cast, the pack characters in pack order, the Elementals, the seasonal cast, then the modes'
-        /// server rewards.
+        /// Everyone: the base cast, the pack characters in pack order, the Elementals, the seasonal cast, the modes'
+        /// server rewards, then the Time Run world's rewards.
         /// </summary>
         public static readonly PixelCharacter[] All =
             Base.Concat(PixelPacks.All.SelectMany(p => p.Characters)).Concat(PixelElementals.All)
                 .Concat(PixelSeasonalCast.Earned).Concat(PixelSeasonalCast.ChristmasPack.Characters)
-                .Concat(PixelModeCast.Rewards).ToArray();
+                .Concat(PixelModeCast.Rewards).Concat(PixelTimeRunCast.Earned).ToArray();
 
         static Dictionary<char, Color32> Pal(params (char ch, Color32 c)[] entries)
         {

@@ -56,6 +56,13 @@ namespace Echo.Core.Achievements
         // A user revision: a bonus extra, outside the 30 the Elementals need (power-ups come from rewarded ads).
         public const string PerformanceEnhanced = "performance_enhanced";
 
+        // World: Time Run (World Time Run doc, phase 4): bonus extras, earned in the Time Run world (a user decision).
+        public const string TimeTraveller = "time_traveller";
+        public const string Year3026 = "year_3026";
+        public const string Extinct = "extinct";
+        public const string FossilRecord = "fossil_record";
+        public const string Paradox = "paradox";
+
         // Seasonal (seasons doc, version 2.1): only during their event, never towards the 30
         public const string TwelveDays = "twelve_days";
         public const string LeadTheWay = "lead_the_way";

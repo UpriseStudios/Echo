@@ -35,6 +35,9 @@ namespace Echo.Services.Iap
         public const string WorldToyTown = "echo.world.toytown";
         public const string WorldsBundle = "echo.worlds.bundle";
 
+        /// <summary>World Time Run doc, phase 4: the top price point (£1.99), on its own, never in the Worlds Bundle.</summary>
+        public const string WorldTimeRun = "echo.world.timerun";
+
         public static readonly string[] Worlds =
             { WorldChristmas, WorldHalloween, WorldNeon, WorldSunken, WorldAutumn, WorldBeach, WorldDesert, WorldVolcano, WorldToyTown };
 
@@ -47,7 +50,7 @@ namespace Echo.Services.Iap
         {
             PackUndead, PackDungeon, PackCritters, PackSpace, PackRetro, PackRoyal, PackMonsters, PackOddballs,
             SeasonOfEcho, PackChristmas, WorldChristmas, WorldHalloween, WorldNeon, WorldSunken, WorldAutumn,
-            WorldBeach, WorldDesert, WorldVolcano, WorldToyTown, WorldsBundle,
+            WorldBeach, WorldDesert, WorldVolcano, WorldToyTown, WorldsBundle, WorldTimeRun,
         };
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Echo.Core.Achievements;
 using Echo.Core.Rules;
 using Echo.Game.Cosmetics;
 using Echo.Game.Persistence;
@@ -144,6 +145,7 @@ namespace Echo.Game.UI
                     foreach (CosmeticItem item in _catalog.Items)
                         if (item.Type == CosmeticType.Character && !item.PurchaseOnly && !item.AllAchievements && !Seasonal(item)) CharacterCard(characters, item);
                     ElementalsSection();
+                    TimeRunSection();
                     SeasonalSection();
                     break;
 
@@ -214,7 +216,7 @@ namespace Echo.Game.UI
             Header("Seasonal", "earned during their event");
             RectTransform grid = Grid(_characterGridTemplate);
             foreach (CosmeticItem item in _catalog.Items)
-                if (item.Type == CosmeticType.Character && Seasonal(item)) CharacterCard(grid, item);
+                if (item.Type == CosmeticType.Character && Seasonal(item) && !TimeRunReward(item)) CharacterCard(grid, item);
 
             var (name, productId) = SkinPacks.Christmas;
             bool anyOwned = false;
@@ -258,40 +260,68 @@ namespace Echo.Game.UI
             bool owned = CosmeticUnlocks.IsOwned(item, _best, _cosmetics.Owned);
             bool equipped = Equipped(item.Type) == item.Id;
             string price = item.PurchaseOnly ? _price(item.ProductId) : null;
+            // World Time Run doc, phase 4: free runs to try it ("2 free runs left"); worn, a tap buys it.
+            int free = owned ? 0 : WorldTrial.Left(item, _cosmetics);
 
             // A little picture of the world: its sky, far layer and near layer, tinted from its own palette.
             Transform preview = button.transform.Find("Preview");
+            // Time Run's picture is its first era (its own look lives in its eras).
+            Echo.Game.Seasons.SeasonTheme look = item.World != null && item.World.Eras.Length > 0 ? item.World.Eras[0] : item.World;
             if (preview != null)
             {
-                Color sky = item.World != null && item.World.PaletteStops.Length > 0 ? item.World.PaletteStops[0] : item.Color;
+                Color sky = look != null && look.PaletteStops.Length > 0 ? look.PaletteStops[0] : item.Color;
                 preview.GetComponent<Image>().color = sky;
                 var far = preview.Find("Far").GetComponent<Image>();
                 var near = preview.Find("Near").GetComponent<Image>();
-                far.sprite = item.World != null && item.World.FarLayer != null ? item.World.FarLayer : _normalFar;
-                near.sprite = item.World != null && item.World.NearLayer != null ? item.World.NearLayer : _normalNear;
+                far.sprite = look != null && look.FarLayer != null ? look.FarLayer : _normalFar;
+                near.sprite = look != null && look.NearLayer != null ? look.NearLayer : _normalNear;
                 far.color = Color.Lerp(sky, Color.white, 0.45f);
                 near.color = Color.Lerp(sky, Color.black, 0.35f);
-                if (!owned)
+                // A world painted in its own colours (Time Run's eras) shows as drawn.
+                if (look != null && look.FarTint == Color.white)
+                {
+                    far.color = Color.white;
+                    near.color = Color.white;
+                }
+                if (!owned && free == 0)
                 {
                     far.color = Color.Lerp(far.color, Color.grey, 0.25f);
                     near.color = Color.Lerp(near.color, Color.grey, 0.25f);
                 }
             }
             var label = button.GetComponentInChildren<TMP_Text>();
+            string runs = free == 1 ? "1 free run left" : $"{free} free runs left";
             label.text = $"{item.DisplayName}\n<size=72%>" +
-                         (equipped ? "<color=#FFC94A>Equipped</color>" : owned ? "Tap to wear" : item.ServerReward ? item.UnlockText : price ?? "Unavailable") + "</size>";
+                         (free > 0 && equipped ? $"<color=#FFC94A>{runs}</color> · {price ?? "Buy"}"
+                             : free > 0 ? $"{runs} · Try it"
+                             : owned && equipped ? "<color=#FFC94A>Equipped</color>" : owned ? "Tap to wear" : item.ServerReward ? item.UnlockText : price ?? "Unavailable") + "</size>";
 
-            button.interactable = !equipped && (owned || price != null);
+            // Still worn after its free runs (the run falls back to the normal world): it asks to be bought.
+            button.interactable = free > 0 ? (!equipped || price != null) : owned ? !equipped : price != null;
             CosmeticItem captured = item;
             button.onClick.AddListener(() =>
             {
+                bool wearing = Equipped(captured.Type) == captured.Id;
                 if (CosmeticUnlocks.IsOwned(captured, _best, _cosmetics.Owned)) Equip(captured);
+                else if (WorldTrial.Left(captured, _cosmetics) > 0 && !wearing) Equip(captured);
                 else BuyClicked?.Invoke(captured.ProductId);
             });
         }
 
-        // Earned only in an event; Pumpkin also unlocks with ads, so it stays with the main cast.
+        // Earned with an achievement (an event's, or the Time Run world's); Pumpkin also unlocks with ads, so it stays with
+        // the main cast.
         static bool Seasonal(CosmeticItem item) => !string.IsNullOrEmpty(item.UnlockAchievement) && item.AdsToUnlock == 0;
+
+        // World Time Run doc, phase 4: the Caveman and the Chrono Android, earned with the world's achievements.
+        static bool TimeRunReward(CosmeticItem item) => System.Array.IndexOf(AchievementCatalog.TimeRun, item.UnlockAchievement) >= 0;
+
+        void TimeRunSection()
+        {
+            Header("Time Run", "earned in the Time Run world");
+            RectTransform grid = Grid(_characterGridTemplate);
+            foreach (CosmeticItem item in _catalog.Items)
+                if (item.Type == CosmeticType.Character && TimeRunReward(item)) CharacterCard(grid, item);
+        }
 
         void AdPackButton(string pack)
         {

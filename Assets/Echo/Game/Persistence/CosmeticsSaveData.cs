@@ -16,5 +16,8 @@ namespace Echo.Game.Persistence
         /// <summary>The Elementals trial (a user revision): ads towards the next trial, and trial runs left.</summary>
         [JsonProperty("trialAds")] public int TrialAds;
         [JsonProperty("trialRunsLeft")] public int TrialRunsLeft;
+
+        /// <summary>World Time Run doc, phase 4: free Time Run runs used (WorldTrial; a user decision: kept in the save).</summary>
+        [JsonProperty("worldTrialUsed")] public int WorldTrialUsed;
     }
 }

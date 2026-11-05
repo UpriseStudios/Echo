@@ -30,6 +30,26 @@ namespace Echo.Core.Achievements
             return earned;
         }
 
+        /// <summary>World Time Run doc: the Far Future starts at 750 m; Year 3026 asks for 1,500 m.</summary>
+        public const int FarFutureMetres = 750;
+        public const int Year3026Metres = 1500;
+        public const int FossilRecordGhosts = 10;
+
+        /// <summary>
+        /// A death in the Time Run world (World Time Run doc, phase 4), any run that wore it but a replay. A Continue may
+        /// carry the run on, so the distance ones are checked again at its next death. Returns the newly unlocked ids.
+        /// </summary>
+        public static List<string> OnTimeRunDeath(Progress p, in TimeRunDeath d)
+        {
+            var earned = new List<string>();
+            Report(p, AchievementIds.TimeTraveller, d.Distance >= FarFutureMetres ? 1 : 0, earned);
+            Report(p, AchievementIds.Year3026, d.Distance >= Year3026Metres ? 1 : 0, earned);
+            if (d.InDinoLand) Report(p, AchievementIds.Extinct, ProgressOf(p, AchievementIds.Extinct) + 1, earned);
+            Report(p, AchievementIds.FossilRecord, d.MostGhostsOnScreenInDinoLand >= FossilRecordGhosts ? 1 : 0, earned);
+            Report(p, AchievementIds.Paradox, d.InFarFuture && d.ByOwnGhost ? 1 : 0, earned);
+            return earned;
+        }
+
         /// <summary>A committed run. Returns the newly unlocked ids in display order.</summary>
         public static List<string> OnRunEnded(RunSimulation run, CommitResult result, Progress p, int sessionRuns)
         {
