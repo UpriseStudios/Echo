@@ -234,6 +234,7 @@ namespace Echo.Editor
             var background = Child<BackgroundView>(world, "Background");
             Wire(background, "_material", material);
             Wire(background, "_litMaterial", EnsureLitSpriteMaterial());
+            Wire(background, "_fade", AssetDatabase.LoadAssetAtPath<Sprite>(SeasonArt.PathFor(Echo.Game.Seasons.SeasonIds.EraFuture, "fade")));
             Wire(background, "_far", LoadSprite(EchoArt.MountainsPath));
             // Themed Biomes: the Graveyard is the near layer at the start, then the Castle, then Space.
             Wire(background, "_near", LoadSprite(EchoArt.GraveyardPath));
@@ -516,6 +517,12 @@ namespace Echo.Editor
             Wire(eraPreload, "_litMaterial", EnsureLitSpriteMaterial());
             Wire(game, "_eraPreload", eraPreload);
             Wire(game, "_futureLights", futureLights);
+            // Art pass phase 5: the Far Future's rain splashes and glowing motes.
+            var futureFx = Child<FutureFxView>(world, "FutureFx");
+            Wire(futureFx, "_material", material);
+            Wire(futureFx, "_splash", AssetDatabase.LoadAssetAtPath<Sprite>(SeasonArt.PathFor(Echo.Game.Seasons.SeasonIds.EraFuture, "splash")));
+            Wire(futureFx, "_mote", LoadSprite(EchoArt.GlowPath));
+            Wire(game, "_futureFx", futureFx);
             Wire(game, "_futureVolume", AddFutureVolume());
             Wire(game, "_eggHunt", eggHunt);
             WireArray(game, "_seasonThemes", SeasonThemes.Build());

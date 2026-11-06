@@ -29,6 +29,7 @@ namespace Echo.Game.Flow
         /// <summary>The backdrop and floor are drawn at half resolution now (Dino Land), for tests.</summary>
         public bool HalfResolutionShown => _halfResolution && _lowRes != null && _lowRes.On;
         [SerializeField] FutureLightsView _futureLights;
+        [SerializeField] FutureFxView _futureFx;
         [Tooltip("The Far Future's stronger bloom, weighted in with full effects.")]
         [SerializeField] Volume _futureVolume;
 
@@ -246,12 +247,18 @@ namespace Echo.Game.Flow
             _cameraRig.SetGlow(full);
             if (_futureVolume != null) _futureVolume.weight = _highDefinition && full ? 1f : 0f;
             if (_futureLights != null) _futureLights.Set(_highDefinition, full);
+            // Art pass phase 5: the wet floor reflects only with full effects; the splashes and motes stay either way.
+            if (_background != null)
+                _background.SetFloorGlass(_highDefinition && _backdrop != null && _backdrop.Reflections, full,
+                    _backdrop != null ? _backdrop.FloorBacking : Color.black);
+            if (_futureFx != null) _futureFx.SetOn(_highDefinition);
         }
 
         void RenderFuture()
         {
             if (!_highDefinition) return;
             if (_futureLights != null) _futureLights.Render(_cameraRig.Left, _cameraRig.Right, _cameraRig.Bottom, _cameraRig.Height, Time.time);
+            if (_futureFx != null) _futureFx.Render(_cameraRig.Left, _cameraRig.Right, _cameraRig.Bottom, _cameraRig.Height, Time.time);
             WatchFrameRate();
         }
 

@@ -155,3 +155,5 @@ MonoBehaviour:
   DuskFrom: 640
   DuskTo: 880
   DuskShade: {r: 0.6039216, g: 0.5411765, b: 0.6901961, a: 1}
+  Reflections: 0
+  FloorBacking: {r: 0, g: 0, b: 0, a: 1}

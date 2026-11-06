@@ -142,5 +142,9 @@ namespace Echo.Game.Seasons
         [Tooltip("Dusk falling across the era (Today): between these distances in metres the scenery dims towards DuskShade; equal: none.")]
         public float DuskFrom, DuskTo;
         public Color DuskShade = Color.white;
+        [Tooltip("Art pass phase 5: the city reflected in a wet glass floor (the Far Future), with full effects only.")]
+        public bool Reflections;
+        [Tooltip("The colour under a glass floor: what shows through it without reflections, and what they fade into.")]
+        public Color FloorBacking = Color.black;
     }
 }

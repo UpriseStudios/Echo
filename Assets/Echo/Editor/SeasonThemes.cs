@@ -359,6 +359,8 @@ namespace Echo.Editor
             future.FlyerEvery = 14f;
             future.FlyerSpeed = 5f;
             future.GhostGlow = true;                     // holograms glow too
+            future.Reflections = true;                   // art pass phase 5: the city in the wet glass floor
+            future.FloorBacking = Hex(0x070A18);
 
             // Art pass phase 1: the fifth era, the Far Far Future (1200 m on). Until phase 6 gives it its real-time 3D
             // backdrop it wears the Far Future's look, so the era system can be tried end to end.
@@ -376,6 +378,8 @@ namespace Echo.Editor
             farFar.NemesisTint = future.NemesisTint;
             farFar.GhostHologram = future.GhostHologram;
             farFar.GhostGlow = future.GhostGlow;
+            farFar.Reflections = future.Reflections;
+            farFar.FloorBacking = future.FloorBacking;
 
             SeasonTheme world = Plain(Load(SeasonIds.TimeRun), "Time Run");
             world.Eras = new[] { dino, medieval, today, future, farFar };
@@ -528,6 +532,8 @@ namespace Echo.Editor
             t.Teeth = null;
             t.DuskFrom = t.DuskTo = 0f;
             t.DuskShade = Color.white;
+            t.Reflections = false;
+            t.FloorBacking = Color.black;
             return t;
         }
 

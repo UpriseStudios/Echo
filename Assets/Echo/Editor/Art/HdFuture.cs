@@ -174,6 +174,27 @@ namespace Echo.Editor.Art
             return c.ToPixelCanvas();
         }
 
+        /// <summary>A rain splash on the floor, 32 x 32: a soft ring (scaled flat as it opens), white for its tint.</summary>
+        public static PixelCanvas Splash()
+        {
+            var c = new HdCanvas(32, 32);
+            c.Fill((x, y) =>
+            {
+                float d = Mathf.Sqrt((x - 15.5f) * (x - 15.5f) + (y - 15.5f) * (y - 15.5f)) / 15.5f;
+                float ring = Mathf.Clamp01(1f - Mathf.Abs(d - 0.8f) / 0.2f);
+                return new Color(1f, 1f, 1f, ring);
+            });
+            return c.ToPixelCanvas();
+        }
+
+        /// <summary>The reflection's fade, 4 x 128: clear at the top to opaque at the bottom, white for its tint.</summary>
+        public static PixelCanvas Fade()
+        {
+            var c = new HdCanvas(4, 128);
+            c.Fill((x, y) => new Color(1f, 1f, 1f, Mathf.SmoothStep(0f, 1f, 1f - y / 127f)));
+            return c.ToPixelCanvas();
+        }
+
         /// <summary>A rain streak, 3 x 48, brightest in the middle (tinted by the effect's colours).</summary>
         public static PixelCanvas Rain()
         {
@@ -189,8 +210,9 @@ namespace Echo.Editor.Art
         /// <summary>A neon grid floor tile, 128 x 128 (1 unit at 128 px per unit): dark glass with glowing lines on two edges.</summary>
         public static PixelCanvas GridFloor()
         {
+            // Art pass phase 5: wet glass, part-transparent, so the city's reflection shows through between the lines.
             var c = new HdCanvas(128, 128);
-            c.Fill((x, y) => Color.Lerp(C(0x080C1E), C(0x0E1430), y / 127f));
+            c.Fill((x, y) => { Color g = Color.Lerp(C(0x080C1E), C(0x0E1430), y / 127f); g.a = 0.38f; return g; });
             for (int k = 0; k < 128; k++)
                 for (int d = 0; d < 10; d++)
                 {

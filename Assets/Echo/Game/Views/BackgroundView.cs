@@ -63,6 +63,11 @@ namespace Echo.Game.Views
             for (int i = 0; i < MaxExtraLayers; i++) _extra[i] = Layer("Extra" + i, null, -22);
             for (int i = 0; i < _frames.Length; i++) _frames[i] = Layer("Frames" + i, null, -22, false);
             for (int i = 0; i < MaxTraffic; i++) _traffic[i] = Layer("Traffic" + i, null, -22, false);
+            _backing = Layer("FloorBacking", BoxSprite.Get(), -6, false);
+            _backing.enabled = false;
+            for (int i = 0; i < Reflected; i++) _reflections[i] = Layer("Reflection" + i, null, -5);
+            _reflectionFade = Layer("ReflectionFade", _fade, -4, false);
+            _reflectionFade.enabled = false;
         }
 
         /// <summary>A backdrop's extra layers (null or empty: none).</summary>
@@ -93,6 +98,76 @@ namespace Echo.Game.Views
                     f.sortingOrder = l != null ? l.Order : -22;
                 }
             }
+        }
+
+        // Art pass phase 5: the Far Future's wet floor. A solid backing under its glass floor (always, so reduced effects
+        // still show a floor), and with full effects the city mirrored below the floor line, fading into the backing with
+        // depth: the far and near layers and the drifting extra layers, upside down, at their own parallax.
+        const int Reflected = MaxExtraLayers + 2;
+        const float ReflectionDepth = 4f;
+        static readonly Color ReflectionTint = new Color(0.8f, 0.86f, 1f, 0.9f);
+        readonly SpriteRenderer[] _reflections = new SpriteRenderer[Reflected];
+        SpriteRenderer _backing, _reflectionFade;
+        [Tooltip("A vertical fade (transparent to opaque), stretched under the reflections so they fade with depth.")]
+        [SerializeField] Sprite _fade;
+        bool _floorGlass, _reflect;
+        Color _floorBacking = Color.black;
+
+        /// <summary>A glass floor with its backing, and the reflections in it (full effects only).</summary>
+        public void SetFloorGlass(bool glass, bool reflections, Color backing)
+        {
+            _floorGlass = glass;
+            _reflect = glass && reflections;
+            _floorBacking = backing;
+            if (_backing != null) _backing.enabled = glass;
+            if (_reflectionFade != null) _reflectionFade.enabled = _reflect;
+            foreach (SpriteRenderer r in _reflections) if (r != null && !_reflect) r.enabled = false;
+        }
+
+        /// <summary>Reflections drawn now (tests).</summary>
+        public int ReflectionsShown
+        {
+            get
+            {
+                int n = 0;
+                foreach (SpriteRenderer sr in _reflections) if (sr != null && sr.enabled) n++;
+                return n;
+            }
+        }
+
+        /// <summary>The solid backing under a glass floor is drawn (tests).</summary>
+        public bool FloorBackingShown => _backing != null && _backing.enabled;
+
+        // A layer's mirror image: the same tiles, upside down about the floor line.
+        void Reflect(int k, SpriteRenderer source)
+        {
+            SpriteRenderer r = _reflections[k];
+            if (r == null) return;
+            r.enabled = _reflect && source != null && source.enabled && source.sprite != null;
+            if (!r.enabled) return;
+            r.sprite = source.sprite;
+            r.drawMode = source.drawMode;
+            r.size = source.size;
+            r.sharedMaterial = source.sharedMaterial;
+            Color c = source.color;
+            r.color = new Color(c.r * ReflectionTint.r, c.g * ReflectionTint.g, c.b * ReflectionTint.b, c.a * ReflectionTint.a);
+            Vector3 p = source.transform.localPosition, s = source.transform.localScale;
+            r.transform.localPosition = new Vector3(p.x, -p.y - 0.06f, 0f);
+            r.transform.localScale = new Vector3(s.x, -s.y, 1f);
+        }
+
+        void PlaceFloor(float cameraX, float viewWidth, float viewBottom)
+        {
+            if (!_floorGlass || _backing == null) return;
+            float depth = Mathf.Max(1f, -viewBottom + 1f), w = viewWidth + 4f;
+            _backing.transform.localPosition = new Vector3(cameraX - w / 2f, -depth, 0f);
+            _backing.transform.localScale = new Vector3(w, depth, 1f);
+            _backing.color = _floorBacking;
+            if (!_reflect || _reflectionFade == null) return;
+            Vector2 f = _fade.bounds.size;
+            _reflectionFade.transform.localPosition = new Vector3(cameraX - w / 2f, -0.06f, 0f);
+            _reflectionFade.transform.localScale = new Vector3(w / f.x, -ReflectionDepth / f.y, 1f);
+            _reflectionFade.color = _floorBacking;
         }
 
         // Art pass phase 4: dusk falling across an era (Today): the scenery dims towards a shade; lights and skies don't.
@@ -226,6 +301,9 @@ namespace Echo.Game.Views
             bannerTint.a = banners * (0.92f + 0.08f * Mathf.Sin(Time.time * 11f));
             Place(_bannerLayer, _castleBanners, cameraX, viewWidth, _nearParallax, _nearScale, bannerTint);
 
+            Reflect(0, _farLayer);
+            Reflect(1, _nearLayer);
+            PlaceFloor(cameraX, viewWidth, viewBottom);
             if (_extraLayers != null)
                 for (int i = 0; i < MaxExtraLayers && i < _extraLayers.Length; i++)
                 {
@@ -238,6 +316,9 @@ namespace Echo.Game.Views
                     float left = Place(_extra[i], l.Sprite, cameraX, viewWidth, l.Parallax, 1f, tint);
                     PlaceFrames(i, l, left, cameraX, viewWidth);
                     if (i == _trafficLayer) PlaceTraffic(l, cameraX, viewWidth);
+                    // The sky stays a sky: only layers that drift are mirrored in the floor.
+                    if (l.Parallax > 0f) Reflect(2 + i, _extra[i]);
+                    else if (_reflections[2 + i] != null) _reflections[2 + i].enabled = false;
                 }
 
             if (_planetSprite != null && _planet != null)

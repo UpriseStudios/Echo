@@ -319,6 +319,11 @@ namespace Echo.Tests.PlayMode
             Assert.IsTrue(game.FullEffects);
             Assert.AreEqual(6, lights.LightsOn, "a global light and five neon pools");
             Assert.IsTrue(rig.GlowOn, "bloom");
+            // Art pass phase 5: the city reflected in the wet glass floor, rain splashes and glowing motes.
+            var futureFx = Object.FindAnyObjectByType<FutureFxView>();
+            Assert.Greater(background.ReflectionsShown, 2, "the far, near and drifting layers mirrored in the floor");
+            Assert.IsTrue(background.FloorBackingShown);
+            Assert.AreEqual(FutureFxView.Splashes + FutureFxView.Motes, futureFx.Shown, "splashes and motes");
 
             // Reduced effects (a weaker phone): no bloom, one light, the same world.
             game.WeakDeviceOverride = true;
@@ -326,6 +331,8 @@ namespace Echo.Tests.PlayMode
             Assert.AreEqual(1, lights.LightsOn);
             Assert.IsFalse(rig.GlowOn);
             Assert.IsTrue(game.HighDefinitionShown, "still HD");
+            Assert.AreEqual(0, background.ReflectionsShown, "no reflections with reduced effects");
+            Assert.IsTrue(background.FloorBackingShown, "but the floor stays solid");
             yield return ScreenCaptureTests.Capture("timerun_era4_reduced");
             game.WeakDeviceOverride = false;
             Assert.AreEqual(6, lights.LightsOn);
@@ -340,6 +347,9 @@ namespace Echo.Tests.PlayMode
             Assert.AreEqual(0, lights.LightsOn);
             Assert.IsFalse(runner.Future);
             Assert.AreEqual(CameraRig.PixelsPerUnit, SimUnits.SnapPerUnit);
+            Assert.IsFalse(background.FloorBackingShown, "a glass floor only in the future");
+            Assert.AreEqual(0, background.ReflectionsShown);
+            Assert.AreEqual(0, futureFx.Shown);
             game.ForceEra = null;
             game.PreviewTimeRun = false;
             game.TickFrame(Dt, false);

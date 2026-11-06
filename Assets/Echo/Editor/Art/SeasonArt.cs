@@ -216,6 +216,8 @@ namespace Echo.Editor.Art
             EchoArt.Write(PathFor(future, Back), HdFuture.Back());
             EchoArt.Write(PathFor(future, Moons), HdFuture.Moons());
             EchoArt.Write(PathFor(future, Floor), HdFuture.GridFloor());
+            EchoArt.Write(PathFor(future, "splash"), HdFuture.Splash());
+            EchoArt.Write(PathFor(future, "fade"), HdFuture.Fade());
 
             foreach (var e in Eras)
             {
@@ -271,6 +273,8 @@ namespace Echo.Editor.Art
             EchoArt.ImportSprite(PathFor(future, Moons), HdFuture.Ppu, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
             EchoArt.ImportSprite(PathFor(future, Sky), 32f, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
             EchoArt.ImportSprite(PathFor(future, Floor), 128f, new Vector2(0f, 1f), default, TextureWrapMode.Repeat, smooth);
+            EchoArt.ImportSprite(PathFor(future, "splash"), 32f, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, smooth);
+            EchoArt.ImportSprite(PathFor(future, "fade"), 32f, new Vector2(0f, 0f), default, TextureWrapMode.Clamp, smooth);
             EchoArt.ImportSprite(FlyerPath(future), HdFuture.Ppu, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, smooth);
             EchoArt.ImportSprite(EffectPath(future, 0), HdFuture.Ppu, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, smooth);
 
