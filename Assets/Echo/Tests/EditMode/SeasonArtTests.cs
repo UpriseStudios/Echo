@@ -178,11 +178,12 @@ namespace Echo.Tests.EditMode
         /// </summary>
         [TestCase(SeasonIds.EraDino)]
         [TestCase(SeasonIds.EraMedieval)]
+        [TestCase(SeasonIds.EraToday)]
         public void ARedoneEra_WearsOnlyItsOwnArt(string id)
         {
             SeasonTheme era = Themes().Find(x => x.Id == id);
             var sprites = new List<Sprite> { era.FarLayer, era.NearLayer, era.Floor, era.FloorTop, era.Ceiling, era.Gap, era.Spike, era.Flyer };
-            foreach (ExtraLayer l in era.ExtraLayers) { sprites.Add(l.Sprite); sprites.AddRange(l.Frames); }
+            foreach (ExtraLayer l in era.ExtraLayers) { sprites.Add(l.Sprite); sprites.AddRange(l.Frames); sprites.AddRange(l.Traffic); }
             sprites.AddRange(era.GapWheel);
             foreach (Sprite s in sprites)
             {

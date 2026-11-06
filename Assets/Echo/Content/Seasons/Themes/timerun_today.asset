@@ -15,22 +15,19 @@ MonoBehaviour:
   Id: timerun_today
   Title: Today
   PaletteStops:
-  - {r: 0.22745098, g: 0.101960786, b: 0.3529412, a: 1}
-  - {r: 0.3529412, g: 0.16470589, b: 0.41568628, a: 1}
-  - {r: 0.101960786, g: 0.16470589, b: 0.3529412, a: 1}
-  PaletteBlend: 0.85
-  FarLayer: {fileID: 21300000, guid: 345a817807769174fa20a2d8dce753b9, type: 3}
-  NearLayer: {fileID: 21300000, guid: 095a64e7b09910f49b69694a3cb088ad, type: 3}
-  FarTint: {r: 0.41568628, g: 0.3529412, b: 0.72156864, a: 1}
-  NearTint: {r: 0.101960786, g: 0.09411765, b: 0.1882353, a: 1}
-  FloorColour: {r: 0.41568628, g: 0.45490196, b: 0.5803922, a: 1}
-  HazardColour: {r: 1, g: 0.8784314, b: 0.2901961, a: 1}
-  Effect: 1
-  EffectSprites:
-  - {fileID: 21300000, guid: a5c0db9f8ddf4294b913230ad75ec1a6, type: 3}
-  EffectColours:
-  - {r: 0.6, g: 0.95, b: 1, a: 0.55}
-  - {r: 1, g: 0.6, b: 0.95, a: 0.45}
+  - {r: 0.54901963, g: 0.76862746, b: 0.9411765, a: 1}
+  - {r: 0.54901963, g: 0.76862746, b: 0.9411765, a: 1}
+  - {r: 0.54901963, g: 0.76862746, b: 0.9411765, a: 1}
+  PaletteBlend: 1
+  FarLayer: {fileID: 21300000, guid: 396efad2aa97bb642a95b6fc4060fd45, type: 3}
+  NearLayer: {fileID: 21300000, guid: 19ee8acbd4d1ccf40ac179fabe09f277, type: 3}
+  FarTint: {r: 1, g: 1, b: 1, a: 1}
+  NearTint: {r: 1, g: 1, b: 1, a: 1}
+  FloorColour: {r: 0.2901961, g: 0.30588236, b: 0.34509805, a: 1}
+  HazardColour: {r: 1, g: 0.47843137, b: 0.101960786, a: 1}
+  Effect: 0
+  EffectSprites: []
+  EffectColours: []
   EffectCount: 60
   EffectFall: 9
   EffectSway: 0
@@ -42,10 +39,10 @@ MonoBehaviour:
   FireworksPerMinute: 6
   ResetShowSeconds: 0
   ResetShowToast: 
-  Flyer: {fileID: 21300000, guid: 9ff9e82838512a34ea54e55c7bcf5d3a, type: 3}
-  FlyerColour: {r: 0.08, g: 0.04, b: 0.16, a: 0.85}
-  FlyerEvery: 30
-  FlyerSpeed: 4
+  Flyer: {fileID: 21300000, guid: 5e727a6309ec79a43823f9c16d87dffc, type: 3}
+  FlyerColour: {r: 1, g: 1, b: 1, a: 1}
+  FlyerEvery: 20
+  FlyerSpeed: 1.6
   Spike: {fileID: 21300000, guid: 7bbfea7c0fbb6004c809e14592f5ff51, type: 3}
   Block: {fileID: 21300000, guid: ce76ced3a27ca4d4bb508702a462e5bc, type: 3}
   GroundTop: {fileID: 0}
@@ -63,31 +60,98 @@ MonoBehaviour:
   Eras: []
   EraLabel: 2026
   Gap: {fileID: 21300000, guid: 5a5764067feb5ab4ab78fdde015d5ccb, type: 3}
-  Coin: {fileID: 0}
+  Coin: {fileID: 21300000, guid: 060b2910ba8f89c4098e993d89c18d41, type: 3}
   GhostTint: {r: 0, g: 0, b: 0, a: 0}
   NemesisTint: {r: 0, g: 0, b: 0, a: 0}
   GhostGlow: 1
   GhostHologram: 0
   ExtraLayers:
+  - Sprite: {fileID: 21300000, guid: a9ef6df4fdd06454bbbd6be64720a18d, type: 3}
+    Parallax: 0
+    Order: -30
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+    Frames: []
+    FramesAt: {x: 0, y: 0}
+    FramesPerSecond: 6
+    FadeFrom: 0
+    FadeTo: 0
+    Traffic: []
+    TrafficY: 0
+    TrafficSpeed: 3
+    TrafficCount: 0
+  - Sprite: {fileID: 21300000, guid: 55f9017c3ab05af41985af8c21878f37, type: 3}
+    Parallax: 0
+    Order: -29
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+    Frames: []
+    FramesAt: {x: 0, y: 0}
+    FramesPerSecond: 6
+    FadeFrom: 640
+    FadeTo: 880
+    Traffic: []
+    TrafficY: 0
+    TrafficSpeed: 3
+    TrafficCount: 0
   - Sprite: {fileID: 21300000, guid: 5f8d2ff290c37b049b91976128be1403, type: 3}
-    Parallax: 0.07
+    Parallax: 0.06
     Order: -22
     Tint: {r: 1, g: 1, b: 1, a: 1}
     Frames: []
     FramesAt: {x: 0, y: 0}
     FramesPerSecond: 6
+    FadeFrom: 0
+    FadeTo: 0
+    Traffic: []
+    TrafficY: 0
+    TrafficSpeed: 3
+    TrafficCount: 0
   - Sprite: {fileID: 21300000, guid: 0e3ec9c971a5bdf45897ef1807392775, type: 3}
     Parallax: 0.27
     Order: -20
     Tint: {r: 1, g: 1, b: 1, a: 1}
+    Frames:
+    - {fileID: 21300000, guid: d6339be875cb2e947b09523cab9b983c, type: 3}
+    - {fileID: 21300000, guid: 0629c165ee57d7c4091aec6333bfa167, type: 3}
+    - {fileID: 21300000, guid: 9bb291b6fa2d9ae48921dffe680d8311, type: 3}
+    - {fileID: 21300000, guid: 1dc8c559b4271de44a322fd9b1523236, type: 3}
+    FramesAt: {x: 13.125, y: 3.5}
+    FramesPerSecond: 0.5
+    FadeFrom: 0
+    FadeTo: 0
+    Traffic:
+    - {fileID: 21300000, guid: 783dbf7d3c022834cb5f00dc601056c1, type: 3}
+    - {fileID: 21300000, guid: 8b88ea2de5bf8cd4597480d19967885a, type: 3}
+    - {fileID: 21300000, guid: 66e19b2535f40d142b360707b1a50f4b, type: 3}
+    - {fileID: 21300000, guid: 0fc7c2aeb0fe66344bd31beea6d13f7d, type: 3}
+    - {fileID: 21300000, guid: 711e5d690e4337f46a66e94ae845f2a1, type: 3}
+    - {fileID: 21300000, guid: 55f0c3c2a1ea7c84ea466393e36aedfa, type: 3}
+    TrafficY: 2.5625
+    TrafficSpeed: 3.2
+    TrafficCount: 8
+  - Sprite: {fileID: 21300000, guid: c877716655ab78b4ea0188c9b9363fd7, type: 3}
+    Parallax: 0.4
+    Order: -18
+    Tint: {r: 1, g: 1, b: 1, a: 1}
     Frames: []
     FramesAt: {x: 0, y: 0}
     FramesPerSecond: 6
-  Floor: {fileID: 0}
+    FadeFrom: 700
+    FadeTo: 880
+    Traffic: []
+    TrafficY: 0
+    TrafficSpeed: 3
+    TrafficCount: 0
+  Floor: {fileID: 21300000, guid: acc2f754c6d310041bf52135590ecf26, type: 3}
   HighDefinition: 0
   HalfResolution: 0
-  FloorTop: {fileID: 0}
-  Ceiling: {fileID: 0}
-  GapWheel: []
-  GapWheelFps: 8
+  FloorTop: {fileID: 21300000, guid: e2b14218e967ac2469ad7205cd39f7dc, type: 3}
+  Ceiling: {fileID: 21300000, guid: 61a14b57767aff14da2e8f5ac0b7fb11, type: 3}
+  GapWheel:
+  - {fileID: 21300000, guid: dcd56f6a9767b044aa65bc9f07ffcadf, type: 3}
+  - {fileID: 21300000, guid: fece8ee8939e8f4458211ef6a73a2fc0, type: 3}
+  GapWheelFps: 2
   FlyerFlap: {fileID: 0}
+  Teeth: {fileID: 21300000, guid: ba143b29430957847baac39c72223478, type: 3}
+  DuskFrom: 640
+  DuskTo: 880
+  DuskShade: {r: 0.6039216, g: 0.5411765, b: 0.6901961, a: 1}

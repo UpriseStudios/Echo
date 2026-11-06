@@ -77,3 +77,7 @@ MonoBehaviour:
   GapWheel: []
   GapWheelFps: 8
   FlyerFlap: {fileID: 0}
+  Teeth: {fileID: 0}
+  DuskFrom: 0
+  DuskTo: 0
+  DuskShade: {r: 1, g: 1, b: 1, a: 1}

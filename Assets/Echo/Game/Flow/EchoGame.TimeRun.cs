@@ -217,6 +217,8 @@ namespace Echo.Game.Flow
             if (_background != null)
             {
                 _background.SetExtraLayers(backdrop != null ? backdrop.ExtraLayers : null);
+                _background.SetDusk(backdrop != null ? backdrop.DuskFrom : 0f, backdrop != null ? backdrop.DuskTo : 0f,
+                    backdrop != null ? backdrop.DuskShade : Color.white);
                 _background.SetHighDefinition(_highDefinition);
             }
             _runnerView.SetFuture(_highDefinition);

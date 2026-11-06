@@ -137,5 +137,10 @@ namespace Echo.Game.Seasons
         public float GapWheelFps = 8f;
         [Tooltip("The flyer's second frame, swapped in to beat its wings (Medieval's dragon); null glides.")]
         public Sprite FlyerFlap;
+        [Tooltip("Art pass phase 4: the teeth under an era's hanging ceilings (Today's anti-climb spikes); null uses its spike upside down.")]
+        public Sprite Teeth;
+        [Tooltip("Dusk falling across the era (Today): between these distances in metres the scenery dims towards DuskShade; equal: none.")]
+        public float DuskFrom, DuskTo;
+        public Color DuskShade = Color.white;
     }
 }

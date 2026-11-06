@@ -133,7 +133,8 @@ namespace Echo.Tests.PlayMode
             float overhangAt = -1f;
             for (int c = 0; overhangAt < 0f && Echo.Game.Views.SimUnits.ToWorld(course.ChunkStartX(c)) < 290f; c++)
                 if (course.ChunkAt(c).Ceilings.Length > 0) overhangAt = Echo.Game.Views.SimUnits.ToWorld(course.ChunkStartX(c) + course.ChunkAt(c).Ceilings[0].X);
-            bool overhangShot = false;
+            bool overhangShot = false, duskShot = false;
+            var background = Object.FindAnyObjectByType<BackgroundView>();
             for (int i = 0; i < 90000 && !game.ReplayEnded; i++)
             {
                 game.TickFrame(Dt, false);
@@ -141,6 +142,15 @@ namespace Echo.Tests.PlayMode
                 {
                     overhangShot = true;
                     yield return ScreenCaptureTests.Capture("timerun_dino_overhang");
+                }
+                // Today turns to dusk across its era: by 880 m the dusk sky and the street's lights have faded in.
+                if (!duskShot && era == 2 && game.CurrentReplay.Run.Distance >= 885)
+                {
+                    duskShot = true;
+                    Assert.Greater(background.ExtraAlpha(1), 0.95f, "the dusk sky");
+                    Assert.Greater(background.ExtraAlpha(4), 0.95f, "the lights");
+                    Assert.Less(background.Dusk.g, 0.65f, "the city has dimmed");
+                    yield return ScreenCaptureTests.Capture("timerun_today_dusk");
                 }
                 // The next era is warmed from 240 m into each one, and only then.
                 int metres = game.CurrentReplay.Run.Distance, into = metres - era * 300;
@@ -166,6 +176,7 @@ namespace Echo.Tests.PlayMode
                 if (i % 60 == 0) yield return null;
             }
             Assert.Greater(preloads, 0, "the next era was warmed before its boundary");
+            Assert.IsTrue(duskShot, "dusk came");
             Assert.IsTrue(game.ReplayEnded);
             Assert.AreEqual(4, rifts, "a rift into each later era");
             CollectionAssert.AreEqual(new[] { "1200 AD", "2026", "3026", "10,000 AD" }, labels);
@@ -282,10 +293,17 @@ namespace Echo.Tests.PlayMode
             Assert.IsFalse(game.HalfResolutionShown, "16-bit: the full pixel grid");
             Assert.IsTrue(rig.PixelPerfect);
 
-            // 32-bit Today: the neon city with two extra parallax layers.
+            // 32-bit Today (art pass phase 4): its own city by day (dusk and the lights fade in later in the era), traffic on
+            // the flyover and a billboard cycling its adverts.
             game.ForceEra = 2;
             game.TickFrame(Dt, false);
-            Assert.AreEqual(2, background.ExtraLayersShown, "a distant skyline and a mid-distance block");
+            Assert.IsTrue(Era(game.ActiveBackdrop.FarLayer, SeasonIds.EraToday), "its own towers, not the neon city");
+            Assert.AreEqual(3, background.ExtraLayersShown, "by day: the sky, the distant skyline and the flyover");
+            Assert.Greater(background.TrafficShown, 4, "traffic on the flyover");
+            Assert.AreEqual(4, game.ActiveBackdrop.ExtraLayers[3].Frames.Length, "a billboard cycling four adverts");
+            Assert.AreEqual(Color.white, background.Dusk, "daytime on the title");
+            Assert.IsTrue(Era(course.CeilingAt(100), SeasonIds.EraToday), "scaffolding");
+            Assert.AreEqual(2, course.GapWheelAt(100).Length, "a blinking roadworks barrier");
             Assert.IsFalse(game.HighDefinitionShown);
 
             // The Far Future in HD: full resolution, lit, bloom and lights, the runner's glow and trail, the neon grid floor.

@@ -168,7 +168,7 @@ namespace Echo.Editor.Art
         {
             (Game.Seasons.SeasonIds.EraDino, PixelTimeRun.RockSpike, PixelTimeRun.CliffBlock, PixelDino.Gap, PixelTimeRun.SlabGrave, PixelTimeRun.AmberCoin),
             (Game.Seasons.SeasonIds.EraMedieval, PixelMedieval.Stake, PixelTimeRun.PortcullisBlock, PixelMedieval.Millstream, null, PixelMedieval.Groat),
-            (Game.Seasons.SeasonIds.EraToday, PixelTimeRun.ConeSpike, PixelTimeRun.BillboardBlock, PixelTimeRun.RooftopGap, PixelTimeRun.ModernGrave, null),
+            (Game.Seasons.SeasonIds.EraToday, PixelTimeRun.ConeSpike, PixelTimeRun.BillboardBlock, PixelToday.Roadworks, PixelTimeRun.ModernGrave, PixelToday.PoundCoin),
             (Game.Seasons.SeasonIds.EraFuture, PixelTimeRun.EnergySpike, PixelTimeRun.HoverBlock, PixelTimeRun.VoidGap, PixelTimeRun.HoloGrave, PixelTimeRun.DataChip),
         };
 
@@ -197,8 +197,20 @@ namespace Echo.Editor.Art
                 EchoArt.Write(PathFor(med, "sails_" + f), PixelMedieval.Sails(f));
                 EchoArt.Write(PathFor(med, "wheel_" + f), PixelMedieval.Waterwheel(f));
             }
-            EchoArt.Write(PathFor(today, Back), PixelToday.BackSkyline());
-            EchoArt.Write(PathFor(today, Mid), PixelToday.MidCity());
+            // Art pass phase 4: Today's own city, from day to dusk.
+            WriteWorld(today, PixelToday.Far(), PixelToday.Near(), PixelToday.Airliner());
+            EchoArt.Write(PathFor(today, "near_lights"), PixelToday.NearLights());
+            EchoArt.Write(PathFor(today, Sky), PixelToday.SkyDay());
+            EchoArt.Write(PathFor(today, "sky_dusk"), PixelToday.SkyDusk());
+            EchoArt.Write(PathFor(today, Back), PixelToday.Distant());
+            EchoArt.Write(PathFor(today, Mid), PixelToday.Mid());
+            EchoArt.Write(PathFor(today, Floor), PixelToday.Floor());
+            EchoArt.Write(PathFor(today, FloorTop), PixelToday.FloorTop());
+            EchoArt.Write(PathFor(today, Ceiling), PixelToday.Scaffold());
+            EchoArt.Write(PathFor(today, "teeth"), PixelToday.Teeth());
+            for (int f = 0; f < 4; f++) EchoArt.Write(PathFor(today, "billboard_" + f), PixelToday.Billboard(f));
+            for (int k = 0; k < 6; k++) EchoArt.Write(PathFor(today, "car_" + k), PixelToday.Car(k));
+            for (int f = 0; f < 2; f++) EchoArt.Write(PathFor(today, "barrier_" + f), PixelToday.Barrier(f));
             WriteWorld(future, HdFuture.Far(), HdFuture.Near(), HdFuture.FlyingCar(), HdFuture.Rain());
             EchoArt.Write(PathFor(future, Sky), HdFuture.Sky());
             EchoArt.Write(PathFor(future, Back), HdFuture.Back());
@@ -242,8 +254,16 @@ namespace Echo.Editor.Art
                 EchoArt.ImportSprite(PathFor(med, "sails_" + f), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
                 EchoArt.ImportSprite(PathFor(med, "wheel_" + f), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
             }
-            EchoArt.ImportSprite(PathFor(today, Back), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
-            EchoArt.ImportSprite(PathFor(today, Mid), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
+            foreach (string layer in new[] { Far, Near, "near_lights", Sky, "sky_dusk", Back, Mid })
+                EchoArt.ImportSprite(PathFor(today, layer), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(FlyerPath(today), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
+            EchoArt.ImportSprite(PathFor(today, Floor), EchoArt.WorldPpu, new Vector2(0f, 1f), default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(PathFor(today, FloorTop), EchoArt.WorldPpu, new Vector2(0f, 0.8f), default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(PathFor(today, Ceiling), EchoArt.WorldPpu, new Vector2(0f, 1f), default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(PathFor(today, "teeth"), 16f, Vector2.zero);
+            for (int f = 0; f < 4; f++) EchoArt.ImportSprite(PathFor(today, "billboard_" + f), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
+            for (int k = 0; k < 6; k++) EchoArt.ImportSprite(PathFor(today, "car_" + k), EchoArt.WorldPpu, new Vector2(0.5f, 0f));
+            for (int f = 0; f < 2; f++) EchoArt.ImportSprite(PathFor(today, "barrier_" + f), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
             const FilterMode smooth = FilterMode.Bilinear;
             EchoArt.ImportSprite(PathFor(future, Far), HdFuture.Ppu, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
             EchoArt.ImportSprite(PathFor(future, Near), HdFuture.Ppu, Vector2.zero, default, TextureWrapMode.Repeat, smooth);

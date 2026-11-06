@@ -22,5 +22,12 @@ namespace Echo.Game.Seasons
         [Tooltip("Where the frames go, in units from the tile's bottom-left.")]
         public Vector2 FramesAt;
         public float FramesPerSecond = 6f;
+        [Tooltip("Art pass phase 4: fades in between these distances in metres (Today's dusk sky and window lights); equal: always shown.")]
+        public float FadeFrom, FadeTo;
+        [Tooltip("Vehicles driving along the layer (Today's flyover), half each way, at TrafficY units up.")]
+        public Sprite[] Traffic = new Sprite[0];
+        public float TrafficY;
+        public float TrafficSpeed = 3f;
+        public int TrafficCount;
     }
 }

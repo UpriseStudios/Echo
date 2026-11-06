@@ -155,7 +155,7 @@ namespace Echo.Game.Views
                     Sprite ceiling = CeilingAt(cx);
                     Tiled(ceiling, cx, cy + ToothHeight + CeilingHeight, cw, CeilingHeight, ceiling == _groundFill ? block : Color.white, 2);
                     int teeth = Mathf.Max(1, Mathf.RoundToInt(cw / ToothWidth));
-                    Sprite tooth = SpikeAt(cx);
+                    Sprite tooth = EraAt(cx) is SeasonTheme te && te.Teeth != null ? te.Teeth : SpikeAt(cx);
                     for (int t = 0; t < teeth; t++)
                         Piece(tooth, cx + cw * t / teeth, cy, cw / teeth, ToothHeight, hazard, 2, true);
                 }
@@ -179,14 +179,15 @@ namespace Echo.Game.Views
         {
             if (!(EraAt(x) is SeasonTheme e) || e.GapWheel == null || e.GapWheel.Length == 0) return;
             Sprite frame = e.GapWheel[(int)(Time.time * e.GapWheelFps) % e.GapWheel.Length];
-            float size = Mathf.Min(WheelUnits, w * 0.8f);
+            // As wide as fits (the wheel 1.5 units, less in a narrow gap), keeping the frame's own shape.
+            Vector2 s = frame.bounds.size;
+            float k = Mathf.Min(WheelUnits, w * 0.8f) / Mathf.Max(s.x, s.y);
             SpriteRenderer sr = Next(1);
             sr.drawMode = SpriteDrawMode.Simple;
             sr.sprite = frame;
             sr.color = Color.white;
-            Vector2 s = frame.bounds.size;
-            sr.transform.localScale = new Vector3(size / s.x, size / s.y, 1f);
-            sr.transform.localPosition = new Vector3(SimUnits.Pixel(x + w / 2f), SimUnits.Pixel(-GroundTopDrop - size * 0.5f - 0.1f), 0f);
+            sr.transform.localScale = new Vector3(k, k, 1f);
+            sr.transform.localPosition = new Vector3(SimUnits.Pixel(x + w / 2f), SimUnits.Pixel(-GroundTopDrop - s.y * k * 0.5f - 0.1f), 0f);
         }
 
         /// <summary>The waterwheel's frames drawn in a gap at x, or none (tests).</summary>

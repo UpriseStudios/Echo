@@ -76,6 +76,12 @@ MonoBehaviour:
     Frames: []
     FramesAt: {x: 0, y: 0}
     FramesPerSecond: 6
+    FadeFrom: 0
+    FadeTo: 0
+    Traffic: []
+    TrafficY: 0
+    TrafficSpeed: 3
+    TrafficCount: 0
   - Sprite: {fileID: 21300000, guid: e986317134cc61a479d95baec72c4118, type: 3}
     Parallax: 0
     Order: -26
@@ -83,6 +89,12 @@ MonoBehaviour:
     Frames: []
     FramesAt: {x: 0, y: 0}
     FramesPerSecond: 6
+    FadeFrom: 0
+    FadeTo: 0
+    Traffic: []
+    TrafficY: 0
+    TrafficSpeed: 3
+    TrafficCount: 0
   - Sprite: {fileID: 21300000, guid: edc291ebc3f9e1940a3c8acd6546afc6, type: 3}
     Parallax: 0.05
     Order: -22
@@ -90,6 +102,12 @@ MonoBehaviour:
     Frames: []
     FramesAt: {x: 0, y: 0}
     FramesPerSecond: 6
+    FadeFrom: 0
+    FadeTo: 0
+    Traffic: []
+    TrafficY: 0
+    TrafficSpeed: 3
+    TrafficCount: 0
   Floor: {fileID: 21300000, guid: db77ddd95a883984984b483d86e8b2f8, type: 3}
   HighDefinition: 1
   HalfResolution: 0
@@ -98,3 +116,7 @@ MonoBehaviour:
   GapWheel: []
   GapWheelFps: 8
   FlyerFlap: {fileID: 0}
+  Teeth: {fileID: 0}
+  DuskFrom: 0
+  DuskTo: 0
+  DuskShade: {r: 1, g: 1, b: 1, a: 1}

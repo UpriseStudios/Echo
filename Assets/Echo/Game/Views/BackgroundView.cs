@@ -32,11 +32,15 @@ namespace Echo.Game.Views
         [SerializeField] float _nearScale = 1f;
 
         SpriteRenderer _farLayer, _nearLayer, _castleLayer, _bannerLayer, _spaceLayer, _planetSprite;
-        const int MaxExtraLayers = 4;
+        const int MaxExtraLayers = 6;
         readonly SpriteRenderer[] _extra = new SpriteRenderer[MaxExtraLayers];
         // Art pass phase 3: each extra layer's animated frames, one renderer per tile it can show at once.
         const int FramesPerLayer = 4;
         readonly SpriteRenderer[] _frames = new SpriteRenderer[MaxExtraLayers * FramesPerLayer];
+        // Art pass phase 4: vehicles driving along a layer, a fixed pool.
+        const int MaxTraffic = 10;
+        readonly SpriteRenderer[] _traffic = new SpriteRenderer[MaxTraffic];
+        int _trafficLayer = -1;
         ExtraLayer[] _extraLayers;
         bool _highDefinition;
         Sprite _baseFar, _baseNear;
@@ -58,12 +62,22 @@ namespace Echo.Game.Views
             _bannerLayer = Layer("CastleBanners", _castleBanners, -18);
             for (int i = 0; i < MaxExtraLayers; i++) _extra[i] = Layer("Extra" + i, null, -22);
             for (int i = 0; i < _frames.Length; i++) _frames[i] = Layer("Frames" + i, null, -22, false);
+            for (int i = 0; i < MaxTraffic; i++) _traffic[i] = Layer("Traffic" + i, null, -22, false);
         }
 
         /// <summary>A backdrop's extra layers (null or empty: none).</summary>
         public void SetExtraLayers(ExtraLayer[] layers)
         {
             _extraLayers = layers;
+            _trafficLayer = -1;
+            for (int i = 0; layers != null && i < layers.Length && i < MaxExtraLayers; i++)
+                if (layers[i] != null && layers[i].Traffic != null && layers[i].Traffic.Length > 0 && layers[i].TrafficCount > 0) _trafficLayer = i;
+            foreach (SpriteRenderer t in _traffic)
+                if (t != null)
+                {
+                    t.enabled = false;
+                    t.sortingOrder = _trafficLayer >= 0 ? layers[_trafficLayer].Order : -22;
+                }
             for (int i = 0; i < MaxExtraLayers; i++)
             {
                 if (_extra[i] == null) continue;
@@ -80,6 +94,38 @@ namespace Echo.Game.Views
                 }
             }
         }
+
+        // Art pass phase 4: dusk falling across an era (Today): the scenery dims towards a shade; lights and skies don't.
+        float _duskFrom, _duskTo;
+        Color _duskShade = Color.white;
+
+        public void SetDusk(float from, float to, Color shade)
+        {
+            _duskFrom = from;
+            _duskTo = to;
+            _duskShade = shade;
+        }
+
+        Color _dusk = Color.white;
+
+        /// <summary>The dimming dusk has brought so far (tests): white by day.</summary>
+        public Color Dusk => _dusk;
+
+        static Color Dimmed(Color c, Color by) => new Color(c.r * by.r, c.g * by.g, c.b * by.b, c.a);
+
+        /// <summary>Vehicles drawn now (tests).</summary>
+        public int TrafficShown
+        {
+            get
+            {
+                int n = 0;
+                foreach (SpriteRenderer sr in _traffic) if (sr != null && sr.enabled) n++;
+                return n;
+            }
+        }
+
+        /// <summary>How far an extra layer has faded in (tests): 1 shown, 0 hidden.</summary>
+        public float ExtraAlpha(int layer) => layer >= 0 && layer < MaxExtraLayers && _extra[layer] != null && _extra[layer].enabled ? _extra[layer].color.a : 0f;
 
         /// <summary>Animated frames drawn now (tests).</summary>
         public int FramesShown
@@ -113,6 +159,8 @@ namespace Echo.Game.Views
             foreach (SpriteRenderer sr in _extra)
                 if (sr != null) sr.sharedMaterial = m;
             foreach (SpriteRenderer sr in _frames)
+                if (sr != null) sr.sharedMaterial = m;
+            foreach (SpriteRenderer sr in _traffic)
                 if (sr != null) sr.sharedMaterial = m;
         }
 
@@ -159,12 +207,14 @@ namespace Echo.Game.Views
         public void Render(float cameraX, float viewWidth, float viewBottom, float viewHeight, Color background, in EnvironmentState env)
         {
             // Far peaks hazy and a touch lighter than the sky, near layers darker: depth from value, 16-bit style.
+            _dusk = _duskTo > _duskFrom ? Color.Lerp(Color.white, _duskShade, Mathf.Clamp01((cameraX - _duskFrom) / (_duskTo - _duskFrom))) : Color.white;
             Color far = _farTint.a > 0f ? Color.Lerp(_farTint, background, env.Night * 0.45f) : Color.Lerp(background, Color.white, 0.14f);
+            far = Dimmed(far, _dusk);
             far.a = 1f - env.Space;
             Place(_farLayer, _far, cameraX, viewWidth, _farParallax, _farScale, far);
 
             Color near = PaletteSampler.Darker(background, 0.72f);
-            Color worldNear = _nearTint.a > 0f ? Color.Lerp(_nearTint, background, env.Night * 0.35f) : near;
+            Color worldNear = Dimmed(_nearTint.a > 0f ? Color.Lerp(_nearTint, background, env.Night * 0.35f) : near, _dusk);
             GraveyardLeft = Place(_nearLayer, _near, cameraX, viewWidth, _nearParallax, _nearScale, Faded(worldNear, env.Graveyard));
             Place(_castleLayer, _castle, cameraX, viewWidth, _nearParallax, _nearScale, Faded(near, env.Castle - env.Space));
             // The moon surface keeps its own grey: tinted from a near-black sky it would vanish.
@@ -181,8 +231,13 @@ namespace Echo.Game.Views
                 {
                     ExtraLayer l = _extraLayers[i];
                     if (l == null || l.Sprite == null) continue;
-                    float left = Place(_extra[i], l.Sprite, cameraX, viewWidth, l.Parallax, 1f, l.Tint);
+                    // World units are metres, so the camera's x is how far the run has come: a layer can fade in with it.
+                    Color tint = l.Tint;
+                    if (l.FadeTo > l.FadeFrom) tint.a *= Mathf.Clamp01((cameraX - l.FadeFrom) / (l.FadeTo - l.FadeFrom));
+                    else if (l.Parallax > 0f) tint = Dimmed(tint, _dusk);   // scenery dims at dusk; skies and lights don't
+                    float left = Place(_extra[i], l.Sprite, cameraX, viewWidth, l.Parallax, 1f, tint);
                     PlaceFrames(i, l, left, cameraX, viewWidth);
+                    if (i == _trafficLayer) PlaceTraffic(l, cameraX, viewWidth);
                 }
 
             if (_planetSprite != null && _planet != null)
@@ -212,6 +267,28 @@ namespace Echo.Game.Views
                 f.sprite = frame;
                 f.color = l.Tint;
                 f.transform.localPosition = new Vector3(SimUnits.Pixel(x), SimUnits.Pixel(l.FramesAt.y), -0.1f);
+            }
+        }
+
+        // Vehicles drive along the layer: half one way, half the other, each at its own speed, wrapping round a stretch a
+        // little wider than the view. They move with the layer's parallax and along it.
+        void PlaceTraffic(ExtraLayer l, float cameraX, float viewWidth)
+        {
+            int count = Mathf.Min(l.TrafficCount, MaxTraffic);
+            float span = viewWidth + 6f, drift = cameraX * l.Parallax;   // the layer slides across the screen at its parallax
+            for (int i = 0; i < MaxTraffic; i++)
+            {
+                SpriteRenderer t = _traffic[i];
+                if (t == null) continue;
+                t.enabled = i < count;
+                if (!t.enabled) continue;
+                bool back = i % 2 == 1;
+                float speed = l.TrafficSpeed * (0.7f + 0.15f * (i % 4)) * (back ? -1f : 1f);
+                float x = cameraX - viewWidth / 2f - 3f + Mathf.Repeat(i * 2.9f + Time.time * speed - drift, span);
+                t.sprite = l.Traffic[i % l.Traffic.Length];
+                t.flipX = back;
+                t.color = Dimmed(l.Tint, _dusk);
+                t.transform.localPosition = new Vector3(SimUnits.Pixel(x), SimUnits.Pixel(l.TrafficY + (back ? 0.12f : 0f)), -0.05f);
             }
         }
 

@@ -1,0 +1,886 @@
+fileFormatVersion: 2
+guid: c877716655ab78b4ea0188c9b9363fd7
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1496429305674799479
+    second: timerun_today_near_lights_0
+  - first:
+      213: -2947555867003403787
+    second: timerun_today_near_lights_1
+  - first:
+      213: 5286979631225606399
+    second: timerun_today_near_lights_2
+  - first:
+      213: 6957783732320378211
+    second: timerun_today_near_lights_3
+  - first:
+      213: -572696869979833246
+    second: timerun_today_near_lights_4
+  - first:
+      213: -6264014508841033353
+    second: timerun_today_near_lights_5
+  - first:
+      213: 3630263080685702545
+    second: timerun_today_near_lights_6
+  - first:
+      213: -627630302806352066
+    second: timerun_today_near_lights_7
+  - first:
+      213: -4772775188825673469
+    second: timerun_today_near_lights_8
+  - first:
+      213: -5226839546574429866
+    second: timerun_today_near_lights_9
+  - first:
+      213: 7798630397736877892
+    second: timerun_today_near_lights_10
+  - first:
+      213: 2957797372657574066
+    second: timerun_today_near_lights_11
+  - first:
+      213: 4752133100153358071
+    second: timerun_today_near_lights_12
+  - first:
+      213: 8359106883120616394
+    second: timerun_today_near_lights_13
+  - first:
+      213: -366980239357517390
+    second: timerun_today_near_lights_14
+  - first:
+      213: -5964566596622953430
+    second: timerun_today_near_lights_15
+  - first:
+      213: 398715819160107084
+    second: timerun_today_near_lights_16
+  - first:
+      213: 8234137752655458974
+    second: timerun_today_near_lights_17
+  - first:
+      213: -2465922244532323576
+    second: timerun_today_near_lights_18
+  - first:
+      213: -4835052888548493330
+    second: timerun_today_near_lights_19
+  - first:
+      213: -6869984489141283987
+    second: timerun_today_near_lights_20
+  - first:
+      213: 5058152532506485176
+    second: timerun_today_near_lights_21
+  - first:
+      213: 4531903081385070981
+    second: timerun_today_near_lights_22
+  - first:
+      213: 5873196483759301199
+    second: timerun_today_near_lights_23
+  - first:
+      213: 6033955735965761288
+    second: timerun_today_near_lights_24
+  - first:
+      213: -2019117828168492630
+    second: timerun_today_near_lights_25
+  - first:
+      213: -3013611734121588941
+    second: timerun_today_near_lights_26
+  - first:
+      213: 373140563920569717
+    second: timerun_today_near_lights_27
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 9
+  spritePivot: {x: 0, y: 0}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: timerun_today_near_lights_0
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 33
+        width: 20
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7791b3c668264c410800000000000000
+      internalID: 1496429305674799479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_1
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 44
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f1c4a74e8d2817d0800000000000000
+      internalID: -2947555867003403787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_2
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 44
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff09de586ff1f5940800000000000000
+      internalID: 5286979631225606399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_3
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 37
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36d92fcc0730f8060800000000000000
+      internalID: 6957783732320378211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_4
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 37
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26cbfd42b3f5d08f0800000000000000
+      internalID: -572696869979833246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_5
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 33
+        width: 28
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77123ac0effb119a0800000000000000
+      internalID: -6264014508841033353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_6
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 34
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19d8c75b909416230800000000000000
+      internalID: 3630263080685702545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_7
+      rect:
+        serializedVersion: 2
+        x: 202
+        y: 34
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3fd4fe90953a47f0800000000000000
+      internalID: -627630302806352066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_8
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 34
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3017f35c042b3cdb0800000000000000
+      internalID: -4772775188825673469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_9
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 34
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 651a77810298677b0800000000000000
+      internalID: -5226839546574429866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_10
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 35
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44f7baf170d4a3c60800000000000000
+      internalID: 7798630397736877892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_11
+      rect:
+        serializedVersion: 2
+        x: 269
+        y: 35
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b0a6d21a053c0920800000000000000
+      internalID: 2957797372657574066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_12
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 33
+        width: 20
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f6440070e7f2f140800000000000000
+      internalID: 4752133100153358071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_13
+      rect:
+        serializedVersion: 2
+        x: 331
+        y: 48
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac35de7fb63810470800000000000000
+      internalID: 8359106883120616394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_14
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 48
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b1e189aa6938eaf0800000000000000
+      internalID: -366980239357517390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_15
+      rect:
+        serializedVersion: 2
+        x: 359
+        y: 48
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a24d021384a993da0800000000000000
+      internalID: -5964566596622953430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_16
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 33
+        width: 28
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c48fd5fcce5888500800000000000000
+      internalID: 398715819160107084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_17
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 41
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9279a2e8a8854270800000000000000
+      internalID: 8234137752655458974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_18
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 38
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80bbaea98c847cdd0800000000000000
+      internalID: -2465922244532323576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_19
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 38
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee737dbd30176ecb0800000000000000
+      internalID: -4835052888548493330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1
+        width: 18
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d635a408189e8a0a0800000000000000
+      internalID: -6869984489141283987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_21
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 1
+        width: 50
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b1aac7ddea223640800000000000000
+      internalID: 5058152532506485176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_22
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 3
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 581947a67dd84ee30800000000000000
+      internalID: 4531903081385070981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_23
+      rect:
+        serializedVersion: 2
+        x: 186
+        y: 1
+        width: 62
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f42eb8e9519c18150800000000000000
+      internalID: 5873196483759301199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_24
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 3
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80f7ba8c5caecb350800000000000000
+      internalID: 6033955735965761288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_25
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 1
+        width: 68
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa9db547807aaf3e0800000000000000
+      internalID: -2019117828168492630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_26
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 3
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 337dbb838108d26d0800000000000000
+      internalID: -3013611734121588941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_today_near_lights_27
+      rect:
+        serializedVersion: 2
+        x: 462
+        y: 1
+        width: 50
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57546cbad59ad2500800000000000000
+      internalID: 373140563920569717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      timerun_today_near_lights_0: 1496429305674799479
+      timerun_today_near_lights_1: -2947555867003403787
+      timerun_today_near_lights_10: 7798630397736877892
+      timerun_today_near_lights_11: 2957797372657574066
+      timerun_today_near_lights_12: 4752133100153358071
+      timerun_today_near_lights_13: 8359106883120616394
+      timerun_today_near_lights_14: -366980239357517390
+      timerun_today_near_lights_15: -5964566596622953430
+      timerun_today_near_lights_16: 398715819160107084
+      timerun_today_near_lights_17: 8234137752655458974
+      timerun_today_near_lights_18: -2465922244532323576
+      timerun_today_near_lights_19: -4835052888548493330
+      timerun_today_near_lights_2: 5286979631225606399
+      timerun_today_near_lights_20: -6869984489141283987
+      timerun_today_near_lights_21: 5058152532506485176
+      timerun_today_near_lights_22: 4531903081385070981
+      timerun_today_near_lights_23: 5873196483759301199
+      timerun_today_near_lights_24: 6033955735965761288
+      timerun_today_near_lights_25: -2019117828168492630
+      timerun_today_near_lights_26: -3013611734121588941
+      timerun_today_near_lights_27: 373140563920569717
+      timerun_today_near_lights_3: 6957783732320378211
+      timerun_today_near_lights_4: -572696869979833246
+      timerun_today_near_lights_5: -6264014508841033353
+      timerun_today_near_lights_6: 3630263080685702545
+      timerun_today_near_lights_7: -627630302806352066
+      timerun_today_near_lights_8: -4772775188825673469
+      timerun_today_near_lights_9: -5226839546574429866
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

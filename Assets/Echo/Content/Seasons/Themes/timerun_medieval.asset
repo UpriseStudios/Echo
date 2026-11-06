@@ -73,6 +73,12 @@ MonoBehaviour:
     Frames: []
     FramesAt: {x: 0, y: 0}
     FramesPerSecond: 6
+    FadeFrom: 0
+    FadeTo: 0
+    Traffic: []
+    TrafficY: 0
+    TrafficSpeed: 3
+    TrafficCount: 0
   - Sprite: {fileID: 21300000, guid: ffba8abb2060c5545a0f8cf334eec3f9, type: 3}
     Parallax: 0.27
     Order: -20
@@ -84,6 +90,12 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 280d74a65ae49e24aa5a99cab1b8f05b, type: 3}
     FramesAt: {x: 10.3125, y: 3.6875}
     FramesPerSecond: 5
+    FadeFrom: 0
+    FadeTo: 0
+    Traffic: []
+    TrafficY: 0
+    TrafficSpeed: 3
+    TrafficCount: 0
   Floor: {fileID: 21300000, guid: 6676f2b9c8a0e9c439f7d6e1156e9ef0, type: 3}
   HighDefinition: 0
   HalfResolution: 0
@@ -96,3 +108,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 59218087ab917984dbbd2dd656714af0, type: 3}
   GapWheelFps: 8
   FlyerFlap: {fileID: 21300000, guid: 634db1e0cf6ce6446b3060c0f283b234, type: 3}
+  Teeth: {fileID: 0}
+  DuskFrom: 0
+  DuskTo: 0
+  DuskShade: {r: 1, g: 1, b: 1, a: 1}

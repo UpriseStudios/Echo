@@ -240,7 +240,7 @@ namespace Echo.Editor
             medieval.FlyerColour = Color.white;
             medieval.FlyerEvery = 24f;
             medieval.FlyerSpeed = 2.4f;
-            SeasonTheme today = Era(SeasonIds.EraToday, "Today", "2026", Built(SeasonIds.NeonNight));
+            SeasonTheme today = Era(SeasonIds.EraToday, "Today", "2026", null);
             SeasonTheme future = Era(SeasonIds.EraFuture, "Far Future", "3026", null);
             future.PaletteStops = new[] { Hex(0x0A1A3A), Hex(0x1A0A3A), Hex(0x0A2A4A) };
             future.PaletteBlend = 0.9f;
@@ -293,12 +293,46 @@ namespace Echo.Editor
             dino.FloorTop = Sprite(SeasonIds.EraDino, SeasonArt.FloorTop);
             dino.Ceiling = Sprite(SeasonIds.EraDino, SeasonArt.Ceiling);
 
-            // Today in 32-bit: the neon city with a distant skyline behind and a mid-distance block in front of its towers.
+            // Art pass phase 4: Today is a new 32-bit city (nothing from the neon world), daytime turning to dusk across the
+            // era: smooth gradient skies (dusk fading in 640-880 m), five parallax layers (a hazy distant skyline, towers, a
+            // flyover with traffic and a digital billboard, the high street, and its windows and lamps lighting up at dusk).
+            Color todaySky = Hex(PixelToday.Sky);
+            today.PaletteStops = new[] { todaySky, todaySky, todaySky };
+            today.PaletteBlend = 1f;
+            today.FarLayer = Sprite(SeasonIds.EraToday, SeasonArt.Far);
+            today.NearLayer = Sprite(SeasonIds.EraToday, SeasonArt.Near);
+            Colours(today, Color.white, Color.white, Hex(0x4A4E58), Hex(0xFF7A1A));   // orange traffic cones
+            var adverts = new Sprite[4];
+            for (int f = 0; f < 4; f++) adverts[f] = Sprite(SeasonIds.EraToday, "billboard_" + f);
+            var cars = new Sprite[6];
+            for (int k = 0; k < 6; k++) cars[k] = Sprite(SeasonIds.EraToday, "car_" + k);
             today.ExtraLayers = new[]
             {
-                new ExtraLayer { Sprite = Sprite(SeasonIds.EraToday, SeasonArt.Back), Parallax = 0.07f, Order = -22 },
-                new ExtraLayer { Sprite = Sprite(SeasonIds.EraToday, SeasonArt.Mid), Parallax = 0.27f, Order = -20 },
+                new ExtraLayer { Sprite = Sprite(SeasonIds.EraToday, SeasonArt.Sky), Parallax = 0f, Order = -30 },
+                new ExtraLayer { Sprite = Sprite(SeasonIds.EraToday, "sky_dusk"), Parallax = 0f, Order = -29, FadeFrom = 640f, FadeTo = 880f },
+                new ExtraLayer { Sprite = Sprite(SeasonIds.EraToday, SeasonArt.Back), Parallax = 0.06f, Order = -22 },
+                new ExtraLayer
+                {
+                    Sprite = Sprite(SeasonIds.EraToday, SeasonArt.Mid), Parallax = 0.27f, Order = -20,
+                    Frames = adverts, FramesPerSecond = 0.5f,
+                    FramesAt = new Vector2(PixelToday.BillboardAt.x, PixelToday.BillboardAt.y) / Art.EchoArt.WorldPpu,
+                    Traffic = cars, TrafficCount = 8, TrafficSpeed = 3.2f, TrafficY = PixelToday.DeckTop / Art.EchoArt.WorldPpu,
+                },
+                new ExtraLayer { Sprite = Sprite(SeasonIds.EraToday, "near_lights"), Parallax = 0.4f, Order = -18, FadeFrom = 700f, FadeTo = 880f },
             };
+            today.DuskFrom = 640f;
+            today.DuskTo = 880f;
+            today.DuskShade = Hex(0x9A8AB0);   // a cool violet dimming; the lit windows stay warm
+            today.Floor = Sprite(SeasonIds.EraToday, SeasonArt.Floor);
+            today.FloorTop = Sprite(SeasonIds.EraToday, SeasonArt.FloorTop);
+            today.Ceiling = Sprite(SeasonIds.EraToday, SeasonArt.Ceiling);
+            today.Teeth = Sprite(SeasonIds.EraToday, "teeth");
+            today.GapWheel = new[] { Sprite(SeasonIds.EraToday, "barrier_0"), Sprite(SeasonIds.EraToday, "barrier_1") };
+            today.GapWheelFps = 2f;
+            today.Flyer = Load<Sprite>(SeasonArt.FlyerPath(SeasonIds.EraToday));
+            today.FlyerColour = Color.white;
+            today.FlyerEvery = 20f;
+            today.FlyerSpeed = 1.6f;
 
             // The Far Future in HD: its own sky, moons, chrome towers, wet street, neon grid floor, rain and flying car.
             future.HighDefinition = true;
@@ -491,6 +525,9 @@ namespace Echo.Editor
             t.GapWheel = new Sprite[0];
             t.GapWheelFps = 8f;
             t.FlyerFlap = null;
+            t.Teeth = null;
+            t.DuskFrom = t.DuskTo = 0f;
+            t.DuskShade = Color.white;
             return t;
         }
 
