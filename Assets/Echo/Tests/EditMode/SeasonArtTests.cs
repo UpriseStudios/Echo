@@ -138,6 +138,40 @@ namespace Echo.Tests.EditMode
             for (int i = 1; i < world.Eras.Length; i++) Assert.IsNull(world.Eras[i].NemesisAccessory, "the red horns in the other eras");
         }
 
+        /// <summary>
+        /// Art pass phase 2: Dino Land is 8-bit: its backdrop, floor, floor edge and pit share at most 8 colours (the sky
+        /// among them) with no part-transparent pixels, and every pixel comes in a 2x2 block (drawn at half resolution).
+        /// </summary>
+        [Test]
+        public void DinoLand_IsEightBit()
+        {
+            SeasonTheme dino = Themes().Find(x => x.Id == SeasonIds.EraDino);
+            Assert.IsTrue(dino.HalfResolution);
+            var colours = new HashSet<Color32>();
+            foreach (Color c in dino.PaletteStops) colours.Add(c);
+            foreach (Sprite s in new[] { dino.FarLayer, dino.NearLayer, dino.Floor, dino.FloorTop, dino.Gap })
+            {
+                Assert.IsNotNull(s);
+                var tex = new Texture2D(2, 2);
+                tex.LoadImage(File.ReadAllBytes(AssetDatabase.GetAssetPath(s.texture)));
+                Color32[] px = tex.GetPixels32();
+                int w = tex.width, h = tex.height;
+                Object.DestroyImmediate(tex);
+                Assert.AreEqual(0, w % 2 + h % 2, s.name + ": whole blocks");
+                for (int y = 0; y < h; y += 2)
+                    for (int x = 0; x < w; x += 2)
+                    {
+                        Color32 a = px[y * w + x];
+                        Assert.IsTrue(a.a == 0 || a.a == 255, $"{s.name}: no part-transparent pixels");
+                        foreach (int i in new[] { y * w + x + 1, (y + 1) * w + x, (y + 1) * w + x + 1 })
+                            Assert.AreEqual(a, px[i], $"{s.name}: pixel {x},{y} isn't a 2x2 block");
+                        if (a.a > 0) colours.Add(a);
+                    }
+            }
+            Assert.LessOrEqual(colours.Count, 8, "an 8-bit palette: " + string.Join(" ", colours));
+            Assert.GreaterOrEqual(colours.Count, 6);
+        }
+
         static bool IsGrey(Sprite s)
         {
             foreach (Color32 p in Pixels(s))

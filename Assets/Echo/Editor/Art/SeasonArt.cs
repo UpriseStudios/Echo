@@ -166,19 +166,23 @@ namespace Echo.Editor.Art
         static readonly (string Era, System.Func<PixelCanvas> Spike, System.Func<PixelCanvas> Block, System.Func<PixelCanvas> Gap,
             System.Func<PixelCanvas> Grave, System.Func<PixelCanvas> Coin)[] Eras =
         {
-            (Game.Seasons.SeasonIds.EraDino, PixelTimeRun.RockSpike, PixelTimeRun.CliffBlock, PixelTimeRun.LavaGap, PixelTimeRun.SlabGrave, PixelTimeRun.AmberCoin),
+            (Game.Seasons.SeasonIds.EraDino, PixelTimeRun.RockSpike, PixelTimeRun.CliffBlock, PixelDino.Gap, PixelTimeRun.SlabGrave, PixelTimeRun.AmberCoin),
             (Game.Seasons.SeasonIds.EraMedieval, null, PixelTimeRun.PortcullisBlock, PixelTimeRun.MoatGap, null, null),
             (Game.Seasons.SeasonIds.EraToday, PixelTimeRun.ConeSpike, PixelTimeRun.BillboardBlock, PixelTimeRun.RooftopGap, PixelTimeRun.ModernGrave, null),
             (Game.Seasons.SeasonIds.EraFuture, PixelTimeRun.EnergySpike, PixelTimeRun.HoverBlock, PixelTimeRun.VoidGap, PixelTimeRun.HoloGrave, PixelTimeRun.DataChip),
         };
 
-        public const string Sky = "sky", Moons = "moons", Back = "back", Mid = "mid", Floor = "floor";
+        public const string Sky = "sky", Moons = "moons", Back = "back", Mid = "mid", Floor = "floor", FloorTop = "floor_top", Ceiling = "ceiling";
 
         static void WriteEras()
         {
             // Phase 3, art styles: 8-bit Dino Land, Today's 32-bit layers and the Far Future in HD.
             string dino = Game.Seasons.SeasonIds.EraDino, today = Game.Seasons.SeasonIds.EraToday, future = Game.Seasons.SeasonIds.EraFuture;
             WriteWorld(dino, PixelDino.Far(), PixelDino.Near(), PixelDino.Pterodactyl(), PixelDino.Ember());
+            // Art pass phase 2: Dino Land's own 8-bit floor, floor edge and lava pit, and its rock overhang.
+            EchoArt.Write(PathFor(dino, Floor), PixelDino.Floor());
+            EchoArt.Write(PathFor(dino, FloorTop), PixelDino.FloorTop());
+            EchoArt.Write(PathFor(dino, Ceiling), PixelDino.Overhang());
             EchoArt.Write(PathFor(today, Back), PixelToday.BackSkyline());
             EchoArt.Write(PathFor(today, Mid), PixelToday.MidCity());
             WriteWorld(future, HdFuture.Far(), HdFuture.Near(), HdFuture.FlyingCar(), HdFuture.Rain());
@@ -206,6 +210,9 @@ namespace Echo.Editor.Art
             EchoArt.ImportSprite(PathFor(dino, Near), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
             EchoArt.ImportSprite(FlyerPath(dino), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
             EchoArt.ImportSprite(EffectPath(dino, 0), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
+            EchoArt.ImportSprite(PathFor(dino, Floor), EchoArt.WorldPpu, new Vector2(0f, 1f), default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(PathFor(dino, FloorTop), EchoArt.WorldPpu, new Vector2(0f, 0.8f), default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(PathFor(dino, Ceiling), EchoArt.WorldPpu, new Vector2(0f, 1f), default, TextureWrapMode.Repeat);
             EchoArt.ImportSprite(PathFor(today, Back), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
             EchoArt.ImportSprite(PathFor(today, Mid), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
             const FilterMode smooth = FilterMode.Bilinear;

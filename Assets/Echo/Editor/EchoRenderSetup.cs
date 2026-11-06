@@ -98,6 +98,25 @@ namespace Echo.Editor
             return volume;
         }
 
+        // Art pass phase 2: a named layer (the LowRes layer for Dino Land's half-resolution backdrop), added to the project's
+        // layers once, in the first free user slot.
+        static int EnsureLayer(string name)
+        {
+            var tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+            SerializedProperty layers = tagManager.FindProperty("layers");
+            for (int i = 8; i < layers.arraySize; i++)
+                if (layers.GetArrayElementAtIndex(i).stringValue == name) return i;
+            for (int i = 8; i < layers.arraySize; i++)
+            {
+                SerializedProperty slot = layers.GetArrayElementAtIndex(i);
+                if (!string.IsNullOrEmpty(slot.stringValue)) continue;
+                slot.stringValue = name;
+                tagManager.ApplyModifiedPropertiesWithoutUndo();
+                return i;
+            }
+            throw new System.InvalidOperationException("no free layer for " + name);
+        }
+
         static void AddPostVolume(VolumeProfile profile)
         {
             var go = new GameObject("PostFX");

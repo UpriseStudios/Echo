@@ -65,6 +65,29 @@ namespace Echo.Game.Views
         /// <summary>The block drawn at x.</summary>
         public Sprite BlockAt(float x) => EraAt(x) is SeasonTheme e && e.Block != null ? e.Block : _block;
 
+        /// <summary>The floor's top edge drawn from x: an era's own (Dino Land's grass), else the stone edge.</summary>
+        public Sprite FloorTopAt(float x) => EraAt(x) is SeasonTheme e && e.FloorTop != null ? e.FloorTop : _groundTop;
+
+        /// <summary>The hanging ceiling drawn from x: an era's own (Dino Land's rock overhang), else the bricks.</summary>
+        public Sprite CeilingAt(float x) => EraAt(x) is SeasonTheme e && e.Ceiling != null ? e.Ceiling : _groundFill;
+
+        // Art pass phase 2: the era whose floor and pits go to the half-resolution layer (Dino Land's, while it's showing).
+        int _lowResEra = -1, _lowResLayer = -1;
+
+        /// <summary>Floor and pits of era <paramref name="era"/> (index into the eras given) drawn on <paramref name="layer"/>; -1 for none.</summary>
+        public void SetLowRes(int era, int layer)
+        {
+            _lowResEra = era;
+            _lowResLayer = layer;
+        }
+
+        // The last piece drawn joins the half-resolution layer when it belongs to that era.
+        void LowResPiece(float x)
+        {
+            if (_lowResEra < 0 || _lowResLayer < 0 || _eras == null || _used == 0) return;
+            if (TimeEras.At(Mathf.FloorToInt(x), _eras.Length) == _lowResEra) _pool[_used - 1].gameObject.layer = _lowResLayer;
+        }
+
         /// <summary>The floor drawn from x: an era's own (the Far Future's neon grid), else the bricks.</summary>
         public Sprite FloorAt(float x) => EraAt(x) is SeasonTheme e && e.Floor != null ? e.Floor : _groundFill;
 
@@ -109,7 +132,10 @@ namespace Echo.Game.Views
                     segmentStart = gapStart + SimUnits.ToWorld(g.W);
                     // Time Run: the era's pit (lava, a moat, a void), in its own colours; the hole itself is unchanged.
                     if (GapAt(gapStart) is Sprite pit)
+                    {
                         Tiled(pit, gapStart, -GroundTopDrop, segmentStart - gapStart, FloorDepth, Color.white, 0);
+                        LowResPiece(gapStart);
+                    }
                 }
                 Floor(segmentStart, x0 + SimUnits.ToWorld(c.Length), floor, lip);
 
@@ -125,7 +151,8 @@ namespace Echo.Game.Views
                 foreach (var cl in c.Ceilings)
                 {
                     float cx = x0 + SimUnits.ToWorld(cl.X), cw = SimUnits.ToWorld(cl.W), cy = SimUnits.ToWorld(cl.Y);
-                    Tiled(_groundFill, cx, cy + ToothHeight + CeilingHeight, cw, CeilingHeight, block, 2);
+                    Sprite ceiling = CeilingAt(cx);
+                    Tiled(ceiling, cx, cy + ToothHeight + CeilingHeight, cw, CeilingHeight, ceiling == _groundFill ? block : Color.white, 2);
                     int teeth = Mathf.Max(1, Mathf.RoundToInt(cw / ToothWidth));
                     Sprite tooth = SpikeAt(cx);
                     for (int t = 0; t < teeth; t++)
@@ -150,13 +177,17 @@ namespace Echo.Game.Views
             // Time Run (phase 3): an era's floor is in its own colours.
             Sprite fill = FloorAt(from);
             Tiled(fill, from, -GroundTopDrop, to - from, FloorDepth, fill == _groundFill ? floor : Color.white, 0);
-            Tiled(_groundTop, from, 0f, to - from, GroundTopHeight, lip, 1);
+            LowResPiece(from);
+            Sprite top = FloorTopAt(from);
+            Tiled(top, from, 0f, to - from, GroundTopHeight, top == _groundTop ? lip : Color.white, 1);
+            LowResPiece(from);
         }
 
         SpriteRenderer Next(int order)
         {
             if (_used == _pool.Count) _pool.Add(BoxSprite.Create(transform, "CoursePiece" + _used, _material, order));
             SpriteRenderer sr = _pool[_used++];
+            if (sr.gameObject.layer != 0) sr.gameObject.layer = 0;
             sr.sortingOrder = order;
             sr.enabled = true;
             return sr;

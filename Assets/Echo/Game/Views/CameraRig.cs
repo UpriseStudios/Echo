@@ -45,6 +45,9 @@ namespace Echo.Game.Views
         /// <summary>How far the zoom has eased in, 0 (following the player) to 1 (on the spot).</summary>
         public float FocusAmount { get; private set; }
 
+        /// <summary>After each placement (art pass phase 2: the half-resolution backdrop follows, a screenshot's framing too).</summary>
+        public event System.Action Followed;
+
         public float Left { get; private set; }
         public float Right { get; private set; }
         public float Bottom { get; private set; }
@@ -128,6 +131,7 @@ namespace Echo.Game.Views
             Right = x + width / 2f;
             Bottom = y - height / 2f;
             Height = height;
+            Followed?.Invoke();
             if (_mirror)
             {
                 // Mirror twist: flip the projection, so everything the camera draws (trails and scarves too) runs

@@ -29,8 +29,8 @@ MonoBehaviour:
   EffectSprites:
   - {fileID: 21300000, guid: 163178c80f9281a4cbf7c16d607f9a83, type: 3}
   EffectColours:
-  - {r: 0.9647059, g: 0.7647059, b: 0.3529412, a: 1}
-  - {r: 0.8862745, g: 0.38431373, b: 0.17254902, a: 1}
+  - {r: 0.972549, g: 0.8235294, b: 0.3529412, a: 1}
+  - {r: 0.8862745, g: 0.32156864, b: 0.17254902, a: 1}
   - {r: 0.16862746, g: 0.105882354, b: 0.18039216, a: 1}
   EffectCount: 40
   EffectFall: 0.6
@@ -70,5 +70,8 @@ MonoBehaviour:
   GhostGlow: 0
   GhostHologram: 0
   ExtraLayers: []
-  Floor: {fileID: 0}
+  Floor: {fileID: 21300000, guid: 3da0805464bf1b74b821e6beed7c3aae, type: 3}
   HighDefinition: 0
+  HalfResolution: 1
+  FloorTop: {fileID: 21300000, guid: 34b475af9a4023440aaaac0311a94741, type: 3}
+  Ceiling: {fileID: 21300000, guid: 1ed7fefa8f833314cbdf7d62b90fdce4, type: 3}

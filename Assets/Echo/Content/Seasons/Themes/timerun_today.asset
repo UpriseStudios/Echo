@@ -79,3 +79,6 @@ MonoBehaviour:
     Tint: {r: 1, g: 1, b: 1, a: 1}
   Floor: {fileID: 0}
   HighDefinition: 0
+  HalfResolution: 0
+  FloorTop: {fileID: 0}
+  Ceiling: {fileID: 0}

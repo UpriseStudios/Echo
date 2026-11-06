@@ -23,6 +23,11 @@ namespace Echo.Game.Flow
     {
         [SerializeField] TimeRiftView _timeRift;
         [SerializeField] EraPreloadView _eraPreload;
+        [SerializeField] LowResView _lowRes;
+        bool _halfResolution;
+
+        /// <summary>The backdrop and floor are drawn at half resolution now (Dino Land), for tests.</summary>
+        public bool HalfResolutionShown => _halfResolution && _lowRes != null && _lowRes.On;
         [SerializeField] FutureLightsView _futureLights;
         [Tooltip("The Far Future's stronger bloom, weighted in with full effects.")]
         [SerializeField] Volume _futureVolume;
@@ -216,6 +221,20 @@ namespace Echo.Game.Flow
             }
             _runnerView.SetFuture(_highDefinition);
             ApplyEffects();
+
+            // Art pass phase 2: Dino Land's backdrop and floor at half resolution; everything else back on the default layer.
+            _halfResolution = backdrop != null && backdrop.HalfResolution && _lowRes != null && LowResView.Layer >= 0;
+            if (_lowRes != null) _lowRes.SetOn(_halfResolution);
+            int layer = _halfResolution ? LowResView.Layer : 0;
+            if (_background != null) LowResView.SetLayer(_background.transform, layer);
+            if (_seasonEffects != null) LowResView.SetLayer(_seasonEffects.transform, layer);
+            _courseView.SetLowRes(_halfResolution ? (_forceEra != null ? 0 : _eraShown) : -1, LowResView.Layer);
+        }
+
+        // Each time the camera is placed (CameraRig.Followed), so the backdrop always matches the framing.
+        void RenderLowRes()
+        {
+            if (_halfResolution) _lowRes.Render(_cameraRig.transform.position, _cameraRig.Right - _cameraRig.Left, _cameraRig.Height, _cameraRig.Background);
         }
 
         // Full effects: bloom (and the Far Future's stronger bloom) and the neon lights; reduced: no bloom, one light.

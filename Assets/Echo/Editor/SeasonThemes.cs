@@ -256,6 +256,12 @@ namespace Echo.Editor
             dino.FlyerEvery = 18f;
             dino.FlyerSpeed = 3f;
 
+            // Art pass phase 2: rendered at half resolution, with its own floor, edge and pit, and a rock overhang for ceilings.
+            dino.HalfResolution = true;
+            dino.Floor = Sprite(SeasonIds.EraDino, SeasonArt.Floor);
+            dino.FloorTop = Sprite(SeasonIds.EraDino, SeasonArt.FloorTop);
+            dino.Ceiling = Sprite(SeasonIds.EraDino, SeasonArt.Ceiling);
+
             // Today in 32-bit: the neon city with a distant skyline behind and a mid-distance block in front of its towers.
             today.ExtraLayers = new[]
             {
@@ -449,6 +455,8 @@ namespace Echo.Editor
             t.ExtraLayers = new ExtraLayer[0];
             t.Floor = null;
             t.HighDefinition = false;
+            t.HalfResolution = false;
+            t.FloorTop = t.Ceiling = null;
             return t;
         }
 

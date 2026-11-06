@@ -489,6 +489,27 @@ namespace Echo.Editor
             Wire(game, "_ambient", ambient);
             Wire(game, "_seasonEffects", seasonEffects);
             Wire(game, "_timeRift", timeRift);
+            // Art pass phase 2: Dino Land's backdrop and floor at half resolution, drawn by their own camera into a texture
+            // the main camera shows behind everything; the main camera never draws the LowRes layer itself.
+            int lowResLayer = EnsureLayer(LowResView.LayerName);
+            camera.cullingMask = ~(1 << lowResLayer);
+            var lowResCameraGo = new GameObject("LowResCamera");
+            var lowResCamera = lowResCameraGo.AddComponent<Camera>();
+            lowResCamera.orthographic = true;
+            lowResCamera.clearFlags = CameraClearFlags.SolidColor;
+            lowResCamera.cullingMask = 1 << lowResLayer;
+            lowResCamera.depth = camera.depth - 1;
+            lowResCamera.enabled = false;
+            lowResCameraGo.AddComponent<UniversalAdditionalCameraData>().renderPostProcessing = false;
+            var lowRes = Child<LowResView>(world, "LowRes");
+            var screenGo = new GameObject("Screen");
+            screenGo.transform.SetParent(lowRes.transform, false);
+            screenGo.AddComponent<MeshFilter>();
+            var screen = screenGo.AddComponent<MeshRenderer>();
+            Wire(lowRes, "_camera", lowResCamera);
+            Wire(lowRes, "_screen", screen);
+            Wire(lowRes, "_material", material);
+            Wire(game, "_lowRes", lowRes);
             // Art pass phase 1: the next era warmed 240 m into each one.
             var eraPreload = Child<EraPreloadView>(world, "EraPreload");
             Wire(eraPreload, "_material", material);

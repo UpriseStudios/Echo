@@ -128,9 +128,20 @@ namespace Echo.Tests.PlayMode
             var labels = new System.Collections.Generic.List<string>();
             var hudEra = Find("Hud/Era").GetComponent<TMP_Text>();
             SeasonTheme[] eras = game.ActiveWorld.Eras;
+            // Where the first hanging ceiling in Dino Land is, to photograph its rock overhang.
+            Course course = game.CurrentReplay.Run.Course;
+            float overhangAt = -1f;
+            for (int c = 0; overhangAt < 0f && Echo.Game.Views.SimUnits.ToWorld(course.ChunkStartX(c)) < 290f; c++)
+                if (course.ChunkAt(c).Ceilings.Length > 0) overhangAt = Echo.Game.Views.SimUnits.ToWorld(course.ChunkStartX(c) + course.ChunkAt(c).Ceilings[0].X);
+            bool overhangShot = false;
             for (int i = 0; i < 90000 && !game.ReplayEnded; i++)
             {
                 game.TickFrame(Dt, false);
+                if (!overhangShot && overhangAt > 0f && game.CurrentReplay.Run.Player.X / 1000f > overhangAt - 3.5f)
+                {
+                    overhangShot = true;
+                    yield return ScreenCaptureTests.Capture("timerun_dino_overhang");
+                }
                 // The next era is warmed from 240 m into each one, and only then.
                 int metres = game.CurrentReplay.Run.Distance, into = metres - era * 300;
                 if (era < eras.Length - 1 && into >= 241 && into < 299)
@@ -243,6 +254,17 @@ namespace Echo.Tests.PlayMode
             Assert.IsFalse(game.HighDefinitionShown);
             Assert.IsTrue(rig.PixelPerfect, "pixel-perfect");
             Assert.AreEqual(0, background.ExtraLayersShown);
+            // Art pass phase 2: the backdrop and floor at half the internal resolution, the gameplay at full.
+            var lowRes = Object.FindAnyObjectByType<LowResView>();
+            Assert.IsTrue(game.HalfResolutionShown);
+            Assert.AreEqual(LowResView.Layer, background.transform.Find("Far").gameObject.layer, "the backdrop draws at half resolution");
+            Assert.AreEqual(0, runner.gameObject.layer, "the runner stays at full resolution");
+            Assert.AreEqual(Mathf.CeilToInt(CameraRig.WidthUnits * 16) + 2, lowRes.Size.x, "16 px per unit, half the world's 32");
+            Assert.IsTrue(Era(course.CeilingAt(100), SeasonIds.EraDino), "a rock overhang, not bricks");
+            Assert.IsTrue(Era(course.FloorAt(100), SeasonIds.EraDino));
+            int floorAtHalf = course.GetComponentsInChildren<SpriteRenderer>().Count(r => r.enabled && r.gameObject.layer == LowResView.Layer);
+            Assert.Greater(floorAtHalf, 0, "the floor draws at half resolution");
+            Assert.IsTrue(course.GetComponentsInChildren<SpriteRenderer>().Any(r => r.enabled && r.gameObject.layer == 0 && r.sortingOrder == 2), "hazards stay at full");
 
             // 32-bit Today: the neon city with two extra parallax layers.
             game.ForceEra = 2;
@@ -277,6 +299,8 @@ namespace Echo.Tests.PlayMode
             // Back to pixel art, and out of Time Run.
             game.ForceEra = 1;
             game.TickFrame(Dt, false);
+            Assert.IsFalse(game.HalfResolutionShown);
+            Assert.AreEqual(0, background.transform.Find("Far").gameObject.layer, "back on the main camera");
             Assert.IsFalse(game.HighDefinitionShown);
             Assert.IsTrue(rig.PixelPerfect);
             Assert.AreEqual(0, lights.LightsOn);

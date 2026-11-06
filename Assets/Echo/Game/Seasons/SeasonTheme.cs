@@ -126,5 +126,11 @@ namespace Echo.Game.Seasons
         public Sprite Floor;
         [Tooltip("The Far Future breaks out of pixel art: full resolution, 2D lights, bloom, and glow and trails on the pixel sprites.")]
         public bool HighDefinition;
+        [Tooltip("Dino Land's 8-bit look: its backdrop and floor rendered at half the internal resolution (LowResView).")]
+        public bool HalfResolution;
+        [Tooltip("An era's floor edge in its own colours (Dino Land's grass); null keeps the stone edge.")]
+        public Sprite FloorTop;
+        [Tooltip("An era's hanging ceiling in its own colours (Dino Land's rock overhang); null keeps the bricks.")]
+        public Sprite Ceiling;
     }
 }

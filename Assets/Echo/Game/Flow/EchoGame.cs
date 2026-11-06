@@ -168,6 +168,7 @@ namespace Echo.Game.Flow
         {
             Application.targetFrameRate = 60;
             _cfg = SimConfig.Default;
+            if (_cameraRig != null) _cameraRig.Followed += RenderLowRes;
 
             var json = new string[_chunkFiles.Length];
             for (int i = 0; i < json.Length; i++) json[i] = _chunkFiles[i].text;
@@ -519,6 +520,7 @@ namespace Echo.Game.Flow
             RenderSeasonEffects();
             RenderTimeRift();
             RenderFuture();
+            RenderLowRes();
             TickBenchmark();
             if (_eggHunt != null) _eggHunt.Render(Time.time);
             // Obstacles keep their contrast at night: against a dark sky they turn pale instead of dark. A world can set
