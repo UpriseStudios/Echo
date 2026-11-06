@@ -489,6 +489,11 @@ namespace Echo.Editor
             Wire(game, "_ambient", ambient);
             Wire(game, "_seasonEffects", seasonEffects);
             Wire(game, "_timeRift", timeRift);
+            // Art pass phase 1: the next era warmed 240 m into each one.
+            var eraPreload = Child<EraPreloadView>(world, "EraPreload");
+            Wire(eraPreload, "_material", material);
+            Wire(eraPreload, "_litMaterial", EnsureLitSpriteMaterial());
+            Wire(game, "_eraPreload", eraPreload);
             Wire(game, "_futureLights", futureLights);
             Wire(game, "_futureVolume", AddFutureVolume());
             Wire(game, "_eggHunt", eggHunt);

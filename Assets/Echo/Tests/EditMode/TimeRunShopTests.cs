@@ -35,7 +35,7 @@ namespace Echo.Tests.EditMode
             CollectionAssert.Contains(ProductIds.All, ProductIds.WorldTimeRun);
             Assert.AreEqual(3, world.TrialRuns);
             Assert.IsNotNull(world.World);
-            Assert.AreEqual(4, world.World.Eras.Length);
+            Assert.AreEqual(5, world.World.Eras.Length);
         }
 
         [Test]
@@ -97,9 +97,9 @@ namespace Echo.Tests.EditMode
             for (int i = 0; i < 22; i++) AchievementRules.OnTimeRunDeath(p, new TimeRunDeath { Distance = 50, InDinoLand = true });
             CollectionAssert.AreEqual(new[] { AchievementIds.Extinct }, AchievementRules.OnTimeRunDeath(p, new TimeRunDeath { Distance = 50, InDinoLand = true }));
 
-            CollectionAssert.IsEmpty(AchievementRules.OnTimeRunDeath(p, new TimeRunDeath { Distance = 749 }), "749 m is still Today");
-            CollectionAssert.AreEqual(new[] { AchievementIds.TimeTraveller }, AchievementRules.OnTimeRunDeath(p, new TimeRunDeath { Distance = 760, InFarFuture = true }));
-            CollectionAssert.IsEmpty(AchievementRules.OnTimeRunDeath(p, new TimeRunDeath { Distance = 900, InFarFuture = true, ByOwnGhost = false }), "a spike is no paradox");
+            CollectionAssert.IsEmpty(AchievementRules.OnTimeRunDeath(p, new TimeRunDeath { Distance = 899 }), "899 m is still Today");
+            CollectionAssert.AreEqual(new[] { AchievementIds.TimeTraveller }, AchievementRules.OnTimeRunDeath(p, new TimeRunDeath { Distance = 910, InFarFuture = true }));
+            CollectionAssert.IsEmpty(AchievementRules.OnTimeRunDeath(p, new TimeRunDeath { Distance = 1000, InFarFuture = true, ByOwnGhost = false }), "a spike is no paradox");
             CollectionAssert.AreEqual(new[] { AchievementIds.Year3026, AchievementIds.Paradox },
                 AchievementRules.OnTimeRunDeath(p, new TimeRunDeath { Distance = 1500, InFarFuture = true, ByOwnGhost = true }));
             Assert.IsEmpty(AchievementRules.OnTimeRunDeath(p, new TimeRunDeath { Distance = 1600, InFarFuture = true, ByOwnGhost = true }), "only once");

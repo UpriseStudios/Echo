@@ -59,6 +59,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bbf01da8857c1e5419a9943893d03f4f, type: 2}
   - {fileID: 11400000, guid: 975061ab820b5bd4b848a3cb69f1cb57, type: 2}
   - {fileID: 11400000, guid: cf809fc7a3dc2e5478ec9f95781a7519, type: 2}
+  - {fileID: 11400000, guid: ee5697fac54a19246a0c30a171321331, type: 2}
   EraLabel: 
   Gap: {fileID: 0}
   Coin: {fileID: 0}

@@ -108,7 +108,7 @@ namespace Echo.Tests.EditMode
         {
             SeasonTheme world = Themes().Find(x => x.Id == SeasonIds.TimeRun);
             Assert.IsNotNull(world);
-            Assert.AreEqual(4, world.Eras.Length);
+            Assert.AreEqual(5, world.Eras.Length);
             Sprite fill = Original("ground_fill.png"), coin = Original("bounty_coin.png"), horns = Original("nemesis_horns.png");
             foreach (SeasonTheme era in world.Eras)
             {
@@ -135,7 +135,7 @@ namespace Echo.Tests.EditMode
                 if (p.r > p.g + 40 && p.r > p.b + 40) red++;
             }
             Assert.Greater(red * 2, opaque, "the skull is mostly red");
-            for (int i = 1; i < 4; i++) Assert.IsNull(world.Eras[i].NemesisAccessory, "the red horns in the other eras");
+            for (int i = 1; i < world.Eras.Length; i++) Assert.IsNull(world.Eras[i].NemesisAccessory, "the red horns in the other eras");
         }
 
         static bool IsGrey(Sprite s)

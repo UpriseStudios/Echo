@@ -12,7 +12,7 @@ namespace Echo.Game.Flow
 {
     /// <summary>
     /// World: Time Run (Assets/Docs/World Time Run.md, phase 1, the era system): a world whose theme changes with the run's
-    /// distance, one era every 250 m (TimeEras), read from the simulation so replays and challenges see the same era in the
+    /// distance, one era every 300 m (TimeEras; five since the art pass), read from the simulation so replays and challenges see the same era in the
     /// same place. Crossing into a later era plays the time rift behind the gameplay, a whoosh and the era's label in the
     /// corner. All of it is looks: the era themes go through the same ApplySeason as any world.
     /// Phase 3, art styles: each era is drawn in a different era of video games (8-bit, 16-bit, 32-bit), and the Far
@@ -22,6 +22,7 @@ namespace Echo.Game.Flow
     public sealed partial class EchoGame
     {
         [SerializeField] TimeRiftView _timeRift;
+        [SerializeField] EraPreloadView _eraPreload;
         [SerializeField] FutureLightsView _futureLights;
         [Tooltip("The Far Future's stronger bloom, weighted in with full effects.")]
         [SerializeField] Volume _futureVolume;
@@ -77,6 +78,12 @@ namespace Echo.Game.Flow
                 if (_seasonThemes != null) RefreshSeason();
             }
         }
+
+        /// <summary>The Time Run world being worn, with its eras (null outside it), for tests.</summary>
+        public SeasonTheme ActiveWorld => _timeRun;
+
+        /// <summary>The era being preloaded (null: none), for tests.</summary>
+        public SeasonTheme EraPreloading => _eraPreload != null ? _eraPreload.Warming : null;
 
         /// <summary>The era on screen (-1 outside Time Run), for tests.</summary>
         public int EraShown => _timeRun != null ? _eraShown : -1;
@@ -159,7 +166,7 @@ namespace Echo.Game.Flow
             {
                 Distance = _run.Distance,
                 InDinoLand = fell == 0,
-                InFarFuture = fell == _timeRun.Eras.Length - 1,
+                InFarFuture = fell >= TimeEras.FarFuture,
                 ByOwnGhost = _run.Cause == DeathCause.Ghost && _run.Killer != null && !_run.Killer.Leader,
                 MostGhostsOnScreenInDinoLand = _dinoGhostsMost,
             };
@@ -179,6 +186,12 @@ namespace Echo.Game.Flow
             if (_timeRun == null || _run == null) return;
             int era = Mathf.Clamp(ForceEra ?? TimeEras.At(_run.Distance, _timeRun.Eras.Length), 0, _timeRun.Eras.Length - 1);
             TrackTimeRun(era);
+            if (_eraPreload != null)
+            {
+                int next = ForceEra == null ? TimeEras.PreloadAt(_run.Distance, _timeRun.Eras.Length) : -1;
+                _eraPreload.Warm(next >= 0 ? _timeRun.Eras[next] : null);
+                _eraPreload.Render(_cameraRig.Left + CameraRig.WidthUnits / 2f, _cameraRig.Bottom + _cameraRig.Height / 2f);
+            }
             if (era == _eraShown) return;
             bool later = era > _eraShown;
             _eraShown = era;
@@ -252,7 +265,7 @@ namespace Echo.Game.Flow
                 _forceEra = null;
             }
             else if (_forceEra == null) _forceEra = 0;
-            else if (_forceEra < 3) _forceEra++;
+            else if (_forceEra < (_timeRun != null ? _timeRun.Eras.Length - 1 : 4)) _forceEra++;
             else
             {
                 _previewTimeRun = false;

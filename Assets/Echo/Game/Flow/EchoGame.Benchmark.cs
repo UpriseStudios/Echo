@@ -23,7 +23,11 @@ namespace Echo.Game.Flow
         const int BenchmarkFromTick = 60;
         const int BenchmarkUntilTick = 60 + 15 * 60;
         static readonly string[] BenchmarkPasses =
-            { "Dino Land (8-bit)", "Medieval (16-bit)", "Today (32-bit)", "Far Future (HD)", "Far Future (HD, reduced effects)" };
+        {
+            "Dino Land (8-bit)", "Medieval (16-bit)", "Today (32-bit)", "Far Future (HD)", "Far Far Future", "Far Future (HD, reduced effects)",
+        };
+        // Each pass's era: every era in turn, then the Far Future again with reduced effects.
+        static readonly int[] BenchmarkEras = { 0, 1, 2, 3, 4, 3 };
 
         sealed class BenchmarkRun
         {
@@ -101,7 +105,7 @@ namespace Echo.Game.Flow
         {
             BenchmarkRun b = _benchmark;
             _previewTimeRun = true;
-            _forceEra = Mathf.Min(b.Pass, 3);
+            _forceEra = BenchmarkEras[b.Pass];
             _benchmarkReduced = b.Pass == BenchmarkPasses.Length - 1;
             RefreshSeason();
             ApplyEffects();

@@ -35,6 +35,7 @@ namespace Echo.Game.Seasons
         public const string EraMedieval = "timerun_medieval";
         public const string EraToday = "timerun_today";
         public const string EraFuture = "timerun_future";
+        public const string EraFarFarFuture = "timerun_farfar";
 
         /// <summary>Seasons phase 1: a theme that exercises every override. Never scheduled; only forced.</summary>
         public const string Test = "test";

@@ -90,18 +90,18 @@ namespace Echo.Tests.PlayMode
             // A run past 800 m with ordinary jumps, played without Time Run and kept as a reel.
             var cfg = SimConfig.Default;
             int speed = cfg.SpeedForPct(game.Run.SpeedPct);
-            Schedule run = SurvivingSchedule.Build(new Course(Library(), game.Run.Course.Seed), speed, 9000, new Random(7), cfg);
+            Schedule run = SurvivingSchedule.Build(new Course(Library(), game.Run.Course.Seed), speed, 16000, new Random(7), cfg);
             game.enabled = false;
             bool tapping = true;
             game.ScriptedTaps = t => tapping && run.TapAt(t);
             game.ScriptedHeld = t => tapping && run.HeldAt(t);
             game.TickFrame(Dt, tapped: true);
-            for (int f = 0; f < 60000 && game.State == GameState.Running && game.Run.Distance < 820; f++)
+            for (int f = 0; f < 60000 && game.State == GameState.Running && game.Run.Distance < 1260; f++)
             {
                 game.TickFrame(Dt, false);
                 if (f % 60 == 0) yield return null;
             }
-            Assert.GreaterOrEqual(game.Run.Distance, 760, "the run reaches the Far Future");
+            Assert.GreaterOrEqual(game.Run.Distance, 1210, "the run reaches the Far Far Future");
             tapping = false;
             for (int f = 0; f < 60000 && game.State != GameState.DeathScreen; f++)
             {
@@ -124,12 +124,21 @@ namespace Echo.Tests.PlayMode
             Assert.AreEqual(GameState.Replay, game.State);
             Assert.AreEqual(0, game.EraShown, "Dino Land at the start");
             Assert.AreEqual(SeasonIds.EraDino, game.ActiveBackdrop.Id);
-            int era = 0, rifts = 0;
+            int era = 0, rifts = 0, preloads = 0;
             var labels = new System.Collections.Generic.List<string>();
             var hudEra = Find("Hud/Era").GetComponent<TMP_Text>();
-            for (int i = 0; i < 60000 && !game.ReplayEnded; i++)
+            SeasonTheme[] eras = game.ActiveWorld.Eras;
+            for (int i = 0; i < 90000 && !game.ReplayEnded; i++)
             {
                 game.TickFrame(Dt, false);
+                // The next era is warmed from 240 m into each one, and only then.
+                int metres = game.CurrentReplay.Run.Distance, into = metres - era * 300;
+                if (era < eras.Length - 1 && into >= 241 && into < 299)
+                {
+                    Assert.AreSame(eras[era + 1], game.EraPreloading, $"era {era + 2} warming at {metres} m");
+                    if (into == 241) preloads++;
+                }
+                else if (into > 1 && into < 239) Assert.IsNull(game.EraPreloading, $"nothing to warm at {metres} m");
                 if (game.EraShown != era)
                 {
                     Assert.AreEqual(era + 1, game.EraShown, "eras come in order");
@@ -137,14 +146,19 @@ namespace Echo.Tests.PlayMode
                     Assert.IsTrue(game.TimeRiftPlaying, $"a time rift into era {era + 1}");
                     rifts++;
                     labels.Add(hudEra.text);
-                    Assert.AreEqual(era * 250, game.CurrentReplay.Run.Distance / 250 * 250, "the era changes at its boundary");
+                    Assert.AreEqual(era * 300, game.CurrentReplay.Run.Distance / 300 * 300, "the era changes at its boundary");
+                    // For review: the rift into each era, then the era itself a moment later.
+                    yield return ScreenCaptureTests.Capture($"timerun_rift_era{era + 1}");
+                    for (int f = 0; f < 90; f++) game.TickFrame(Dt, false);
+                    yield return ScreenCaptureTests.Capture($"timerun_run_era{era + 1}");
                 }
                 if (i % 60 == 0) yield return null;
             }
+            Assert.Greater(preloads, 0, "the next era was warmed before its boundary");
             Assert.IsTrue(game.ReplayEnded);
-            Assert.AreEqual(3, rifts, "a rift into each later era");
-            CollectionAssert.AreEqual(new[] { "1200 AD", "2026", "3026" }, labels);
-            Assert.AreEqual(SeasonIds.EraFuture, game.ActiveBackdrop.Id);
+            Assert.AreEqual(4, rifts, "a rift into each later era");
+            CollectionAssert.AreEqual(new[] { "1200 AD", "2026", "3026", "10,000 AD" }, labels);
+            Assert.AreEqual(SeasonIds.EraFarFarFuture, game.ActiveBackdrop.Id);
             Assert.AreEqual(played, Print(game.CurrentReplay.Run), "Time Run is looks only: the run replays exactly as it was played");
             Click(Showing("Replay/Exit") ? "Replay/Exit" : "Replay/Back");
             if (Showing("Reels")) Click("Reels/Close");
@@ -160,38 +174,38 @@ namespace Echo.Tests.PlayMode
             var course = Object.FindAnyObjectByType<CourseView>();
             var graves = Object.FindAnyObjectByType<GraveViews>();
             var ghosts = Object.FindAnyObjectByType<GhostViews>();
-            Sprite spike = course.SpikeAt(100), block = course.BlockAt(100), grave = graves.GraveAt(100), horns = ghosts.HornsAt(100);
-            Color ghost = ghosts.BodyAt(100, false);
-            Assert.IsNull(course.GapAt(100), "outside Time Run a gap is a plain hole");
+            Sprite spike = course.SpikeAt(150), block = course.BlockAt(150), grave = graves.GraveAt(150), horns = ghosts.HornsAt(150);
+            Color ghost = ghosts.BodyAt(150, false);
+            Assert.IsNull(course.GapAt(150), "outside Time Run a gap is a plain hole");
 
             game.PreviewTimeRun = true;
             game.TickFrame(Dt, false);
-            // Each era by position: 0-249 m Dino Land, then Medieval, Today and the Far Future.
-            Assert.IsTrue(Era(course.SpikeAt(100), SeasonIds.EraDino), "a rock spike");
-            Assert.IsTrue(Era(course.BlockAt(100), SeasonIds.EraDino), "a cliff");
-            Assert.IsTrue(Era(course.GapAt(100), SeasonIds.EraDino), "lava");
-            Assert.AreSame(spike, course.SpikeAt(300), "Medieval keeps the spike");
-            Assert.IsTrue(Era(course.BlockAt(300), SeasonIds.EraMedieval), "a portcullis");
-            Assert.IsTrue(Era(course.GapAt(300), SeasonIds.EraMedieval), "a moat");
-            Assert.IsTrue(Era(course.SpikeAt(600), SeasonIds.EraToday), "a traffic cone");
-            Assert.IsTrue(Era(course.GapAt(600), SeasonIds.EraToday), "between rooftops");
-            Assert.IsTrue(Era(course.SpikeAt(900), SeasonIds.EraFuture), "an energy spike");
-            Assert.IsTrue(Era(course.BlockAt(900), SeasonIds.EraFuture), "a hover block");
-            Assert.IsTrue(Era(course.SpikeAt(249), SeasonIds.EraDino), "the boundary is at 250 m");
-            Assert.IsFalse(Era(course.SpikeAt(250), SeasonIds.EraDino));
+            // Each era by position, 300 m each: Dino Land, then Medieval, Today, the Far Future and the Far Far Future.
+            Assert.IsTrue(Era(course.SpikeAt(150), SeasonIds.EraDino), "a rock spike");
+            Assert.IsTrue(Era(course.BlockAt(150), SeasonIds.EraDino), "a cliff");
+            Assert.IsTrue(Era(course.GapAt(150), SeasonIds.EraDino), "lava");
+            Assert.AreSame(spike, course.SpikeAt(450), "Medieval keeps the spike");
+            Assert.IsTrue(Era(course.BlockAt(450), SeasonIds.EraMedieval), "a portcullis");
+            Assert.IsTrue(Era(course.GapAt(450), SeasonIds.EraMedieval), "a moat");
+            Assert.IsTrue(Era(course.SpikeAt(750), SeasonIds.EraToday), "a traffic cone");
+            Assert.IsTrue(Era(course.GapAt(750), SeasonIds.EraToday), "between rooftops");
+            Assert.IsTrue(Era(course.SpikeAt(1050), SeasonIds.EraFuture), "an energy spike");
+            Assert.IsTrue(Era(course.BlockAt(1050), SeasonIds.EraFuture), "a hover block");
+            Assert.IsTrue(Era(course.SpikeAt(299), SeasonIds.EraDino), "the boundary is at 300 m");
+            Assert.IsFalse(Era(course.SpikeAt(300), SeasonIds.EraDino));
 
-            Assert.IsTrue(Era(graves.GraveAt(100), SeasonIds.EraDino), "a stone slab");
-            Assert.AreSame(grave, graves.GraveAt(300), "Medieval keeps the tombstone");
-            Assert.IsTrue(Era(graves.GraveAt(600), SeasonIds.EraToday));
-            Assert.IsTrue(Era(graves.GraveAt(900), SeasonIds.EraFuture), "a holographic memorial");
+            Assert.IsTrue(Era(graves.GraveAt(150), SeasonIds.EraDino), "a stone slab");
+            Assert.AreSame(grave, graves.GraveAt(450), "Medieval keeps the tombstone");
+            Assert.IsTrue(Era(graves.GraveAt(750), SeasonIds.EraToday));
+            Assert.IsTrue(Era(graves.GraveAt(1050), SeasonIds.EraFuture), "a holographic memorial");
 
-            Assert.AreNotEqual(ghost, ghosts.BodyAt(100, false), "fossil ghosts");
-            Assert.AreEqual(ghost, ghosts.BodyAt(300, false), "standard ghosts in Medieval");
-            Assert.AreNotEqual(ghost, ghosts.BodyAt(900, false), "hologram ghosts");
+            Assert.AreNotEqual(ghost, ghosts.BodyAt(150, false), "fossil ghosts");
+            Assert.AreEqual(ghost, ghosts.BodyAt(450, false), "standard ghosts in Medieval");
+            Assert.AreNotEqual(ghost, ghosts.BodyAt(1050, false), "hologram ghosts");
             // The Nemesis is always red and horned: the fossil's skull is red art (SeasonArtTests), otherwise the red horns.
-            Assert.IsTrue(Era(ghosts.HornsAt(100), SeasonIds.EraDino), "the fossil Nemesis's horned skull");
-            foreach (int x in new[] { 300, 600, 900 }) Assert.AreSame(horns, ghosts.HornsAt(x), $"horns at {x} m");
-            foreach (int x in new[] { 100, 900 })
+            Assert.IsTrue(Era(ghosts.HornsAt(150), SeasonIds.EraDino), "the fossil Nemesis's horned skull");
+            foreach (int x in new[] { 450, 750, 1050 }) Assert.AreSame(horns, ghosts.HornsAt(x), $"horns at {x} m");
+            foreach (int x in new[] { 150, 1050 })
             {
                 Color n = ghosts.BodyAt(x, true);
                 Assert.Greater(n.r, Mathf.Max(n.g, n.b) + 0.3f, $"a red Nemesis at {x} m");
@@ -199,15 +213,15 @@ namespace Echo.Tests.PlayMode
 
             // A forced era shows everywhere; off again, everything is as it was.
             game.ForceEra = 3;
-            Assert.IsTrue(Era(course.SpikeAt(100), SeasonIds.EraFuture));
-            Assert.IsTrue(Era(graves.GraveAt(100), SeasonIds.EraFuture));
+            Assert.IsTrue(Era(course.SpikeAt(150), SeasonIds.EraFuture));
+            Assert.IsTrue(Era(graves.GraveAt(150), SeasonIds.EraFuture));
             game.ForceEra = null;
             game.PreviewTimeRun = false;
-            Assert.AreSame(spike, course.SpikeAt(100));
-            Assert.AreSame(block, course.BlockAt(100));
-            Assert.AreSame(grave, graves.GraveAt(100));
-            Assert.AreEqual(ghost, ghosts.BodyAt(900, false));
-            Assert.IsNull(course.GapAt(900));
+            Assert.AreSame(spike, course.SpikeAt(150));
+            Assert.AreSame(block, course.BlockAt(150));
+            Assert.AreSame(grave, graves.GraveAt(150));
+            Assert.AreEqual(ghost, ghosts.BodyAt(1050, false));
+            Assert.IsNull(course.GapAt(1050));
         }
 
         [UnityTest]
@@ -244,7 +258,7 @@ namespace Echo.Tests.PlayMode
             Assert.IsTrue(background.Lit, "the HD backdrop takes the 2D lights");
             Assert.AreEqual(3, background.ExtraLayersShown, "its sky, its moons and a distant skyline");
             Assert.IsTrue(runner.Future, "glow, rim light and afterimages");
-            Assert.IsTrue(Era(course.FloorAt(900), SeasonIds.EraFuture), "the neon grid floor");
+            Assert.IsTrue(Era(course.FloorAt(1050), SeasonIds.EraFuture), "the neon grid floor");
             Assert.Greater(SimUnits.SnapPerUnit, CameraRig.PixelsPerUnit, "things glide rather than step");
             Assert.IsTrue(game.FullEffects);
             Assert.AreEqual(6, lights.LightsOn, "a global light and five neon pools");
@@ -321,7 +335,7 @@ namespace Echo.Tests.PlayMode
             Assert.IsFalse(game.TimeRiftPlaying, "no rift on the title");
 
             // Each era on screen, for review (TestResults/Screenshots/timerun_era*).
-            for (int era = 0; era < 4; era++)
+            for (int era = 0; era < 5; era++)
             {
                 game.ForceEra = era;
                 game.TickFrame(Dt, false);

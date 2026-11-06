@@ -289,10 +289,27 @@ namespace Echo.Editor
             future.FlyerSpeed = 5f;
             future.GhostGlow = true;                     // holograms glow too
 
+            // Art pass phase 1: the fifth era, the Far Far Future (1200 m on). Until phase 6 gives it its real-time 3D
+            // backdrop it wears the Far Future's look, so the era system can be tried end to end.
+            SeasonTheme farFar = Era(SeasonIds.EraFarFarFuture, "Far Far Future", "10,000 AD", future);
+            farFar.HighDefinition = true;
+            farFar.ExtraLayers = future.ExtraLayers;
+            farFar.Floor = future.Floor;
+            farFar.Spike = future.Spike;
+            farFar.Block = future.Block;
+            farFar.Gap = future.Gap;
+            farFar.Grave = future.Grave;
+            farFar.Coin = future.Coin;
+            farFar.GraveInColour = future.GraveInColour;
+            farFar.GhostTint = future.GhostTint;
+            farFar.NemesisTint = future.NemesisTint;
+            farFar.GhostHologram = future.GhostHologram;
+            farFar.GhostGlow = future.GhostGlow;
+
             SeasonTheme world = Plain(Load(SeasonIds.TimeRun), "Time Run");
-            world.Eras = new[] { dino, medieval, today, future };
-            foreach (SeasonTheme t in new[] { dino, medieval, today, future, world }) EditorUtility.SetDirty(t);
-            return new[] { dino, medieval, today, future, world };
+            world.Eras = new[] { dino, medieval, today, future, farFar };
+            foreach (SeasonTheme t in new[] { dino, medieval, today, future, farFar, world }) EditorUtility.SetDirty(t);
+            return new[] { dino, medieval, today, future, farFar, world };
         }
 
         // ---- four more (a user revision), painted in their own colours: white tints show them as drawn ----

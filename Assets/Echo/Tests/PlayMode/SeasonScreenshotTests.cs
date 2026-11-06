@@ -113,7 +113,7 @@ namespace Echo.Tests.PlayMode
                 most = seen;
                 shot = tick;
             });
-            for (int era = 0; era < 4; era++)
+            for (int era = 0; era < 5; era++)
             {
                 yield return Load(library, cfg, ghosts);
                 var game = Object.FindAnyObjectByType<EchoGame>();

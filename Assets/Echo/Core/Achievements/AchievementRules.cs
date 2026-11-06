@@ -30,8 +30,8 @@ namespace Echo.Core.Achievements
             return earned;
         }
 
-        /// <summary>World Time Run doc: the Far Future starts at 750 m; Year 3026 asks for 1,500 m.</summary>
-        public const int FarFutureMetres = 750;
+        /// <summary>World Time Run doc (art pass): the Far Future starts at 900 m; Year 3026 still asks for 1,500 m.</summary>
+        public const int FarFutureMetres = 900;
         public const int Year3026Metres = 1500;
         public const int FossilRecordGhosts = 10;
 
