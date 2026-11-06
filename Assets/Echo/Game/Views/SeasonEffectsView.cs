@@ -100,7 +100,8 @@ namespace Echo.Game.Views
             }
             float x = left - 2f + age * _theme.FlyerSpeed;
             float y = bottom + height * Mathf.Lerp(0.72f, 0.88f, Hash01(pass, 10)) + 0.25f * Mathf.Sin(age * 1.6f);
-            _flyer.sprite = _theme.Flyer;
+            // Art pass phase 3: a flyer with a second frame beats its wings (Medieval's dragon), four beats a second.
+            _flyer.sprite = _theme.FlyerFlap != null && (int)(age * 8f) % 2 == 1 ? _theme.FlyerFlap : _theme.Flyer;
             _flyer.color = _theme.FlyerColour;
             _flyer.transform.localPosition = new Vector3(SimUnits.Pixel(x), SimUnits.Pixel(y), 0f);
             _flyer.enabled = true;

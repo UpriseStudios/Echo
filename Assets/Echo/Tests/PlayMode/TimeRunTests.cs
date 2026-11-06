@@ -195,9 +195,13 @@ namespace Echo.Tests.PlayMode
             Assert.IsTrue(Era(course.SpikeAt(150), SeasonIds.EraDino), "a rock spike");
             Assert.IsTrue(Era(course.BlockAt(150), SeasonIds.EraDino), "a cliff");
             Assert.IsTrue(Era(course.GapAt(150), SeasonIds.EraDino), "lava");
-            Assert.AreSame(spike, course.SpikeAt(450), "Medieval keeps the spike");
+            Assert.IsTrue(Era(course.SpikeAt(450), SeasonIds.EraMedieval), "a wooden stake");
             Assert.IsTrue(Era(course.BlockAt(450), SeasonIds.EraMedieval), "a portcullis");
-            Assert.IsTrue(Era(course.GapAt(450), SeasonIds.EraMedieval), "a moat");
+            Assert.IsTrue(Era(course.GapAt(450), SeasonIds.EraMedieval), "a millstream");
+            Assert.AreEqual(4, course.GapWheelAt(450).Length, "with a waterwheel turning in it");
+            Assert.IsTrue(Era(course.CeilingAt(450), SeasonIds.EraMedieval), "a jettied house overhang");
+            Assert.IsTrue(Era(course.FloorAt(450), SeasonIds.EraMedieval), "cobbles");
+            Assert.IsTrue(Era(course.FloorTopAt(450), SeasonIds.EraMedieval), "under a dirt path");
             Assert.IsTrue(Era(course.SpikeAt(750), SeasonIds.EraToday), "a traffic cone");
             Assert.IsTrue(Era(course.GapAt(750), SeasonIds.EraToday), "between rooftops");
             Assert.IsTrue(Era(course.SpikeAt(1050), SeasonIds.EraFuture), "an energy spike");
@@ -265,6 +269,18 @@ namespace Echo.Tests.PlayMode
             int floorAtHalf = course.GetComponentsInChildren<SpriteRenderer>().Count(r => r.enabled && r.gameObject.layer == LowResView.Layer);
             Assert.Greater(floorAtHalf, 0, "the floor draws at half resolution");
             Assert.IsTrue(course.GetComponentsInChildren<SpriteRenderer>().Any(r => r.enabled && r.gameObject.layer == 0 && r.sortingOrder == 2), "hazards stay at full");
+
+            // 16-bit Medieval (art pass phase 3): a banded sky and three parallax layers, the windmill's sails turning, a
+            // dragon that beats its wings.
+            game.ForceEra = 1;
+            game.TickFrame(Dt, false);
+            Assert.IsTrue(Era(game.ActiveBackdrop.FarLayer, SeasonIds.EraMedieval), "its own hills, not the castle world");
+            Assert.IsTrue(Era(game.ActiveBackdrop.NearLayer, SeasonIds.EraMedieval));
+            Assert.AreEqual(2, background.ExtraLayersShown, "its sky and the windmill hill");
+            Assert.Greater(background.FramesShown, 0, "the sails turn");
+            Assert.IsNotNull(game.ActiveBackdrop.FlyerFlap, "a dragon beating its wings");
+            Assert.IsFalse(game.HalfResolutionShown, "16-bit: the full pixel grid");
+            Assert.IsTrue(rig.PixelPerfect);
 
             // 32-bit Today: the neon city with two extra parallax layers.
             game.ForceEra = 2;

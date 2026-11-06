@@ -75,3 +75,6 @@ MonoBehaviour:
   HalfResolution: 1
   FloorTop: {fileID: 21300000, guid: 34b475af9a4023440aaaac0311a94741, type: 3}
   Ceiling: {fileID: 21300000, guid: 1ed7fefa8f833314cbdf7d62b90fdce4, type: 3}
+  GapWheel: []
+  GapWheelFps: 8
+  FlyerFlap: {fileID: 0}

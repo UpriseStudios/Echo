@@ -73,12 +73,21 @@ MonoBehaviour:
     Parallax: 0.07
     Order: -22
     Tint: {r: 1, g: 1, b: 1, a: 1}
+    Frames: []
+    FramesAt: {x: 0, y: 0}
+    FramesPerSecond: 6
   - Sprite: {fileID: 21300000, guid: 0e3ec9c971a5bdf45897ef1807392775, type: 3}
     Parallax: 0.27
     Order: -20
     Tint: {r: 1, g: 1, b: 1, a: 1}
+    Frames: []
+    FramesAt: {x: 0, y: 0}
+    FramesPerSecond: 6
   Floor: {fileID: 0}
   HighDefinition: 0
   HalfResolution: 0
   FloorTop: {fileID: 0}
   Ceiling: {fileID: 0}
+  GapWheel: []
+  GapWheelFps: 8
+  FlyerFlap: {fileID: 0}

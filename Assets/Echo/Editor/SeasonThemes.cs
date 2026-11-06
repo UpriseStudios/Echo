@@ -203,12 +203,43 @@ namespace Echo.Editor
             }
 
             SeasonTheme dino = Era(SeasonIds.EraDino, "Dino Land", "65,000,000 BC", Built(SeasonIds.VolcanicWaste));
+            // Art pass phase 3: Medieval is a new 16-bit village (nothing from the Echo castle world): a banded sky, three
+            // parallax layers (hills and the cathedral, the windmill hill with turning sails, the cottages and the lists),
+            // a dragon now and then, cobbles under a dirt path, a jettied house overhang and waterwheels in the gaps.
             SeasonTheme medieval = Era(SeasonIds.EraMedieval, "Medieval", "1200 AD", null);
-            medieval.PaletteStops = new[] { Hex(0x5A6A9A), Hex(0x7A6A8A), Hex(0x4A4A6A) };
-            medieval.PaletteBlend = 0.85f;
-            medieval.FarLayer = Load<Sprite>(Art.EchoArt.MountainsPath);
-            medieval.NearLayer = Load<Sprite>(Art.EchoArt.CastlePath);
-            Colours(medieval, Hex(0x8A94B8), Hex(0x2A2A44), Hex(0x6A6070), Hex(0xFFD24A));
+            Color medievalSky = Hex(PixelMedieval.Sky);
+            medieval.PaletteStops = new[] { medievalSky, medievalSky, medievalSky };
+            medieval.PaletteBlend = 1f;
+            medieval.FarLayer = Sprite(SeasonIds.EraMedieval, SeasonArt.Far);
+            medieval.NearLayer = Sprite(SeasonIds.EraMedieval, SeasonArt.Near);
+            Colours(medieval, Color.white, Color.white, Hex(0x6A7488), Hex(0x8A4A1E));   // oak-brown stakes
+            var sails = new Sprite[4];
+            var wheel = new Sprite[4];
+            for (int f = 0; f < 4; f++)
+            {
+                sails[f] = Sprite(SeasonIds.EraMedieval, "sails_" + f);
+                wheel[f] = Sprite(SeasonIds.EraMedieval, "wheel_" + f);
+            }
+            medieval.ExtraLayers = new[]
+            {
+                new ExtraLayer { Sprite = Sprite(SeasonIds.EraMedieval, SeasonArt.Sky), Parallax = 0f, Order = -30 },
+                new ExtraLayer
+                {
+                    Sprite = Sprite(SeasonIds.EraMedieval, SeasonArt.Mid), Parallax = 0.27f, Order = -20,
+                    Frames = sails, FramesPerSecond = 5f,
+                    FramesAt = new Vector2(PixelMedieval.SailsAt.x, PixelMedieval.SailsAt.y) / Art.EchoArt.WorldPpu,
+                },
+            };
+            medieval.Floor = Sprite(SeasonIds.EraMedieval, SeasonArt.Floor);
+            medieval.FloorTop = Sprite(SeasonIds.EraMedieval, SeasonArt.FloorTop);
+            medieval.Ceiling = Sprite(SeasonIds.EraMedieval, SeasonArt.Ceiling);
+            medieval.GapWheel = wheel;
+            medieval.GapWheelFps = 8f;
+            medieval.Flyer = Load<Sprite>(SeasonArt.FlyerPath(SeasonIds.EraMedieval));
+            medieval.FlyerFlap = Sprite(SeasonIds.EraMedieval, "flyer_flap");
+            medieval.FlyerColour = Color.white;
+            medieval.FlyerEvery = 24f;
+            medieval.FlyerSpeed = 2.4f;
             SeasonTheme today = Era(SeasonIds.EraToday, "Today", "2026", Built(SeasonIds.NeonNight));
             SeasonTheme future = Era(SeasonIds.EraFuture, "Far Future", "3026", null);
             future.PaletteStops = new[] { Hex(0x0A1A3A), Hex(0x1A0A3A), Hex(0x0A2A4A) };
@@ -457,6 +488,9 @@ namespace Echo.Editor
             t.HighDefinition = false;
             t.HalfResolution = false;
             t.FloorTop = t.Ceiling = null;
+            t.GapWheel = new Sprite[0];
+            t.GapWheelFps = 8f;
+            t.FlyerFlap = null;
             return t;
         }
 

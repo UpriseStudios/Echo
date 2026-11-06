@@ -167,7 +167,7 @@ namespace Echo.Editor.Art
             System.Func<PixelCanvas> Grave, System.Func<PixelCanvas> Coin)[] Eras =
         {
             (Game.Seasons.SeasonIds.EraDino, PixelTimeRun.RockSpike, PixelTimeRun.CliffBlock, PixelDino.Gap, PixelTimeRun.SlabGrave, PixelTimeRun.AmberCoin),
-            (Game.Seasons.SeasonIds.EraMedieval, null, PixelTimeRun.PortcullisBlock, PixelTimeRun.MoatGap, null, null),
+            (Game.Seasons.SeasonIds.EraMedieval, PixelMedieval.Stake, PixelTimeRun.PortcullisBlock, PixelMedieval.Millstream, null, PixelMedieval.Groat),
             (Game.Seasons.SeasonIds.EraToday, PixelTimeRun.ConeSpike, PixelTimeRun.BillboardBlock, PixelTimeRun.RooftopGap, PixelTimeRun.ModernGrave, null),
             (Game.Seasons.SeasonIds.EraFuture, PixelTimeRun.EnergySpike, PixelTimeRun.HoverBlock, PixelTimeRun.VoidGap, PixelTimeRun.HoloGrave, PixelTimeRun.DataChip),
         };
@@ -183,6 +183,20 @@ namespace Echo.Editor.Art
             EchoArt.Write(PathFor(dino, Floor), PixelDino.Floor());
             EchoArt.Write(PathFor(dino, FloorTop), PixelDino.FloorTop());
             EchoArt.Write(PathFor(dino, Ceiling), PixelDino.Overhang());
+            // Art pass phase 3: Medieval's village, all new.
+            string med = Game.Seasons.SeasonIds.EraMedieval;
+            WriteWorld(med, PixelMedieval.Far(), PixelMedieval.Near(), PixelMedieval.Dragon());
+            EchoArt.Write(PathFor(med, "flyer_flap"), PixelMedieval.DragonFlap());
+            EchoArt.Write(PathFor(med, Sky), PixelMedieval.SkyBands());
+            EchoArt.Write(PathFor(med, Mid), PixelMedieval.Mid());
+            EchoArt.Write(PathFor(med, Floor), PixelMedieval.Floor());
+            EchoArt.Write(PathFor(med, FloorTop), PixelMedieval.FloorTop());
+            EchoArt.Write(PathFor(med, Ceiling), PixelMedieval.Overhang());
+            for (int f = 0; f < 4; f++)
+            {
+                EchoArt.Write(PathFor(med, "sails_" + f), PixelMedieval.Sails(f));
+                EchoArt.Write(PathFor(med, "wheel_" + f), PixelMedieval.Waterwheel(f));
+            }
             EchoArt.Write(PathFor(today, Back), PixelToday.BackSkyline());
             EchoArt.Write(PathFor(today, Mid), PixelToday.MidCity());
             WriteWorld(future, HdFuture.Far(), HdFuture.Near(), HdFuture.FlyingCar(), HdFuture.Rain());
@@ -213,6 +227,21 @@ namespace Echo.Editor.Art
             EchoArt.ImportSprite(PathFor(dino, Floor), EchoArt.WorldPpu, new Vector2(0f, 1f), default, TextureWrapMode.Repeat);
             EchoArt.ImportSprite(PathFor(dino, FloorTop), EchoArt.WorldPpu, new Vector2(0f, 0.8f), default, TextureWrapMode.Repeat);
             EchoArt.ImportSprite(PathFor(dino, Ceiling), EchoArt.WorldPpu, new Vector2(0f, 1f), default, TextureWrapMode.Repeat);
+            string med = Game.Seasons.SeasonIds.EraMedieval;
+            EchoArt.ImportSprite(PathFor(med, Far), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(PathFor(med, Near), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(PathFor(med, Sky), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(PathFor(med, Mid), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(FlyerPath(med), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
+            EchoArt.ImportSprite(PathFor(med, "flyer_flap"), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
+            EchoArt.ImportSprite(PathFor(med, Floor), EchoArt.WorldPpu, new Vector2(0f, 1f), default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(PathFor(med, FloorTop), EchoArt.WorldPpu, new Vector2(0f, 0.8f), default, TextureWrapMode.Repeat);
+            EchoArt.ImportSprite(PathFor(med, Ceiling), EchoArt.WorldPpu, new Vector2(0f, 1f), default, TextureWrapMode.Repeat);
+            for (int f = 0; f < 4; f++)
+            {
+                EchoArt.ImportSprite(PathFor(med, "sails_" + f), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
+                EchoArt.ImportSprite(PathFor(med, "wheel_" + f), EchoArt.WorldPpu, new Vector2(0.5f, 0.5f));
+            }
             EchoArt.ImportSprite(PathFor(today, Back), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
             EchoArt.ImportSprite(PathFor(today, Mid), EchoArt.WorldPpu, Vector2.zero, default, TextureWrapMode.Repeat);
             const FilterMode smooth = FilterMode.Bilinear;

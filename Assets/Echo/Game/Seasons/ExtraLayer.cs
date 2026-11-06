@@ -17,5 +17,10 @@ namespace Echo.Game.Seasons
         public int Order;
         [Tooltip("White shows the layer in its own colours.")]
         public Color Tint = Color.white;
+        [Tooltip("Art pass phase 3: frames drawn over the layer at one spot in every tile (the windmill's turning sails).")]
+        public Sprite[] Frames = new Sprite[0];
+        [Tooltip("Where the frames go, in units from the tile's bottom-left.")]
+        public Vector2 FramesAt;
+        public float FramesPerSecond = 6f;
     }
 }

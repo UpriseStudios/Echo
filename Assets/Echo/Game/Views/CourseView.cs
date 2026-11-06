@@ -135,6 +135,7 @@ namespace Echo.Game.Views
                     {
                         Tiled(pit, gapStart, -GroundTopDrop, segmentStart - gapStart, FloorDepth, Color.white, 0);
                         LowResPiece(gapStart);
+                        GapWheel(gapStart, segmentStart - gapStart);
                     }
                 }
                 Floor(segmentStart, x0 + SimUnits.ToWorld(c.Length), floor, lip);
@@ -169,6 +170,27 @@ namespace Echo.Game.Views
 
             for (int i = _used; i < _pool.Count; i++) _pool[i].enabled = false;
         }
+
+        // Art pass phase 3: Medieval's waterwheel turning in the millstream, centred in the gap, wholly below the floor's
+        // edge (so it never reads as something to stand on), sized to the gap.
+        const float WheelUnits = 1.5f;
+
+        void GapWheel(float x, float w)
+        {
+            if (!(EraAt(x) is SeasonTheme e) || e.GapWheel == null || e.GapWheel.Length == 0) return;
+            Sprite frame = e.GapWheel[(int)(Time.time * e.GapWheelFps) % e.GapWheel.Length];
+            float size = Mathf.Min(WheelUnits, w * 0.8f);
+            SpriteRenderer sr = Next(1);
+            sr.drawMode = SpriteDrawMode.Simple;
+            sr.sprite = frame;
+            sr.color = Color.white;
+            Vector2 s = frame.bounds.size;
+            sr.transform.localScale = new Vector3(size / s.x, size / s.y, 1f);
+            sr.transform.localPosition = new Vector3(SimUnits.Pixel(x + w / 2f), SimUnits.Pixel(-GroundTopDrop - size * 0.5f - 0.1f), 0f);
+        }
+
+        /// <summary>The waterwheel's frames drawn in a gap at x, or none (tests).</summary>
+        public Sprite[] GapWheelAt(float x) => EraAt(x) is SeasonTheme e ? e.GapWheel : null;
 
         void Floor(float from, float to, Color floor, Color lip)
         {

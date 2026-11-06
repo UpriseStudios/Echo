@@ -15,16 +15,16 @@ MonoBehaviour:
   Id: timerun_medieval
   Title: Medieval
   PaletteStops:
-  - {r: 0.3529412, g: 0.41568628, b: 0.6039216, a: 1}
-  - {r: 0.47843137, g: 0.41568628, b: 0.5411765, a: 1}
-  - {r: 0.2901961, g: 0.2901961, b: 0.41568628, a: 1}
-  PaletteBlend: 0.85
-  FarLayer: {fileID: 21300000, guid: aa28fc1133ebace4daed095a8da9b8fd, type: 3}
-  NearLayer: {fileID: 21300000, guid: c280a1bbeab3e084ca5f167430332aa0, type: 3}
-  FarTint: {r: 0.5411765, g: 0.5803922, b: 0.72156864, a: 1}
-  NearTint: {r: 0.16470589, g: 0.16470589, b: 0.26666668, a: 1}
-  FloorColour: {r: 0.41568628, g: 0.3764706, b: 0.4392157, a: 1}
-  HazardColour: {r: 1, g: 0.8235294, b: 0.2901961, a: 1}
+  - {r: 0.5411765, g: 0.8, b: 0.972549, a: 1}
+  - {r: 0.5411765, g: 0.8, b: 0.972549, a: 1}
+  - {r: 0.5411765, g: 0.8, b: 0.972549, a: 1}
+  PaletteBlend: 1
+  FarLayer: {fileID: 21300000, guid: f25390b67682caf49ab72ae0465e9321, type: 3}
+  NearLayer: {fileID: 21300000, guid: c485d5f8391f40e43a30fcbfddd55111, type: 3}
+  FarTint: {r: 1, g: 1, b: 1, a: 1}
+  NearTint: {r: 1, g: 1, b: 1, a: 1}
+  FloorColour: {r: 0.41568628, g: 0.45490196, b: 0.53333336, a: 1}
+  HazardColour: {r: 0.5411765, g: 0.2901961, b: 0.11764706, a: 1}
   Effect: 0
   EffectSprites: []
   EffectColours: []
@@ -39,11 +39,11 @@ MonoBehaviour:
   FireworksPerMinute: 6
   ResetShowSeconds: 0
   ResetShowToast: 
-  Flyer: {fileID: 0}
-  FlyerColour: {r: 0, g: 0, b: 0, a: 1}
-  FlyerEvery: 45
+  Flyer: {fileID: 21300000, guid: 907d0604e9158a044b5d56fee030a1ab, type: 3}
+  FlyerColour: {r: 1, g: 1, b: 1, a: 1}
+  FlyerEvery: 24
   FlyerSpeed: 2.4
-  Spike: {fileID: 0}
+  Spike: {fileID: 21300000, guid: 19486a9796f90c845a578c7fdcde1012, type: 3}
   Block: {fileID: 21300000, guid: d8ca1bf8823c22a46aaf98bfa39c4a73, type: 3}
   GroundTop: {fileID: 0}
   Grave: {fileID: 0}
@@ -60,14 +60,39 @@ MonoBehaviour:
   Eras: []
   EraLabel: 1200 AD
   Gap: {fileID: 21300000, guid: 5b796bb333f4f284da6f74b9fd7249dc, type: 3}
-  Coin: {fileID: 0}
+  Coin: {fileID: 21300000, guid: 68555178ebda3fe4e96adc88fdc9f76a, type: 3}
   GhostTint: {r: 0, g: 0, b: 0, a: 0}
   NemesisTint: {r: 0, g: 0, b: 0, a: 0}
   GhostGlow: 0
   GhostHologram: 0
-  ExtraLayers: []
-  Floor: {fileID: 0}
+  ExtraLayers:
+  - Sprite: {fileID: 21300000, guid: 694f30c3fdb54b1489215df1ea20174b, type: 3}
+    Parallax: 0
+    Order: -30
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+    Frames: []
+    FramesAt: {x: 0, y: 0}
+    FramesPerSecond: 6
+  - Sprite: {fileID: 21300000, guid: ffba8abb2060c5545a0f8cf334eec3f9, type: 3}
+    Parallax: 0.27
+    Order: -20
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+    Frames:
+    - {fileID: 21300000, guid: b2983e3e35b7a364480f7916472dc914, type: 3}
+    - {fileID: 21300000, guid: 6191c60250bbed243bcd9e2aa27abab3, type: 3}
+    - {fileID: 21300000, guid: 81bf140227339cf4a949bb01e86d6407, type: 3}
+    - {fileID: 21300000, guid: 280d74a65ae49e24aa5a99cab1b8f05b, type: 3}
+    FramesAt: {x: 10.3125, y: 3.6875}
+    FramesPerSecond: 5
+  Floor: {fileID: 21300000, guid: 6676f2b9c8a0e9c439f7d6e1156e9ef0, type: 3}
   HighDefinition: 0
   HalfResolution: 0
-  FloorTop: {fileID: 0}
-  Ceiling: {fileID: 0}
+  FloorTop: {fileID: 21300000, guid: ad15fd855b138de45a1e34cf932b5593, type: 3}
+  Ceiling: {fileID: 21300000, guid: 9c1f1091eadf7304990adfe36779e85f, type: 3}
+  GapWheel:
+  - {fileID: 21300000, guid: a9d2c2ffc7413f2479bfddf53651f81e, type: 3}
+  - {fileID: 21300000, guid: 705c934bb6418354ba52a790c5beb94e, type: 3}
+  - {fileID: 21300000, guid: a8dd8f0c29c91c44e9fc5d38900ed5a0, type: 3}
+  - {fileID: 21300000, guid: 59218087ab917984dbbd2dd656714af0, type: 3}
+  GapWheelFps: 8
+  FlyerFlap: {fileID: 21300000, guid: 634db1e0cf6ce6446b3060c0f283b234, type: 3}

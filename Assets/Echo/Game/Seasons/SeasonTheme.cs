@@ -132,5 +132,10 @@ namespace Echo.Game.Seasons
         public Sprite FloorTop;
         [Tooltip("An era's hanging ceiling in its own colours (Dino Land's rock overhang); null keeps the bricks.")]
         public Sprite Ceiling;
+        [Tooltip("Art pass phase 3: frames turning in each gap of the era (Medieval's waterwheel), below the floor.")]
+        public Sprite[] GapWheel = new Sprite[0];
+        public float GapWheelFps = 8f;
+        [Tooltip("The flyer's second frame, swapped in to beat its wings (Medieval's dragon); null glides.")]
+        public Sprite FlyerFlap;
     }
 }

@@ -204,18 +204,15 @@ namespace Echo.Editor.Art
             "rrrrrrrrrrrrrrrr",
         }, ('g', Leaf), ('G', Fern), ('n', Night), ('r', Rock)).Scaled(2);
 
-        /// <summary>A lava pit, 16 x 16 tiling down the gap: flat lava with a bubble, 2x2 pixels.</summary>
-        public static PixelCanvas Gap() => Rows(new[]
+        /// <summary>A lava pit, 16 x 192 (6 units deep, so its dark rim shows once): flat lava with bubbles, 2x2 pixels.</summary>
+        public static PixelCanvas Gap()
         {
-            "nnnnnnnn",
-            "LLLLLLLL",
-            "LLLsLLLL",
-            "LLLLLLLL",
-            "LLLLLLsL",
-            "LLLLLLLL",
-            "LsLLLLLL",
-            "LLLLLLLL",
-        }, ('n', Night), ('L', Lava), ('s', Sun)).Scaled(2);
+            var c = new PixelCanvas(8, 96);
+            Box(c, 0, 0, 7, 95, Lava);
+            Box(c, 0, 95, 7, 95, Night);
+            foreach (var (x, y) in new[] { (3, 92), (6, 88), (1, 84), (5, 76), (2, 66), (6, 54), (3, 40), (1, 24), (5, 10) }) Plot(c, x, y, Sun);
+            return c.Scaled(2);
+        }
 
         /// <summary>
         /// The rock overhang (the hanging ceiling), 32 x 32 at normal resolution since it's gameplay: dark rock with lit

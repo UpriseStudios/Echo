@@ -14,7 +14,7 @@ namespace Echo.Game.Views
         [SerializeField] Material _material;
         [SerializeField] Material _litMaterial;
 
-        public const int PoolSize = 24;
+        public const int PoolSize = 32;
         public const int SortingOrder = -31;
 
         readonly SpriteRenderer[] _pool = new SpriteRenderer[PoolSize];
@@ -53,7 +53,15 @@ namespace Echo.Game.Views
                 bool lit = theme.HighDefinition && _litMaterial != null;
                 Add(theme.FarLayer, lit);
                 Add(theme.NearLayer, lit);
-                foreach (ExtraLayer l in theme.ExtraLayers) Add(l != null ? l.Sprite : null, lit);
+                foreach (ExtraLayer l in theme.ExtraLayers)
+                {
+                    Add(l != null ? l.Sprite : null, lit);
+                    if (l != null) foreach (Sprite f in l.Frames) Add(f, lit);
+                }
+                foreach (Sprite f in theme.GapWheel) Add(f, false);
+                Add(theme.FlyerFlap, false);
+                Add(theme.FloorTop, false);
+                Add(theme.Ceiling, false);
                 Add(theme.Floor, false);
                 Add(theme.Spike, false);
                 Add(theme.Block, false);

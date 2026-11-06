@@ -79,3 +79,6 @@ MonoBehaviour:
   HalfResolution: 0
   FloorTop: {fileID: 0}
   Ceiling: {fileID: 0}
+  GapWheel: []
+  GapWheelFps: 8
+  FlyerFlap: {fileID: 0}

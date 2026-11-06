@@ -172,6 +172,25 @@ namespace Echo.Tests.EditMode
             Assert.GreaterOrEqual(colours.Count, 6);
         }
 
+        /// <summary>
+        /// The art pass: an era redone has only its own art, nothing from another world (Medieval no longer wears the Echo
+        /// castle world). Every backdrop, floor and hazard sprite is one of the era's own files.
+        /// </summary>
+        [TestCase(SeasonIds.EraDino)]
+        [TestCase(SeasonIds.EraMedieval)]
+        public void ARedoneEra_WearsOnlyItsOwnArt(string id)
+        {
+            SeasonTheme era = Themes().Find(x => x.Id == id);
+            var sprites = new List<Sprite> { era.FarLayer, era.NearLayer, era.Floor, era.FloorTop, era.Ceiling, era.Gap, era.Spike, era.Flyer };
+            foreach (ExtraLayer l in era.ExtraLayers) { sprites.Add(l.Sprite); sprites.AddRange(l.Frames); }
+            sprites.AddRange(era.GapWheel);
+            foreach (Sprite s in sprites)
+            {
+                Assert.IsNotNull(s, id + ": every part drawn");
+                StringAssert.Contains("/" + id + "_", AssetDatabase.GetAssetPath(s), $"{id}: {s.name} is the era's own");
+            }
+        }
+
         static bool IsGrey(Sprite s)
         {
             foreach (Color32 p in Pixels(s))

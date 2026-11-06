@@ -34,6 +34,9 @@ namespace Echo.Game.Views
         SpriteRenderer _farLayer, _nearLayer, _castleLayer, _bannerLayer, _spaceLayer, _planetSprite;
         const int MaxExtraLayers = 4;
         readonly SpriteRenderer[] _extra = new SpriteRenderer[MaxExtraLayers];
+        // Art pass phase 3: each extra layer's animated frames, one renderer per tile it can show at once.
+        const int FramesPerLayer = 4;
+        readonly SpriteRenderer[] _frames = new SpriteRenderer[MaxExtraLayers * FramesPerLayer];
         ExtraLayer[] _extraLayers;
         bool _highDefinition;
         Sprite _baseFar, _baseNear;
@@ -54,6 +57,7 @@ namespace Echo.Game.Views
             _spaceLayer = Layer("Space", _space, -19);
             _bannerLayer = Layer("CastleBanners", _castleBanners, -18);
             for (int i = 0; i < MaxExtraLayers; i++) _extra[i] = Layer("Extra" + i, null, -22);
+            for (int i = 0; i < _frames.Length; i++) _frames[i] = Layer("Frames" + i, null, -22, false);
         }
 
         /// <summary>A backdrop's extra layers (null or empty: none).</summary>
@@ -67,6 +71,24 @@ namespace Echo.Game.Views
                 _extra[i].sprite = l != null ? l.Sprite : null;
                 _extra[i].sortingOrder = l != null ? l.Order : -22;
                 _extra[i].enabled = l != null && l.Sprite != null;
+                for (int k = 0; k < FramesPerLayer; k++)
+                {
+                    SpriteRenderer f = _frames[i * FramesPerLayer + k];
+                    if (f == null) continue;
+                    f.enabled = false;
+                    f.sortingOrder = l != null ? l.Order : -22;
+                }
+            }
+        }
+
+        /// <summary>Animated frames drawn now (tests).</summary>
+        public int FramesShown
+        {
+            get
+            {
+                int n = 0;
+                foreach (SpriteRenderer sr in _frames) if (sr != null && sr.enabled) n++;
+                return n;
             }
         }
 
@@ -89,6 +111,8 @@ namespace Echo.Game.Views
             foreach (SpriteRenderer sr in new[] { _farLayer, _nearLayer })
                 if (sr != null) sr.sharedMaterial = m;
             foreach (SpriteRenderer sr in _extra)
+                if (sr != null) sr.sharedMaterial = m;
+            foreach (SpriteRenderer sr in _frames)
                 if (sr != null) sr.sharedMaterial = m;
         }
 
@@ -156,7 +180,9 @@ namespace Echo.Game.Views
                 for (int i = 0; i < MaxExtraLayers && i < _extraLayers.Length; i++)
                 {
                     ExtraLayer l = _extraLayers[i];
-                    if (l != null && l.Sprite != null) Place(_extra[i], l.Sprite, cameraX, viewWidth, l.Parallax, 1f, l.Tint);
+                    if (l == null || l.Sprite == null) continue;
+                    float left = Place(_extra[i], l.Sprite, cameraX, viewWidth, l.Parallax, 1f, l.Tint);
+                    PlaceFrames(i, l, left, cameraX, viewWidth);
                 }
 
             if (_planetSprite != null && _planet != null)
@@ -167,6 +193,25 @@ namespace Echo.Game.Views
                 float y = viewBottom + viewHeight * 0.78f;
                 _planetSprite.transform.localPosition = new Vector3(SimUnits.Pixel(x), SimUnits.Pixel(y), 0f);
                 _planetSprite.color = new Color(1f, 1f, 1f, env.Space);
+            }
+        }
+
+        // The frames at their spot in each tile in view, a touch nearer the camera than the layer so they draw over it.
+        void PlaceFrames(int layer, ExtraLayer l, float left, float cameraX, float viewWidth)
+        {
+            bool any = l.Frames != null && l.Frames.Length > 0;
+            float tileW = l.Sprite.bounds.size.x;
+            Sprite frame = any ? l.Frames[(int)(Time.time * l.FramesPerSecond) % l.Frames.Length] : null;
+            for (int k = 0; k < FramesPerLayer; k++)
+            {
+                SpriteRenderer f = _frames[layer * FramesPerLayer + k];
+                if (f == null) continue;
+                float x = left + k * tileW + l.FramesAt.x;
+                f.enabled = any && x > cameraX - viewWidth / 2f - 2f && x < cameraX + viewWidth / 2f + 2f;
+                if (!f.enabled) continue;
+                f.sprite = frame;
+                f.color = l.Tint;
+                f.transform.localPosition = new Vector3(SimUnits.Pixel(x), SimUnits.Pixel(l.FramesAt.y), -0.1f);
             }
         }
 
