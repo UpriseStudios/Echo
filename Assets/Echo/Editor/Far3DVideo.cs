@@ -37,7 +37,7 @@ namespace Echo.Editor
                 Far3DScene.CameraAt(k * Far3DScene.Period / 3f, out Vector3 at, out Quaternion look);
                 cam.transform.SetPositionAndRotation(at, look);
                 scene.Follow(at);
-                scene.Animate(k * 1.7f);
+                scene.Animate(k * 1.7f, k * Far3DScene.Period / 3f);
                 cam.Render();
                 RenderTexture.active = rt;
                 frame.ReadPixels(new Rect(0, 0, Width, Height), 0, 0);
@@ -83,7 +83,7 @@ namespace Echo.Editor
                     Far3DScene.CameraAt(t * Far3DScene.Period / Far3DScene.LoopSeconds, out Vector3 at, out Quaternion look);
                     cam.transform.SetPositionAndRotation(at, look);
                     scene.Follow(at);
-                    scene.Animate(t);
+                    scene.Animate(t, t * Far3DScene.Period / Far3DScene.LoopSeconds);
                     cam.Render();
                     RenderTexture.active = rt;
                     frame.ReadPixels(new Rect(0, 0, Width, Height), 0, 0);

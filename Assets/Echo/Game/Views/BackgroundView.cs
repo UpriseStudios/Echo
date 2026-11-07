@@ -218,7 +218,9 @@ namespace Echo.Game.Views
         void PlaceFloor(float cameraX, float viewWidth, float viewBottom)
         {
             if (!_floorGlass || _backing == null) return;
-            float depth = Mathf.Max(1f, -viewBottom + 1f), w = viewWidth + 4f;
+            // Well past any view's bottom: the view can change shape between frames (a resized window, a screenshot's
+            // framing), and a short backing would let the 3D city show through under the floor.
+            float depth = Mathf.Max(20f, -viewBottom + 4f), w = viewWidth + 4f;
             _backing.transform.localPosition = new Vector3(cameraX - w / 2f, -depth, 0f);
             _backing.transform.localScale = new Vector3(w, depth, 1f);
             _backing.color = _floorBacking;

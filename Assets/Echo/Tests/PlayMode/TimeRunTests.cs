@@ -358,6 +358,7 @@ namespace Echo.Tests.PlayMode
             Assert.IsTrue(runner.ShadowShown, "a shadow on the floor");
             Assert.IsTrue(far3D.HasLoop, "the reduced-effects loop is set up");
             Assert.AreEqual(0, futureFx.AtmosphereShown, "the 3D city brings its own atmosphere");
+            Assert.IsTrue(far3D.CalmShown, "art fix phase 3: a darker, calmer band behind the gameplay");
             yield return null;
             yield return ScreenCaptureTests.Capture("timerun_era5_3d");
             game.WeakDeviceOverride = true;
@@ -397,6 +398,9 @@ namespace Echo.Tests.PlayMode
         {
             yield return Title();
             var game = Object.FindAnyObjectByType<EchoGame>();
+            // Art fix phase 3: a player who chose full effects in Settings still gets real reduced passes.
+            game.CurrentSave.Settings.EffectsChosen = true;
+            game.CurrentSave.Settings.Glow = true;
             Click("Title/Settings");
             Assert.AreEqual(GameState.Menu, game.State);
             var row = GameObject.Find("Canvas/SafeArea/Settings").GetComponentsInChildren<UnityEngine.UI.Button>(true).First(b => b.name == "Benchmark");
@@ -404,14 +408,18 @@ namespace Echo.Tests.PlayMode
             row.onClick.Invoke();
             Assert.IsTrue(game.BenchmarkRunning);
             float give = Time.realtimeSinceStartup + 500f;
-            bool sawFuture = false;
+            bool sawFuture = false, sawVideo = false, sawReduced = false;
             while (game.BenchmarkRunning && Time.realtimeSinceStartup < give)
             {
                 sawFuture |= game.HighDefinitionShown && game.State == GameState.Replay;
+                sawVideo |= game.Scene3DShown == Far3DView.Mode.Video;
+                sawReduced |= !game.FullEffects && game.EffectsMode.Contains("the benchmark's reduced pass");
                 yield return null;
             }
             Assert.IsFalse(game.BenchmarkRunning, "the benchmark finished");
             Assert.IsTrue(sawFuture, "the Far Future was measured in HD");
+            Assert.IsTrue(sawReduced, "the reduced passes are reduced, whatever was chosen in Settings");
+            Assert.IsTrue(sawVideo, "and the Far Far Future's reduced pass plays the video");
             string report = game.BenchmarkReport;
             Debug.Log("[Benchmark] editor report:\n" + report);
             StringAssert.Contains("30 ghosts in the graveyard", report);

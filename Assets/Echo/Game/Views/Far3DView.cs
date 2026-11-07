@@ -12,6 +12,8 @@ namespace Echo.Game.Views
     /// stacking: the 3D scene needs the Universal renderer while the game runs on the 2D renderer (a stack shares one
     /// renderer type, and the pixel-perfect camera doesn't stack), and a texture lets the city render below screen
     /// resolution and lets the video stand in for it on the same quad.
+    /// Art fix phase 3: a darker, calmer band behind the gameplay strip (a gradient over the city's foot, either mode), and a
+    /// switch to the video holds the last real-time frame until the video has a frame of its own (no blank flash).
     /// </summary>
     public sealed class Far3DView : MonoBehaviour
     {
@@ -28,10 +30,18 @@ namespace Echo.Game.Views
 
         public const string LayerName = "Far3D";
         public const int SortingOrder = -40;
+        /// <summary>The calm band: this many units over the floor line, darkest at the floor.</summary>
+        public const float CalmHeight = 5.5f;
+        static readonly Color CalmColour = new Color(0.02f, 0.02f, 0.07f, 0.85f);
 
         RenderTexture _target, _videoTarget;
-        Material _shown;
+        Material _shown, _calmMaterial;
+        MeshRenderer _calm;
         Mode _mode = Mode.Off;
+        bool _awaitingVideo;
+
+        /// <summary>The calm band behind the gameplay is drawn (tests).</summary>
+        public bool CalmShown => _calm != null && _calm.enabled;
 
         /// <summary>What's showing (tests).</summary>
         public Mode Showing => _mode;
@@ -53,6 +63,22 @@ namespace Echo.Game.Views
             _shown = new Material(_material);
             _screen.sharedMaterial = _shown;
             _screen.sortingOrder = SortingOrder;
+
+            // The calm band: a quad whose vertex colours fade from the floor line upwards, on a white texture.
+            var calmGo = new GameObject("Calm");
+            calmGo.transform.SetParent(transform, false);
+            var calmMesh = new Mesh { name = "Far3DCalm" };
+            calmMesh.vertices = new[] { new Vector3(-0.5f, 0f), new Vector3(0.5f, 0f), new Vector3(-0.5f, 1f), new Vector3(0.5f, 1f) };
+            calmMesh.uv = new[] { Vector2.zero, Vector2.right, Vector2.up, Vector2.one };
+            var clear = new Color(CalmColour.r, CalmColour.g, CalmColour.b, 0f);
+            calmMesh.colors = new[] { CalmColour, CalmColour, clear, clear };
+            calmMesh.triangles = new[] { 0, 2, 1, 2, 3, 1 };
+            calmGo.AddComponent<MeshFilter>().sharedMesh = calmMesh;
+            _calm = calmGo.AddComponent<MeshRenderer>();
+            _calmMaterial = new Material(_material) { mainTexture = Texture2D.whiteTexture };
+            _calm.sharedMaterial = _calmMaterial;
+            _calm.sortingOrder = SortingOrder + 1;
+            _calm.enabled = false;
             if (_scene != null) _scene.Build();
             SetMode(Mode.Off);
         }
@@ -63,7 +89,8 @@ namespace Echo.Game.Views
             if (mode == Mode.Video && _loop == null) mode = Mode.RealTime;
             _mode = mode;
             if (_camera != null) _camera.enabled = mode == Mode.RealTime;
-            if (_screen != null) _screen.enabled = mode != Mode.Off;
+            if (_screen != null) _screen.enabled = mode != Mode.Off && (mode != Mode.Video || _target != null);
+            if (_calm != null) _calm.enabled = mode != Mode.Off;
             if (_scene != null) _scene.gameObject.SetActive(mode == Mode.RealTime);
             if (_video == null) return;
             if (mode == Mode.Video)
@@ -76,11 +103,13 @@ namespace Echo.Game.Views
                 _video.clip = _loop;
                 _video.isLooping = true;
                 _video.Play();
-                _shown.mainTexture = _videoTarget;
+                // Keep showing the last real-time frame (if any) until the video has drawn one.
+                _awaitingVideo = true;
             }
             else
             {
                 _video.Stop();
+                _awaitingVideo = false;
                 if (_target != null) _shown.mainTexture = _target;
             }
         }
@@ -94,7 +123,18 @@ namespace Echo.Game.Views
             if (_mode == Mode.Off) return;
             _screen.transform.position = new Vector3(mainCamera.x, mainCamera.y, 0f);
             _screen.transform.localScale = new Vector3(viewWidth, viewHeight, 1f);
-            if (_mode != Mode.RealTime) return;
+            _calm.transform.position = new Vector3(mainCamera.x, 0f, 0f);
+            _calm.transform.localScale = new Vector3(viewWidth + 2f, CalmHeight, 1f);
+            if (_mode == Mode.Video)
+            {
+                if (_awaitingVideo && _video.isPrepared && _video.frame >= 0)
+                {
+                    _awaitingVideo = false;
+                    _shown.mainTexture = _videoTarget;
+                    _screen.enabled = true;
+                }
+                return;
+            }
             int w = Mathf.Max(64, Mathf.RoundToInt(Screen.width * _resolution)), h = Mathf.Max(64, Mathf.RoundToInt(w * viewHeight / viewWidth));
             bool resized = _target == null || _target.width != w || _target.height != h;
             if (resized)
@@ -107,13 +147,14 @@ namespace Echo.Game.Views
             Far3DScene.CameraAt(metres * Far3DScene.UnitsPerMetre, out Vector3 at, out Quaternion look);
             _camera.transform.SetPositionAndRotation(at, look);
             _scene.Follow(at);
-            _scene.Animate(time);
+            _scene.Animate(time, metres * Far3DScene.UnitsPerMetre);
             // A new size (the grave reveal's zoom, a screenshot's framing) is drawn now, not a frame late.
             if (resized) _camera.Render();
         }
 
         void OnDestroy()
         {
+            if (_calmMaterial != null) Destroy(_calmMaterial);
             if (_target != null) _target.Release();
             if (_videoTarget != null) _videoTarget.Release();
         }

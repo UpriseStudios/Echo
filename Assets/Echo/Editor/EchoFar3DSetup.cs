@@ -76,21 +76,22 @@ namespace Echo.Editor
             Texture2D Tex(string p) => AssetDatabase.LoadAssetAtPath<Texture2D>(p);
             Material tower = Far3DMaterial("Far3DTower", "Universal Render Pipeline/Simple Lit", Tex(Far3DArt.Facade), Color.white,
                 Tex(Far3DArt.Windows), new Color(1.1f, 1.1f, 1.15f));
-            Material ground = Far3DMaterial("Far3DGround", "Universal Render Pipeline/Unlit", Tex(Far3DArt.Ground), new Color(1.3f, 1.3f, 1.4f));
-            // A grid square every 100 units, which divides the city's 600-unit repeat, so the ground never jumps.
-            ground.SetTextureScale("_BaseMap", new Vector2(Far3DScene.Period * 4f / 100f, 18f));
-            Material sky = Far3DMaterial("Far3DSky", "Universal Render Pipeline/Unlit", Tex(Far3DArt.Sky), Color.white);
-            Material ring = Far3DMaterial("Far3DRing", "Universal Render Pipeline/Unlit", Tex(Far3DArt.Ring), new Color(1.8f, 1.9f, 2.1f));
-            Material traffic = Far3DMaterial("Far3DTraffic", "Universal Render Pipeline/Unlit", Texture2D.whiteTexture, new Color(1.2f, 1.7f, 2.1f));
+            Material ground = Far3DMaterial("Far3DGround", "Universal Render Pipeline/Unlit", Tex(Far3DArt.Ground), new Color(1.4f, 1.4f, 1.5f));
+            // A tile every 100 units, which divides the city's repeat, so the street never jumps (1200 x Copies * Period).
+            ground.SetTextureScale("_BaseMap", new Vector2(12f, 6f * Far3DScene.Period / 100f));
+            // Art fix phase 3: the sky, the skyline and the planet never fog (Echo/Far3D Unfogged); the lights are fogged unlit.
+            Material sky = Far3DMaterial("Far3DSky", "Echo/Far3D Unfogged", Tex(Far3DArt.Sky), Color.white);
+            Material unfogged = Far3DMaterial("Far3DUnfogged", "Echo/Far3D Unfogged", Texture2D.whiteTexture, Color.white);
+            Material strip = Far3DMaterial("Far3DTraffic", "Universal Render Pipeline/Unlit", Texture2D.whiteTexture, Color.white);
 
             var camGo = new GameObject("Far3DCamera");
             var cam = camGo.AddComponent<Camera>();
             cam.orthographic = false;
-            cam.fieldOfView = 50f;
+            cam.fieldOfView = Far3DScene.FieldOfView;
             cam.nearClipPlane = 1f;
             cam.farClipPlane = 3000f;
             cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = new Color(0.03f, 0.03f, 0.09f);
+            cam.backgroundColor = Far3DArt.FogColour;
             cam.cullingMask = 1 << layer;
             cam.depth = main.depth - 2;
             cam.enabled = false;
@@ -104,26 +105,27 @@ namespace Echo.Editor
             Wire(scene, "_tower", tower);
             Wire(scene, "_ground", ground);
             Wire(scene, "_sky", sky);
-            Wire(scene, "_ring", ring);
-            Wire(scene, "_traffic", traffic);
+            Wire(scene, "_unfogged", unfogged);
+            Wire(scene, "_strip", strip);
             var lightGo = new GameObject("Far3DMoonlight") { layer = layer };
             lightGo.transform.SetParent(sceneGo.transform, false);
-            lightGo.transform.rotation = Quaternion.Euler(32f, -40f, 0f);
+            // From the left and a little ahead: the canyon's right wall lit, its left wall in shade, roofs catching the light.
+            lightGo.transform.rotation = Quaternion.Euler(35f, 70f, 0f);
             var light = lightGo.AddComponent<Light>();
             light.type = LightType.Directional;
-            light.color = new Color(0.62f, 0.72f, 1f);
-            light.intensity = 0.9f;
+            light.color = new Color(0.66f, 0.74f, 1f);
+            light.intensity = 2f;
             light.shadows = LightShadows.None;
             light.cullingMask = 1 << layer;
 
-            // Fog and ambient for the 3D camera (sprites don't use them).
+            // Exponential coloured fog for the 3D camera (sprites don't use it), the sky's horizon colour, so the city fades
+            // into the horizon's glow: about 65% clear at the street the gameplay stands over, a third at 400 units, gone by 1500.
             RenderSettings.fog = true;
-            RenderSettings.fogMode = FogMode.Linear;
-            RenderSettings.fogColor = new Color(0.2f, 0.12f, 0.32f);
-            RenderSettings.fogStartDistance = 320f;
-            RenderSettings.fogEndDistance = 1900f;
+            RenderSettings.fogMode = FogMode.Exponential;
+            RenderSettings.fogColor = Far3DArt.FogColour;
+            RenderSettings.fogDensity = 0.0028f;
             RenderSettings.ambientMode = AmbientMode.Flat;
-            RenderSettings.ambientLight = new Color(0.22f, 0.2f, 0.36f);
+            RenderSettings.ambientLight = new Color(0.09f, 0.08f, 0.16f);
 
             var view = Child<Far3DView>(world, "Far3D");
             var screenGo = new GameObject("Screen");

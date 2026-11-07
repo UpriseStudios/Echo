@@ -47,7 +47,9 @@ namespace Echo.Game.Flow
         bool WeakDevice => _weakDevice ??= EffectsQuality.ThisDeviceIsWeak();
 
         /// <summary>Full effects now: the player's choice, else this phone's (World Time Run doc, phase 3).</summary>
-        public bool FullEffects => _save == null || EffectsQuality.Full(_save.Settings, WeakDevice || _benchmarkReduced || _sessionReduced);
+        // The benchmark's reduced passes are reduced whatever the player chose (art fix phase 3: a phone with effects chosen
+        // in Settings measured full effects twice and reported it as reduced).
+        public bool FullEffects => !_benchmarkReduced && (_save == null || EffectsQuality.Full(_save.Settings, WeakDevice || _sessionReduced));
 
         // Art fix phase 1: a slow Far Future turns effects down for this session only, judged on the game's own frame time.
         bool _sessionReduced;

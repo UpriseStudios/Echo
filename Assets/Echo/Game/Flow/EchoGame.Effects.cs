@@ -20,9 +20,9 @@ namespace Echo.Game.Flow
             get
             {
                 bool full = FullEffects;
-                string why = _save == null ? "no save yet"
+                string why = _benchmarkReduced ? "the benchmark's reduced pass"
+                    : _save == null ? "no save yet"
                     : _save.Settings.EffectsChosen ? "chosen in Settings"
-                    : _benchmarkReduced ? "the benchmark's reduced pass"
                     : WeakDevice ? "auto: a weaker phone"
                     : _sessionReduced ? "auto: the Far Future ran slow this session"
                     : "auto: a capable phone";
