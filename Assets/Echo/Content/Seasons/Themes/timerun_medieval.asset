@@ -59,6 +59,7 @@ MonoBehaviour:
   MusicStems: []
   Eras: []
   EraLabel: 1200 AD
+  EraTitle: 0
   Gap: {fileID: 21300000, guid: 5b796bb333f4f284da6f74b9fd7249dc, type: 3}
   Coin: {fileID: 21300000, guid: 68555178ebda3fe4e96adc88fdc9f76a, type: 3}
   GhostTint: {r: 0, g: 0, b: 0, a: 0}

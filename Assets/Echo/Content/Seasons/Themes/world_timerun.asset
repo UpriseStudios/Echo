@@ -61,6 +61,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cf809fc7a3dc2e5478ec9f95781a7519, type: 2}
   - {fileID: 11400000, guid: ee5697fac54a19246a0c30a171321331, type: 2}
   EraLabel: 
+  EraTitle: 0
   Gap: {fileID: 0}
   Coin: {fileID: 0}
   GhostTint: {r: 0, g: 0, b: 0, a: 0}

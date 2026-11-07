@@ -223,6 +223,7 @@ namespace Echo.Editor.Art
                 for (int k = 0; k < 2; k++) EchoArt.Write(PathFor(future, $"car{lane}_{k}"), HdFuture.TrailCar(k + lane, FutureLanes[lane]));
             EchoArt.Write(PathFor(future, "beam"), HdFuture.Beam());
             EchoArt.Write(PathFor(future, "mist"), HdFuture.Mist());
+            EchoArt.Write(PathFor(future, "shatter"), HdFuture.Shatter());   // art pass phase 7: the last rift's shards
             EchoArt.Write(PathFor(future, Floor), HdFuture.GridFloor());
             EchoArt.Write(PathFor(future, "splash"), HdFuture.Splash());
             Far3DArt.Write();   // art pass phase 6: the 3D city's textures and the blob shadow
@@ -289,6 +290,7 @@ namespace Echo.Editor.Art
                     EchoArt.ImportSprite(PathFor(future, $"car{lane}_{k}"), HdFuture.Ppu, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, smooth);
             EchoArt.ImportSprite(PathFor(future, "beam"), HdFuture.Ppu, new Vector2(0.5f, 0f), default, TextureWrapMode.Clamp, smooth);
             EchoArt.ImportSprite(PathFor(future, "mist"), HdFuture.Ppu, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, smooth);
+            EchoArt.ImportSprite(PathFor(future, "shatter"), HdFuture.Ppu, Vector2.zero, default, TextureWrapMode.Clamp, smooth);
             EchoArt.ImportSprite(PathFor(future, Sky), 32f, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
             EchoArt.ImportSprite(PathFor(future, Floor), 128f, new Vector2(0f, 1f), default, TextureWrapMode.Repeat, smooth);
             EchoArt.ImportSprite(PathFor(future, "splash"), 32f, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, smooth);

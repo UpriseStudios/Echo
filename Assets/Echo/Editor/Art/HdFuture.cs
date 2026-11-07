@@ -422,6 +422,44 @@ namespace Echo.Editor.Art
             return c.ToPixelCanvas();
         }
 
+        /// <summary>
+        /// Art pass phase 7: the Far Future as one picture, 576 x 1024 (9 x 16 units at 64 px per unit, the floor line 293 px
+        /// up), every layer stacked as the game stacks them and their lights added on, bright as they look under bloom: the
+        /// last rift breaks this into shards that fly apart to show the 3D city behind.
+        /// </summary>
+        public static PixelCanvas Shatter()
+        {
+            const int w = 576, h = 1024, floor = 293;
+            var c = new HdCanvas(w, h);
+            c.Fill((x, y) =>
+            {
+                if (y < floor) return C(0x070A18);
+                float t = (y - floor) / 1023f;
+                Color low = Color.Lerp(C(0x5A2470), C(0x1A1E50), Mathf.SmoothStep(0f, 1f, t * 2.2f));
+                return Color.Lerp(low, C(0x04060F), Mathf.SmoothStep(0.35f, 1f, t));
+            });
+            void Layer(PixelCanvas layer, float lights)
+            {
+                for (int y = 0; y < layer.Height && floor + y < h; y++)
+                    for (int x = 0; x < w; x++)
+                    {
+                        Color p = layer[x % layer.Width, y];
+                        if (p.a <= 0f) continue;
+                        if (lights > 0f) c.Add(x, floor + y, new Color(p.r, p.g, p.b), p.a * lights);
+                        else c.Blend(x, floor + y, p);
+                    }
+            }
+            Layer(Moons(), 0f);
+            Layer(MoonsGlow(), 1.4f);
+            Layer(Back(), 0f);
+            Layer(MidFar(), 0f);
+            Layer(Far(), 0f);
+            Layer(FarGlow(), 1.6f);
+            Layer(Near(), 0f);
+            Layer(NearGlow(), 1.6f);
+            return c.ToPixelCanvas();
+        }
+
         /// <summary>The reflection's fade, 4 x 128: clear at the top to opaque at the bottom, white for its tint.</summary>
         public static PixelCanvas Fade()
         {

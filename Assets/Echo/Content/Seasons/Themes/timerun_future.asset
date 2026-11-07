@@ -62,6 +62,7 @@ MonoBehaviour:
   MusicStems: []
   Eras: []
   EraLabel: 3026
+  EraTitle: 1
   Gap: {fileID: 21300000, guid: f582466ba7bd0444eaa824ee96ae8951, type: 3}
   Coin: {fileID: 21300000, guid: ba21abf085e2d6647ac7e871e1807a2f, type: 3}
   GhostTint: {r: 0.2901961, g: 0.9411765, b: 1, a: 1}

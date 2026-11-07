@@ -211,16 +211,27 @@ namespace Echo.Game.Flow
                 _eraPreload.Warm(next >= 0 ? _timeRun.Eras[next] : null);
                 _eraPreload.Render(_cameraRig.Left + CameraRig.WidthUnits / 2f, _cameraRig.Bottom + _cameraRig.Height / 2f);
             }
+            // Art pass phase 7: the first era's name as a run sets off in it (the later ones come with their rifts).
+            bool running = State == GameState.Running || State == GameState.Replay;
+            if (running && _titledRun != _run && ForceEra == null && era == 0 && _run.Distance < 5)
+            {
+                _titledRun = _run;
+                _hud.ShowEra(_timeRun.Eras[0].EraLabel, _timeRun.Eras[0].EraTitle);
+            }
             if (era == _eraShown) return;
             bool later = era > _eraShown;
             _eraShown = era;
             SeasonTheme theme = _timeRun.Eras[era];
             ApplySeason(null, theme);
-            if (!later || (State != GameState.Running && State != GameState.Replay)) return;
-            if (_timeRift != null) _timeRift.Play();
+            if (!later || !running) return;
+            _titledRun = _run;
+            // Each rift bigger than the last; the last breaks the screen open into the 3D city.
+            if (_timeRift != null) _timeRift.Play(era);
             _sfx.TimeRift();
-            _hud.ShowEra(theme.EraLabel);
+            _hud.ShowEra(theme.EraLabel, theme.EraTitle);
         }
+
+        RunSimulation _titledRun;
 
         // The backdrop's art style: extra layers for any backdrop that has them, and high definition for the Far Future.
         void ApplyArtStyle(SeasonTheme backdrop)

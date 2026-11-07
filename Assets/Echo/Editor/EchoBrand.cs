@@ -34,6 +34,8 @@ namespace Echo.Editor
         // ---- type ----
         const string FontDir = "Assets/Echo/Content/Fonts";
         static TMP_FontAsset _black, _bold, _medium;
+        // Time Run art pass phase 7: the era titles' modern (3026) and extruded (10,000 AD) faces.
+        static TMP_FontAsset _modernTitle, _extrudedTitle;
         // Badge icons drawn inline (BadgeSprites): boards and profile lines use them.
         static TMP_SpriteAsset _badges;
 
@@ -50,6 +52,8 @@ namespace Echo.Editor
             _black = FontAsset("PressStart2P-Regular", 64, 1024, pixelify, rubik);
             _bold = pixelify;
             _medium = pixelify;
+            _modernTitle = FontAsset("Rubik-Medium", 90, 1024, rubik);
+            _extrudedTitle = FontAsset("Rubik-Black", 90, 1024, rubik);
         }
 
         // Pixel faces are sampled so each design pixel spans about 8 atlas pixels, so edges stay square and gaps open.

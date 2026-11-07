@@ -297,7 +297,7 @@ namespace Echo.Editor
             Wire(seasonEffects, "_material", material);
             // World: Time Run: the time rift between eras, in front of the scenery, behind the floor and everything on it.
             var timeRift = Child<TimeRiftView>(world, "TimeRift");
-            foreach (var (part, sprite) in new[] { ("_flash", EchoArt.WhitePath), ("_ripple", EchoArt.GlowPath) })
+            foreach (var (part, sprite) in new[] { ("_flash", EchoArt.WhitePath), ("_ripple", EchoArt.GlowPath), ("_rippleBack", EchoArt.GlowPath) })
             {
                 var sr = new GameObject(part.TrimStart('_')).AddComponent<SpriteRenderer>();
                 sr.transform.SetParent(timeRift.transform, false);
@@ -306,6 +306,8 @@ namespace Echo.Editor
                 sr.sortingOrder = TimeRiftView.SortingOrder;
                 Wire(timeRift, part, sr);
             }
+            // Art pass phase 7: the last rift breaks the Far Future's skyline into shards.
+            Wire(timeRift, "_shatter", LoadSprite(SeasonArt.PathFor(Echo.Game.Seasons.SeasonIds.EraFuture, "shatter")));
             // World Time Run doc, phase 3: the Far Future's lights, a dim global light and five neon pools, off elsewhere.
             var futureLights = Child<FutureLightsView>(world, "FutureLights");
             var globalLight = new GameObject("Global").AddComponent<UnityEngine.Rendering.Universal.Light2D>();

@@ -56,11 +56,27 @@ namespace Echo.Editor
             var nearMiss = MakeText(root, "NearMiss", "CLOSE +5", 44, _black, new Vector2(0.5f, 1f), new Vector2(0, -200), new Vector2(600, 80));
             nearMiss.color = Accent;
             var toast = MakeText(root, "Toast", "", 42, _bold, new Vector2(0.5f, 1f), new Vector2(0, -300), new Vector2(1000, 80));
-            // World: Time Run: the era's label in the corner as a run reaches it.
-            var era = MakeText(root, "Era", "", 30, _black, new Vector2(0f, 1f), new Vector2(44, -160), new Vector2(600, 56));
-            era.rectTransform.pivot = new Vector2(0f, 1f);
-            era.alignment = TextAlignmentOptions.TopLeft;
-            era.color = GhostCyan;
+            // World: Time Run (art pass phase 7): the era's name, big and centred in the sky above the runner, in its era's
+            // type; the layers behind it (a shadow, a glow or a 3D extrusion) come first so they draw beneath it.
+            var eraDepth = NewRect("EraDepth", root);
+            eraDepth.anchorMin = Vector2.zero;
+            eraDepth.anchorMax = Vector2.one;
+            eraDepth.offsetMin = eraDepth.offsetMax = Vector2.zero;
+            var eraLayers = new TMP_Text[14];
+            for (int i = 0; i < eraLayers.Length; i++)
+            {
+                eraLayers[i] = MakeText(eraDepth, "Layer" + i, "", 120, _extrudedTitle, new Vector2(0.5f, 0.5f), new Vector2(0, 330), new Vector2(1000, 200));
+                eraLayers[i].rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                eraLayers[i].gameObject.SetActive(false);
+            }
+            var era = MakeText(root, "Era", "", 120, _extrudedTitle, new Vector2(0.5f, 0.5f), new Vector2(0, 330), new Vector2(1000, 200));
+            era.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            var eraTitle = era.gameObject.AddComponent<EraTitleView>();
+            Wire(eraTitle, "_face", era);
+            WireArray(eraTitle, "_depth", eraLayers);
+            Wire(eraTitle, "_pixel", _black);
+            Wire(eraTitle, "_modern", _modernTitle);
+            Wire(eraTitle, "_extruded", _extrudedTitle);
             era.gameObject.SetActive(false);
             var tapHint = MakeText(root, "TapHint", "TAP TO JUMP", 50, _black, new Vector2(0.5f, 0.5f), new Vector2(0, -420), new Vector2(1000, 110));
             tapHint.gameObject.AddComponent<Pulse>();
@@ -78,7 +94,7 @@ namespace Echo.Editor
             Wire(view, "_nearMiss", nearMiss);
             Wire(view, "_tapHint", tapHint);
             Wire(view, "_toast", toast);
-            Wire(view, "_era", era);
+            Wire(view, "_era", eraTitle);
             Wire(view, "_life", life.gameObject);
 
             // Power-ups (a user revision): Shield, Phase and Lantern along the floor, bottom left, tapped to use.

@@ -63,6 +63,7 @@ MonoBehaviour:
   MusicStems: []
   Eras: []
   EraLabel: 65,000,000 BC
+  EraTitle: 0
   Gap: {fileID: 21300000, guid: 85c97a6844aac254a8f0cc38998fdf91, type: 3}
   Coin: {fileID: 21300000, guid: 5b027cdab8b3fa14abad85417b5d5009, type: 3}
   GhostTint: {r: 0.92941177, g: 0.89411765, b: 0.8, a: 1}

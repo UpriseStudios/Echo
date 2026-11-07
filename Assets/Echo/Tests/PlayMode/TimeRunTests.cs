@@ -7,6 +7,7 @@ using Echo.Core.Sim;
 using Echo.Game.Flow;
 using Echo.Game.Persistence;
 using Echo.Game.Seasons;
+using Echo.Game.UI;
 using Echo.Game.Views;
 using Echo.Game.Dev;
 using Newtonsoft.Json;
@@ -124,6 +125,13 @@ namespace Echo.Tests.PlayMode
             Assert.AreEqual(GameState.Replay, game.State);
             Assert.AreEqual(0, game.EraShown, "Dino Land at the start");
             Assert.AreEqual(SeasonIds.EraDino, game.ActiveBackdrop.Id);
+            // Art pass phase 7: the first era's name as the run sets off, big and centred in the pixel face.
+            var hud = Object.FindAnyObjectByType<HudView>();
+            var rift = Object.FindAnyObjectByType<TimeRiftView>();
+            game.TickFrame(Dt, false);
+            Assert.AreEqual("65,000,000 BC", hud.EraLabel, "Dino Land's name at the start");
+            Assert.AreEqual(EraTitleStyle.Pixel, hud.EraTitle.Style);
+            yield return ScreenCaptureTests.Capture("timerun_title_era1");
             int era = 0, rifts = 0, preloads = 0;
             var labels = new System.Collections.Generic.List<string>();
             var hudEra = Find("Hud/Era").GetComponent<TMP_Text>();
@@ -167,9 +175,26 @@ namespace Echo.Tests.PlayMode
                     Assert.IsTrue(game.TimeRiftPlaying, $"a time rift into era {era + 1}");
                     rifts++;
                     labels.Add(hudEra.text);
+                    // Art pass phase 7: a bigger rift each time, the name in its era's type, the last breaking open.
+                    Assert.AreEqual(era, rift.Level, "the rift's size grows with each era");
+                    Assert.IsTrue(hud.EraTitle.Showing);
+                    Assert.AreEqual(era < 3 ? EraTitleStyle.Pixel : era == 3 ? EraTitleStyle.Modern : EraTitleStyle.Extruded, hud.EraTitle.Style);
+                    Assert.AreEqual(era == 4 ? 14 : 1, hud.EraTitle.DepthLayersShown, "an extrusion for 10,000 AD, a shadow or glow before");
+                    Assert.AreEqual(era == 4, rift.Shattering, "only the last rift breaks the screen open");
+                    if (era > 1) Assert.Greater(TimeRiftView.SecondsFor(era), TimeRiftView.SecondsFor(era - 1));
                     Assert.AreEqual(era * 300, game.CurrentReplay.Run.Distance / 300 * 300, "the era changes at its boundary");
                     // For review: the rift into each era, then the era itself a moment later.
+                    // The last rift: the shards in flight first (a capture takes a moment, and the shatter lasts 1.3 s).
+                    if (era == 4)
+                    {
+                        yield return Ticking(game, 0.25f);
+                        Assert.IsTrue(rift.Shattering, "still breaking open");
+                        yield return ScreenCaptureTests.Capture("timerun_shatter_mid");
+                    }
                     yield return ScreenCaptureTests.Capture($"timerun_rift_era{era + 1}");
+                    // Each title once it has landed.
+                    yield return Ticking(game, 0.35f);
+                    yield return ScreenCaptureTests.Capture($"timerun_title_era{era + 1}");
                     for (int f = 0; f < 90; f++) game.TickFrame(Dt, false);
                     yield return ScreenCaptureTests.Capture($"timerun_run_era{era + 1}");
                 }
@@ -184,6 +209,17 @@ namespace Echo.Tests.PlayMode
             Assert.AreEqual(played, Print(game.CurrentReplay.Run), "Time Run is looks only: the run replays exactly as it was played");
             Click(Showing("Replay/Exit") ? "Replay/Exit" : "Replay/Back");
             if (Showing("Reels")) Click("Reels/Close");
+        }
+
+        // Real time passing with the game stepping each frame (the rift is drawn as the game steps).
+        static IEnumerator Ticking(EchoGame game, float seconds)
+        {
+            float until = Time.realtimeSinceStartup + seconds;
+            while (Time.realtimeSinceStartup < until)
+            {
+                game.TickFrame(Dt, false);
+                yield return null;
+            }
         }
 
         static bool Era(Sprite s, string era) => s != null && s.name.StartsWith(era + "_");

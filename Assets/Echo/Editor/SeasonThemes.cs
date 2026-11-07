@@ -179,6 +179,7 @@ namespace Echo.Editor
             {
                 SeasonTheme e = Plain(Load(id), title);
                 e.EraLabel = label;
+                e.EraTitle = EraTitleStyle.Pixel;
                 if (like != null)
                 {
                     e.PaletteStops = like.PaletteStops;
@@ -339,6 +340,7 @@ namespace Echo.Editor
             // towers, the street), every light on an emissive companion drawn in HDR (Glow), three lanes of cars with light
             // trails (far, middle, near: smaller and slower further back) and holographic billboards on the chrome towers.
             future.HighDefinition = true;
+            future.EraTitle = EraTitleStyle.Modern;      // art pass phase 7: a clean modern face for 3026
             future.FarLayer = Sprite(SeasonIds.EraFuture, SeasonArt.Far);
             future.NearLayer = Sprite(SeasonIds.EraFuture, SeasonArt.Near);
             Colours(future, Color.white, Color.white, Hex(0x3A5A7A), Hex(0x4AFFE0));
@@ -387,6 +389,7 @@ namespace Echo.Editor
             SeasonTheme farFar = Era(SeasonIds.EraFarFarFuture, "Far Far Future", "10,000 AD", future);
             farFar.HighDefinition = true;
             farFar.Scene3D = true;
+            farFar.EraTitle = EraTitleStyle.Extruded;    // and a 3D extruded title for 10,000 AD
             farFar.FarLayer = farFar.NearLayer = null;
             farFar.Flyer = null;   // the city has its own traffic
             farFar.Floor = future.Floor;

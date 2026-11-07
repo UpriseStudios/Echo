@@ -106,8 +106,10 @@ namespace Echo.Game.Seasons
         [Header("Time Run")]
         [Tooltip("A world that travels through eras by distance (World Time Run doc): one theme per era, in order (TimeEras).")]
         public SeasonTheme[] Eras = new SeasonTheme[0];
-        [Tooltip("An era's label, shown in the corner as a run reaches it (\"65,000,000 BC\").")]
+        [Tooltip("An era's label, shown big and centred as a run reaches it (\"65,000,000 BC\").")]
         public string EraLabel = "";
+        [Tooltip("Art pass phase 7: the label's type: pixel, modern or 3D extruded.")]
+        public EraTitleStyle EraTitle;
         [Tooltip("An era's gap: a tile drawn down the pit, in its own colours (lava, a moat, a void).")]
         public Sprite Gap;
         [Tooltip("An era's bounty coin, in its own colours (amber, a data chip); null keeps the gold coin.")]

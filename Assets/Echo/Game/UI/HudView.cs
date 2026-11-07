@@ -22,29 +22,27 @@ namespace Echo.Game.UI
         [SerializeField] TMP_Text _nearMiss;
         [SerializeField] TMP_Text _tapHint;
         [SerializeField] TMP_Text _toast;
-        [Tooltip("Time Run: the era's label in the corner for a moment (\"65,000,000 BC\").")]
-        [SerializeField] TMP_Text _era;
+        [Tooltip("Time Run: the era's name, big and centred for a moment (\"65,000,000 BC\"; art pass phase 7).")]
+        [SerializeField] EraTitleView _era;
         [SerializeField] GameObject _life;
         [Tooltip("Power-ups (a user revision): Shield, Phase and Lantern buttons along the floor, tapped to use one.")]
         [SerializeField] Button[] _powerUps = new Button[0];
 
         readonly Queue<string> _toasts = new Queue<string>(8);
         int _shownScore = -1, _shownGhosts = -1, _shownCountdown = -1;
-        float _popLeft, _toastLeft, _eraLeft;
-        const float EraSeconds = 2f;
+        float _popLeft, _toastLeft;
 
-        /// <summary>Time Run: the era's label in the corner for two seconds, fading for the last half.</summary>
-        public void ShowEra(string label)
+        /// <summary>Time Run: the era's name, big and centred, in its era's type.</summary>
+        public void ShowEra(string label, Echo.Game.Seasons.EraTitleStyle style)
         {
-            if (_era == null || string.IsNullOrEmpty(label)) return;
-            _era.SetText(label);
-            _era.alpha = 1f;
-            _era.gameObject.SetActive(true);
-            _eraLeft = EraSeconds;
+            if (_era != null) _era.Show(label, style);
         }
 
         /// <summary>The era label showing now (tests).</summary>
-        public string EraLabel => _era != null && _era.gameObject.activeSelf ? _era.text : "";
+        public string EraLabel => _era != null && _era.Showing ? _era.Text : "";
+
+        /// <summary>The era title (tests).</summary>
+        public EraTitleView EraTitle => _era;
 
         void Awake()
         {
@@ -176,12 +174,6 @@ namespace Echo.Game.UI
         void Update()
         {
             float dt = Time.unscaledDeltaTime;
-            if (_eraLeft > 0f)
-            {
-                _eraLeft -= dt;
-                _era.alpha = Mathf.Clamp01(_eraLeft / 0.5f);
-                if (_eraLeft <= 0f) _era.gameObject.SetActive(false);
-            }
             if (_popLeft > 0f)
             {
                 _popLeft -= dt;
