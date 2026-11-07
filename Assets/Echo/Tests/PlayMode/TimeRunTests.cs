@@ -393,7 +393,7 @@ namespace Echo.Tests.PlayMode
             Assert.AreEqual(0, background.ExtraLayersShown);
         }
 
-        [UnityTest, Timeout(600000)]
+        [UnityTest, Timeout(900000)]
         public IEnumerator TheBenchmark_ReportsTheFrameRateInEachEra()
         {
             yield return Title();
@@ -407,7 +407,7 @@ namespace Echo.Tests.PlayMode
             Assert.IsTrue(row.gameObject.activeInHierarchy, "a development row");
             row.onClick.Invoke();
             Assert.IsTrue(game.BenchmarkRunning);
-            float give = Time.realtimeSinceStartup + 500f;
+            float give = Time.realtimeSinceStartup + 800f;
             bool sawFuture = false, sawVideo = false, sawReduced = false;
             while (game.BenchmarkRunning && Time.realtimeSinceStartup < give)
             {
@@ -423,7 +423,9 @@ namespace Echo.Tests.PlayMode
             string report = game.BenchmarkReport;
             Debug.Log("[Benchmark] editor report:\n" + report);
             StringAssert.Contains("30 ghosts in the graveyard", report);
-            foreach (string era in new[] { "Dino Land (8-bit)", "Medieval (16-bit)", "Today (32-bit)", "Far Future (HD)", "Far Future (HD, reduced effects)" })
+            foreach (string era in new[] { "Dino Land (8-bit)", "Medieval (16-bit)", "Today (32-bit)", "Far Future (HD)", "Far Far Future (3D)",
+                         "Dino Land (8-bit, reduced effects)", "Medieval (16-bit, reduced effects)", "Today (32-bit, reduced effects)",
+                         "Far Future (HD, reduced effects)", "Far Far Future (video, reduced effects)" })
                 StringAssert.IsMatch(System.Text.RegularExpressions.Regex.Escape(era) + @": \d+ fps, 1% low \d+", report);
             Assert.IsTrue(Showing("Challenge"), "the report shows on a card");
             Assert.IsFalse(game.PreviewTimeRun, "the world is put back");

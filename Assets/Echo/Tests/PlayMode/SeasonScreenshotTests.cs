@@ -133,6 +133,34 @@ namespace Echo.Tests.PlayMode
                 Assert.That(seen, Is.InRange(era == 3 ? most - 3 : most, most), $"era {era + 1}: the same ghosts on screen");
                 yield return ScreenCaptureTests.Capture($"timerun30crowd_era{era + 1}");
             }
+            // Time Run art fix, phase 4 (proof): the five eras side by side, the same tick of the same run and crowd.
+            SideBySide(Enumerable.Range(1, 5).Select(e => $"timerun30crowd_era{e}").ToArray(), "proof_five_eras");
+        }
+
+        // Each capture scaled to 540 x 960 and laid out left to right with a dark gap, to TestResults/Screenshots/<name>.png.
+        static void SideBySide(string[] shots, string name)
+        {
+            const int w = 540, h = 960, gap = 12;
+            string dir = Path.Combine(Path.GetDirectoryName(Application.dataPath), "TestResults", "Screenshots");
+            var sheet = new Texture2D(shots.Length * (w + gap) - gap, h, TextureFormat.RGB24, false);
+            var fill = new Color32[sheet.width * h];
+            for (int i = 0; i < fill.Length; i++) fill[i] = new Color32(12, 12, 18, 255);
+            sheet.SetPixels32(fill);
+            var rt = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
+            for (int i = 0; i < shots.Length; i++)
+            {
+                var shot = new Texture2D(2, 2);
+                shot.LoadImage(File.ReadAllBytes(Path.Combine(dir, shots[i] + ".png")));
+                Graphics.Blit(shot, rt);
+                RenderTexture.active = rt;
+                sheet.ReadPixels(new Rect(0, 0, w, h), i * (w + gap), 0);
+                RenderTexture.active = null;
+                Object.Destroy(shot);
+            }
+            RenderTexture.ReleaseTemporary(rt);
+            sheet.Apply();
+            File.WriteAllBytes(Path.Combine(dir, name + ".png"), sheet.EncodeToPNG());
+            Object.Destroy(sheet);
         }
 
         static ChunkLibrary Library() =>

@@ -25,10 +25,12 @@ namespace Echo.Game.Flow
         static readonly string[] BenchmarkPasses =
         {
             "Dino Land (8-bit)", "Medieval (16-bit)", "Today (32-bit)", "Far Future (HD)", "Far Far Future (3D)",
+            "Dino Land (8-bit, reduced effects)", "Medieval (16-bit, reduced effects)", "Today (32-bit, reduced effects)",
             "Far Future (HD, reduced effects)", "Far Far Future (video, reduced effects)",
         };
-        // Each pass's era: every era in turn, then the Far Future and the Far Far Future again with reduced effects.
-        static readonly int[] BenchmarkEras = { 0, 1, 2, 3, 4, 3, 4 };
+        // Each pass's era: every era with full effects, then every era again with reduced effects (art fix phase 4: the
+        // brief's "frame rates with 30 ghosts in each era, effects on and off").
+        static readonly int[] BenchmarkEras = { 0, 1, 2, 3, 4, 0, 1, 2, 3, 4 };
         const int FirstReducedPass = 5;
 
         sealed class BenchmarkRun
