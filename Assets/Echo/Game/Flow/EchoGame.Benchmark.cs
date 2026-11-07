@@ -24,10 +24,12 @@ namespace Echo.Game.Flow
         const int BenchmarkUntilTick = 60 + 15 * 60;
         static readonly string[] BenchmarkPasses =
         {
-            "Dino Land (8-bit)", "Medieval (16-bit)", "Today (32-bit)", "Far Future (HD)", "Far Far Future", "Far Future (HD, reduced effects)",
+            "Dino Land (8-bit)", "Medieval (16-bit)", "Today (32-bit)", "Far Future (HD)", "Far Far Future (3D)",
+            "Far Future (HD, reduced effects)", "Far Far Future (video, reduced effects)",
         };
-        // Each pass's era: every era in turn, then the Far Future again with reduced effects.
-        static readonly int[] BenchmarkEras = { 0, 1, 2, 3, 4, 3 };
+        // Each pass's era: every era in turn, then the Far Future and the Far Far Future again with reduced effects.
+        static readonly int[] BenchmarkEras = { 0, 1, 2, 3, 4, 3, 4 };
+        const int FirstReducedPass = 5;
 
         sealed class BenchmarkRun
         {
@@ -35,6 +37,7 @@ namespace Echo.Game.Flow
             public int Pass;
             public readonly FrameStats[] Stats = new FrameStats[BenchmarkPasses.Length];
             public bool PreviewBefore;
+            public string ModeBefore = "";
             public int? EraBefore;
         }
 
@@ -90,7 +93,8 @@ namespace Echo.Game.Flow
                     Debug.LogError($"[Benchmark] couldn't start: {build.Exception?.GetBaseException().Message ?? "left the menu"}");
                     return;
                 }
-                _benchmark = new BenchmarkRun { Reel = build.Result, PreviewBefore = _previewTimeRun, EraBefore = _forceEra };
+                _benchmark = new BenchmarkRun { Reel = build.Result, PreviewBefore = _previewTimeRun, EraBefore = _forceEra, ModeBefore = EffectsMode };
+                LogEffects("benchmark start");
                 _settings.Hide();
                 BeginBenchmarkPass();
                 return;
@@ -106,11 +110,14 @@ namespace Echo.Game.Flow
             BenchmarkRun b = _benchmark;
             _previewTimeRun = true;
             _forceEra = BenchmarkEras[b.Pass];
-            _benchmarkReduced = b.Pass == BenchmarkPasses.Length - 1;
+            _benchmarkReduced = b.Pass >= FirstReducedPass;
             RefreshSeason();
             ApplyEffects();
             b.Stats[b.Pass] = new FrameStats();
-            StartExternalReplay(b.Reel, $"Benchmark {b.Pass + 1}/{BenchmarkPasses.Length} · {BenchmarkPasses[b.Pass]}", NextBenchmarkPass);
+            // Art fix phase 1: the pass label says which quality is really running.
+            StartExternalReplay(b.Reel, $"Benchmark {b.Pass + 1}/{BenchmarkPasses.Length} · {BenchmarkPasses[b.Pass]} · {(FullEffects ? "full" : "reduced")} effects",
+                NextBenchmarkPass);
+            LogEffects($"benchmark pass {b.Pass + 1}");
         }
 
         // EndReplay has entered the title: the next pass from a menu, or the report.
@@ -143,6 +150,7 @@ namespace Echo.Game.Flow
             foreach (FrameStats f in b.Stats) if (f != null && f.MostGhostsOnScreen > most) most = f.MostGhostsOnScreen;
             s.Append($"{SystemInfo.deviceModel} · {Screen.width}x{Screen.height} · {SystemInfo.graphicsDeviceName}\n");
             s.Append($"{BenchmarkGhosts} ghosts in the graveyard, up to {most} on screen\n");
+            s.Append($"Quality outside the benchmark: {b.ModeBefore}\n");
             for (int i = 0; i < BenchmarkPasses.Length; i++)
             {
                 FrameStats f = b.Stats[i];

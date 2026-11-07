@@ -42,7 +42,7 @@ MonoBehaviour:
   FireworksPerMinute: 6
   ResetShowSeconds: 0
   ResetShowToast: 
-  Flyer: {fileID: 21300000, guid: c540f43b6726d674f987ec06b23a75c4, type: 3}
+  Flyer: {fileID: 0}
   FlyerColour: {r: 1, g: 1, b: 1, a: 1}
   FlyerEvery: 14
   FlyerSpeed: 5
@@ -82,7 +82,22 @@ MonoBehaviour:
     TrafficY: 0
     TrafficSpeed: 3
     TrafficCount: 0
+    Glow: 0
   - Sprite: {fileID: 21300000, guid: e986317134cc61a479d95baec72c4118, type: 3}
+    Parallax: 0
+    Order: -27
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+    Frames: []
+    FramesAt: {x: 0, y: 0}
+    FramesPerSecond: 6
+    FadeFrom: 0
+    FadeTo: 0
+    Traffic: []
+    TrafficY: 0
+    TrafficSpeed: 3
+    TrafficCount: 0
+    Glow: 0
+  - Sprite: {fileID: 21300000, guid: e4c3c2509cf545e488da41a0852ea24e, type: 3}
     Parallax: 0
     Order: -26
     Tint: {r: 1, g: 1, b: 1, a: 1}
@@ -95,9 +110,10 @@ MonoBehaviour:
     TrafficY: 0
     TrafficSpeed: 3
     TrafficCount: 0
+    Glow: 1
   - Sprite: {fileID: 21300000, guid: edc291ebc3f9e1940a3c8acd6546afc6, type: 3}
     Parallax: 0.05
-    Order: -22
+    Order: -25
     Tint: {r: 1, g: 1, b: 1, a: 1}
     Frames: []
     FramesAt: {x: 0, y: 0}
@@ -108,6 +124,59 @@ MonoBehaviour:
     TrafficY: 0
     TrafficSpeed: 3
     TrafficCount: 0
+    Glow: 0
+  - Sprite: {fileID: 21300000, guid: 13371f0be8c83154e90c665a8fa216e4, type: 3}
+    Parallax: 0.09
+    Order: -22
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+    Frames: []
+    FramesAt: {x: 0, y: 0}
+    FramesPerSecond: 6
+    FadeFrom: 0
+    FadeTo: 0
+    Traffic:
+    - {fileID: 21300000, guid: ff077814a90727749b8fae52cddea9e7, type: 3}
+    - {fileID: 21300000, guid: 411cfa2c90ce7ea438fc455a23c6566c, type: 3}
+    TrafficY: 6.6
+    TrafficSpeed: 1.1
+    TrafficCount: 4
+    Glow: 0
+  - Sprite: {fileID: 21300000, guid: afa458bdc731d604fbcf3c4f2cc96e12, type: 3}
+    Parallax: 0.15
+    Order: -20
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+    Frames:
+    - {fileID: 21300000, guid: 30f8666fee8a7f040b2a9679d74ce177, type: 3}
+    - {fileID: 21300000, guid: 673116094324f6e41ab59b4737e8b28a, type: 3}
+    - {fileID: 21300000, guid: 06b35387997739e4181ada340faa9d1f, type: 3}
+    - {fileID: 21300000, guid: 893d06fa705a29f4dbff6e549ce1d83d, type: 3}
+    FramesAt: {x: 9.625, y: 5.19}
+    FramesPerSecond: 0.8
+    FadeFrom: 0
+    FadeTo: 0
+    Traffic:
+    - {fileID: 21300000, guid: b4ee5f17069b5aa41a1f9fad2aa7cd19, type: 3}
+    - {fileID: 21300000, guid: 2aed6f6078facaa41bac1845b5804ecd, type: 3}
+    TrafficY: 5.1
+    TrafficSpeed: 2
+    TrafficCount: 3
+    Glow: 1
+  - Sprite: {fileID: 21300000, guid: 46d391d37112acd4a8c1b18ffd8b4bc5, type: 3}
+    Parallax: 0.4
+    Order: -18
+    Tint: {r: 1, g: 1, b: 1, a: 1}
+    Frames: []
+    FramesAt: {x: 0, y: 0}
+    FramesPerSecond: 6
+    FadeFrom: 0
+    FadeTo: 0
+    Traffic:
+    - {fileID: 21300000, guid: c9817b2c33a51fe4cb4f8d3421214330, type: 3}
+    - {fileID: 21300000, guid: b3cc72632eef6914e90f44b1e73869de, type: 3}
+    TrafficY: 4.1
+    TrafficSpeed: 3.4
+    TrafficCount: 3
+    Glow: 1
   Floor: {fileID: 21300000, guid: db77ddd95a883984984b483d86e8b2f8, type: 3}
   HighDefinition: 1
   HalfResolution: 0
@@ -122,3 +191,4 @@ MonoBehaviour:
   DuskShade: {r: 1, g: 1, b: 1, a: 1}
   Reflections: 1
   FloorBacking: {r: 0.02745098, g: 0.039215688, b: 0.09411765, a: 1}
+  Scene3D: 0

@@ -107,6 +107,27 @@ namespace Echo.Editor
             return m;
         }
 
+        // Art fix phase 2: the Far Future's wet floor (Echo/Sprite Ripple), a touch darker than lit, like the layers it mirrors.
+        static Material RippleMaterial()
+        {
+            const string shaderName = "Echo/Sprite Ripple";
+            string path = $"{MaterialDir}/FutureRipple.mat";
+            var m = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (m == null)
+            {
+                EnsureFolder(MaterialDir);
+                var shader = Shader.Find(shaderName) ?? throw new InvalidOperationException($"shader {shaderName} not found");
+                m = new Material(shader) { name = "FutureRipple" };
+                AssetDatabase.CreateAsset(m, path);
+            }
+            m.SetFloat("_Intensity", 0.85f);
+            m.SetFloat("_Amplitude", 0.0012f);   // in the tile's UV: a 16-unit tile shifts a few pixels, a shimmer, not a smear
+            m.SetFloat("_Frequency", 4f);
+            m.SetFloat("_Speed", 1.6f);
+            EditorUtility.SetDirty(m);
+            return m;
+        }
+
         static Sprite LoadSprite(string path) =>
             AssetDatabase.LoadAssetAtPath<Sprite>(path) ?? throw new InvalidOperationException($"sprite missing: {path}");
 

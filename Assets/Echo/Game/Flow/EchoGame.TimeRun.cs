@@ -30,6 +30,13 @@ namespace Echo.Game.Flow
         public bool HalfResolutionShown => _halfResolution && _lowRes != null && _lowRes.On;
         [SerializeField] FutureLightsView _futureLights;
         [SerializeField] FutureFxView _futureFx;
+        [SerializeField] Far3DView _far3D;
+        [SerializeField] Material _spriteUnlit;
+        [SerializeField] Material _spriteLit;
+        bool _scene3D, _gameplayLit;
+
+        /// <summary>The Far Far Future's 3D city is showing (tests).</summary>
+        public Far3DView.Mode Scene3DShown => _far3D != null ? _far3D.Showing : Far3DView.Mode.Off;
         [Tooltip("The Far Future's stronger bloom, weighted in with full effects.")]
         [SerializeField] Volume _futureVolume;
 
@@ -40,7 +47,11 @@ namespace Echo.Game.Flow
         bool WeakDevice => _weakDevice ??= EffectsQuality.ThisDeviceIsWeak();
 
         /// <summary>Full effects now: the player's choice, else this phone's (World Time Run doc, phase 3).</summary>
-        public bool FullEffects => _save == null || EffectsQuality.Full(_save.Settings, WeakDevice || _benchmarkReduced);
+        public bool FullEffects => _save == null || EffectsQuality.Full(_save.Settings, WeakDevice || _benchmarkReduced || _sessionReduced);
+
+        // Art fix phase 1: a slow Far Future turns effects down for this session only, judged on the game's own frame time.
+        bool _sessionReduced;
+        float _frameDt = 1f / 60f;
 
         /// <summary>The Far Future's high definition is showing (tests).</summary>
         public bool HighDefinitionShown => _highDefinition;
@@ -223,6 +234,12 @@ namespace Echo.Game.Flow
                 _background.SetHighDefinition(_highDefinition);
             }
             _runnerView.SetFuture(_highDefinition);
+            // Art pass phase 6: the 3D city behind the gameplay, the 2D backdrop aside, the gameplay lit and shadowed to match.
+            _scene3D = backdrop != null && backdrop.Scene3D && _far3D != null;
+            if (_background != null) _background.SetHidden(_scene3D);
+            SetGameplayLit(_scene3D);
+            _runnerView.SetShadow(_scene3D);
+            _ghostViews.SetShadows(_scene3D);
             ApplyEffects();
 
             // Art pass phase 2: Dino Land's backdrop and floor at half resolution; everything else back on the default layer.
@@ -248,10 +265,37 @@ namespace Echo.Game.Flow
             if (_futureVolume != null) _futureVolume.weight = _highDefinition && full ? 1f : 0f;
             if (_futureLights != null) _futureLights.Set(_highDefinition, full);
             // Art pass phase 5: the wet floor reflects only with full effects; the splashes and motes stay either way.
+            // The glass floor's backing in both future eras; reflections only where there's a 2D city to mirror.
+            bool glass = _highDefinition && _backdrop != null && (_backdrop.Reflections || _backdrop.Scene3D);
             if (_background != null)
-                _background.SetFloorGlass(_highDefinition && _backdrop != null && _backdrop.Reflections, full,
-                    _backdrop != null ? _backdrop.FloorBacking : Color.black);
-            if (_futureFx != null) _futureFx.SetOn(_highDefinition);
+                _background.SetFloorGlass(glass, full && _backdrop != null && _backdrop.Reflections, _backdrop != null ? _backdrop.FloorBacking : Color.black);
+            if (_background != null) _background.SetFullEffects(full);
+            // Art fix phase 2: the 2D Far Future's searchlights and mist; the 3D city brings its own atmosphere.
+            if (_futureFx != null) _futureFx.SetOn(_highDefinition, _highDefinition && !_scene3D);
+            if (_futureLights != null) _futureLights.SetGameplay(_scene3D);
+            if (_far3D != null) _far3D.SetMode(!_scene3D ? Far3DView.Mode.Off : full ? Far3DView.Mode.RealTime : Far3DView.Mode.Video);
+        }
+
+        // The runner, ghosts, course, graves and the Copycat on the lit sprite shader (the Far Far Future) or back to unlit.
+        void SetGameplayLit(bool lit)
+        {
+            if (lit == _gameplayLit || _spriteUnlit == null || _spriteLit == null) return;
+            _gameplayLit = lit;
+            Material from = lit ? _spriteUnlit : _spriteLit, to = lit ? _spriteLit : _spriteUnlit;
+            SpriteLighting.Swap(_runnerView.transform, from, to);
+            SpriteLighting.Swap(_ghostViews.transform, from, to);
+            if (_graves != null) SpriteLighting.Swap(_graves.transform, from, to);
+            if (_copycatView != null) SpriteLighting.Swap(_copycatView.transform, from, to);
+            _courseView.SetPieceMaterial(to);
+        }
+
+        /// <summary>The gameplay sprites are lit (tests).</summary>
+        public bool GameplayLit => _gameplayLit;
+
+        // Each frame and each time the camera is placed (a screenshot's framing too), so the city always fills the view.
+        void RenderFar3D()
+        {
+            if (_scene3D) _far3D.Render(_cameraRig.transform.position, _cameraRig.Right - _cameraRig.Left, _cameraRig.Height, _runnerView.Position.x, Time.time);
         }
 
         void RenderFuture()
@@ -259,6 +303,7 @@ namespace Echo.Game.Flow
             if (!_highDefinition) return;
             if (_futureLights != null) _futureLights.Render(_cameraRig.Left, _cameraRig.Right, _cameraRig.Bottom, _cameraRig.Height, Time.time);
             if (_futureFx != null) _futureFx.Render(_cameraRig.Left, _cameraRig.Right, _cameraRig.Bottom, _cameraRig.Height, Time.time);
+            RenderFar3D();
             WatchFrameRate();
         }
 
@@ -266,17 +311,17 @@ namespace Echo.Game.Flow
         // player chose. Remembered with the next save, so later runs start reduced.
         void WatchFrameRate()
         {
-            bool watching = _save != null && !_save.Settings.EffectsChosen && FullEffects && _benchmark == null
+            bool watching = _save != null && !_save.Settings.EffectsChosen && FullEffects && _benchmark == null && !_sessionReduced
                             && (State == GameState.Running || State == GameState.Replay);
             if (!watching)
             {
                 _frameWatch.Reset();
                 return;
             }
-            if (!_frameWatch.Feed(Time.unscaledDeltaTime)) return;
-            _save.Settings.EffectsReduced = true;
+            if (!_frameWatch.Feed(_frameDt)) return;
+            _sessionReduced = true;
             ApplyEffects();
-            Debug.Log("[Effects] the Far Future ran slow: reduced effects from now on");
+            Debug.Log("[Effects] the Far Future ran slow: reduced effects for this session");
         }
 
         void RenderTimeRift()

@@ -156,7 +156,7 @@ namespace Echo.Game.Flow
         }
 
         /// <summary>Whether the backdrop brings its own scenery, and so stands for the whole run.</summary>
-        bool OwnScenery => _backdrop != null && (_backdrop.FarLayer != null || _backdrop.NearLayer != null);
+        bool OwnScenery => _backdrop != null && (_backdrop.FarLayer != null || _backdrop.NearLayer != null || _backdrop.Scene3D);
 
         /// <summary>The backdrop showing now (a season's, a world's or a mode's), or null for the normal one.</summary>
         public SeasonTheme ActiveBackdrop => _backdrop;

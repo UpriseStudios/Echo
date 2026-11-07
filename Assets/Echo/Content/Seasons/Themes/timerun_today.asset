@@ -79,6 +79,7 @@ MonoBehaviour:
     TrafficY: 0
     TrafficSpeed: 3
     TrafficCount: 0
+    Glow: 0
   - Sprite: {fileID: 21300000, guid: 55f9017c3ab05af41985af8c21878f37, type: 3}
     Parallax: 0
     Order: -29
@@ -92,6 +93,7 @@ MonoBehaviour:
     TrafficY: 0
     TrafficSpeed: 3
     TrafficCount: 0
+    Glow: 0
   - Sprite: {fileID: 21300000, guid: 5f8d2ff290c37b049b91976128be1403, type: 3}
     Parallax: 0.06
     Order: -22
@@ -105,6 +107,7 @@ MonoBehaviour:
     TrafficY: 0
     TrafficSpeed: 3
     TrafficCount: 0
+    Glow: 0
   - Sprite: {fileID: 21300000, guid: 0e3ec9c971a5bdf45897ef1807392775, type: 3}
     Parallax: 0.27
     Order: -20
@@ -128,6 +131,7 @@ MonoBehaviour:
     TrafficY: 2.5625
     TrafficSpeed: 3.2
     TrafficCount: 8
+    Glow: 0
   - Sprite: {fileID: 21300000, guid: c877716655ab78b4ea0188c9b9363fd7, type: 3}
     Parallax: 0.4
     Order: -18
@@ -141,6 +145,7 @@ MonoBehaviour:
     TrafficY: 0
     TrafficSpeed: 3
     TrafficCount: 0
+    Glow: 0
   Floor: {fileID: 21300000, guid: acc2f754c6d310041bf52135590ecf26, type: 3}
   HighDefinition: 0
   HalfResolution: 0
@@ -157,3 +162,4 @@ MonoBehaviour:
   DuskShade: {r: 0.6039216, g: 0.5411765, b: 0.6901961, a: 1}
   Reflections: 0
   FloorBacking: {r: 0, g: 0, b: 0, a: 1}
+  Scene3D: 0

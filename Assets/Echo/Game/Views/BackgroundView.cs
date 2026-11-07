@@ -20,6 +20,12 @@ namespace Echo.Game.Views
         [SerializeField] Material _material;
         [Tooltip("Sprite-Lit-Default: the high-definition backdrop takes the Far Future's lights.")]
         [SerializeField] Material _litMaterial;
+        [Tooltip("Art fix phase 2: the HDR glow material (Echo/Sprite Glow) for emissive layers, so the bloom catches their light.")]
+        [SerializeField] Material _glowMaterial;
+        [Tooltip("Art fix phase 2: Echo/Sprite Ripple, the wet floor's shimmering reflections.")]
+        [SerializeField] Material _rippleMaterial;
+        Material _rippleGlow;
+        bool _fullEffects = true;
         [SerializeField] Sprite _far;
         [SerializeField] Sprite _near;
         [SerializeField] Sprite _castle;
@@ -32,15 +38,17 @@ namespace Echo.Game.Views
         [SerializeField] float _nearScale = 1f;
 
         SpriteRenderer _farLayer, _nearLayer, _castleLayer, _bannerLayer, _spaceLayer, _planetSprite;
-        const int MaxExtraLayers = 6;
+        const int MaxExtraLayers = 8;
         readonly SpriteRenderer[] _extra = new SpriteRenderer[MaxExtraLayers];
         // Art pass phase 3: each extra layer's animated frames, one renderer per tile it can show at once.
         const int FramesPerLayer = 4;
         readonly SpriteRenderer[] _frames = new SpriteRenderer[MaxExtraLayers * FramesPerLayer];
-        // Art pass phase 4: vehicles driving along a layer, a fixed pool.
-        const int MaxTraffic = 10;
+        // Art pass phase 4: vehicles driving along a layer, a fixed pool. Art fix phase 2: shared out over every layer with
+        // traffic (the Far Future's three lanes at three depths), in layer order.
+        const int MaxTraffic = 16;
         readonly SpriteRenderer[] _traffic = new SpriteRenderer[MaxTraffic];
-        int _trafficLayer = -1;
+        readonly int[] _trafficLayerOf = new int[MaxTraffic];
+        readonly int[] _trafficIndex = new int[MaxTraffic];
         ExtraLayer[] _extraLayers;
         bool _highDefinition;
         Sprite _baseFar, _baseNear;
@@ -68,21 +76,50 @@ namespace Echo.Game.Views
             for (int i = 0; i < Reflected; i++) _reflections[i] = Layer("Reflection" + i, null, -5);
             _reflectionFade = Layer("ReflectionFade", _fade, -4, false);
             _reflectionFade.enabled = false;
+            for (int k = 0; k < MaxTraffic; k++) _trafficLayerOf[k] = -1;
+            if (_rippleMaterial != null && _glowMaterial != null)
+            {
+                // The glow layers' reflections: the ripple at the glow material's brightness (made once, never per frame).
+                _rippleGlow = new Material(_rippleMaterial) { name = "RippleGlow" };
+                _rippleGlow.SetFloat("_Intensity", _glowMaterial.GetFloat("_Intensity"));
+            }
+        }
+
+        void OnDestroy()
+        {
+            if (_rippleGlow != null) Destroy(_rippleGlow);
+        }
+
+        /// <summary>Full effects: emissive layers glow in HDR and reflections ripple; reduced: emissive layers drawn plainly.</summary>
+        public void SetFullEffects(bool full)
+        {
+            _fullEffects = full;
+            ApplyMaterials();
         }
 
         /// <summary>A backdrop's extra layers (null or empty: none).</summary>
         public void SetExtraLayers(ExtraLayer[] layers)
         {
             _extraLayers = layers;
-            _trafficLayer = -1;
+            int next = 0;
+            for (int k = 0; k < MaxTraffic; k++) _trafficLayerOf[k] = -1;
             for (int i = 0; layers != null && i < layers.Length && i < MaxExtraLayers; i++)
-                if (layers[i] != null && layers[i].Traffic != null && layers[i].Traffic.Length > 0 && layers[i].TrafficCount > 0) _trafficLayer = i;
-            foreach (SpriteRenderer t in _traffic)
-                if (t != null)
+            {
+                ExtraLayer l = layers[i];
+                if (l == null || l.Traffic == null || l.Traffic.Length == 0) continue;
+                for (int n = 0; n < l.TrafficCount && next < MaxTraffic; n++, next++)
                 {
-                    t.enabled = false;
-                    t.sortingOrder = _trafficLayer >= 0 ? layers[_trafficLayer].Order : -22;
+                    _trafficLayerOf[next] = i;
+                    _trafficIndex[next] = n;
                 }
+            }
+            for (int k = 0; k < MaxTraffic; k++)
+            {
+                SpriteRenderer t = _traffic[k];
+                if (t == null) continue;
+                t.enabled = false;
+                t.sortingOrder = _trafficLayerOf[k] >= 0 ? layers[_trafficLayerOf[k]].Order : -22;
+            }
             for (int i = 0; i < MaxExtraLayers; i++)
             {
                 if (_extra[i] == null) continue;
@@ -98,6 +135,7 @@ namespace Echo.Game.Views
                     f.sortingOrder = l != null ? l.Order : -22;
                 }
             }
+            ApplyMaterials();
         }
 
         // Art pass phase 5: the Far Future's wet floor. A solid backing under its glass floor (always, so reduced effects
@@ -112,6 +150,24 @@ namespace Echo.Game.Views
         [SerializeField] Sprite _fade;
         bool _floorGlass, _reflect;
         Color _floorBacking = Color.black;
+
+        // Art pass phase 6: the 2D backdrop steps aside for the 3D city (the glass floor's backing stays).
+        bool _hidden;
+
+        public void SetHidden(bool hidden)
+        {
+            _hidden = hidden;
+            if (!hidden) return;
+            foreach (SpriteRenderer sr in new[] { _farLayer, _nearLayer, _castleLayer, _bannerLayer, _spaceLayer, _planetSprite })
+                if (sr != null) sr.enabled = false;
+            foreach (SpriteRenderer sr in _extra) if (sr != null) sr.enabled = false;
+            foreach (SpriteRenderer sr in _frames) if (sr != null) sr.enabled = false;
+            foreach (SpriteRenderer sr in _traffic) if (sr != null) sr.enabled = false;
+            foreach (SpriteRenderer sr in _reflections) if (sr != null) sr.enabled = false;
+        }
+
+        /// <summary>The 2D backdrop is hidden for the 3D city (tests).</summary>
+        public bool Hidden => _hidden;
 
         /// <summary>A glass floor with its backing, and the reflections in it (full effects only).</summary>
         public void SetFloorGlass(bool glass, bool reflections, Color backing)
@@ -148,11 +204,14 @@ namespace Echo.Game.Views
             r.sprite = source.sprite;
             r.drawMode = source.drawMode;
             r.size = source.size;
-            r.sharedMaterial = source.sharedMaterial;
+            // Art fix phase 2: the wet floor shimmers (the glow layers' reflections still bloom).
+            bool glowing = _glowMaterial != null && source.sharedMaterial == _glowMaterial;
+            r.sharedMaterial = _rippleMaterial == null ? source.sharedMaterial : glowing && _rippleGlow != null ? _rippleGlow : _rippleMaterial;
             Color c = source.color;
             r.color = new Color(c.r * ReflectionTint.r, c.g * ReflectionTint.g, c.b * ReflectionTint.b, c.a * ReflectionTint.a);
             Vector3 p = source.transform.localPosition, s = source.transform.localScale;
-            r.transform.localPosition = new Vector3(p.x, -p.y - 0.06f, 0f);
+            // Mirrored layers keep their depth order among themselves (all share the reflections' sorting order).
+            r.transform.localPosition = new Vector3(p.x, -p.y - 0.06f, -(source.sortingOrder + 31) * 0.001f);
             r.transform.localScale = new Vector3(s.x, -s.y, 1f);
         }
 
@@ -228,15 +287,50 @@ namespace Echo.Game.Views
         public void SetHighDefinition(bool on)
         {
             _highDefinition = on;
-            Material m = on && _litMaterial != null ? _litMaterial : _material;
+            ApplyMaterials();
+        }
+
+        // Lit in high definition, plain otherwise; an emissive layer (and its frames and traffic) glows with full effects.
+        void ApplyMaterials()
+        {
+            Material m = _highDefinition && _litMaterial != null ? _litMaterial : _material;
             foreach (SpriteRenderer sr in new[] { _farLayer, _nearLayer })
                 if (sr != null) sr.sharedMaterial = m;
-            foreach (SpriteRenderer sr in _extra)
-                if (sr != null) sr.sharedMaterial = m;
-            foreach (SpriteRenderer sr in _frames)
-                if (sr != null) sr.sharedMaterial = m;
-            foreach (SpriteRenderer sr in _traffic)
-                if (sr != null) sr.sharedMaterial = m;
+            for (int i = 0; i < MaxExtraLayers; i++)
+            {
+                Material lm = LayerGlows(i) ? _glowMaterial : m;
+                if (_extra[i] != null) _extra[i].sharedMaterial = lm;
+                for (int k = 0; k < FramesPerLayer; k++)
+                    if (_frames[i * FramesPerLayer + k] != null) _frames[i * FramesPerLayer + k].sharedMaterial = lm;
+            }
+            for (int k = 0; k < MaxTraffic; k++)
+                if (_traffic[k] != null) _traffic[k].sharedMaterial = _trafficLayerOf[k] >= 0 && LayerGlows(_trafficLayerOf[k]) ? _glowMaterial : m;
+        }
+
+        bool LayerGlows(int i) => _fullEffects && _glowMaterial != null && _extraLayers != null && i < _extraLayers.Length
+                                  && _extraLayers[i] != null && _extraLayers[i].Glow;
+
+        /// <summary>Extra layers drawn through the glow material now (tests).</summary>
+        public int GlowLayersShown
+        {
+            get
+            {
+                int n = 0;
+                foreach (SpriteRenderer sr in _extra) if (sr != null && sr.enabled && _glowMaterial != null && sr.sharedMaterial == _glowMaterial) n++;
+                return n;
+            }
+        }
+
+        /// <summary>Reflections drawn with the ripple now (tests).</summary>
+        public int RipplesShown
+        {
+            get
+            {
+                int n = 0;
+                foreach (SpriteRenderer sr in _reflections)
+                    if (sr != null && sr.enabled && sr.sharedMaterial != null && (sr.sharedMaterial == _rippleMaterial || sr.sharedMaterial == _rippleGlow)) n++;
+                return n;
+            }
         }
 
         /// <summary>The layers are lit (tests).</summary>
@@ -282,6 +376,11 @@ namespace Echo.Game.Views
         public void Render(float cameraX, float viewWidth, float viewBottom, float viewHeight, Color background, in EnvironmentState env)
         {
             // Far peaks hazy and a touch lighter than the sky, near layers darker: depth from value, 16-bit style.
+            if (_hidden)
+            {
+                PlaceFloor(cameraX, viewWidth, viewBottom);
+                return;
+            }
             _dusk = _duskTo > _duskFrom ? Color.Lerp(Color.white, _duskShade, Mathf.Clamp01((cameraX - _duskFrom) / (_duskTo - _duskFrom))) : Color.white;
             Color far = _farTint.a > 0f ? Color.Lerp(_farTint, background, env.Night * 0.45f) : Color.Lerp(background, Color.white, 0.14f);
             far = Dimmed(far, _dusk);
@@ -308,14 +407,15 @@ namespace Echo.Game.Views
                 for (int i = 0; i < MaxExtraLayers && i < _extraLayers.Length; i++)
                 {
                     ExtraLayer l = _extraLayers[i];
-                    if (l == null || l.Sprite == null) continue;
+                    if (l == null) continue;
+                    PlaceTraffic(i, l, cameraX, viewWidth);
+                    if (l.Sprite == null) continue;
                     // World units are metres, so the camera's x is how far the run has come: a layer can fade in with it.
                     Color tint = l.Tint;
                     if (l.FadeTo > l.FadeFrom) tint.a *= Mathf.Clamp01((cameraX - l.FadeFrom) / (l.FadeTo - l.FadeFrom));
                     else if (l.Parallax > 0f) tint = Dimmed(tint, _dusk);   // scenery dims at dusk; skies and lights don't
                     float left = Place(_extra[i], l.Sprite, cameraX, viewWidth, l.Parallax, 1f, tint);
                     PlaceFrames(i, l, left, cameraX, viewWidth);
-                    if (i == _trafficLayer) PlaceTraffic(l, cameraX, viewWidth);
                     // The sky stays a sky: only layers that drift are mirrored in the floor.
                     if (l.Parallax > 0f) Reflect(2 + i, _extra[i]);
                     else if (_reflections[2 + i] != null) _reflections[2 + i].enabled = false;
@@ -353,16 +453,16 @@ namespace Echo.Game.Views
 
         // Vehicles drive along the layer: half one way, half the other, each at its own speed, wrapping round a stretch a
         // little wider than the view. They move with the layer's parallax and along it.
-        void PlaceTraffic(ExtraLayer l, float cameraX, float viewWidth)
+        void PlaceTraffic(int layer, ExtraLayer l, float cameraX, float viewWidth)
         {
-            int count = Mathf.Min(l.TrafficCount, MaxTraffic);
             float span = viewWidth + 6f, drift = cameraX * l.Parallax;   // the layer slides across the screen at its parallax
-            for (int i = 0; i < MaxTraffic; i++)
+            for (int k = 0; k < MaxTraffic; k++)
             {
-                SpriteRenderer t = _traffic[i];
+                if (_trafficLayerOf[k] != layer) continue;
+                SpriteRenderer t = _traffic[k];
                 if (t == null) continue;
-                t.enabled = i < count;
-                if (!t.enabled) continue;
+                t.enabled = true;
+                int i = _trafficIndex[k];
                 bool back = i % 2 == 1;
                 float speed = l.TrafficSpeed * (0.7f + 0.15f * (i % 4)) * (back ? -1f : 1f);
                 float x = cameraX - viewWidth / 2f - 3f + Mathf.Repeat(i * 2.9f + Time.time * speed - drift, span);

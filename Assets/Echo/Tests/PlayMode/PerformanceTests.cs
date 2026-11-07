@@ -80,7 +80,11 @@ namespace Echo.Tests.PlayMode
         [UnityTest]
         public IEnumerator SixtySecondRun_InTheFarFuture_AllocatesNothingPerFrame() => Run(farFuture: true);
 
-        IEnumerator Run(bool farFuture)
+        /// <summary>Art pass phase 6: the Far Far Future's real-time 3D city, lit gameplay and shadows allocate nothing either.</summary>
+        [UnityTest]
+        public IEnumerator SixtySecondRun_InTheFarFarFuture3D_AllocatesNothingPerFrame() => Run(farFuture: true, era: 4);
+
+        IEnumerator Run(bool farFuture, int era = 3)
         {
             var cfg = SimConfig.Default;
             var library = ChunkLibrary.FromJson(Directory.GetFiles(Path.Combine(Application.dataPath, "Echo", "Content", "Chunks"), "*.json")
@@ -130,7 +134,7 @@ namespace Echo.Tests.PlayMode
             if (farFuture)
             {
                 game.PreviewTimeRun = true;
-                game.ForceEra = 3;
+                game.ForceEra = era;
                 game.WeakDeviceOverride = false;
             }
             game.ScriptedTaps = player.TapAt;

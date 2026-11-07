@@ -1,0 +1,2914 @@
+fileFormatVersion: 2
+guid: afa458bdc731d604fbcf3c4f2cc96e12
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1820468771392006104
+    second: timerun_future_far_glow_0
+  - first:
+      213: 210441259663647581
+    second: timerun_future_far_glow_1
+  - first:
+      213: 2918901005118182348
+    second: timerun_future_far_glow_2
+  - first:
+      213: -663359956479179752
+    second: timerun_future_far_glow_3
+  - first:
+      213: 7716176643063272892
+    second: timerun_future_far_glow_4
+  - first:
+      213: -8325784074137977354
+    second: timerun_future_far_glow_5
+  - first:
+      213: 2355664789143130671
+    second: timerun_future_far_glow_6
+  - first:
+      213: -5510064948453624751
+    second: timerun_future_far_glow_7
+  - first:
+      213: -2097400816109230164
+    second: timerun_future_far_glow_8
+  - first:
+      213: 6507216608913685562
+    second: timerun_future_far_glow_9
+  - first:
+      213: -6627082120576677514
+    second: timerun_future_far_glow_10
+  - first:
+      213: -381394202455814691
+    second: timerun_future_far_glow_11
+  - first:
+      213: 1262001926677274013
+    second: timerun_future_far_glow_12
+  - first:
+      213: -2896074582209355759
+    second: timerun_future_far_glow_13
+  - first:
+      213: -4130935013646622099
+    second: timerun_future_far_glow_14
+  - first:
+      213: -1605986780295122249
+    second: timerun_future_far_glow_15
+  - first:
+      213: 7934215458831854444
+    second: timerun_future_far_glow_16
+  - first:
+      213: -2452639562767144736
+    second: timerun_future_far_glow_17
+  - first:
+      213: 2871322465018451850
+    second: timerun_future_far_glow_18
+  - first:
+      213: -4508564260306500737
+    second: timerun_future_far_glow_19
+  - first:
+      213: -7097124354100940064
+    second: timerun_future_far_glow_20
+  - first:
+      213: 2656178594128756664
+    second: timerun_future_far_glow_21
+  - first:
+      213: 5260146960271209672
+    second: timerun_future_far_glow_22
+  - first:
+      213: 8625622346232560489
+    second: timerun_future_far_glow_23
+  - first:
+      213: -3578070959688506076
+    second: timerun_future_far_glow_24
+  - first:
+      213: 4290563937685893353
+    second: timerun_future_far_glow_25
+  - first:
+      213: 4760253095271408321
+    second: timerun_future_far_glow_26
+  - first:
+      213: 2479263568537806500
+    second: timerun_future_far_glow_27
+  - first:
+      213: -7648065309526390240
+    second: timerun_future_far_glow_28
+  - first:
+      213: -6582124534455572966
+    second: timerun_future_far_glow_29
+  - first:
+      213: -6950736916259669025
+    second: timerun_future_far_glow_30
+  - first:
+      213: 2055665977310536655
+    second: timerun_future_far_glow_31
+  - first:
+      213: -8643803530642591831
+    second: timerun_future_far_glow_32
+  - first:
+      213: 5557358193662629286
+    second: timerun_future_far_glow_33
+  - first:
+      213: 5312041913342699983
+    second: timerun_future_far_glow_34
+  - first:
+      213: -3588365540780239155
+    second: timerun_future_far_glow_35
+  - first:
+      213: 1062617347062246387
+    second: timerun_future_far_glow_36
+  - first:
+      213: 122891592741502642
+    second: timerun_future_far_glow_37
+  - first:
+      213: 3800348214597574714
+    second: timerun_future_far_glow_38
+  - first:
+      213: -2861224852674764396
+    second: timerun_future_far_glow_39
+  - first:
+      213: 1164008266915646358
+    second: timerun_future_far_glow_40
+  - first:
+      213: 2375811356135712259
+    second: timerun_future_far_glow_41
+  - first:
+      213: -4843019841866735298
+    second: timerun_future_far_glow_42
+  - first:
+      213: -8876876210916265248
+    second: timerun_future_far_glow_43
+  - first:
+      213: 5243483997640021618
+    second: timerun_future_far_glow_44
+  - first:
+      213: 8723905372702966731
+    second: timerun_future_far_glow_45
+  - first:
+      213: 8893209631505777791
+    second: timerun_future_far_glow_46
+  - first:
+      213: -3263727400193488340
+    second: timerun_future_far_glow_47
+  - first:
+      213: 1465074621580741457
+    second: timerun_future_far_glow_48
+  - first:
+      213: -375306080353274180
+    second: timerun_future_far_glow_49
+  - first:
+      213: -3362553115170967520
+    second: timerun_future_far_glow_50
+  - first:
+      213: -4670541379923425168
+    second: timerun_future_far_glow_51
+  - first:
+      213: -5975569262416355767
+    second: timerun_future_far_glow_52
+  - first:
+      213: -4681070859441946308
+    second: timerun_future_far_glow_53
+  - first:
+      213: -8236441232001143745
+    second: timerun_future_far_glow_54
+  - first:
+      213: -4618889552661089907
+    second: timerun_future_far_glow_55
+  - first:
+      213: 20528931892973674
+    second: timerun_future_far_glow_56
+  - first:
+      213: 3937309447725488795
+    second: timerun_future_far_glow_57
+  - first:
+      213: 1100809628367797301
+    second: timerun_future_far_glow_58
+  - first:
+      213: -1147728936821363834
+    second: timerun_future_far_glow_59
+  - first:
+      213: -2506993837949638032
+    second: timerun_future_far_glow_60
+  - first:
+      213: 4920171753657639107
+    second: timerun_future_far_glow_61
+  - first:
+      213: -1002020466671151005
+    second: timerun_future_far_glow_62
+  - first:
+      213: 2462040857147356462
+    second: timerun_future_far_glow_63
+  - first:
+      213: -8096897387292310031
+    second: timerun_future_far_glow_64
+  - first:
+      213: -2224488280884488435
+    second: timerun_future_far_glow_65
+  - first:
+      213: 1239823919455483249
+    second: timerun_future_far_glow_66
+  - first:
+      213: 3761149704320817140
+    second: timerun_future_far_glow_67
+  - first:
+      213: -712541897007950863
+    second: timerun_future_far_glow_68
+  - first:
+      213: 1275126981101815602
+    second: timerun_future_far_glow_69
+  - first:
+      213: 8717940873502608348
+    second: timerun_future_far_glow_70
+  - first:
+      213: 823453225840898187
+    second: timerun_future_far_glow_71
+  - first:
+      213: 8592748017728089639
+    second: timerun_future_far_glow_72
+  - first:
+      213: 8298986436333141952
+    second: timerun_future_far_glow_73
+  - first:
+      213: 921692611084149838
+    second: timerun_future_far_glow_74
+  - first:
+      213: 7826209669893810226
+    second: timerun_future_far_glow_75
+  - first:
+      213: 1622627846743918142
+    second: timerun_future_far_glow_76
+  - first:
+      213: -3380319949014047125
+    second: timerun_future_far_glow_77
+  - first:
+      213: -1186614061223054245
+    second: timerun_future_far_glow_78
+  - first:
+      213: -7865844834054024894
+    second: timerun_future_far_glow_79
+  - first:
+      213: 9024277041910097742
+    second: timerun_future_far_glow_80
+  - first:
+      213: -1826366818311996139
+    second: timerun_future_far_glow_81
+  - first:
+      213: 9131523727726652241
+    second: timerun_future_far_glow_82
+  - first:
+      213: -7011399230202362709
+    second: timerun_future_far_glow_83
+  - first:
+      213: -2563503211401733595
+    second: timerun_future_far_glow_84
+  - first:
+      213: -1269218027829296961
+    second: timerun_future_far_glow_85
+  - first:
+      213: -3212481479282561842
+    second: timerun_future_far_glow_86
+  - first:
+      213: 7691415373022273307
+    second: timerun_future_far_glow_87
+  - first:
+      213: -9039225649646647324
+    second: timerun_future_far_glow_88
+  - first:
+      213: -7918375007748381003
+    second: timerun_future_far_glow_89
+  - first:
+      213: -1000202718640359739
+    second: timerun_future_far_glow_90
+  - first:
+      213: -2087091275074321516
+    second: timerun_future_far_glow_91
+  - first:
+      213: 4158481453005737538
+    second: timerun_future_far_glow_92
+  - first:
+      213: -8203624020669886321
+    second: timerun_future_far_glow_93
+  - first:
+      213: -1605818006394711435
+    second: timerun_future_far_glow_94
+  - first:
+      213: 2834191961418649238
+    second: timerun_future_far_glow_95
+  - first:
+      213: 6312880911513558360
+    second: timerun_future_far_glow_96
+  - first:
+      213: 8868053324464411254
+    second: timerun_future_far_glow_97
+  - first:
+      213: 8806364292263835547
+    second: timerun_future_far_glow_98
+  - first:
+      213: -2610075923926980658
+    second: timerun_future_far_glow_99
+  - first:
+      213: 9087312053088489929
+    second: timerun_future_far_glow_100
+  - first:
+      213: 3527732857813415537
+    second: timerun_future_far_glow_101
+  - first:
+      213: 342211930708141016
+    second: timerun_future_far_glow_102
+  - first:
+      213: 8883406652664976640
+    second: timerun_future_far_glow_103
+  - first:
+      213: -4766504039858957363
+    second: timerun_future_far_glow_104
+  - first:
+      213: -1081702442015191802
+    second: timerun_future_far_glow_105
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 9
+  spritePivot: {x: 0, y: 0}
+  spritePixelsToUnits: 64
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: timerun_future_far_glow_0
+      rect:
+        serializedVersion: 2
+        x: 482
+        y: 419
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 828dc743c456cb6e0800000000000000
+      internalID: -1820468771392006104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_1
+      rect:
+        serializedVersion: 2
+        x: 870
+        y: 423
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d536650f533abe200800000000000000
+      internalID: 210441259663647581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_2
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 384
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc39998cff4028820800000000000000
+      internalID: 2918901005118182348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_3
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 387
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81407db52a54bc6f0800000000000000
+      internalID: -663359956479179752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_4
+      rect:
+        serializedVersion: 2
+        x: 890
+        y: 0
+        width: 27
+        height: 410
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb5d3f956cd551b60800000000000000
+      internalID: 7716176643063272892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_5
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 0
+        width: 113
+        height: 380
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fdb6681f7fd47c80800000000000000
+      internalID: -8325784074137977354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_6
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 364
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2295c615a001b020800000000000000
+      internalID: 2355664789143130671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_7
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 373
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 154371a7f115883b0800000000000000
+      internalID: -5510064948453624751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_8
+      rect:
+        serializedVersion: 2
+        x: 866
+        y: 373
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca7e13cf11984e2e0800000000000000
+      internalID: -2097400816109230164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_9
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 345
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3c72d277074e4a50800000000000000
+      internalID: 6507216608913685562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_10
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 0
+        width: 26
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6794fa15cefd704a0800000000000000
+      internalID: -6627082120576677514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_11
+      rect:
+        serializedVersion: 2
+        x: 671
+        y: 0
+        width: 21
+        height: 351
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddd4a3b5ef305baf0800000000000000
+      internalID: -381394202455814691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_12
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 314
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9d1571e018838110800000000000000
+      internalID: 1262001926677274013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_13
+      rect:
+        serializedVersion: 2
+        x: 638
+        y: 331
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 110af54f2831fc7d0800000000000000
+      internalID: -2896074582209355759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_14
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 299
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d62ae51ed78fba6c0800000000000000
+      internalID: -4130935013646622099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_15
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 317
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b2398e388366b9e0800000000000000
+      internalID: -1605986780295122249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_16
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 317
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6be51b2ceefb1e60800000000000000
+      internalID: 7934215458831854444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_17
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 303
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e8e133ff4976fdd0800000000000000
+      internalID: -2452639562767144736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_18
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 303
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a87160ba19cf8d720800000000000000
+      internalID: 2871322465018451850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_19
+      rect:
+        serializedVersion: 2
+        x: 638
+        y: 303
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f73c86151bc5e61c0800000000000000
+      internalID: -4508564260306500737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_20
+      rect:
+        serializedVersion: 2
+        x: 650
+        y: 303
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e23a0b8003f18d90800000000000000
+      internalID: -7097124354100940064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_21
+      rect:
+        serializedVersion: 2
+        x: 662
+        y: 303
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bf7a0bbb54acd420800000000000000
+      internalID: 2656178594128756664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_22
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 303
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c4f0597acbcff840800000000000000
+      internalID: 5260146960271209672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_23
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 289
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96bfcd9c2dd54b770800000000000000
+      internalID: 8625622346232560489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_24
+      rect:
+        serializedVersion: 2
+        x: 182
+        y: 275
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42520aa6b63285ec0800000000000000
+      internalID: -3578070959688506076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_25
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 0
+        width: 101
+        height: 275
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e07edf3b252b8b30800000000000000
+      internalID: 4290563937685893353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_26
+      rect:
+        serializedVersion: 2
+        x: 590
+        y: 275
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c22b9028f0df0240800000000000000
+      internalID: 4760253095271408321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_27
+      rect:
+        serializedVersion: 2
+        x: 650
+        y: 275
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a66343741d186220800000000000000
+      internalID: 2479263568537806500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_28
+      rect:
+        serializedVersion: 2
+        x: 662
+        y: 275
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02a01b64f1d9cd590800000000000000
+      internalID: -7648065309526390240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_29
+      rect:
+        serializedVersion: 2
+        x: 977
+        y: 259
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1664680c9897a4a0800000000000000
+      internalID: -6582124534455572966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_30
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 261
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdbf52be9950a8f90800000000000000
+      internalID: -6950736916259669025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_31
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 261
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc36372a051378c10800000000000000
+      internalID: 2055665977310536655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_32
+      rect:
+        serializedVersion: 2
+        x: 182
+        y: 261
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9afe7c75c7a0b0880800000000000000
+      internalID: -8643803530642591831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_33
+      rect:
+        serializedVersion: 2
+        x: 379
+        y: 249
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a51ede35d3bf1d40800000000000000
+      internalID: 5557358193662629286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_34
+      rect:
+        serializedVersion: 2
+        x: 753
+        y: 245
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc927ccc9f928b940800000000000000
+      internalID: 5312041913342699983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_35
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 124
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc69a897d80933ec0800000000000000
+      internalID: -3588365540780239155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_36
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 247
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fb20dfd8dc2fbe00800000000000000
+      internalID: 1062617347062246387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_37
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 247
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2be3d33a04994b100800000000000000
+      internalID: 122891592741502642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_38
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 247
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a30e0e9e09c8db430800000000000000
+      internalID: 3800348214597574714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_39
+      rect:
+        serializedVersion: 2
+        x: 650
+        y: 247
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4912dc9e723ea48d0800000000000000
+      internalID: -2861224852674764396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_40
+      rect:
+        serializedVersion: 2
+        x: 662
+        y: 247
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69b00210a53672010800000000000000
+      internalID: 1164008266915646358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_41
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 233
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 306eecf37d398f020800000000000000
+      internalID: 2375811356135712259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_42
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 0
+        width: 21
+        height: 236
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e316d5dfc132accb0800000000000000
+      internalID: -4843019841866735298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_43
+      rect:
+        serializedVersion: 2
+        x: 566
+        y: 233
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e2783d2e100fc480800000000000000
+      internalID: -8876876210916265248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_44
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 233
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27657c82ae894c840800000000000000
+      internalID: 5243483997640021618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_45
+      rect:
+        serializedVersion: 2
+        x: 866
+        y: 233
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc3051a17b9811970800000000000000
+      internalID: 8723905372702966731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_46
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 219
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f740cf6aa070b6b70800000000000000
+      internalID: 8893209631505777791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_47
+      rect:
+        serializedVersion: 2
+        x: 698
+        y: 0
+        width: 130
+        height: 232
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2a02c3b839e4b2d0800000000000000
+      internalID: -3263727400193488340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_48
+      rect:
+        serializedVersion: 2
+        x: 373
+        y: 205
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15b82c42b9df45410800000000000000
+      internalID: 1465074621580741457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_49
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 205
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb6bf7ebb15aacaf0800000000000000
+      internalID: -375306080353274180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_50
+      rect:
+        serializedVersion: 2
+        x: 866
+        y: 205
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 020f9dfd1cfc551d0800000000000000
+      internalID: -3362553115170967520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_51
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 191
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 078c6ec4c57ee2fb0800000000000000
+      internalID: -4670541379923425168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_52
+      rect:
+        serializedVersion: 2
+        x: 602
+        y: 191
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94e1eee6a63821da0800000000000000
+      internalID: -5975569262416355767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_53
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 191
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c31c78ecade790fb0800000000000000
+      internalID: -4681070859441946308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_54
+      rect:
+        serializedVersion: 2
+        x: 662
+        y: 191
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3ce039865842bd80800000000000000
+      internalID: -8236441232001143745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_55
+      rect:
+        serializedVersion: 2
+        x: 373
+        y: 177
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d817fdc7c6866efb0800000000000000
+      internalID: -4618889552661089907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_56
+      rect:
+        serializedVersion: 2
+        x: 956
+        y: 177
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a60591d64fee84000800000000000000
+      internalID: 20528931892973674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_57
+      rect:
+        serializedVersion: 2
+        x: 980
+        y: 177
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9a977af41224a630800000000000000
+      internalID: 3937309447725488795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_58
+      rect:
+        serializedVersion: 2
+        x: 992
+        y: 177
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53c3130568cd64f00800000000000000
+      internalID: 1100809628367797301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_59
+      rect:
+        serializedVersion: 2
+        x: 1004
+        y: 177
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68b6356ec927210f0800000000000000
+      internalID: -1147728936821363834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_60
+      rect:
+        serializedVersion: 2
+        x: 1016
+        y: 177
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07a2be2136e553dd0800000000000000
+      internalID: -2506993837949638032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_61
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 163
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c0acaa4426f74440800000000000000
+      internalID: 4920171753657639107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_62
+      rect:
+        serializedVersion: 2
+        x: 361
+        y: 163
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 368156ac1bb1812f0800000000000000
+      internalID: -1002020466671151005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_63
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 163
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2534c87d1dea2220800000000000000
+      internalID: 2462040857147356462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_64
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 163
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f547a7b9ba02af80800000000000000
+      internalID: -8096897387292310031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_65
+      rect:
+        serializedVersion: 2
+        x: 944
+        y: 163
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d075cd2c1b70121e0800000000000000
+      internalID: -2224488280884488435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_66
+      rect:
+        serializedVersion: 2
+        x: 638
+        y: 149
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1753d2f294db43110800000000000000
+      internalID: 1239823919455483249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_67
+      rect:
+        serializedVersion: 2
+        x: 662
+        y: 149
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f79b198ab9423430800000000000000
+      internalID: 3761149704320817140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_68
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 149
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f3124d7bea8c16f0800000000000000
+      internalID: -712541897007950863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_69
+      rect:
+        serializedVersion: 2
+        x: 968
+        y: 149
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2370710cb3922b110800000000000000
+      internalID: 1275126981101815602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_70
+      rect:
+        serializedVersion: 2
+        x: 980
+        y: 149
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdb4bf9e8095cf870800000000000000
+      internalID: 8717940873502608348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_71
+      rect:
+        serializedVersion: 2
+        x: 650
+        y: 135
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b807567985e7d6b00800000000000000
+      internalID: 823453225840898187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_72
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 121
+        width: 104
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72eef19bbc29f3770800000000000000
+      internalID: 8592748017728089639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_73
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 121
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cffb65a13ceb2370800000000000000
+      internalID: 8298986436333141952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_74
+      rect:
+        serializedVersion: 2
+        x: 638
+        y: 121
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e44e5c3eb828acc00800000000000000
+      internalID: 921692611084149838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_75
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 107
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2386fbfca384c9c60800000000000000
+      internalID: 7826209669893810226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_76
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 107
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3604d7fd6bb48610800000000000000
+      internalID: 1622627846743918142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_77
+      rect:
+        serializedVersion: 2
+        x: 566
+        y: 107
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b66e9d38ae0b611d0800000000000000
+      internalID: -3380319949014047125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_78
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 107
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b54f05b5ccc488fe0800000000000000
+      internalID: -1186614061223054245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_79
+      rect:
+        serializedVersion: 2
+        x: 866
+        y: 107
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2415ed76cc7e6d290800000000000000
+      internalID: -7865844834054024894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_80
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 107
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e47a3cd282cac3d70800000000000000
+      internalID: 9024277041910097742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_81
+      rect:
+        serializedVersion: 2
+        x: 980
+        y: 107
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51df3f42e0177a6e0800000000000000
+      internalID: -1826366818311996139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_82
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 93
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15ba2311370b9be70800000000000000
+      internalID: 9131523727726652241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_83
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 93
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba447515c8182be90800000000000000
+      internalID: -7011399230202362709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_84
+      rect:
+        serializedVersion: 2
+        x: 866
+        y: 93
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52a93d7496b9c6cd0800000000000000
+      internalID: -2563503211401733595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_85
+      rect:
+        serializedVersion: 2
+        x: 944
+        y: 93
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb086b4ade4d26ee0800000000000000
+      internalID: -1269218027829296961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_86
+      rect:
+        serializedVersion: 2
+        x: 182
+        y: 79
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecc67d37d19fa63d0800000000000000
+      internalID: -3212481479282561842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_87
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 79
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1f98f8e7856dba60800000000000000
+      internalID: 7691415373022273307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_88
+      rect:
+        serializedVersion: 2
+        x: 614
+        y: 79
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e7463cd9283e8280800000000000000
+      internalID: -9039225649646647324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_89
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 79
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b6a3d042e74c1290800000000000000
+      internalID: -7918375007748381003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_90
+      rect:
+        serializedVersion: 2
+        x: 373
+        y: 65
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c6bf0c3de09e12f0800000000000000
+      internalID: -1000202718640359739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_91
+      rect:
+        serializedVersion: 2
+        x: 182
+        y: 51
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 493c06f0b892903e0800000000000000
+      internalID: -2087091275074321516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_92
+      rect:
+        serializedVersion: 2
+        x: 566
+        y: 51
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24e057359d4e5b930800000000000000
+      internalID: 4158481453005737538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_93
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 51
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f801c19fa6fd62e80800000000000000
+      internalID: -8203624020669886321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_94
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 51
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 572daeaf70df6b9e0800000000000000
+      internalID: -1605818006394711435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_95
+      rect:
+        serializedVersion: 2
+        x: 944
+        y: 51
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69e40ad9292155720800000000000000
+      internalID: 2834191961418649238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_96
+      rect:
+        serializedVersion: 2
+        x: 956
+        y: 51
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85d1c10fdbbdb9750800000000000000
+      internalID: 6312880911513558360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_97
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 37
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6725ced7387a11b70800000000000000
+      internalID: 8868053324464411254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_98
+      rect:
+        serializedVersion: 2
+        x: 397
+        y: 37
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b97f11b6aad763a70800000000000000
+      internalID: 8806364292263835547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_99
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 37
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec76885a6c527cbd0800000000000000
+      internalID: -2610075923926980658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_100
+      rect:
+        serializedVersion: 2
+        x: 1016
+        y: 37
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c117776a2e9c1e70800000000000000
+      internalID: 9087312053088489929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_101
+      rect:
+        serializedVersion: 2
+        x: 566
+        y: 23
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 176317ce75605f030800000000000000
+      internalID: 3527732857813415537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_102
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 23
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d362c710f7cfb400800000000000000
+      internalID: 342211930708141016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_103
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 23
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0051077c843384b70800000000000000
+      internalID: 8883406652664976640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_104
+      rect:
+        serializedVersion: 2
+        x: 944
+        y: 23
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc31ebb64d9f9ddb0800000000000000
+      internalID: -4766504039858957363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timerun_future_far_glow_105
+      rect:
+        serializedVersion: 2
+        x: 992
+        y: 23
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60d030f2c550df0f0800000000000000
+      internalID: -1081702442015191802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      timerun_future_far_glow_0: -1820468771392006104
+      timerun_future_far_glow_1: 210441259663647581
+      timerun_future_far_glow_10: -6627082120576677514
+      timerun_future_far_glow_100: 9087312053088489929
+      timerun_future_far_glow_101: 3527732857813415537
+      timerun_future_far_glow_102: 342211930708141016
+      timerun_future_far_glow_103: 8883406652664976640
+      timerun_future_far_glow_104: -4766504039858957363
+      timerun_future_far_glow_105: -1081702442015191802
+      timerun_future_far_glow_11: -381394202455814691
+      timerun_future_far_glow_12: 1262001926677274013
+      timerun_future_far_glow_13: -2896074582209355759
+      timerun_future_far_glow_14: -4130935013646622099
+      timerun_future_far_glow_15: -1605986780295122249
+      timerun_future_far_glow_16: 7934215458831854444
+      timerun_future_far_glow_17: -2452639562767144736
+      timerun_future_far_glow_18: 2871322465018451850
+      timerun_future_far_glow_19: -4508564260306500737
+      timerun_future_far_glow_2: 2918901005118182348
+      timerun_future_far_glow_20: -7097124354100940064
+      timerun_future_far_glow_21: 2656178594128756664
+      timerun_future_far_glow_22: 5260146960271209672
+      timerun_future_far_glow_23: 8625622346232560489
+      timerun_future_far_glow_24: -3578070959688506076
+      timerun_future_far_glow_25: 4290563937685893353
+      timerun_future_far_glow_26: 4760253095271408321
+      timerun_future_far_glow_27: 2479263568537806500
+      timerun_future_far_glow_28: -7648065309526390240
+      timerun_future_far_glow_29: -6582124534455572966
+      timerun_future_far_glow_3: -663359956479179752
+      timerun_future_far_glow_30: -6950736916259669025
+      timerun_future_far_glow_31: 2055665977310536655
+      timerun_future_far_glow_32: -8643803530642591831
+      timerun_future_far_glow_33: 5557358193662629286
+      timerun_future_far_glow_34: 5312041913342699983
+      timerun_future_far_glow_35: -3588365540780239155
+      timerun_future_far_glow_36: 1062617347062246387
+      timerun_future_far_glow_37: 122891592741502642
+      timerun_future_far_glow_38: 3800348214597574714
+      timerun_future_far_glow_39: -2861224852674764396
+      timerun_future_far_glow_4: 7716176643063272892
+      timerun_future_far_glow_40: 1164008266915646358
+      timerun_future_far_glow_41: 2375811356135712259
+      timerun_future_far_glow_42: -4843019841866735298
+      timerun_future_far_glow_43: -8876876210916265248
+      timerun_future_far_glow_44: 5243483997640021618
+      timerun_future_far_glow_45: 8723905372702966731
+      timerun_future_far_glow_46: 8893209631505777791
+      timerun_future_far_glow_47: -3263727400193488340
+      timerun_future_far_glow_48: 1465074621580741457
+      timerun_future_far_glow_49: -375306080353274180
+      timerun_future_far_glow_5: -8325784074137977354
+      timerun_future_far_glow_50: -3362553115170967520
+      timerun_future_far_glow_51: -4670541379923425168
+      timerun_future_far_glow_52: -5975569262416355767
+      timerun_future_far_glow_53: -4681070859441946308
+      timerun_future_far_glow_54: -8236441232001143745
+      timerun_future_far_glow_55: -4618889552661089907
+      timerun_future_far_glow_56: 20528931892973674
+      timerun_future_far_glow_57: 3937309447725488795
+      timerun_future_far_glow_58: 1100809628367797301
+      timerun_future_far_glow_59: -1147728936821363834
+      timerun_future_far_glow_6: 2355664789143130671
+      timerun_future_far_glow_60: -2506993837949638032
+      timerun_future_far_glow_61: 4920171753657639107
+      timerun_future_far_glow_62: -1002020466671151005
+      timerun_future_far_glow_63: 2462040857147356462
+      timerun_future_far_glow_64: -8096897387292310031
+      timerun_future_far_glow_65: -2224488280884488435
+      timerun_future_far_glow_66: 1239823919455483249
+      timerun_future_far_glow_67: 3761149704320817140
+      timerun_future_far_glow_68: -712541897007950863
+      timerun_future_far_glow_69: 1275126981101815602
+      timerun_future_far_glow_7: -5510064948453624751
+      timerun_future_far_glow_70: 8717940873502608348
+      timerun_future_far_glow_71: 823453225840898187
+      timerun_future_far_glow_72: 8592748017728089639
+      timerun_future_far_glow_73: 8298986436333141952
+      timerun_future_far_glow_74: 921692611084149838
+      timerun_future_far_glow_75: 7826209669893810226
+      timerun_future_far_glow_76: 1622627846743918142
+      timerun_future_far_glow_77: -3380319949014047125
+      timerun_future_far_glow_78: -1186614061223054245
+      timerun_future_far_glow_79: -7865844834054024894
+      timerun_future_far_glow_8: -2097400816109230164
+      timerun_future_far_glow_80: 9024277041910097742
+      timerun_future_far_glow_81: -1826366818311996139
+      timerun_future_far_glow_82: 9131523727726652241
+      timerun_future_far_glow_83: -7011399230202362709
+      timerun_future_far_glow_84: -2563503211401733595
+      timerun_future_far_glow_85: -1269218027829296961
+      timerun_future_far_glow_86: -3212481479282561842
+      timerun_future_far_glow_87: 7691415373022273307
+      timerun_future_far_glow_88: -9039225649646647324
+      timerun_future_far_glow_89: -7918375007748381003
+      timerun_future_far_glow_9: 6507216608913685562
+      timerun_future_far_glow_90: -1000202718640359739
+      timerun_future_far_glow_91: -2087091275074321516
+      timerun_future_far_glow_92: 4158481453005737538
+      timerun_future_far_glow_93: -8203624020669886321
+      timerun_future_far_glow_94: -1605818006394711435
+      timerun_future_far_glow_95: 2834191961418649238
+      timerun_future_far_glow_96: 6312880911513558360
+      timerun_future_far_glow_97: 8868053324464411254
+      timerun_future_far_glow_98: 8806364292263835547
+      timerun_future_far_glow_99: -2610075923926980658
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

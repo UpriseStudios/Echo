@@ -25,6 +25,21 @@ namespace Echo.Game.Views
         [SerializeField] Vector2 _scarfAnchor = new Vector2(-0.03f, 0.53f);
         [Tooltip("World Time Run doc, phase 3: the soft glow behind the runner in the Far Future.")]
         [SerializeField] Sprite _glow;
+        [Tooltip("Art pass phase 6: a soft blob shadow on the floor in the Far Far Future.")]
+        [SerializeField] Sprite _shadowSprite;
+        SpriteRenderer _shadow;
+        bool _shadowOn;
+
+        /// <summary>The blob shadow under the runner on or off.</summary>
+        public void SetShadow(bool on)
+        {
+            _ = Body;
+            _shadowOn = on && _shadowSprite != null;
+            _shadow.enabled = _shadowOn;
+        }
+
+        /// <summary>The runner's shadow is drawn (tests).</summary>
+        public bool ShadowShown => _shadow != null && _shadow.enabled;
 
         SpriteRenderer _body;
         LineRenderer _scarf;
@@ -113,6 +128,8 @@ namespace Echo.Game.Views
                 _rimTrailing = Extra("RimTrailing", 8);
                 _rimLeading = Extra("RimLeading", 8);
                 for (int i = 0; i < Afterimages; i++) _after[i] = Extra("Afterimage" + i, 7);
+                _shadow = Extra("Shadow", 1);
+                _shadow.sprite = _shadowSprite;
                 return _body;
             }
         }
@@ -175,6 +192,7 @@ namespace Echo.Game.Views
 
             UpdateScarf(Position + new Vector2(_scarfAnchor.x * _deform.x, _scarfAnchor.y * _deform.y), current.Alive, dt);
             if (_future) RenderFuture(body, dt);
+            if (_shadowOn) BlobShadow.Place(_shadow, Position.x, Position.y, body.enabled ? 1f : 0f);
         }
 
         void RenderFuture(SpriteRenderer body, float dt)

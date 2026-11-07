@@ -29,5 +29,7 @@ namespace Echo.Game.Seasons
         public float TrafficY;
         public float TrafficSpeed = 3f;
         public int TrafficCount;
+        [Tooltip("Art fix phase 2: an emissive layer (neon, lit windows, signs), drawn through the HDR glow material so the bloom catches it; with reduced effects it is drawn plainly.")]
+        public bool Glow;
     }
 }

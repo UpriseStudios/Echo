@@ -169,6 +169,7 @@ namespace Echo.Game.Flow
             Application.targetFrameRate = 60;
             _cfg = SimConfig.Default;
             if (_cameraRig != null) _cameraRig.Followed += RenderLowRes;
+            if (_cameraRig != null) _cameraRig.Followed += RenderFar3D;
 
             var json = new string[_chunkFiles.Length];
             for (int i = 0; i < json.Length; i++) json[i] = _chunkFiles[i].text;
@@ -289,9 +290,15 @@ namespace Echo.Game.Flow
             PcWording.InstallIfPc();
             ApplyCosmetics();
             LogSeasonalEquip();   // what's worn at startup is the baseline, not an equip
+            // Art fix phase 1: an older build could save "reduced effects" for good after one slow stretch; a capable
+            // phone could stay reduced for ever. The flag is now for the session only, so a saved one is cleared here.
+            bool savedSlow = _save.Settings.EffectsReduced;
+            _save.Settings.EffectsReduced = false;
             ApplySettings();
             _sessionStart = Time.realtimeSinceStartup;
             EnterTitle();
+            if (savedSlow) Debug.Log("[Effects] startup: a saved reduced-effects flag (the Far Future ran slow once) was found and cleared");
+            LogEffects("startup");
 
             // tech spec 19: no ad or analytics SDK starts before the player has chosen.
             if (_save.Consent.Decided)
@@ -321,6 +328,7 @@ namespace Echo.Game.Flow
         /// <summary>One frame of flow, sim and rendering. Update calls it; PlayMode tests call it directly.</summary>
         public void TickFrame(float dt, bool tapped)
         {
+            _frameDt = dt;
             tapped |= _injectedTap;
             _injectedTap = false;
             _stateTime += dt;

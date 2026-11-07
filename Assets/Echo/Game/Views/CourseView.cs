@@ -206,6 +206,14 @@ namespace Echo.Game.Views
             LowResPiece(from);
         }
 
+        /// <summary>Art pass phase 6: the material the course's pieces use (lit in the Far Far Future), existing and new.</summary>
+        public void SetPieceMaterial(Material material)
+        {
+            if (material == null || material == _material) return;
+            foreach (SpriteRenderer sr in _pool) sr.sharedMaterial = material;
+            _material = material;
+        }
+
         SpriteRenderer Next(int order)
         {
             if (_used == _pool.Count) _pool.Add(BoxSprite.Create(transform, "CoursePiece" + _used, _material, order));

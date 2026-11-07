@@ -211,12 +211,21 @@ namespace Echo.Editor.Art
             for (int f = 0; f < 4; f++) EchoArt.Write(PathFor(today, "billboard_" + f), PixelToday.Billboard(f));
             for (int k = 0; k < 6; k++) EchoArt.Write(PathFor(today, "car_" + k), PixelToday.Car(k));
             for (int f = 0; f < 2; f++) EchoArt.Write(PathFor(today, "barrier_" + f), PixelToday.Barrier(f));
-            WriteWorld(future, HdFuture.Far(), HdFuture.Near(), HdFuture.FlyingCar(), HdFuture.Rain());
+            WriteWorld(future, HdFuture.Far(), HdFuture.Near(), HdFuture.TrailCar(1, 160), HdFuture.Rain());
             EchoArt.Write(PathFor(future, Sky), HdFuture.Sky());
             EchoArt.Write(PathFor(future, Back), HdFuture.Back());
             EchoArt.Write(PathFor(future, Moons), HdFuture.Moons());
+            // Art fix phase 2: the mid-distance towers, the emissive companions, holograms, three lanes of cars, beams, mist.
+            EchoArt.Write(PathFor(future, Mid), HdFuture.MidFar());
+            foreach (string part in FutureGlowParts) EchoArt.Write(PathFor(future, part), FutureGlow(part));
+            for (int f = 0; f < 4; f++) EchoArt.Write(PathFor(future, "holo_" + f), HdFuture.Hologram(f));
+            for (int lane = 0; lane < FutureLanes.Length; lane++)
+                for (int k = 0; k < 2; k++) EchoArt.Write(PathFor(future, $"car{lane}_{k}"), HdFuture.TrailCar(k + lane, FutureLanes[lane]));
+            EchoArt.Write(PathFor(future, "beam"), HdFuture.Beam());
+            EchoArt.Write(PathFor(future, "mist"), HdFuture.Mist());
             EchoArt.Write(PathFor(future, Floor), HdFuture.GridFloor());
             EchoArt.Write(PathFor(future, "splash"), HdFuture.Splash());
+            Far3DArt.Write();   // art pass phase 6: the 3D city's textures and the blob shadow
             EchoArt.Write(PathFor(future, "fade"), HdFuture.Fade());
 
             foreach (var e in Eras)
@@ -271,9 +280,19 @@ namespace Echo.Editor.Art
             EchoArt.ImportSprite(PathFor(future, Near), HdFuture.Ppu, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
             EchoArt.ImportSprite(PathFor(future, Back), HdFuture.Ppu, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
             EchoArt.ImportSprite(PathFor(future, Moons), HdFuture.Ppu, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
+            EchoArt.ImportSprite(PathFor(future, Mid), HdFuture.Ppu, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
+            foreach (string part in FutureGlowParts)
+                EchoArt.ImportSprite(PathFor(future, part), HdFuture.Ppu, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
+            for (int f = 0; f < 4; f++) EchoArt.ImportSprite(PathFor(future, "holo_" + f), HdFuture.Ppu, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, smooth);
+            for (int lane = 0; lane < FutureLanes.Length; lane++)
+                for (int k = 0; k < 2; k++)
+                    EchoArt.ImportSprite(PathFor(future, $"car{lane}_{k}"), HdFuture.Ppu, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, smooth);
+            EchoArt.ImportSprite(PathFor(future, "beam"), HdFuture.Ppu, new Vector2(0.5f, 0f), default, TextureWrapMode.Clamp, smooth);
+            EchoArt.ImportSprite(PathFor(future, "mist"), HdFuture.Ppu, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, smooth);
             EchoArt.ImportSprite(PathFor(future, Sky), 32f, Vector2.zero, default, TextureWrapMode.Repeat, smooth);
             EchoArt.ImportSprite(PathFor(future, Floor), 128f, new Vector2(0f, 1f), default, TextureWrapMode.Repeat, smooth);
             EchoArt.ImportSprite(PathFor(future, "splash"), 32f, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, smooth);
+            Far3DArt.Import();
             EchoArt.ImportSprite(PathFor(future, "fade"), 32f, new Vector2(0f, 0f), default, TextureWrapMode.Clamp, smooth);
             EchoArt.ImportSprite(FlyerPath(future), HdFuture.Ppu, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, smooth);
             EchoArt.ImportSprite(EffectPath(future, 0), HdFuture.Ppu, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, smooth);
@@ -289,6 +308,14 @@ namespace Echo.Editor.Art
             // Like the horns: its base row over the top of the head.
             EchoArt.ImportSprite(PathFor(Game.Seasons.SeasonIds.EraDino, NemesisAccessory), EchoArt.WorldPpu, new Vector2(0.5f, 1f / 9f));
         }
+
+        /// <summary>Art fix phase 2: the Far Future's emissive companion layers (their lights alone, drawn in HDR).</summary>
+        public static readonly string[] FutureGlowParts = { "moons_glow", "far_glow", "near_glow" };
+
+        /// <summary>Art fix phase 2: the Far Future's car lengths in pixels, far lane to near lane.</summary>
+        public static readonly int[] FutureLanes = { 48, 72, 112 };
+
+        static PixelCanvas FutureGlow(string part) => part == "moons_glow" ? HdFuture.MoonsGlow() : part == "far_glow" ? HdFuture.FarGlow() : HdFuture.NearGlow();
 
         static void WriteWorld(string id, PixelCanvas far, PixelCanvas near, PixelCanvas flyer, params PixelCanvas[] effects)
         {

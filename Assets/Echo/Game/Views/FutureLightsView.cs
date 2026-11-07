@@ -16,7 +16,30 @@ namespace Echo.Game.Views
         public const float FullGlobal = 0.85f;
         public const float ReducedGlobal = 1f;
 
-        bool _on, _full;
+        bool _on, _full, _gameplay;
+
+        /// <summary>
+        /// Art pass phase 6: in the Far Far Future the gameplay is lit too, so two of the pools become a key light (cyan,
+        /// above and ahead of the runner) and a rim light (magenta, behind), matching the 3D city's colours.
+        /// </summary>
+        public void SetGameplay(bool on)
+        {
+            if (on == _gameplay) return;
+            if (_neonColours == null)
+            {
+                _neonColours = new Color[_neon.Length];
+                _neonRadii = new float[_neon.Length];
+                for (int i = 0; i < _neon.Length; i++)
+                    if (_neon[i] != null) { _neonColours[i] = _neon[i].color; _neonRadii[i] = _neon[i].pointLightOuterRadius; }
+            }
+            _gameplay = on;
+            if (on) return;
+            for (int i = 0; i < _neon.Length; i++)   // the borrowed pools back to their own colours
+                if (_neon[i] != null) { _neon[i].color = _neonColours[i]; _neon[i].pointLightOuterRadius = _neonRadii[i]; }
+        }
+
+        Color[] _neonColours;
+        float[] _neonRadii;
 
         /// <summary>Lights on in the Far Future; the neon pools only with full effects.</summary>
         public void Set(bool on, bool full)
@@ -52,6 +75,15 @@ namespace Echo.Game.Views
             {
                 Light2D l = _neon[i];
                 if (l == null) continue;
+                if (_gameplay && i < 2)
+                {
+                    float w = right - left;
+                    l.transform.position = i == 0 ? new Vector3(left + 0.62f * w, bottom + 0.62f * height, 0f) : new Vector3(left + 0.08f * w, bottom + 0.4f * height, 0f);
+                    l.color = i == 0 ? new Color(0.55f, 0.95f, 1f) : new Color(1f, 0.35f, 0.85f);
+                    l.pointLightOuterRadius = i == 0 ? 8f : 6f;
+                    l.intensity = i == 0 ? 0.55f : 0.45f;
+                    continue;
+                }
                 float p = Mathf.Repeat(i * 0.37f - time * (0.02f + 0.013f * i), 1f);
                 float x = left - 3f + p * span;
                 float y = bottom + height * (0.42f + 0.07f * i % 0.3f) + 0.4f * Mathf.Sin(time * 0.7f + i * 1.9f);

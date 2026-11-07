@@ -335,6 +335,9 @@ namespace Echo.Editor
             today.FlyerSpeed = 1.6f;
 
             // The Far Future in HD: its own sky, moons, chrome towers, wet street, neon grid floor, rain and flying car.
+            // Art fix phase 2: five depths, hazier with distance (the sky's bodies, a far skyline, mid towers, the chrome
+            // towers, the street), every light on an emissive companion drawn in HDR (Glow), three lanes of cars with light
+            // trails (far, middle, near: smaller and slower further back) and holographic billboards on the chrome towers.
             future.HighDefinition = true;
             future.FarLayer = Sprite(SeasonIds.EraFuture, SeasonArt.Far);
             future.NearLayer = Sprite(SeasonIds.EraFuture, SeasonArt.Near);
@@ -342,8 +345,25 @@ namespace Echo.Editor
             future.ExtraLayers = new[]
             {
                 new ExtraLayer { Sprite = Sprite(SeasonIds.EraFuture, SeasonArt.Sky), Parallax = 0f, Order = -30 },
-                new ExtraLayer { Sprite = Sprite(SeasonIds.EraFuture, SeasonArt.Moons), Parallax = 0f, Order = -26 },
-                new ExtraLayer { Sprite = Sprite(SeasonIds.EraFuture, SeasonArt.Back), Parallax = 0.05f, Order = -22 },
+                new ExtraLayer { Sprite = Sprite(SeasonIds.EraFuture, SeasonArt.Moons), Parallax = 0f, Order = -27 },
+                new ExtraLayer { Sprite = Sprite(SeasonIds.EraFuture, "moons_glow"), Parallax = 0f, Order = -26, Glow = true },
+                new ExtraLayer { Sprite = Sprite(SeasonIds.EraFuture, SeasonArt.Back), Parallax = 0.05f, Order = -25 },
+                new ExtraLayer
+                {
+                    Sprite = Sprite(SeasonIds.EraFuture, SeasonArt.Mid), Parallax = 0.09f, Order = -22, Glow = false,
+                    Traffic = FutureCars(0), TrafficY = 6.6f, TrafficSpeed = 1.1f, TrafficCount = 4,
+                },
+                new ExtraLayer
+                {
+                    Sprite = Sprite(SeasonIds.EraFuture, "far_glow"), Parallax = 0.15f, Order = -20, Glow = true,
+                    Frames = FutureHolograms(), FramesAt = new Vector2(9.625f, 5.19f), FramesPerSecond = 0.8f,
+                    Traffic = FutureCars(1), TrafficY = 5.1f, TrafficSpeed = 2f, TrafficCount = 3,
+                },
+                new ExtraLayer
+                {
+                    Sprite = Sprite(SeasonIds.EraFuture, "near_glow"), Parallax = 0.4f, Order = -18, Glow = true,
+                    Traffic = FutureCars(2), TrafficY = 4.1f, TrafficSpeed = 3.4f, TrafficCount = 3,
+                },
             };
             future.Floor = Sprite(SeasonIds.EraFuture, SeasonArt.Floor);
             future.Effect = SeasonEffect.Falling;
@@ -354,7 +374,7 @@ namespace Echo.Editor
             future.EffectSway = 0f;
             future.EffectBand = 1f;
             future.EffectParallax = 0.2f;
-            future.Flyer = Load<Sprite>(SeasonArt.FlyerPath(SeasonIds.EraFuture));
+            future.Flyer = null;   // art fix phase 2: three lanes of traffic instead
             future.FlyerColour = Color.white;
             future.FlyerEvery = 14f;
             future.FlyerSpeed = 5f;
@@ -362,11 +382,13 @@ namespace Echo.Editor
             future.Reflections = true;                   // art pass phase 5: the city in the wet glass floor
             future.FloorBacking = Hex(0x070A18);
 
-            // Art pass phase 1: the fifth era, the Far Far Future (1200 m on). Until phase 6 gives it its real-time 3D
-            // backdrop it wears the Far Future's look, so the era system can be tried end to end.
+            // Art pass phase 1: the fifth era, the Far Far Future (1200 m on). Phase 6: its backdrop is the real-time 3D
+            // megacity (Scene3D, Far3DView; a video loop with reduced effects); its gameplay layer is the Far Future's for now.
             SeasonTheme farFar = Era(SeasonIds.EraFarFarFuture, "Far Far Future", "10,000 AD", future);
             farFar.HighDefinition = true;
-            farFar.ExtraLayers = future.ExtraLayers;
+            farFar.Scene3D = true;
+            farFar.FarLayer = farFar.NearLayer = null;
+            farFar.Flyer = null;   // the city has its own traffic
             farFar.Floor = future.Floor;
             farFar.Spike = future.Spike;
             farFar.Block = future.Block;
@@ -378,7 +400,7 @@ namespace Echo.Editor
             farFar.NemesisTint = future.NemesisTint;
             farFar.GhostHologram = future.GhostHologram;
             farFar.GhostGlow = future.GhostGlow;
-            farFar.Reflections = future.Reflections;
+            farFar.Reflections = false;   // nothing 2D to mirror: the floor is glass over its backing
             farFar.FloorBacking = future.FloorBacking;
 
             SeasonTheme world = Plain(Load(SeasonIds.TimeRun), "Time Run");
@@ -534,6 +556,7 @@ namespace Echo.Editor
             t.DuskShade = Color.white;
             t.Reflections = false;
             t.FloorBacking = Color.black;
+            t.Scene3D = false;
             return t;
         }
 
@@ -623,6 +646,16 @@ namespace Echo.Editor
         static AudioClip[] Carol(CarolMusic carol) => Array.ConvertAll(carol.StemNames, n => Load<AudioClip>(PlaceholderAudio.PathFor(n)));
 
         static Sprite Sprite(string season, string part) => Load<Sprite>(SeasonArt.PathFor(season, part));
+
+        // Art fix phase 2: the Far Future's cars for one lane, and its holographic billboard's frames.
+        static Sprite[] FutureCars(int lane) => new[] { Sprite(SeasonIds.EraFuture, $"car{lane}_0"), Sprite(SeasonIds.EraFuture, $"car{lane}_1") };
+
+        static Sprite[] FutureHolograms()
+        {
+            var frames = new Sprite[4];
+            for (int f = 0; f < 4; f++) frames[f] = Sprite(SeasonIds.EraFuture, "holo_" + f);
+            return frames;
+        }
 
         // An era keeps the original where it has no art of its own (Medieval keeps the spike, grave and coin).
         static Sprite Optional(string season, string part) => AssetDatabase.LoadAssetAtPath<Sprite>(SeasonArt.PathFor(season, part));

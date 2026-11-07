@@ -312,7 +312,11 @@ namespace Echo.Tests.PlayMode
             Assert.IsTrue(game.HighDefinitionShown);
             Assert.IsFalse(rig.PixelPerfect, "the pixel-perfect camera steps aside");
             Assert.IsTrue(background.Lit, "the HD backdrop takes the 2D lights");
-            Assert.AreEqual(3, background.ExtraLayersShown, "its sky, its moons and a distant skyline");
+            // Art fix phase 2: sky, moons and their glow, the far skyline, the mid towers, the chrome towers' and the street's lights.
+            Assert.AreEqual(7, background.ExtraLayersShown, "five depths and their emissive companions");
+            Assert.AreEqual(3, background.GlowLayersShown, "the moon's, the towers' and the street's lights in HDR");
+            Assert.AreEqual(10, background.TrafficShown, "three lanes of cars with light trails");
+            Assert.Greater(background.FramesShown, 0, "the holographic billboards");
             Assert.IsTrue(runner.Future, "glow, rim light and afterimages");
             Assert.IsTrue(Era(course.FloorAt(1050), SeasonIds.EraFuture), "the neon grid floor");
             Assert.Greater(SimUnits.SnapPerUnit, CameraRig.PixelsPerUnit, "things glide rather than step");
@@ -324,6 +328,8 @@ namespace Echo.Tests.PlayMode
             Assert.Greater(background.ReflectionsShown, 2, "the far, near and drifting layers mirrored in the floor");
             Assert.IsTrue(background.FloorBackingShown);
             Assert.AreEqual(FutureFxView.Splashes + FutureFxView.Motes, futureFx.Shown, "splashes and motes");
+            Assert.AreEqual(FutureFxView.Beams + FutureFxView.Wisps, futureFx.AtmosphereShown, "searchlights and mist");
+            Assert.AreEqual(background.ReflectionsShown, background.RipplesShown, "every reflection ripples");
 
             // Reduced effects (a weaker phone): no bloom, one light, the same world.
             game.WeakDeviceOverride = true;
@@ -333,9 +339,33 @@ namespace Echo.Tests.PlayMode
             Assert.IsTrue(game.HighDefinitionShown, "still HD");
             Assert.AreEqual(0, background.ReflectionsShown, "no reflections with reduced effects");
             Assert.IsTrue(background.FloorBackingShown, "but the floor stays solid");
+            Assert.AreEqual(0, background.GlowLayersShown, "lights drawn plainly");
+            Assert.AreEqual(7, background.ExtraLayersShown, "but every layer still shown");
             yield return ScreenCaptureTests.Capture("timerun_era4_reduced");
             game.WeakDeviceOverride = false;
             Assert.AreEqual(6, lights.LightsOn);
+
+            // Art pass phase 6: the Far Far Future's real-time 3D city behind the 2D gameplay, which is lit and shadowed to
+            // match; reduced effects play the video loop of the same scene.
+            game.ForceEra = 4;
+            game.TickFrame(Dt, false);
+            var far3D = Object.FindAnyObjectByType<Far3DView>();
+            Assert.AreEqual(Far3DView.Mode.RealTime, game.Scene3DShown, "real-time 3D");
+            Assert.Greater(far3D.Size.x, 0, "rendered into its texture");
+            Assert.IsTrue(background.Hidden, "the 2D backdrop steps aside");
+            Assert.IsTrue(background.FloorBackingShown, "the floor stays");
+            Assert.IsTrue(game.GameplayLit, "the gameplay takes the lights");
+            Assert.IsTrue(runner.ShadowShown, "a shadow on the floor");
+            Assert.IsTrue(far3D.HasLoop, "the reduced-effects loop is set up");
+            Assert.AreEqual(0, futureFx.AtmosphereShown, "the 3D city brings its own atmosphere");
+            yield return null;
+            yield return ScreenCaptureTests.Capture("timerun_era5_3d");
+            game.WeakDeviceOverride = true;
+            Assert.AreEqual(Far3DView.Mode.Video, game.Scene3DShown, "reduced effects: the video loop");
+            for (int f = 0; f < 20; f++) yield return null;
+            yield return ScreenCaptureTests.Capture("timerun_era5_video");
+            game.WeakDeviceOverride = false;
+            Assert.AreEqual(Far3DView.Mode.RealTime, game.Scene3DShown);
 
             // Back to pixel art, and out of Time Run.
             game.ForceEra = 1;
@@ -348,8 +378,13 @@ namespace Echo.Tests.PlayMode
             Assert.IsFalse(runner.Future);
             Assert.AreEqual(CameraRig.PixelsPerUnit, SimUnits.SnapPerUnit);
             Assert.IsFalse(background.FloorBackingShown, "a glass floor only in the future");
+            Assert.AreEqual(Far3DView.Mode.Off, game.Scene3DShown);
+            Assert.IsFalse(background.Hidden);
+            Assert.IsFalse(game.GameplayLit, "the gameplay back on the unlit shader");
+            Assert.IsFalse(runner.ShadowShown);
             Assert.AreEqual(0, background.ReflectionsShown);
             Assert.AreEqual(0, futureFx.Shown);
+            Assert.AreEqual(0, futureFx.AtmosphereShown);
             game.ForceEra = null;
             game.PreviewTimeRun = false;
             game.TickFrame(Dt, false);

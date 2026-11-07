@@ -48,6 +48,28 @@ namespace Echo.Game.Views
         [SerializeField] Sprite _bountyIcon;
         [Tooltip("Time Run's Today era: the soft glow behind each ghost.")]
         [SerializeField] Sprite _glow;
+        [Tooltip("Art pass phase 6: a soft blob shadow under each ghost in the Far Far Future.")]
+        [SerializeField] Sprite _shadowSprite;
+        SpriteRenderer[] _shadows;
+        bool _shadowsOn;
+
+        /// <summary>Blob shadows under the ghosts on or off.</summary>
+        public void SetShadows(bool on)
+        {
+            _shadowsOn = on && _shadowSprite != null;
+            if (!_shadowsOn && _shadows != null) foreach (SpriteRenderer s in _shadows) s.enabled = false;
+        }
+
+        /// <summary>Ghost shadows drawn now (tests).</summary>
+        public int ShadowsShown
+        {
+            get
+            {
+                int n = 0;
+                if (_shadows != null) foreach (SpriteRenderer s in _shadows) if (s.enabled) n++;
+                return n;
+            }
+        }
 
         const float StrideUnits = 0.42f;
 
@@ -86,8 +108,17 @@ namespace Echo.Game.Views
             _trails = new LineRenderer[PoolSize];
             _accessories = new SpriteRenderer[PoolSize];
             _glows = new SpriteRenderer[PoolSize];
+            _shadows = new SpriteRenderer[PoolSize];
             for (int i = 0; i < PoolSize; i++)
             {
+                var shadowGo = new GameObject("Shadow" + i);
+                shadowGo.transform.SetParent(transform, false);
+                _shadows[i] = shadowGo.AddComponent<SpriteRenderer>();
+                _shadows[i].sharedMaterial = _material;
+                _shadows[i].sprite = _shadowSprite;
+                _shadows[i].sortingOrder = 1;
+                _shadows[i].enabled = false;
+
                 var glowGo = new GameObject("Glow" + i);
                 glowGo.transform.SetParent(transform, false);
                 _glows[i] = glowGo.AddComponent<SpriteRenderer>();
@@ -316,6 +347,7 @@ namespace Echo.Game.Views
                     trail.enabled = false;
                     _accessories[i].enabled = false;
                     _glows[i].enabled = false;
+                    _shadows[i].enabled = false;
                     continue;
                 }
 
@@ -398,6 +430,7 @@ namespace Echo.Game.Views
                 }
                 box.sortingOrder = isNemesis ? 6 : 5;
                 box.enabled = true;
+                if (_shadowsOn) BlobShadow.Place(_shadows[i], pos.x, pos.y + lift, a);
 
                 // The accessory its run wore (the Halo), else the season's; the Nemesis keeps its horns.
                 SpriteRenderer accessory = _accessories[i];

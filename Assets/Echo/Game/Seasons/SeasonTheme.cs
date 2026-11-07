@@ -146,5 +146,7 @@ namespace Echo.Game.Seasons
         public bool Reflections;
         [Tooltip("The colour under a glass floor: what shows through it without reflections, and what they fade into.")]
         public Color FloorBacking = Color.black;
+        [Tooltip("Art pass phase 6: the backdrop is the real-time 3D city (Far3DView; a video loop with reduced effects), the gameplay lit to match.")]
+        public bool Scene3D;
     }
 }

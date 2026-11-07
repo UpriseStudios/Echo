@@ -234,6 +234,10 @@ namespace Echo.Editor
             var background = Child<BackgroundView>(world, "Background");
             Wire(background, "_material", material);
             Wire(background, "_litMaterial", EnsureLitSpriteMaterial());
+            // Art fix phase 2: the Far Future's emissive layers in HDR, and its wet floor's rippling reflections.
+            Material futureGlow = GlowMaterial("FutureGlow", 2.2f);
+            Wire(background, "_glowMaterial", futureGlow);
+            Wire(background, "_rippleMaterial", RippleMaterial());
             Wire(background, "_fade", AssetDatabase.LoadAssetAtPath<Sprite>(SeasonArt.PathFor(Echo.Game.Seasons.SeasonIds.EraFuture, "fade")));
             Wire(background, "_far", LoadSprite(EchoArt.MountainsPath));
             // Themed Biomes: the Graveyard is the near layer at the start, then the Castle, then Space.
@@ -519,10 +523,19 @@ namespace Echo.Editor
             Wire(game, "_futureLights", futureLights);
             // Art pass phase 5: the Far Future's rain splashes and glowing motes.
             var futureFx = Child<FutureFxView>(world, "FutureFx");
-            Wire(futureFx, "_material", material);
+            Wire(futureFx, "_material", futureGlow);
+            Wire(futureFx, "_plainMaterial", material);
             Wire(futureFx, "_splash", AssetDatabase.LoadAssetAtPath<Sprite>(SeasonArt.PathFor(Echo.Game.Seasons.SeasonIds.EraFuture, "splash")));
+            Wire(futureFx, "_beam", LoadSprite(SeasonArt.PathFor(Echo.Game.Seasons.SeasonIds.EraFuture, "beam")));
+            Wire(futureFx, "_mist", LoadSprite(SeasonArt.PathFor(Echo.Game.Seasons.SeasonIds.EraFuture, "mist")));
             Wire(futureFx, "_mote", LoadSprite(EchoArt.GlowPath));
             Wire(game, "_futureFx", futureFx);
+            // Art pass phase 6: the Far Far Future's real-time 3D city, the gameplay lit and shadowed to match.
+            Wire(game, "_far3D", BuildFar3D(world, camera, material));
+            Wire(game, "_spriteUnlit", material);
+            Wire(game, "_spriteLit", EnsureLitSpriteMaterial());
+            Wire(runnerView, "_shadowSprite", LoadSprite(Far3DArt.Shadow));
+            Wire(ghostViews, "_shadowSprite", LoadSprite(Far3DArt.Shadow));
             Wire(game, "_futureVolume", AddFutureVolume());
             Wire(game, "_eggHunt", eggHunt);
             WireArray(game, "_seasonThemes", SeasonThemes.Build());
