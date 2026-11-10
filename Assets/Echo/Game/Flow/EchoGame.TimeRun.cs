@@ -227,6 +227,8 @@ namespace Echo.Game.Flow
             _titledRun = _run;
             // Each rift bigger than the last; the last breaks the screen open into the 3D city.
             if (_timeRift != null) _timeRift.Play(era);
+            // The Infinite City: through the rift, the camera rises and the orbital ring climbs into view.
+            if (theme.Scene3D && _far3D != null) _far3D.BeginReveal();
             _sfx.TimeRift();
             _hud.ShowEra(theme.EraLabel, theme.EraTitle);
         }

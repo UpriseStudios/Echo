@@ -4,68 +4,68 @@ using UnityEngine;
 namespace Echo.Game.Views
 {
     /// <summary>
-    /// World Time Run doc (art pass phase 6; art fix phase 3, "readable 3D"): the Far Far Future's real-time 3D backdrop, a
-    /// vast future megacity seen down one of its canyons. The camera hangs above the canyon's street, looking along it to
-    /// the horizon (sky in the top third), and glides slowly forward as the run goes on, so the towers on either side slide
-    /// past with real parallax. Built procedurally when the scene starts (nothing is built mid-run):
+    /// World Time Run doc, the Far Far Future ("The Infinite City", a user brief: awe, not density). The real-time 3D backdrop
+    /// is a few impossibly large structures standing apart in a violet haze, under a gigantic orbital ring:
     /// <list type="bullet">
-    /// <item>rows of towers either side, taller further out, in three tints, shaded by a moonlight from the left (one canyon
-    /// wall lit, the other in shade), with mostly dark windows (about one in five lit, mipmapped, so distant facades become
-    /// a dim glow), glowing edge strips on the corners facing the canyon and pulsing lights on the roofs;</item>
-    /// <item>sky bridges across the canyon overhead, lit underneath;</item>
-    /// <item>streams of traffic at several heights and depths: white headlights coming, red tail lights going;</item>
-    /// <item>exponential coloured fog (the scene's lighting settings) fading it all into a glowing horizon, and beyond the
-    /// fog a crisp skyline outline with landmarks (a spire with a beacon and a halo, an arcology, twin towers), a ringed
-    /// planet and a starry gradient sky, unfogged (Echo/Far3D Unfogged) and keeping pace with the camera.</item>
+    /// <item>four architecturally distinct megastructures a stretch (a faceted needle spire with a halo, a stepped arcology,
+    /// a blade monolith, a tower ringed by floating discs), separated by
+    /// open space and sky, shaded by a cool moonlight from the left, with thin cyan edge highlights and warm amber only as
+    /// small accents high up;</item>
+    /// <item>depth from strong exponential-squared haze in the horizon's colour (near structures clear, the far ones gone) (contrast and saturation fall away with distance, the
+    /// far structures dissolve into the sky), two elevated transit rails running to the horizon, and now and then a
+    /// foreground arch passed under or a pylon sweeping past;</item>
+    /// <item>the landmark: an orbital ring thousands of units away, high across the frame, unfogged, turning and drifting
+    /// slowly as the run goes on; a faint skyline outline on the horizon and a gradient sky with stars.</item>
     /// </list>
-    /// One stretch of <see cref="Period"/> units repeats along the canyon, so the camera can travel for ever. Everything is a
-    /// pure function of the distance travelled and the time, and the traffic repeats exactly every <see cref="LoopSeconds"/>
-    /// while the camera travels one Period, so the reduced-effects video loop is the same scene and loops seamlessly.
+    /// No windows, no traffic, nothing bright low in the frame: the bottom third, behind the gameplay, stays the darkest and
+    /// calmest part (Far3DView adds a calm band there too). Every part shares a few materials and is combined into one mesh
+    /// each, so the whole city is about a dozen draw calls. One stretch of <see cref="Period"/> units repeats along the path
+    /// (the camera wraps within it); everything is a pure function of the distance travelled and the time, repeating with the
+    /// camera every Period and every <see cref="LoopSeconds"/>, so the reduced-effects video is the same scene and loops.
+    /// On the rift into the era the camera starts low and rises as the ring climbs into place (<see cref="CameraAt"/> with a
+    /// reveal under 1, <see cref="Follow"/>).
     /// </summary>
     public sealed class Far3DScene : MonoBehaviour
     {
-        [Tooltip("Simple Lit with the lit windows as emission: the towers.")]
+        [Tooltip("Simple Lit: the structures (copies tinted midnight blue and violet; the panel texture as their base).")]
         [SerializeField] Material _tower;
-        [Tooltip("Unlit, fogged: the canyon's street, its glowing lanes.")]
+        [Tooltip("Unlit, fogged: the ground far below.")]
         [SerializeField] Material _ground;
         [Tooltip("Echo/Far3D Unfogged with the sky's gradient.")]
         [SerializeField] Material _sky;
-        [Tooltip("Echo/Far3D Unfogged, white: the skyline, the landmarks' lights, the planet and its rings (tinted copies).")]
+        [Tooltip("Echo/Far3D Unfogged, white: the orbital ring and the skyline outline (tinted copies).")]
         [SerializeField] Material _unfogged;
-        [Tooltip("Unlit, fogged, white: edge strips, roof lights and traffic (HDR-tinted copies, so they bloom).")]
+        [Tooltip("Unlit, fogged, white: the cyan edges and amber accents (HDR-tinted copies, so they bloom).")]
         [SerializeField] Material _strip;
+        [Tooltip("A subtle panelled surface for the structures (no windows).")]
+        [SerializeField] Texture2D _panels;
 
-        /// <summary>The city repeats every Period units along the canyon.</summary>
-        public const float Period = 400f;
-        /// <summary>The camera travels one Period in this many seconds in the video loop, and the traffic repeats with it.</summary>
-        public const float LoopSeconds = 30f;
+        /// <summary>The city repeats every Period units along the path.</summary>
+        public const float Period = 2000f;
+        /// <summary>The camera travels one Period in this many seconds in the video loop.</summary>
+        public const float LoopSeconds = 75f;
         /// <summary>Units the camera travels per metre of the run (slow: about 10 units a second at running speed).</summary>
         public const float UnitsPerMetre = 0.8f;
         public static readonly Vector3 Origin = new Vector3(0f, -5000f, 0f);
 
-        /// <summary>The camera's height above the street, its downward tilt and its vertical field of view (the builder sets it).</summary>
-        public const float CameraHeight = 95f, CameraPitch = 9f, FieldOfView = 62f;
+        /// <summary>The camera's height, its downward tilt and its vertical field of view (the builder sets them).</summary>
+        public const float CameraHeight = 95f, CameraPitch = 9f, FieldOfView = 62f, FarClip = 8500f;
+        /// <summary>How far the camera starts below its height, and its tilt there, at the start of the reveal.</summary>
+        public const float RevealDrop = 28f, RevealPitch = -2f;
 
-        // The city is laid out as Copies stretches one after another; the camera stays in the first.
-        const int Copies = 6;
-        const float CanyonHalfWidth = 60f;
-        // How far ahead the skyline, the landmarks and the sky stand (always: they keep pace with the camera).
-        const float SkylineAt = 1950f, SkyAt = 2600f, PlanetAt = 2400f;
+        // Enough stretches to reach past where the haze has taken everything (about 2500 units from the camera).
+        const int Copies = 3;
+        // Ahead of the camera, always: the skyline outline, the ring and the sky.
+        const float SkylineAt = 2500f, RingAt = 4100f, SkyAt = 7000f, SkyHeight = 5100f, SkyWidth = 9200f;
+        const float RingRadius = 2500f, RingHeight = 1150f, RingRise = 1400f;
 
-        struct Lane
-        {
-            public float X, Y, Speed;
-            public bool Coming;
-        }
+        /// <summary>Where the sky texture's horizon is, up its height.</summary>
+        public const float HorizonV = 0.16f;
 
-        const int CarsPerLane = 10;
-        const float TrafficWindow = Period * 5f;   // a car's spacing (200) divides the Period, so the loop is seamless
-        Lane[] _lanes;
-        Transform[] _cars;
-        Transform _skyPart, _horizon, _planet;
-        Material _roofLights;
         static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
-        static readonly Color RoofRed = new Color(3.2f, 0.35f, 0.3f);
+        static readonly Color Cyan = new Color(0.45f, 1.5f, 1.8f), Amber = new Color(2.2f, 1.25f, 0.45f);
+        Transform _skyPart, _horizon, _ring;
+        Material _beacons;
         bool _built;
 
         static float Hash01(int a, int b) => (((uint)(a * 73856093) ^ (uint)(b * 19349663)) % 10000u) / 10000f;
@@ -78,276 +78,247 @@ namespace Echo.Game.Views
             transform.position = Origin;
             int layer = gameObject.layer;
             Mesh box = Box();
-
-            // Three tints of the same facade; the keyword is switched on here because the scene is built without a graphics
-            // device, where keywords can't be set.
-            var tints = new[]
-            {
-                (new Color(0.78f, 0.86f, 1f), new Color(1f, 1.05f, 1.15f)),      // steel blue glass, cool light
-                (new Color(0.9f, 0.84f, 0.84f), new Color(1.2f, 1f, 0.8f)),      // warm grey stone, warm light
-                (new Color(0.62f, 0.85f, 0.85f), new Color(0.8f, 1.15f, 1.2f)),  // dark teal glass
-            };
-            var towerParts = new List<CombineInstance>[tints.Length];
-            for (int k = 0; k < tints.Length; k++) towerParts[k] = new List<CombineInstance>();
-            var cyan = new List<CombineInstance>();
-            var magenta = new List<CombineInstance>();
-            var roofs = new List<CombineInstance>();
             var made = new List<Mesh>();
 
-            // One stretch of the city, laid out once, then placed Copies times along the canyon.
-            var stretch = new List<(int tint, Mesh mesh, Vector3 at)>();
-            var lights = new List<(int kind, Vector3 at, Vector3 size)>();   // 0 cyan, 1 magenta, 2 roof light
-            int n = 0;
-            // The canyon's walls stay below the camera's eye; each row behind is taller, so the city rises away like a bowl
-            // round an open sky.
-            float[] rowInner = { CanyonHalfWidth, 130f, 220f, 340f };
-            float[] rowLow = { 40f, 80f, 130f, 180f }, rowRange = { 70f, 90f, 120f, 160f };
-            for (int row = 0; row < rowInner.Length; row++)
-                for (int side = -1; side <= 1; side += 2)
-                {
-                    float z = Hash01(row, side + 5) * 12f;
-                    while (true)
-                    {
-                        n++;
-                        float along = 26f + Hash01(n, 1) * (20f + row * 14f);
-                        if (z + along > Period - 4f) break;
-                        float across = 24f + Hash01(n, 2) * (16f + row * 20f);
-                        float h = rowLow[row] + Hash01(n, 3) * rowRange[row];
-                        float x = side * (rowInner[row] + across / 2f);
-                        float zc = z + along / 2f;
-                        Mesh m = ScaledBox(box, across, h, along);
-                        made.Add(m);
-                        int tint = (int)(Hash01(n, 4) * tints.Length) % tints.Length;
-                        stretch.Add((tint, m, new Vector3(x, h / 2f, zc)));
+            // One stretch: (material, mesh, transform) for the solids, light parts as boxes.
+            var blue = new List<(Mesh, Matrix4x4)>();
+            var violet = new List<(Mesh, Matrix4x4)>();
+            var cyan = new List<Matrix4x4>();
+            var amber = new List<Matrix4x4>();
+            var beacons = new List<Matrix4x4>();
+            var railLine = new List<Matrix4x4>();
+            Mesh Keep(Mesh m) { made.Add(m); return m; }
+            void Solid(List<(Mesh, Matrix4x4)> to, Mesh m, Vector3 at, float yaw = 0f) => to.Add((m, Matrix4x4.TRS(at, Quaternion.Euler(0f, yaw, 0f), Vector3.one)));
+            void Edge(List<Matrix4x4> to, Vector3 a, Vector3 b, float thick) => to.Add(Beam(a, b, thick));
 
-                        // The canyon's walls and the row behind them: glowing strips up the corners facing the canyon and along
-                        // the roof's edge; most roofs carry a warning light, the tallest an aerial with one at its tip.
-                        float inner = side * rowInner[row];
-                        if (row < 2 && Hash01(n, 5) > 0.75f)
-                        {
-                            int kind = Hash01(n, 6) > 0.5f ? 0 : 1;
-                            lights.Add((kind, new Vector3(inner, h / 2f, z + 0.4f), new Vector3(0.8f, h, 0.8f)));
-                            lights.Add((kind, new Vector3(inner, h + 0.4f, zc), new Vector3(0.8f, 0.8f, along)));
-                        }
-                        if (Hash01(n, 7) > 0.45f)
-                        {
-                            bool aerial = h > 200f && Hash01(n, 8) > 0.4f;
-                            if (aerial) stretch.Add((tint, Track(made, ScaledBox(box, 1.2f, 30f, 1.2f)), new Vector3(x, h + 15f, zc)));
-                            lights.Add((2, new Vector3(x, h + (aerial ? 31f : 1.5f), zc), new Vector3(2.6f, 2.6f, 2.6f)));
-                        }
-                        z += along + 4f + Hash01(n, 9) * (Hash01(n, 10) > 0.8f ? 22f : 10f);
-                    }
-                }
-
-            // Sky bridges across the canyon, dark underneath with a glowing strip along each edge.
-            for (int b = 0; b < 1; b++)
+            // A. The needle spire: three faceted stages to a point, a halo round its upper stage, a beacon at the tip.
             {
-                // Overhead (above the camera's eye), so they sweep over the top of the view rather than across it.
-                float zb = Period * 0.55f, yb = 128f;
-                float span = 2f * (CanyonHalfWidth + 14f);
-                stretch.Add((0, Track(made, ScaledBox(box, span, 4f, 9f)), new Vector3(0f, yb, zb)));
-                int kind = b % 2;
-                lights.Add((kind, new Vector3(0f, yb - 2.2f, zb - 4.5f), new Vector3(span, 0.6f, 0.6f)));
-                lights.Add((kind, new Vector3(0f, yb - 2.2f, zb + 4.5f), new Vector3(span, 0.6f, 0.6f)));
-                // Pylons up the canyon walls where it lands, so a bridge is plainly held up.
-                lights.Add((kind, new Vector3(-CanyonHalfWidth - 0.5f, yb / 2f, zb), new Vector3(0.6f, yb, 0.6f)));
-                lights.Add((kind, new Vector3(CanyonHalfWidth + 0.5f, yb / 2f, zb), new Vector3(0.6f, yb, 0.6f)));
+                var at = new Vector3(210f, 0f, 150f);   // near the path: dark, contrasty
+                float y = 0f;
+                foreach (var (r0, r1, h) in new[] { (90f, 58f, 760f), (50f, 28f, 380f), (22f, 2f, 300f) })
+                {
+                    Solid(blue, Keep(Prism(8, r0, r1, h)), at + new Vector3(0f, y, 0f), 22.5f);
+                    // Two of its edges catch a cyan line: the ones facing the path.
+                    for (int k = 4; k <= 5; k++)
+                    {
+                        float a = (k * 45f + 22.5f) * Mathf.Deg2Rad;
+                        var d = new Vector3(Mathf.Sin(a), 0f, Mathf.Cos(a));
+                        Edge(cyan, at + d * r0 + Vector3.up * y, at + d * r1 + Vector3.up * (y + h), 1.2f);
+                    }
+                    y += h;
+                }
+                beacons.Add(Matrix4x4.TRS(at + new Vector3(0f, y + 4f, 0f), Quaternion.identity, Vector3.one * 7f));
+                cyan.AddRange(RingOfBeams(at + new Vector3(0f, 960f, 0f), 120f, 24, 1.8f));
+            }
+            // B. The stepped arcology: five diamond tiers, a cyan rim round each, amber only on the top tier.
+            {
+                var at = new Vector3(-560f, 0f, 760f);   // far out: dissolving into the haze
+                float y = 0f;
+                for (int t = 0; t < 5; t++)
+                {
+                    float r = 300f - t * 58f, h = t == 4 ? 160f : 130f;
+                    Solid(violet, Keep(Prism(4, r, r * 0.94f, h)), at + new Vector3(0f, y, 0f), 45f);
+                    cyan.AddRange(RingOfBeams(at + new Vector3(0f, y + h, 0f), r * 0.94f, 4, 1.3f, 45f));
+                    y += h;
+                }
+                for (int k = 0; k < 4; k++)
+                {
+                    float a = (k * 90f) * Mathf.Deg2Rad;
+                    amber.Add(Matrix4x4.TRS(at + new Vector3(Mathf.Sin(a) * 40f, y + 6f, Mathf.Cos(a) * 40f), Quaternion.identity, new Vector3(6f, 6f, 6f)));
+                }
+            }
+            // C. The blade monolith, a sheer slab turned to the path.
+            {
+                var at = new Vector3(450f, 0f, 1150f);   // far out
+                Solid(violet, Keep(ScaledBox(box, 46f, 980f, 280f)), at + new Vector3(0f, 490f, 0f), 18f);
+                Quaternion turn = Quaternion.Euler(0f, 18f, 0f);
+                Vector3 lead = at + turn * new Vector3(-23f, 0f, -140f);
+                Edge(cyan, lead, lead + Vector3.up * 980f, 1.8f);
+                amber.Add(Matrix4x4.TRS(at + new Vector3(0f, 988f, 0f), Quaternion.identity, new Vector3(7f, 7f, 7f)));
+            }
+            // D. The disc tower: a slender core with three floating discs, each with a cyan rim.
+            {
+                var at = new Vector3(-240f, 0f, 1760f);   // nearer again
+                Solid(blue, Keep(Prism(16, 40f, 30f, 1100f)), at);
+                foreach (var (y, r) in new[] { (400f, 170f), (640f, 140f), (860f, 110f) })
+                {
+                    Solid(violet, Keep(Prism(24, r, r * 0.9f, 14f)), at + new Vector3(0f, y, 0f));
+                    cyan.AddRange(RingOfBeams(at + new Vector3(0f, y + 7f, 0f), r * 0.97f, 24, 1.2f));
+                }
+                amber.Add(Matrix4x4.TRS(at + new Vector3(0f, 1106f, 0f), Quaternion.identity, new Vector3(7f, 7f, 7f)));
+            }
+            // Foreground, now and then: an arch over the path (passed under, sweeping over the top of the view) and a pylon
+            // sweeping past on the right.
+            {
+                const float z = 1450f;
+                foreach (float x in new[] { -88f, 88f })
+                    Solid(blue, Keep(ScaledBox(box, 16f, 236f, 22f)), new Vector3(x, 118f, z));
+                Solid(blue, Keep(ScaledBox(box, 212f, 26f, 26f)), new Vector3(0f, 249f, z));
+                Edge(cyan, new Vector3(-96f, 236f, z - 13.5f), new Vector3(96f, 236f, z - 13.5f), 1f);
+                Solid(violet, Keep(Prism(4, 11f, 5f, 430f)), new Vector3(78f, 0f, 480f), 45f);
+                Edge(cyan, new Vector3(70f, 0f, 480f), new Vector3(74.5f, 430f, 480f), 0.8f);
+                beacons.Add(Matrix4x4.TRS(new Vector3(78f, 434f, 480f), Quaternion.identity, Vector3.one * 4f));
+            }
+            // Perspective: two floating transit rails to the horizon (below the eye, never low in the frame).
+            for (int side = -1; side <= 1; side += 2)
+            {
+                float x = side * 36f;
+                Solid(blue, Keep(ScaledBox(box, 7f, 4f, Period)), new Vector3(x, 62f, Period / 2f));
+                Edge(railLine, new Vector3(x - side * 3.6f, 64.3f, 0f), new Vector3(x - side * 3.6f, 64.3f, Period), 0.4f);
             }
 
+            // The stretch, Copies times along the path, one mesh per material.
+            var blueParts = new List<CombineInstance>();
+            var violetParts = new List<CombineInstance>();
+            var cyanParts = new List<CombineInstance>();
+            var amberParts = new List<CombineInstance>();
+            var beaconParts = new List<CombineInstance>();
+            var railParts = new List<CombineInstance>();
             for (int copy = 0; copy < Copies; copy++)
             {
-                var offset = new Vector3(0f, 0f, copy * Period);
-                foreach (var (tint, mesh, at) in stretch)
-                    towerParts[tint].Add(new CombineInstance { mesh = mesh, transform = Matrix4x4.Translate(at + offset) });
-                foreach (var (kind, at, size) in lights)
-                {
-                    var ci = new CombineInstance { mesh = box, transform = Matrix4x4.TRS(at + offset, Quaternion.identity, size) };
-                    (kind == 0 ? cyan : kind == 1 ? magenta : roofs).Add(ci);
-                }
+                Matrix4x4 shift = Matrix4x4.Translate(new Vector3(0f, 0f, copy * Period));
+                foreach (var (m, t) in blue) blueParts.Add(new CombineInstance { mesh = m, transform = shift * t });
+                foreach (var (m, t) in violet) violetParts.Add(new CombineInstance { mesh = m, transform = shift * t });
+                foreach (Matrix4x4 t in cyan) cyanParts.Add(new CombineInstance { mesh = box, transform = shift * t });
+                foreach (Matrix4x4 t in amber) amberParts.Add(new CombineInstance { mesh = box, transform = shift * t });
+                foreach (Matrix4x4 t in beacons) beaconParts.Add(new CombineInstance { mesh = box, transform = shift * t });
+                foreach (Matrix4x4 t in railLine) railParts.Add(new CombineInstance { mesh = box, transform = shift * t });
             }
-            for (int k = 0; k < tints.Length; k++)
-            {
-                var tower = new Material(_tower) { name = "Far3DTower" + k };
-                tower.EnableKeyword("_EMISSION");
-                tower.SetColor(BaseColor, tints[k].Item1);
-                tower.SetColor("_EmissionColor", tints[k].Item2);
-                Part("Towers" + k, Combined("Far3DTowers" + k, towerParts[k]), tower, Vector3.zero, Vector3.one, layer);
-            }
-            Part("EdgesCyan", Combined("Far3DEdgesCyan", cyan), Tinted(_strip, new Color(0.5f, 2.4f, 2.9f)), Vector3.zero, Vector3.one, layer);
-            Part("EdgesMagenta", Combined("Far3DEdgesMagenta", magenta), Tinted(_strip, new Color(2.8f, 0.5f, 2.2f)), Vector3.zero, Vector3.one, layer);
-            _roofLights = Tinted(_strip, RoofRed);
-            Part("RoofLights", Combined("Far3DRoofLights", roofs), _roofLights, Vector3.zero, Vector3.one, layer);
-            // The per-tower meshes only fed the combined ones (the video tool builds the city in the editor, outside play).
+            Part("Blue", Combined("Far3DBlue", blueParts), Surface(new Color(0.3f, 0.34f, 0.58f)), Vector3.zero, Vector3.one, layer);
+            Part("Violet", Combined("Far3DViolet", violetParts), Surface(new Color(0.38f, 0.3f, 0.58f)), Vector3.zero, Vector3.one, layer);
+            Part("Edges", Combined("Far3DEdges", cyanParts), Tinted(_strip, Cyan), Vector3.zero, Vector3.one, layer);
+            Part("Amber", Combined("Far3DAmber", amberParts), Tinted(_strip, Amber), Vector3.zero, Vector3.one, layer);
+            Part("RailLines", Combined("Far3DRailLines", railParts), Tinted(_strip, Cyan * 0.45f), Vector3.zero, Vector3.one, layer);
+            _beacons = Tinted(_strip, Amber);
+            Part("Beacons", Combined("Far3DBeacons", beaconParts), _beacons, Vector3.zero, Vector3.one, layer);
             foreach (Mesh m in made)
                 if (Application.isPlaying) Object.Destroy(m);
                 else Object.DestroyImmediate(m);
 
-            // The canyon's street far below, its lanes glowing (a grid square every 100 units divides the Period).
-            Part("Street", Quad(), _ground, new Vector3(0f, 0f, Copies * Period / 2f), new Vector3(1200f, Copies * Period, 1f), layer,
+            // The ground far below: dark, its faint lines running to the horizon (a tile every 100 units divides the Period).
+            Part("Ground", Quad(), _ground, new Vector3(0f, 0f, Copies * Period / 2f), new Vector3(2400f, Copies * Period, 1f), layer,
                 Quaternion.Euler(90f, 0f, 0f));
 
             BuildHorizon(box, layer);
-            BuildTraffic(box, layer);
         }
 
-        // The skyline outline beyond the fog, the landmarks and the sky: unfogged, keeping pace with the camera.
+        // Ahead of the camera, always: the faint skyline outline (in the haze), the orbital ring and the sky (beyond it,
+        // unfogged, so they carry the haze's colour themselves).
         void BuildHorizon(Mesh box, int layer)
         {
-            var dark = new List<CombineInstance>();
-            var glow = new List<CombineInstance>();
-            var beacons = new List<CombineInstance>();
-            void Block(List<CombineInstance> to, Vector3 at, Vector3 size) =>
-                to.Add(new CombineInstance { mesh = box, transform = Matrix4x4.TRS(at, Quaternion.identity, size) });
-
-            // The skyline: a broken row of blocks, taller away from the canyon's line, a few with aerials.
-            for (int i = 0; i < 44; i++)
+            var skyline = new List<CombineInstance>();
+            for (int i = 0; i < 26; i++)
             {
-                float x = -780f + i * 36f + Hash01(i, 31) * 20f, w = 26f + Hash01(i, 32) * 44f;
-                float h = 120f + Hash01(i, 33) * 260f + Mathf.Abs(x) * 0.15f;
-                float z = SkylineAt + Hash01(i, 34) * 120f;
-                Block(dark, new Vector3(x, h / 2f, z), new Vector3(w, h, 30f));
-                if (Hash01(i, 35) > 0.6f) Block(beacons, new Vector3(x, h + 3f, z - 16f), new Vector3(5f, 5f, 2f));
+                float x = -620f + i * 48f + Hash01(i, 31) * 24f, w = 22f + Hash01(i, 32) * 46f;
+                float h = 40f + Hash01(i, 33) * 140f + (Hash01(i, 36) > 0.85f ? 130f : 0f);
+                skyline.Add(new CombineInstance { mesh = box, transform = Matrix4x4.TRS(new Vector3(x, h / 2f, SkylineAt + Hash01(i, 34) * 120f), Quaternion.identity, new Vector3(w, h, 30f)) });
             }
-            // The spire at the end of the canyon: tapering stages, edge lights, a halo and a beacon at its tip.
-            float sx = 50f, sz = SkylineAt + 220f, y = 0f;
-            foreach (var (w, h) in new[] { (70f, 230f), (44f, 200f), (24f, 170f), (5f, 120f) })
-            {
-                Block(dark, new Vector3(sx, y + h / 2f, sz), new Vector3(w, h, w));
-                if (w > 6f)
-                {
-                    for (float band = y + 30f; band < y + h - 10f; band += 34f)
-                        Block(glow, new Vector3(sx, band, sz - w / 2f - 1f), new Vector3(w * 0.8f, 2f, 1.6f));
-                    Block(glow, new Vector3(sx - w / 2f, y + h / 2f, sz - w / 2f - 1f), new Vector3(1.6f, h, 1.6f));
-                    Block(glow, new Vector3(sx + w / 2f, y + h / 2f, sz - w / 2f - 1f), new Vector3(1.6f, h, 1.6f));
-                    Block(glow, new Vector3(sx, y + h, sz - w / 2f - 1f), new Vector3(w, 1.6f, 1.6f));
-                }
-                y += h;
-            }
-            Block(beacons, new Vector3(sx, y + 4f, sz - 3f), new Vector3(9f, 9f, 3f));
-            // An arcology, stepped like a ziggurat, with bands of light; and twin towers joined by a bridge.
-            float ay = 0f;
-            for (int s = 0; s < 5; s++)
-            {
-                float w = 300f - s * 58f, h = s == 4 ? 80f : 60f;
-                Block(dark, new Vector3(-430f, ay + h / 2f, SkylineAt + 120f), new Vector3(w, h, 80f));
-                Block(glow, new Vector3(-430f, ay + h * 0.55f, SkylineAt + 78f), new Vector3(w * 0.9f, 1.8f, 1.8f));
-                ay += h;
-            }
-            foreach (float tx in new[] { 360f, 440f })
-            {
-                Block(dark, new Vector3(tx, 250f, SkylineAt + 60f), new Vector3(48f, 500f, 48f));
-                Block(glow, new Vector3(tx - 24f, 250f, SkylineAt + 35f), new Vector3(1.6f, 500f, 1.6f));
-                Block(beacons, new Vector3(tx, 506f, SkylineAt + 34f), new Vector3(6f, 6f, 2f));
-            }
-            Block(dark, new Vector3(400f, 330f, SkylineAt + 60f), new Vector3(40f, 10f, 20f));
-            Block(glow, new Vector3(400f, 325f, SkylineAt + 49f), new Vector3(40f, 1.6f, 1.6f));
-
             _horizon = new GameObject("Horizon") { layer = layer }.transform;
             _horizon.SetParent(transform, false);
-            Part("Skyline", Combined("Far3DSkyline", dark), Tinted(_unfogged, new Color(0.025f, 0.012f, 0.045f)), Vector3.zero, Vector3.one, layer).transform.SetParent(_horizon, false);
-            Part("SkylineLights", Combined("Far3DSkylineLights", glow), Tinted(_unfogged, new Color(0.9f, 2f, 2.6f)), Vector3.zero, Vector3.one, layer).transform.SetParent(_horizon, false);
-            Part("Beacons", Combined("Far3DBeacons", beacons), Tinted(_unfogged, new Color(3.5f, 0.6f, 0.5f)), Vector3.zero, Vector3.one, layer).transform.SetParent(_horizon, false);
-            var halo = Part("Halo", Torus(48f, 1.6f, 64, 6), Tinted(_unfogged, new Color(0.8f, 2.2f, 2.8f)), new Vector3(sx, 470f, sz), Vector3.one, layer,
-                Quaternion.Euler(8f, 0f, 0f));
-            halo.transform.SetParent(_horizon, false);
+            // Inside the haze, fogged like everything else: dark blocks that the fog leaves as a faint outline in exactly its
+            // own colour, so whatever stands as far off melts into it rather than showing against it.
+            Color haze = FogColour;
+            Part("Skyline", Combined("Far3DSkyline", skyline), Tinted(_strip, new Color(0.04f, 0.03f, 0.1f)),
+                Vector3.zero, Vector3.one, layer).transform.SetParent(_horizon, false);
 
-            // The sky: a gradient behind everything, its horizon at the camera's eye level (SkyTexture's HorizonV).
-            _skyPart = Part("Sky", Quad(), _sky, Vector3.zero, new Vector3(3400f, 1900f, 1f), layer).transform;
-            // A ringed planet high on the right, lit from the left.
-            var planet = new Material(_unfogged) { name = "Far3DPlanet" };
-            planet.SetColor(BaseColor, new Color(0.62f, 0.2f, 0.11f));
-            planet.SetFloat("_Shade", 1f);
-            planet.SetVector("_LightDir", new Vector4(-0.8f, 0.35f, -0.5f, 0f));
-            _planet = Part("Planet", Sphere(140f, 32, 20), planet, Vector3.zero, Vector3.one, layer).transform;
-            Material rings = Tinted(_unfogged, new Color(0.55f, 0.4f, 0.3f));
-            // Nearly edge-on, tilted a little: a thin ellipse crossing the planet.
-            foreach (float r in new[] { 215f, 240f, 262f })
-                Part("Ring" + r, Torus(r, r > 250f ? 3f : 5f, 96, 4), rings, Vector3.zero, Vector3.one, layer, Quaternion.Euler(-14f, 0f, -16f))
-                    .transform.SetParent(_planet, false);
-        }
-
-        void BuildTraffic(Mesh box, int layer)
-        {
-            // Lanes down the canyon (low, level with the camera, overhead) and in the streets behind its walls; a whole
-            // number of Periods per loop each way, so the traffic repeats exactly with the video.
-            float unit = Period / LoopSeconds;
-            _lanes = new[]
+            // The orbital ring: a broad structural band, a bright cyan seam along it and stations spaced round it, tilted a
+            // little and lying almost flat, so from here it is a vast arc across the top of the sky.
+            _ring = new GameObject("Ring") { layer = layer }.transform;
+            _ring.SetParent(transform, false);
+            Part("RingBand", Torus(RingRadius, 150f, 256, 8), Unfogged(Color.Lerp(haze, new Color(0.5f, 0.52f, 0.8f), 0.3f)),
+                Vector3.zero, new Vector3(1f, 0.45f, 1f), layer).transform.SetParent(_ring, false);
+            Part("RingSeam", Torus(RingRadius - 128f, 11f, 256, 4), Tinted(_unfogged, new Color(0.35f, 1.1f, 1.4f)),
+                new Vector3(0f, -40f, 0f), Vector3.one, layer).transform.SetParent(_ring, false);
+            var stations = new List<CombineInstance>();
+            for (int k = 0; k < 24; k++)
             {
-                new Lane { X = -20f, Y = 30f, Speed = 3f * unit },
-                new Lane { X = 20f, Y = 30f, Speed = -2f * unit, Coming = true },
-                new Lane { X = -32f, Y = 64f, Speed = 4f * unit },
-                new Lane { X = 32f, Y = 64f, Speed = -3f * unit, Coming = true },
-                new Lane { X = -12f, Y = 128f, Speed = 2f * unit },
-                new Lane { X = 12f, Y = 128f, Speed = -1f * unit, Coming = true },
-                new Lane { X = -115f, Y = 110f, Speed = 2f * unit },
-                new Lane { X = 115f, Y = 120f, Speed = -2f * unit, Coming = true },
-            };
-            Material coming = Tinted(_strip, new Color(2.4f, 2.6f, 3f)), going = Tinted(_strip, new Color(3f, 0.35f, 0.35f));
-            Mesh car = ScaledBox(box, 1.5f, 0.9f, 9f);
-            _cars = new Transform[_lanes.Length * CarsPerLane];
-            for (int l = 0; l < _lanes.Length; l++)
-                for (int c = 0; c < CarsPerLane; c++)
-                    _cars[l * CarsPerLane + c] = Part("Car" + l + "_" + c, car, _lanes[l].Coming ? coming : going, Vector3.zero, Vector3.one, layer).transform;
+                float a = k * 15f * Mathf.Deg2Rad;
+                var p = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a)) * RingRadius;
+                stations.Add(new CombineInstance { mesh = box, transform = Matrix4x4.TRS(p, Quaternion.Euler(0f, -k * 15f, 0f), new Vector3(220f, 120f, 360f)) });
+            }
+            Part("RingStations", Combined("Far3DRingStations", stations), Unfogged(Color.Lerp(haze, new Color(0.42f, 0.44f, 0.7f), 0.3f)),
+                Vector3.zero, Vector3.one, layer).transform.SetParent(_ring, false);
+            var lights = new List<CombineInstance>();
+            for (int k = 0; k < 24; k += 3)
+            {
+                float a = k * 15f * Mathf.Deg2Rad;
+                var p = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a)) * (RingRadius - 2f);
+                lights.Add(new CombineInstance { mesh = box, transform = Matrix4x4.TRS(p + Vector3.down * 66f, Quaternion.identity, Vector3.one * 26f) });
+            }
+            Part("RingLights", Combined("Far3DRingLights", lights), Tinted(_unfogged, new Color(2.4f, 1.4f, 0.55f)),
+                Vector3.zero, Vector3.one, layer).transform.SetParent(_ring, false);
+
+            // The sky: a gradient behind everything, its horizon at the camera's eye level.
+            _skyPart = Part("Sky", Quad(), _sky, Vector3.zero, new Vector3(SkyWidth, SkyHeight, 1f), layer).transform;
         }
 
-        /// <summary>Keeps the skyline, the landmarks, the sky and the planet with the camera (they are too far away to near).</summary>
-        public void Follow(Vector3 camera)
+        /// <summary>The haze's colour, which the sky's horizon matches (Far3DArt's sky, the scene's fog).</summary>
+        public static readonly Color FogColour = new Color(0.3f, 0.24f, 0.46f);
+
+        /// <summary>How far the reveal has come: 0 as the era arrives, 1 once the ring is in place (Far3DView sets it).</summary>
+        public float Reveal { get; set; } = 1f;
+
+        /// <summary>
+        /// Keeps the skyline, the ring and the sky ahead of the camera (they are too far away to near). The ring turns a station
+        /// a stretch and drifts gently side to side as the run goes on, so it moves, slowly, like something immense; in the
+        /// reveal it climbs from behind the horizon into place.
+        /// </summary>
+        public void Follow(Vector3 camera, float along)
         {
             if (!_built) return;
             Vector3 c = camera - Origin;
             _horizon.localPosition = new Vector3(c.x, 0f, c.z);
-            // The sky's horizon (HorizonV up its height) at the camera's eye level.
-            const float height = 1900f;
-            _skyPart.localPosition = new Vector3(c.x, c.y + height * (0.5f - HorizonV), c.z + SkyAt);
-            _planet.localPosition = new Vector3(c.x + 360f, c.y + 640f, c.z + PlanetAt);
+            _skyPart.localPosition = new Vector3(c.x, c.y + SkyHeight * (0.5f - HorizonV), c.z + SkyAt);
+            float phase = along / Period * 2f * Mathf.PI;
+            float rise = 1f - Reveal;
+            rise *= rise;   // eases out: nearly in place a second after the rift
+            _ring.localPosition = new Vector3(c.x + 160f * Mathf.Sin(phase), CameraHeight + RingHeight - RingRise * rise, c.z + RingAt);
+            _ring.localRotation = Quaternion.Euler(-6f, along / Period * 15f, 7f);
         }
 
-        /// <summary>Where the sky texture's horizon is, up its height.</summary>
-        public const float HorizonV = 0.16f;
-
-        /// <summary>The traffic and the roof lights at <paramref name="time"/> seconds, the camera <paramref name="along"/> its path.</summary>
+        /// <summary>The beacons' slow pulse at <paramref name="time"/> seconds (a whole number of pulses each loop).</summary>
         public void Animate(float time, float along)
         {
             if (!_built) return;
-            float wrap = Mathf.Floor(along / Period) * Period, start = along - 60f;
-            for (int l = 0; l < _lanes.Length; l++)
-            {
-                Lane lane = _lanes[l];
-                for (int c = 0; c < CarsPerLane; c++)
-                {
-                    // Each car moves at its lane's speed through a window that slides with the camera (a pure function of the
-                    // time and the distance), then shifts by the camera's wrap, like the camera itself.
-                    float z = start + Mathf.Repeat(c * TrafficWindow / CarsPerLane + Hash01(l, c) * 30f + time * lane.Speed - start, TrafficWindow);
-                    _cars[l * CarsPerLane + c].localPosition = new Vector3(lane.X + 2f * Mathf.Sin(c * 1.7f + l), lane.Y + 3f * Mathf.Sin(c + l), z - wrap);
-                }
-            }
-            // The roof lights pulse slowly, all together (a whole number of pulses per loop).
-            float pulse = 0.35f + 0.65f * Mathf.Pow(0.5f + 0.5f * Mathf.Sin(time * 2f * Mathf.PI * 18f / LoopSeconds), 3f);
-            _roofLights.SetColor(BaseColor, RoofRed * pulse);
+            float pulse = 0.4f + 0.6f * Mathf.Pow(0.5f + 0.5f * Mathf.Sin(time * 2f * Mathf.PI * 24f / LoopSeconds), 2f);
+            _beacons.SetColor(BaseColor, Amber * pulse);
         }
 
         /// <summary>
-        /// Where the camera is for a distance along its path: above the canyon's street, looking along it to the horizon
-        /// (tilted down so the horizon sits a third of the way down), drifting gently side to side. Wraps every Period, which
-        /// the repeating city hides.
+        /// Where the camera is for a distance along its path: above the city, looking along the path to the horizon (tilted
+        /// down so the horizon sits a third of the way down), drifting gently side to side. Wraps every Period, which the
+        /// repeating city hides. With <paramref name="reveal"/> under 1 (the rift into the era) it starts low, tilted up a
+        /// little, and rises into place.
         /// </summary>
-        public static void CameraAt(float along, out Vector3 position, out Quaternion rotation)
+        public static void CameraAt(float along, out Vector3 position, out Quaternion rotation, float reveal = 1f)
         {
             float a = along * 2f * Mathf.PI / Period;
-            position = Origin + new Vector3(7f * Mathf.Sin(a), CameraHeight + 5f * Mathf.Sin(2f * a), Mathf.Repeat(along, Period));
-            rotation = Quaternion.Euler(CameraPitch + 1f * Mathf.Sin(2f * a), -2.5f * Mathf.Cos(a), 0f);
+            float low = 1f - Mathf.Clamp01(reveal);
+            low = low * low * (3f - 2f * low);
+            position = Origin + new Vector3(9f * Mathf.Sin(a), CameraHeight + 5f * Mathf.Sin(2f * a) - RevealDrop * low, Mathf.Repeat(along, Period));
+            rotation = Quaternion.Euler(Mathf.Lerp(CameraPitch + Mathf.Sin(2f * a), RevealPitch, low), -2.5f * Mathf.Cos(a), 0f);
         }
+
+        public static void CameraAt(float along, out Vector3 position, out Quaternion rotation) => CameraAt(along, out position, out rotation, 1f);
+
+        Material Surface(Color colour)
+        {
+            var m = new Material(_tower) { name = "Far3DSurface" };
+            m.DisableKeyword("_EMISSION");
+            m.SetColor("_EmissionColor", Color.black);
+            if (_panels != null) m.SetTexture("_BaseMap", _panels);
+            m.SetColor(BaseColor, colour);
+            return m;
+        }
+
+        // Echo/Far3D Unfogged takes its colour as given (linear), so a colour meant to sit beside the fogged scene (which
+        // works in gamma, like the fog colour) is converted.
+        Material Unfogged(Color gamma) => Tinted(_unfogged, gamma.linear);
 
         Material Tinted(Material source, Color colour)
         {
             var m = new Material(source) { name = source.name + "Tinted" };
             m.SetColor(BaseColor, colour);
-            return m;
-        }
-
-        static Mesh Track(List<Mesh> made, Mesh m)
-        {
-            made.Add(m);
             return m;
         }
 
@@ -371,6 +342,25 @@ namespace Echo.Game.Views
             r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             r.receiveShadows = false;
             return go;
+        }
+
+        // A thin box from a to b: an edge highlight.
+        static Matrix4x4 Beam(Vector3 a, Vector3 b, float thick)
+        {
+            Vector3 d = b - a;
+            return Matrix4x4.TRS((a + b) * 0.5f, Quaternion.LookRotation(d.normalized, Mathf.Abs(d.normalized.y) > 0.99f ? Vector3.forward : Vector3.up),
+                new Vector3(thick, thick, d.magnitude));
+        }
+
+        // Beams round a polygon: a lit rim.
+        static IEnumerable<Matrix4x4> RingOfBeams(Vector3 centre, float radius, int sides, float thick, float startDeg = 0f)
+        {
+            for (int k = 0; k < sides; k++)
+            {
+                float a0 = (startDeg + k * 360f / sides) * Mathf.Deg2Rad, a1 = (startDeg + (k + 1) * 360f / sides) * Mathf.Deg2Rad;
+                yield return Beam(centre + new Vector3(Mathf.Sin(a0), 0f, Mathf.Cos(a0)) * radius,
+                                  centre + new Vector3(Mathf.Sin(a1), 0f, Mathf.Cos(a1)) * radius, thick);
+            }
         }
 
         // ---- procedural meshes ----
@@ -413,7 +403,10 @@ namespace Echo.Game.Views
             return m;
         }
 
-        // A box w x h x d whose side UVs tile with its size, so the facade's windows stay one size on every tower.
+        /// <summary>The panel texture covers this many units of surface.</summary>
+        public const float PanelTileWidth = 60f, PanelTileHeight = 60f;
+
+        // A box w x h x d whose side UVs tile with its size, so the panels stay one size on every structure.
         static Mesh ScaledBox(Mesh box, float w, float h, float d)
         {
             var m = Object.Instantiate(box);
@@ -425,8 +418,7 @@ namespace Echo.Game.Views
                 v[i] = Vector3.Scale(v[i], new Vector3(w, h, d));
                 bool side = Mathf.Abs(n[i].y) < 0.5f;
                 float across = Mathf.Abs(n[i].x) > 0.5f ? d : w;
-                // One facade tile is 20 x 40 units (16 x 32 windows, each 1.25 units across); roofs take a dark corner.
-                uv[i] = side ? new Vector2(uv[i].x * across / FacadeTileWidth, uv[i].y * h / FacadeTileHeight) : new Vector2(0.01f, 0.01f);
+                uv[i] = side ? new Vector2(uv[i].x * across / PanelTileWidth, uv[i].y * h / PanelTileHeight) : new Vector2(0.5f, 0.5f);
             }
             m.vertices = v;
             m.uv = uv;
@@ -434,12 +426,52 @@ namespace Echo.Game.Views
             return m;
         }
 
-        /// <summary>The facade texture covers this many units of wall.</summary>
-        public const float FacadeTileWidth = 20f, FacadeTileHeight = 40f;
+        // A faceted frustum, flat-shaded (each face its own vertices) so the moonlight picks out every facet; bottom at 0,
+        // from radius r0 to r1 over h, with a cap on top. Side UVs tile with size like ScaledBox.
+        static Mesh Prism(int sides, float r0, float r1, float h)
+        {
+            var v = new List<Vector3>();
+            var nn = new List<Vector3>();
+            var uv = new List<Vector2>();
+            var t = new List<int>();
+            for (int k = 0; k < sides; k++)
+            {
+                float a0 = k * 2f * Mathf.PI / sides, a1 = (k + 1) * 2f * Mathf.PI / sides;
+                Vector3 d0 = new Vector3(Mathf.Sin(a0), 0f, Mathf.Cos(a0)), d1 = new Vector3(Mathf.Sin(a1), 0f, Mathf.Cos(a1));
+                Vector3 b0 = d0 * r0, b1 = d1 * r0, t0 = d0 * r1 + Vector3.up * h, t1 = d1 * r1 + Vector3.up * h;
+                Vector3 normal = Vector3.Cross(t0 - b0, b1 - b0).normalized;
+                if (Vector3.Dot(normal, d0 + d1) < 0f) normal = -normal;
+                float width = (b1 - b0).magnitude / PanelTileWidth, height = h / PanelTileHeight;
+                int o = v.Count;
+                v.AddRange(new[] { b0, b1, t0, t1 });
+                nn.AddRange(new[] { normal, normal, normal, normal });
+                uv.AddRange(new[] { new Vector2(0f, 0f), new Vector2(width, 0f), new Vector2(0f, height), new Vector2(width, height) });
+                t.AddRange(new[] { o, o + 2, o + 1, o + 2, o + 3, o + 1 });
+            }
+            int c = v.Count;
+            v.Add(Vector3.up * h);
+            nn.Add(Vector3.up);
+            uv.Add(new Vector2(0.5f, 0.5f));
+            for (int k = 0; k <= sides; k++)
+            {
+                float a = k * 2f * Mathf.PI / sides;
+                v.Add(new Vector3(Mathf.Sin(a), 0f, Mathf.Cos(a)) * r1 + Vector3.up * h);
+                nn.Add(Vector3.up);
+                uv.Add(new Vector2(0.5f, 0.5f));
+            }
+            for (int k = 0; k < sides; k++) t.AddRange(new[] { c, c + 1 + k, c + 2 + k });
+            var m = new Mesh { name = "Far3DPrism" };
+            m.SetVertices(v);
+            m.SetNormals(nn);
+            m.SetUVs(0, uv);
+            m.SetTriangles(t, 0);
+            m.RecalculateBounds();
+            return m;
+        }
 
         static Mesh Torus(float radius, float tube, int segments, int sides)
         {
-            var m = new Mesh { name = "Far3DRing" };
+            var m = new Mesh { name = "Far3DTorus" };
             var v = new Vector3[(segments + 1) * (sides + 1)];
             var uv = new Vector2[v.Length];
             var nn = new Vector3[v.Length];
@@ -460,36 +492,6 @@ namespace Echo.Game.Views
                 {
                     int a = s * (sides + 1) + k, b = a + sides + 1;
                     t[i++] = a; t[i++] = b; t[i++] = a + 1; t[i++] = b; t[i++] = b + 1; t[i++] = a + 1;
-                }
-            m.vertices = v;
-            m.normals = nn;
-            m.uv = uv;
-            m.triangles = t;
-            return m;
-        }
-
-        static Mesh Sphere(float radius, int segments, int rings)
-        {
-            var m = new Mesh { name = "Far3DPlanet" };
-            var v = new Vector3[(segments + 1) * (rings + 1)];
-            var uv = new Vector2[v.Length];
-            var nn = new Vector3[v.Length];
-            for (int r = 0; r <= rings; r++)
-                for (int s = 0; s <= segments; s++)
-                {
-                    float a = s * 2f * Mathf.PI / segments, b = Mathf.PI * r / rings;
-                    Vector3 n = new Vector3(Mathf.Sin(b) * Mathf.Cos(a), Mathf.Cos(b), Mathf.Sin(b) * Mathf.Sin(a));
-                    v[r * (segments + 1) + s] = n * radius;
-                    nn[r * (segments + 1) + s] = n;
-                    uv[r * (segments + 1) + s] = new Vector2(s / (float)segments, r / (float)rings);
-                }
-            var t = new int[segments * rings * 6];
-            int i = 0;
-            for (int r = 0; r < rings; r++)
-                for (int s = 0; s < segments; s++)
-                {
-                    int a = r * (segments + 1) + s, b = a + segments + 1;
-                    t[i++] = a; t[i++] = a + 1; t[i++] = b; t[i++] = b; t[i++] = a + 1; t[i++] = b + 1;
                 }
             m.vertices = v;
             m.normals = nn;

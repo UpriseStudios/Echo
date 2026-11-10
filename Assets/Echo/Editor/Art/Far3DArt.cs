@@ -4,16 +4,15 @@ using UnityEngine;
 namespace Echo.Editor.Art
 {
     /// <summary>
-    /// World Time Run doc (art pass phase 6): the textures of the Far Far Future's 3D megacity (Far3DScene), generated like
-    /// the rest of the game's art: a facade of dark glass panels with a window grid and its lit windows as an emission map,
-    /// a ground of dark plating crossed by glowing lanes, a sky from deep indigo to a magenta horizon, the orbital ring's
-    /// light strips, and the soft blob shadow cast on the floor by the runner and the ghosts.
+    /// The textures of the Far Far Future's 3D city (Far3DScene, "The Infinite City"), generated like the rest of the game's
+    /// art: a subtle panelled surface for the megastructures (large plates and faint seams, no windows), a dark ground with
+    /// faint lines running to the horizon, a sky from the haze's violet at the horizon through midnight blue to a near-black
+    /// top with stars, and the soft blob shadow cast on the floor by the runner and the ghosts.
     /// </summary>
     public static class Far3DArt
     {
         public const string Dir = "Assets/Echo/Content/Art/Far3D";
-        public static string Facade => Dir + "/facade.png";
-        public static string Windows => Dir + "/facade_windows.png";
+        public static string Panels => Dir + "/panels.png";
         public static string Ground => Dir + "/ground.png";
         public static string Sky => Dir + "/sky.png";
         public static string Shadow => Dir + "/shadow.png";
@@ -24,8 +23,10 @@ namespace Echo.Editor.Art
         public static void Write()
         {
             if (!AssetDatabase.IsValidFolder(Dir)) AssetDatabase.CreateFolder("Assets/Echo/Content/Art", "Far3D");
-            EchoArt.Write(Facade, FacadeTexture(lit: false));
-            EchoArt.Write(Windows, FacadeTexture(lit: true));
+            // The window facades of the earlier city are gone with it.
+            foreach (string old in new[] { Dir + "/facade.png", Dir + "/facade_windows.png" })
+                if (AssetDatabase.LoadAssetAtPath<Texture2D>(old) != null) AssetDatabase.DeleteAsset(old);
+            EchoArt.Write(Panels, PanelTexture());
             EchoArt.Write(Ground, GroundTexture());
             EchoArt.Write(Sky, SkyTexture());
             EchoArt.Write(Shadow, ShadowTexture());
@@ -33,7 +34,7 @@ namespace Echo.Editor.Art
 
         public static void Import()
         {
-            foreach (string p in new[] { Facade, Windows, Ground, Sky })
+            foreach (string p in new[] { Panels, Ground, Sky })
             {
                 var importer = (TextureImporter)AssetImporter.GetAtPath(p);
                 importer.textureType = TextureImporterType.Default;
@@ -46,63 +47,34 @@ namespace Echo.Editor.Art
             EchoArt.ImportSprite(Shadow, 64f, new Vector2(0.5f, 0.5f), default, TextureWrapMode.Clamp, FilterMode.Bilinear);
         }
 
-        // 256 x 512: one tile is 20 x 40 units of facade (Far3DScene.FacadeTile*), 16 x 32 windows of 16 px, so its windows
-        // stay one size on every tower and stay sharp close up.
-        // Art fix phase 3: mostly dark. About one window in five is lit, in runs along a floor (an office still working)
-        // rather than an even speckle; every fourth floor is a darker band and a mullion every four windows, so a facade
-        // reads as a building, and mipmapping turns a distant one into a dim glow.
-
-        static bool Lit(int col, int row) => Noise(col / 3 + 11, row) > 0.55f && Noise(col, row + 5) > 0.35f;
-
-        static PixelCanvas FacadeTexture(bool lit)
+        // 256 x 256 for 60 x 60 units of surface (Far3DScene.PanelTile*): big plates a touch different in tone, faint seams
+        // between them and a finer horizontal course every so often, so a surface reads as built at an impossible scale
+        // without a single window. Near white: the materials tint it.
+        static PixelCanvas PanelTexture()
         {
-            var c = new HdCanvas(256, 512);
+            var c = new HdCanvas(256, 256);
             c.Fill((x, y) =>
             {
-                int col = x / 16, row = y / 16;
-                bool frame = x % 16 < 2 || y % 16 < 3;
-                bool mullion = x % 64 < 3;
-                bool band = row % 4 == 3;
-                bool on = !band && Lit(col, row);
-                if (lit)
-                {
-                    if (frame || mullion || !on) return new Color(0f, 0f, 0f, 1f);
-                    Color w = Noise(col + 7, row) > 0.75f ? C(0x8ADCFF) : C(0xFFC88A);
-                    return w * (0.65f + 0.35f * Noise(col + 3, row + 9));   // some brighter than others
-                }
-                // Light enough for the moonlight to shade the faces: one wall lit, the other in shade, the roofs catching it.
-                Color glass = Color.Lerp(C(0x26304C), C(0x38445E), Noise(col, row + 40) * 0.6f + y / 1280f);
-                if (band) glass = C(0x1A2034);
-                return mullion ? C(0x4A5670) : frame ? C(0x30394F) : on ? Color.Lerp(glass, C(0x6A7898), 0.35f) : glass;
+                int px = x / 64, py = y / 32;
+                float plate = 0.86f + 0.1f * Noise(px + 3, py + 7);
+                bool seam = x % 64 < 2 || y % 32 < 2;
+                bool course = y % 128 < 4;
+                float v = seam ? 0.62f : course ? 0.74f : plate;
+                return new Color(v, v, v, 1f);
             });
             return c.ToPixelCanvas();
         }
 
-        /// <summary>The share of the facade's windows that are lit (tests check it stays 15-25%).</summary>
-        public static float MeasuredLitShare()
-        {
-            int lit = 0, windows = 0;
-            for (int row = 0; row < 32; row++)
-                for (int col = 0; col < 16; col++)
-                {
-                    windows++;
-                    if (row % 4 != 3 && Lit(col, row)) lit++;
-                }
-            return lit / (float)windows;
-        }
-
-        // The canyon's street: dark plating, lanes running along the canyon (v), a faint cross street each tile.
+        // The ground far below: dark, with faint lines running along the path (v) towards the horizon.
         static PixelCanvas GroundTexture()
         {
             var c = new HdCanvas(256, 256);
-            c.Fill((x, y) => Noise(x / 16, y / 16) > 0.5f ? C(0x080B16) : C(0x0B0F1C));
+            c.Fill((x, y) => Noise(x / 32, y / 32) > 0.5f ? C(0x07081A) : C(0x090A1E));
             for (int k = 0; k < 256; k++)
-                for (int d = 0; d < 5; d++)
+                for (int d = 0; d < 3; d++)
                 {
-                    float a = d == 0 ? 0.9f : 0.3f * (1f - d / 5f);
-                    foreach (int lane in new[] { 40, 104, 152, 216 }) { c.Add(lane + d, k, C(0x3AF0FF), a * 0.8f); c.Add(lane - d, k, C(0x3AF0FF), a * 0.8f); }
-                    c.Add(128 + d, k, C(0xFF3AD0), a);
-                    c.Add(k, d, C(0x3AF0FF), a * 0.3f);
+                    float a = d == 0 ? 0.18f : 0.06f * (1f - d / 3f);
+                    foreach (int lane in new[] { 64, 192 }) { c.Add(lane + d, k, C(0x3AA8D0), a); c.Add(lane - d, k, C(0x3AA8D0), a); }
                 }
             return c.ToPixelCanvas();
         }
@@ -110,11 +82,11 @@ namespace Echo.Editor.Art
         /// <summary>Where the horizon is up the sky texture (Far3DScene.HorizonV, which places it at the camera's eye level).</summary>
         public const float HorizonV = Echo.Game.Views.Far3DScene.HorizonV;
 
-        /// <summary>The exponential fog's colour, which the sky's horizon matches, so the fogged city melts into it.</summary>
-        public static readonly Color FogColour = new Color(0.30f, 0.13f, 0.38f);
+        /// <summary>The haze's colour, which the sky's horizon matches, so the far city melts into it.</summary>
+        public static Color FogColour => Echo.Game.Views.Far3DScene.FogColour;
 
-        // 256 x 512: below the horizon the fog's colour; a magenta glow just above it, fading through violet to a near-black
-        // top with stars.
+        // 256 x 512: below the horizon the haze's colour; just above it a soft violet glow, rising through midnight blue to a
+        // near-black top with faint stars.
         static PixelCanvas SkyTexture()
         {
             var c = new HdCanvas(256, 512);
@@ -123,14 +95,14 @@ namespace Echo.Editor.Art
                 float v = y / 511f;
                 if (v < HorizonV) return FogColour;
                 float t = (v - HorizonV) / (1f - HorizonV);
-                Color glow = Color.Lerp(Color.Lerp(FogColour, C(0x8A3A8E), Mathf.SmoothStep(0f, 0.05f, t)), C(0x2E1A5A), Mathf.SmoothStep(0.03f, 0.3f, t));
-                return Color.Lerp(glow, C(0x05060F), Mathf.SmoothStep(0.25f, 0.85f, t));
+                Color low = Color.Lerp(Color.Lerp(FogColour, C(0x4A3A7E), Mathf.SmoothStep(0f, 0.06f, t)), C(0x1A1C48), Mathf.SmoothStep(0.04f, 0.35f, t));
+                return Color.Lerp(low, C(0x04050F), Mathf.SmoothStep(0.3f, 0.95f, t));
             });
-            for (int k = 0; k < 260; k++)
+            for (int k = 0; k < 220; k++)
             {
-                int x = (int)(Noise(k, 61) * 256), y = (int)(512 * (HorizonV + 0.2f + 0.8f * (1f - HorizonV - 0.2f) * Noise(k, 62)));
-                float b = 0.3f + 0.7f * Noise(k, 63);
-                c.Blend(x, y, new Color(0.9f, 0.92f, 1f, b));
+                int x = (int)(Noise(k, 61) * 256), y = (int)(512 * (HorizonV + 0.25f + (1f - HorizonV - 0.25f) * Noise(k, 62)));
+                float b = 0.2f + 0.6f * Noise(k, 63);
+                c.Blend(x, y, new Color(0.85f, 0.9f, 1f, b));
             }
             return c.ToPixelCanvas();
         }

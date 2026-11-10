@@ -40,6 +40,16 @@ namespace Echo.Game.Views
         Mode _mode = Mode.Off;
         bool _awaitingVideo;
 
+        // The Infinite City's reveal: from the rift into the era, the camera rises and the ring climbs into place.
+        public const float RevealSeconds = 1.5f;
+        float _revealStart = float.NegativeInfinity;
+
+        /// <summary>The rift into the era has happened: the reveal starts now (Time.time, so a recording keeps its pace).</summary>
+        public void BeginReveal() => _revealStart = Time.time;
+
+        /// <summary>How far the reveal has come, 0 to 1 (tests).</summary>
+        public float Reveal => Mathf.Clamp01((Time.time - _revealStart) / RevealSeconds);
+
         /// <summary>The calm band behind the gameplay is drawn (tests).</summary>
         public bool CalmShown => _calm != null && _calm.enabled;
 
@@ -116,7 +126,7 @@ namespace Echo.Game.Views
 
         /// <summary>
         /// Each frame: the quad covers the view behind the gameplay, and in real time the camera follows the run's
-        /// distance and the traffic moves. The texture is made again only when the view's size changes.
+        /// distance (rising through the reveal after the rift into the era) and the beacons pulse. The texture is made again only when the view's size changes.
         /// </summary>
         public void Render(Vector3 mainCamera, float viewWidth, float viewHeight, float metres, float time)
         {
@@ -144,9 +154,11 @@ namespace Echo.Game.Views
                 _camera.targetTexture = _target;
                 _shown.mainTexture = _target;
             }
-            Far3DScene.CameraAt(metres * Far3DScene.UnitsPerMetre, out Vector3 at, out Quaternion look);
+            float along = metres * Far3DScene.UnitsPerMetre, reveal = Reveal;
+            Far3DScene.CameraAt(along, out Vector3 at, out Quaternion look, reveal);
             _camera.transform.SetPositionAndRotation(at, look);
-            _scene.Follow(at);
+            _scene.Reveal = reveal;
+            _scene.Follow(at, along);
             _scene.Animate(time, metres * Far3DScene.UnitsPerMetre);
             // A new size (the grave reveal's zoom, a screenshot's framing) is drawn now, not a frame late.
             if (resized) _camera.Render();
